@@ -1,0 +1,47 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+android {
+
+    compileSdkVersion rootProject.ext.android.compileSdkVersion
+
+    buildToolsVersion rootProject.ext.android.buildToolsVersion
+
+    defaultConfig {
+        applicationId rootProject.ext.android.applicationId
+
+        minSdkVersion rootProject.ext.android.minSdkVersion
+
+        targetSdkVersion rootProject.ext.android.targetSdkVersion
+
+        versionCode rootProject.ext.android.versionCode
+
+        versionName rootProject.ext.android.versionName
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    // Java8
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
+}
+
+dependencies {
+    api fileTree(dir: 'libs', include: ['*.jar'])
+    //  Androidx配置
+    api rootProject.ext.androidx["constraint-layout"]
+    api rootProject.ext.androidx["recyclerview"]
+    api rootProject.ext.androidx["appcompat"]
+    api rootProject.ext.androidx["ktx"]
+    api rootProject.ext.androidx["kotlin"]
+    api rootProject.ext.androidx["material"]
+}
