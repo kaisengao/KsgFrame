@@ -1,2 +1,4 @@
 rootProject.name='KsgFrame'
 include ':app'
+include ':lib_mvp'
+include ':lib_base'

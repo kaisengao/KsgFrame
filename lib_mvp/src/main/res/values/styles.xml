@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Toolbar-->
+    <style name="AppTheme.Toolbar.Light">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:minHeight">45dp</item>
+        <item name="android:background">#FFFFFF</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="colorControlNormal">#000000</item>
+        <item name="android:actionBarSize">45dp</item>
+    </style>
+
+</resources>

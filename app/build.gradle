@@ -36,12 +36,7 @@ android {
 }
 
 dependencies {
-    api fileTree(dir: 'libs', include: ['*.jar'])
-    //  Androidx配置
-    api rootProject.ext.androidx["constraint-layout"]
-    api rootProject.ext.androidx["recyclerview"]
-    api rootProject.ext.androidx["appcompat"]
-    api rootProject.ext.androidx["ktx"]
-    api rootProject.ext.androidx["kotlin"]
-    api rootProject.ext.androidx["material"]
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // MVP
+    implementation project(':lib_mvp')
 }

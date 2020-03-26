@@ -1,0 +1,15 @@
+<resources>
+
+    <style name="AppTheme.Toolbar" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:minHeight">45dp</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="colorControlNormal">#000000</item>
+        <item name="android:actionBarSize">45dp</item>
+    </style>
+
+</resources>
