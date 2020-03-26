@@ -1,6 +1,9 @@
 package com.kasiengao.ksgframe
 
+import android.content.Intent
 import androidx.appcompat.widget.AppCompatImageView
+import com.kasiengao.ksgframe.java.JavaActivity
+import com.kasiengao.ksgframe.kt.KtActivity
 import com.kasiengao.mvp.java.BaseToolbarActivity
 
 /**
@@ -18,12 +21,12 @@ class MainActivity : BaseToolbarActivity() {
         // Toolbar Back
         this.setNavigationIcon(R.drawable.icon_main_smiling_face)
         // Kt 语言版本
-        findViewById<AppCompatImageView>(R.id.main_kt).setOnClickListener {
-
+        this.findViewById<AppCompatImageView>(R.id.main_kt).setOnClickListener {
+            startActivity(Intent(this, KtActivity::class.java))
         }
         // Java 语言版本
-        findViewById<AppCompatImageView>(R.id.main_java).setOnClickListener {
-
+        this.findViewById<AppCompatImageView>(R.id.main_java).setOnClickListener {
+            startActivity(Intent(this, JavaActivity::class.java))
         }
     }
 }

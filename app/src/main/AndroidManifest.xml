@@ -22,7 +22,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
+        <activity
+            android:name=".java.JavaActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".kt.KtActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -23,10 +23,11 @@ public abstract class BaseToolbarActivity extends BaseActivity {
 
     private Toolbar mToolbar;
 
+    private ActionBar mActionBar;
+
     private View mContentLayout;
 
     private LinearLayout mParentLinearLayout;
-    private ActionBar mActionBar;
 
     @Override
     public void setContentView(@LayoutRes int layoutResId) {

@@ -4,4 +4,7 @@
     <string name="main_kt">KT</string>
     <string name="main_java">JAVA</string>
 
+    <string name="java_title">Java版本</string>
+    <string name="kotlin_title">Kotlin版本</string>
+
 </resources>
