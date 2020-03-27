@@ -1,5 +1,6 @@
 package com.kasiengao.mvp.kt
 
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
@@ -56,6 +57,8 @@ abstract class BaseToolbarActivity : BaseActivity() {
         this.layoutInflater.inflate(getToolbarLayoutId(), this.mParentLinearLayout)
         if (this.mParentLinearLayout!!.childCount > 0) { // 沉浸式状态栏 添加padding高度
             StatusBarUtil.setPaddingSmart(this, this.mParentLinearLayout!!.getChildAt(0))
+            StatusBarUtil.setStatusBarColor(this, R.color.white)
+            StatusBarUtil.darkMode(this)
         } else { // 如果没有添加Toolbar就移除沉浸式效果
             this.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
@@ -139,5 +142,13 @@ abstract class BaseToolbarActivity : BaseActivity() {
         if (this.mActionBar != null) {
             this.mActionBar!!.setDisplayHomeAsUpEnabled(showHomeAsUp)
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            this.finish()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -7,4 +7,9 @@
     <string name="java_title">Java版本</string>
     <string name="kotlin_title">Kotlin版本</string>
 
+    <string name="btn_mvp">MVP模式</string>
+    <string name="btn_other">待定</string>
+
+    <string name="mvp_title">Mvp模式</string>
+
 </resources>

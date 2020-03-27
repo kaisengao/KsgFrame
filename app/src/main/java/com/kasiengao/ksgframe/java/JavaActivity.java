@@ -1,6 +1,9 @@
 package com.kasiengao.ksgframe.java;
 
+import android.content.Intent;
+
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.java.mvp.MvpActivity;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 
 /**
@@ -21,5 +24,12 @@ public class JavaActivity extends BaseToolbarActivity {
         super.initWidget();
         // Toolbar Title
         this.setTitle(R.string.java_title);
+
+        // Mvp 模式
+        this.findViewById(R.id.java_mvp).setOnClickListener(v -> {
+            // Mvp 模式
+            this.startActivity(new Intent(this, MvpActivity.class));
+        });
+
     }
 }

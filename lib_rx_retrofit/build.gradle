@@ -21,14 +21,24 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    // Java8
+    compileOptions {
+        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility JavaVersion.VERSION_1_8
+    }
+
 }
 
 dependencies {
-    //  Androidx配置
-    api rootProject.ext.androidx["constraint-layout"]
-    api rootProject.ext.androidx["recyclerview"]
-    api rootProject.ext.androidx["appcompat"]
-    api rootProject.ext.androidx["ktx"]
-    api rootProject.ext.androidx["kotlin"]
-    api rootProject.ext.androidx["material"]
+    // Base
+    api project(':lib_base')
+    // RxJava
+    api rootProject.ext.dependencies.rxjava
+    api rootProject.ext.dependencies.rxandroid
+    api rootProject.ext.dependencies.autodispose
+    // Retrofit
+    api rootProject.ext.dependencies.retrofit
+    api rootProject.ext.dependencies["converter-gson"]
+    api rootProject.ext.dependencies["adapter-rxjava"]
 }

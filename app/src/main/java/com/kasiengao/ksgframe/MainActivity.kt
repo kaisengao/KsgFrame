@@ -4,7 +4,7 @@ import android.content.Intent
 import androidx.appcompat.widget.AppCompatImageView
 import com.kasiengao.ksgframe.java.JavaActivity
 import com.kasiengao.ksgframe.kt.KtActivity
-import com.kasiengao.mvp.java.BaseToolbarActivity
+import com.kasiengao.mvp.kt.BaseToolbarActivity
 
 /**
  * @ClassName: MainActivity

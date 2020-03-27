@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.kasiengao.ksgframe">
 
+    <uses-permission android:name="android.permission.INTERNET"/>
+
     <application
         android:name="com.kasiengao.base.BaseApplication"
         android:allowBackup="false"
@@ -27,6 +29,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".kt.KtActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".java.mvp.MvpActivity"
             android:screenOrientation="portrait" />
     </application>
 

@@ -1,5 +1,6 @@
 package com.kasiengao.mvp.java;
 
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
@@ -60,6 +61,8 @@ public abstract class BaseToolbarActivity extends BaseActivity {
         if (this.mParentLinearLayout.getChildCount() > 0) {
             // 沉浸式状态栏 添加padding高度
             StatusBarUtil.setPaddingSmart(this, this.mParentLinearLayout.getChildAt(0));
+            StatusBarUtil.setStatusBarColor(this, R.color.white);
+            StatusBarUtil.darkMode(this);
         } else {
             // 如果没有添加Toolbar就移除沉浸式效果
             this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -155,4 +158,12 @@ public abstract class BaseToolbarActivity extends BaseActivity {
         }
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

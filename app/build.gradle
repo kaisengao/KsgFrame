@@ -39,4 +39,6 @@ dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     // MVP
     implementation project(':lib_mvp')
+    // Rx + Retrofit
+    implementation project(':lib_rx_retrofit')
 }
