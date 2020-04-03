@@ -24,8 +24,6 @@ public class MvpPresenter extends BasePresenter<MvpContract.IView> implements Mv
     public void requestTrailerList() {
         // Model层生成数据
         TrailerBean trailerBean = this.mModel.requestTrailerList();
-        // 在此处理逻辑数据等.......
-
         // 回调View层 模拟假数据 延迟3秒
         ThreadPool.MainThreadHandler.getInstance().post(() -> {
             getView().resultTrailerList(trailerBean);

@@ -8,6 +8,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.kasiengao.base.configure.ActivityManager;
+import com.kasiengao.base.loadsir.callback.ErrorCallback;
+import com.kasiengao.base.loadsir.callback.LoadingCallback;
+import com.kasiengao.base.loadsir.core.LoadSir;
 
 /**
  * @ClassName: BaseApplication
@@ -34,6 +37,18 @@ public class BaseApplication extends Application implements Application.Activity
         sApplication = this;
         // 管理Activity
         this.registerActivityLifecycleCallbacks(this);
+        // 初始化 LoadSir
+        this.initLoadSir();
+    }
+
+    /**
+     * 初始化 LoadSir
+     */
+    private void initLoadSir() {
+        LoadSir.beginBuilder()
+                .addCallback(new ErrorCallback())
+                .addCallback(new LoadingCallback())
+                .commit();
     }
 
     @Override

@@ -8,8 +8,14 @@
     <string name="kotlin_title">Kotlin版本</string>
 
     <string name="btn_mvp">MVP模式</string>
+    <string name="btn_rx_retrofit">RxRetrofit</string>
     <string name="btn_other">待定</string>
 
     <string name="mvp_title">Mvp模式</string>
+
+    <string name="rx_retrofit_title">RxRetrofit</string>
+    <string name="rx_retrofit_menu_normal">normal 请求</string>
+    <string name="rx_retrofit_menu_dialog">Dialog 请求</string>
+    <string name="rx_retrofit_menu_loadsir">LoadSir 请求</string>
 
 </resources>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--网络-->
+    <string name="net_not">网络不可用…</string>
+    <string name="net_time_out">网络连接异常…</string>
+    <string name="net_http_abnormal">服务器抛锚了，请刷新试试…</string>
+    <string name="net_json_catch">数据异常，请刷新试试…</string>
+
+</resources>

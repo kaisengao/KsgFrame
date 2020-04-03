@@ -33,6 +33,9 @@
         <activity
             android:name=".java.mvp.MvpActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".java.retrofit.RxRetrofitActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

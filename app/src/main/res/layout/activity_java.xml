@@ -16,11 +16,12 @@
             style="@style/btn_style"
             android:text="@string/btn_mvp" />
 
-        <!-- 待定-->
+        <!-- RxRetrofit-->
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/java_other"
+            android:id="@+id/java_rx_retrofit"
             style="@style/btn_style"
-            android:text="@string/btn_other" />
+            android:text="@string/btn_rx_retrofit"
+            android:textAllCaps="false" />
 
     </LinearLayout>
 
