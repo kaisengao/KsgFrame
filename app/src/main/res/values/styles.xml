@@ -8,6 +8,12 @@
         <item name="colorAccent">@color/colorAccent</item>
         <!-- 全屏透明状态栏 -->
         <item name="android:windowTranslucentStatus">true</item>
+
+        <item name="android:windowContentTransitions">true</item>
+    </style>
+
+    <style name="ShareElementAppTheme" parent="AppTheme">
+        <item name="android:windowContentTransitions">true</item>
     </style>
 
     <style name="btn_style">

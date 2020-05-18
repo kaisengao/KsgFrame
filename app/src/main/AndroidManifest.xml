@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.kasiengao.ksgframe">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:name="com.kasiengao.base.BaseApplication"
@@ -26,7 +26,8 @@
         </activity>
         <activity
             android:name=".java.JavaActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:theme="@style/ShareElementAppTheme" />
         <activity
             android:name=".kt.KtActivity"
             android:screenOrientation="portrait" />
@@ -36,6 +37,10 @@
         <activity
             android:name=".java.retrofit.RxRetrofitActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".java.element.ShareElementActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ShareElementAppTheme" />
     </application>
 
 </manifest>
