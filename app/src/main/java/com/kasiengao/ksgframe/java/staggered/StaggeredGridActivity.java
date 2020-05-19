@@ -1,20 +1,12 @@
 package com.kasiengao.ksgframe.java.staggered;
 
-import android.content.Intent;
-import android.view.View;
 import android.view.Window;
 
-import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.kasiengao.base.configure.ThreadPool;
 import com.kasiengao.ksgframe.R;
-import com.kasiengao.ksgframe.java.element.ShareElementActivity;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 
 /**
@@ -23,7 +15,7 @@ import com.kasiengao.mvp.java.BaseToolbarActivity;
  * @CreateDate: 2020/5/19 10:19
  * @Description: 瀑布流
  */
-public class StaggeredGridActivity extends BaseToolbarActivity implements OnItemClickListener {
+public class StaggeredGridActivity extends BaseToolbarActivity {
 
     private int mCount = 0;
 
@@ -68,8 +60,7 @@ public class StaggeredGridActivity extends BaseToolbarActivity implements OnItem
      */
     private void initAdapter() {
         // Adapter
-        this.mAdapter = new StaggeredGridAdapter();
-        this.mAdapter.setOnItemClickListener(this);
+        this.mAdapter = new StaggeredGridAdapter(this);
         this.mAdapter.getLoadMoreModule().setOnLoadMoreListener(() -> {
             ThreadPool.MainThreadHandler.getInstance().post(() -> {
                 // 计数
@@ -77,7 +68,7 @@ public class StaggeredGridActivity extends BaseToolbarActivity implements OnItem
                 // 添加更多
                 this.mAdapter.addData(this.mModel.requestGridBeans());
                 // 结束加载
-                if (mCount > 2) {
+                if (mCount >= 2) {
                     this.mAdapter.getLoadMoreModule().loadMoreEnd();
                 } else {
                     this.mAdapter.getLoadMoreModule().loadMoreComplete();
@@ -92,17 +83,5 @@ public class StaggeredGridActivity extends BaseToolbarActivity implements OnItem
         this.mRecyclerView.setLayoutManager(layoutManager);
         this.mRecyclerView.addItemDecoration(new StaggeredItemDecoration(20));
         this.mRecyclerView.setAdapter(mAdapter);
-    }
-
-    @Override
-    public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-        StaggeredGridBean gridBean = this.mAdapter.getData().get(position);
-        // ShareElement
-        Intent intent = new Intent(this, ShareElementActivity.class);
-        intent.putExtra(ShareElementActivity.DATA, gridBean);
-        intent.putExtra(ShareElementActivity.POSITION, position);
-        ActivityOptionsCompat activityOptionsCompat =
-                ActivityOptionsCompat.makeSceneTransitionAnimation(this, view, getString(R.string.share_element_picture) + position);
-        ActivityCompat.startActivity(this, intent, activityOptionsCompat.toBundle());
     }
 }

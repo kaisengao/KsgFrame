@@ -1,6 +1,9 @@
 package com.kasiengao.ksgframe.java.staggered;
 
+import com.kasiengao.ksgframe.java.element.PreviewBean;
+
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @ClassName: StaggeredGridBean
@@ -10,16 +13,12 @@ import java.io.Serializable;
  */
 public class StaggeredGridBean implements Serializable {
 
-    public String mPicture;
-
     public String mName;
 
     public String mContent;
 
     public String mDetailContent;
 
-    public int mWidth;
-
-    public int mHeight;
+    public List<PreviewBean> mPreviewBeans;
 
 }
