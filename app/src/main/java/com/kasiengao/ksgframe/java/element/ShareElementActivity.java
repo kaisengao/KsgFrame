@@ -1,7 +1,6 @@
 package com.kasiengao.ksgframe.java.element;
 
 import android.os.Bundle;
-import android.view.MenuItem;
 import android.view.ViewGroup;
 
 import androidx.appcompat.widget.AppCompatTextView;
@@ -114,13 +113,16 @@ public class ShareElementActivity extends BaseToolbarActivity {
         });
     }
 
-    @Override
 
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == android.R.id.home) {
-            this.finishAfterTransition();
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+    @Override
+    public void onBackPressed() {
+        this.finish();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+
+        overridePendingTransition(0, R.anim.anim_activity_right_exit);
     }
 }
