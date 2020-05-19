@@ -1,16 +1,11 @@
 package com.kasiengao.ksgframe.java;
 
 import android.content.Intent;
-import android.view.Window;
-
-import androidx.appcompat.widget.AppCompatImageButton;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ActivityOptionsCompat;
 
 import com.kasiengao.ksgframe.R;
-import com.kasiengao.ksgframe.java.element.ShareElementActivity;
 import com.kasiengao.ksgframe.java.mvp.MvpActivity;
 import com.kasiengao.ksgframe.java.retrofit.RxRetrofitActivity;
+import com.kasiengao.ksgframe.java.staggered.StaggeredGridActivity;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 
 /**
@@ -24,13 +19,6 @@ public class JavaActivity extends BaseToolbarActivity {
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_java;
-    }
-
-    @Override
-    protected void initWindow() {
-        super.initWindow();
-        // 打开FEATURE_CONTENT_TRANSITIONS开关(可选)，这个开关默认是打开的
-        super.requestWindowFeature(Window.FEATURE_CONTENT_TRANSITIONS);
     }
 
     @Override
@@ -48,14 +36,10 @@ public class JavaActivity extends BaseToolbarActivity {
             // Rx+Retrofit
             this.startActivity(new Intent(this, RxRetrofitActivity.class));
         });
-        // ShareElement
-        AppCompatImageButton shareElement = this.findViewById(R.id.java_share_element);
-        shareElement.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ShareElementActivity.class);
-            ActivityOptionsCompat activityOptionsCompat =
-                    ActivityOptionsCompat.makeSceneTransitionAnimation(this, shareElement, getString(R.string.share_element_name));
-            ActivityCompat.startActivity(this, intent, activityOptionsCompat.toBundle());
+        // StaggeredGrid
+        this.findViewById(R.id.java_staggered_grid).setOnClickListener(v -> {
+            // Rx+Retrofit
+            this.startActivity(new Intent(this, StaggeredGridActivity.class));
         });
-
     }
 }

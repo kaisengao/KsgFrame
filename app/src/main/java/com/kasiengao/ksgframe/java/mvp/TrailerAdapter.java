@@ -4,13 +4,14 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.RatingBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatRatingBar;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kasiengao.base.widget.KsgImageView;
+import com.kasiengao.base.util.GlideUtil;
 import com.kasiengao.ksgframe.R;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         TrailerBean.TrailersBean trailersBean = mVideoBeans.get(position);
 
-        holder.mIcon.setImageUrl(trailersBean.getCoverImg());
+        GlideUtil.loadImageRound(mContext, trailersBean.getCoverImg(), holder.mIcon,4);
         holder.mTitle.setText(trailersBean.getMovieName());
         holder.mSummary.setText(trailersBean.getType().toString());
         holder.mRating.setRating((float) (1 + Math.random() * (5 - 1 + 1)));
@@ -64,13 +65,12 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
         return mVideoBeans == null ? 0 : mVideoBeans.size();
     }
 
-
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final KsgImageView mIcon;
-        private final TextView mTitle;
-        private final TextView mSummary;
-        private final RatingBar mRating;
+        private final AppCompatImageView mIcon;
+        private final AppCompatTextView mTitle;
+        private final AppCompatTextView mSummary;
+        private final AppCompatRatingBar mRating;
 
         private ViewHolder(final View itemView) {
             super(itemView);

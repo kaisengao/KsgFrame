@@ -9,10 +9,11 @@
         <!-- 全屏透明状态栏 -->
         <item name="android:windowTranslucentStatus">true</item>
 
-        <item name="android:windowContentTransitions">true</item>
+
     </style>
 
     <style name="ShareElementAppTheme" parent="AppTheme">
+        <!--允许启用窗口内容转换效果-->
         <item name="android:windowContentTransitions">true</item>
     </style>
 

@@ -13,7 +13,9 @@
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="LockedOrientationActivity">
+        android:networkSecurityConfig="@xml/network_security_config"
+        tools:ignore="LockedOrientationActivity"
+        tools:targetApi="n">
 
         <activity
             android:name=".MainActivity"
@@ -26,8 +28,7 @@
         </activity>
         <activity
             android:name=".java.JavaActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/ShareElementAppTheme" />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".kt.KtActivity"
             android:screenOrientation="portrait" />
@@ -37,6 +38,10 @@
         <activity
             android:name=".java.retrofit.RxRetrofitActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".java.staggered.StaggeredGridActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/ShareElementAppTheme"/>
         <activity
             android:name=".java.element.ShareElementActivity"
             android:screenOrientation="portrait"

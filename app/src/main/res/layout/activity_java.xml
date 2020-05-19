@@ -24,15 +24,23 @@
             style="@style/btn_style"
             android:text="@string/btn_rx_retrofit"
             android:textAllCaps="false" />
-        <!-- ShareElement-->
-        <androidx.appcompat.widget.AppCompatImageButton
-            android:id="@+id/java_share_element"
-            android:layout_width="match_parent"
-            android:layout_height="210dp"
-            android:scaleType="centerCrop"
-            android:background="@null"
-            android:src="@drawable/conan"
-            android:transitionName="@string/share_element_name" />
+
+        <!-- StaggeredGrid-->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/java_staggered_grid"
+            style="@style/btn_style"
+            android:text="@string/btn_staggered_grid"
+            android:textAllCaps="false" />
+
+        <!--        &lt;!&ndash; ShareElement&ndash;&gt;-->
+        <!--        <androidx.appcompat.widget.AppCompatImageButton-->
+        <!--            android:id="@+id/java_share_element"-->
+        <!--            android:layout_width="match_parent"-->
+        <!--            android:layout_height="210dp"-->
+        <!--            android:background="@null"-->
+        <!--            android:scaleType="centerCrop"-->
+        <!--            android:src="@drawable/conan"-->
+        <!--            android:transitionName="@string/share_element_name" />-->
 
     </LinearLayout>
 

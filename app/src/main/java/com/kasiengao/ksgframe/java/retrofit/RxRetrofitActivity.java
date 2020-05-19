@@ -9,9 +9,12 @@ import com.kaisengao.retrofit.RxCompose;
 import com.kaisengao.retrofit.observer.BaseDialogObserver;
 import com.kaisengao.retrofit.observer.BaseLoadSirObserver;
 import com.kaisengao.retrofit.observer.BaseRxObserver;
-import com.kasiengao.base.util.KLog;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
+
+import java.util.concurrent.TimeUnit;
+
+import io.reactivex.Observable;
 
 /**
  * @ClassName: RxRetrofitActivity
@@ -35,8 +38,17 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
         super.initWidget();
         // Toolbar Title
         this.setTitle(R.string.rx_retrofit_title);
+
         this.mMessage = findViewById(R.id.message);
+    }
+
+    @Override
+    protected void initData() {
+        super.initData();
+        // Model
         this.mModel = new RxRetrofitModel();
+        // 默认请求
+        this.requestLoadSir();
     }
 
     @Override
@@ -68,8 +80,7 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
      */
     private void requestNormal() {
 
-        this.mModel
-                .requestNewsTop()
+        this.requestNewsTop()
                 .as(RxCompose.bindLifecycle(this))
                 .subscribe(new BaseRxObserver<NewsTopBean>(this) {
                     @Override
@@ -87,8 +98,7 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
      */
     private void requestDialog() {
 
-        this.mModel
-                .requestNewsTop()
+        this.requestNewsTop()
                 .as(RxCompose.bindLifecycle(this))
                 .subscribe(new BaseDialogObserver<NewsTopBean>(this) {
                     @Override
@@ -106,13 +116,11 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
      */
     private void requestLoadSir() {
 
-        this.mModel
-                .requestNewsTop()
+        this.requestNewsTop()
                 .as(RxCompose.bindLifecycle(this))
                 .subscribe(new BaseLoadSirObserver<NewsTopBean>(this, getInflate()) {
                     @Override
                     protected void onResult(NewsTopBean topBean) {
-                        KLog.d("3 +" + topBean);
 
                         if (topBean != null) {
                             mMessage.setText(topBean.toString());
@@ -121,8 +129,21 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
 
                     @Override
                     protected void onReload(Object target) {
-
+                        // Reload
+                        requestLoadSir();
                     }
                 });
+    }
+
+    /**
+     * 聚合数据 新闻
+     */
+    private Observable<NewsTopBean> requestNewsTop() {
+        // 延时 3 秒
+        Observable<Long> timer = Observable.timer(3, TimeUnit.SECONDS);
+        // 聚合数据
+        Observable<NewsTopBean> newsTop = this.mModel.requestNewsTop();
+        // zip
+        return Observable.zip(timer, newsTop, (aLong, newsTopBean) -> newsTopBean);
     }
 }

@@ -31,4 +31,11 @@ dependencies {
     api rootProject.ext.androidx["ktx"]
     api rootProject.ext.androidx["kotlin"]
     api rootProject.ext.androidx["material"]
+    // Glide图片加载库
+    api(rootProject.ext.dependencies.glide) {
+        exclude group: 'com.android.support'
+    }
+    annotationProcessor rootProject.ext.dependencies["glide-compiler"]
+    // BaseRecyclerViewAdapterHelper
+    api rootProject.ext.dependencies["recycler-adapter"]
 }

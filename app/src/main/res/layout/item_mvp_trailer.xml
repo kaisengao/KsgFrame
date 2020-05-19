@@ -7,7 +7,7 @@
     android:background="?attr/selectableItemBackground"
     android:padding="12dp">
 
-    <com.kasiengao.base.widget.KsgImageView
+    <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/item_video_icon"
         android:layout_width="120dp"
         android:layout_height="80dp"
