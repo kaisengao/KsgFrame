@@ -36,7 +36,7 @@ public class StaggeredGridAdapter extends BaseQuickAdapter<StaggeredGridBean, St
     public StaggeredGridAdapter(AppCompatActivity compatActivity) {
         super(R.layout.item_staggered_grid);
         this.mCompatActivity = compatActivity;
-        super.getLoadMoreModule().setEnableLoadMoreIfNotFullPage(false);
+        this.getLoadMoreModule().setEnableLoadMoreIfNotFullPage(false);
     }
 
     @Override
@@ -45,17 +45,15 @@ public class StaggeredGridAdapter extends BaseQuickAdapter<StaggeredGridBean, St
         if (item.mPreviewBeans != null && !item.mPreviewBeans.isEmpty()) {
             // 默认显示第一张图
             PreviewBean previewBean = item.mPreviewBeans.get(0);
-            // 获取item宽度，计算图片等比例缩放后的高度，为imageView设置参数
+            // 等比例缩放宽高
+            int[] screenSize = DensityUtil.scaleScreenSize(getContext(), previewBean.mWidth, previewBean.mHeight, 2);
+            // 更新宽高
             ViewGroup.LayoutParams layoutParams = holder.mPicture.getLayoutParams();
-            int itemWidth = (int) (DensityUtil.getWidthInPx(getContext())) / 2;
-            float scale = (itemWidth + 0f) / previewBean.mWidth;
-            int itemHeight = (int) (previewBean.mHeight * scale);
-            // 重新赋值
-            layoutParams.width = itemWidth;
-            layoutParams.height = itemHeight;
+            layoutParams.width = screenSize[0];
+            layoutParams.height = screenSize[1];
             holder.mPicture.setLayoutParams(layoutParams);
             // Load
-            GlideUtil.loadImage(getContext(), previewBean.mMediaUrl, itemWidth, itemHeight, holder.mPicture);
+            GlideUtil.loadImage(getContext(), previewBean.mMediaUrl, layoutParams.width, layoutParams.height, holder.mPicture);
         }
 
         holder.mName.setText(item.mName);

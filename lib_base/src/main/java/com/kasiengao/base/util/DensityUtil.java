@@ -70,18 +70,25 @@ public final class DensityUtil {
         return new int[]{displayMetrics.widthPixels, displayMetrics.heightPixels};
     }
 
-    /**
-     * 使用dp单位
-     *
-     * @param context
-     * @param value
-     * @return
-     */
     public static int getDp(Context context, float value) {
         return ((int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, value, context.getResources().getDisplayMetrics()));
     }
 
     public static Float getFloat(Float value, Float minValue, Float maxValue) {
         return Math.min(maxValue, Math.max(minValue, value));
+    }
+
+    /**
+     * 等比例缩放 View 宽高
+     *
+     * @param width  宽度
+     * @param height 高度
+     * @param scale  缩放比例
+     * @return int[宽, 高]
+     */
+    public static int[] scaleScreenSize(Context context, int width, int height, int scale) {
+        int itemWidth = (int) (DensityUtil.getWidthInPx(context)) / scale;
+        int itemHeight = (int) (height * ((itemWidth + 0f) / width));
+        return new int[]{itemWidth, itemHeight};
     }
 }

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- 视图-->
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/layout_preview_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never" />
+
+    <!-- 预览图-->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/layout_preview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+    <!-- 页数-->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/layout_preview_pager_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="end"
+        android:layout_marginTop="14dp"
+        android:layout_marginEnd="14dp"
+        android:background="@drawable/shape_preview_count"
+        android:paddingStart="8dp"
+        android:paddingTop="2dp"
+        android:paddingEnd="8dp"
+        android:paddingBottom="3dp"
+        android:text="@string/preview_count"
+        android:textColor="@color/white"
+        tools:text="1/2" />
+
+</FrameLayout>

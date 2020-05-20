@@ -22,6 +22,7 @@ public final class GlideUtil {
      */
     public static void loadImage(Context context, String url, ImageView imageView) {
         Glide.with(context)
+                .asBitmap()
                 .load(url)
                 .priority(Priority.HIGH)
 //                .error(failureIcon)
