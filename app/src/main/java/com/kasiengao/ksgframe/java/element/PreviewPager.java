@@ -5,7 +5,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
@@ -15,9 +14,13 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.kasiengao.base.util.DensityUtil;
-import com.kasiengao.base.util.GlideUtil;
 import com.kasiengao.ksgframe.R;
+import com.ksg.ksgplayer.entity.DataSource;
+import com.ksg.ksgplayer.widget.KsgVideoPlayer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +31,7 @@ import java.util.List;
  * @CreateDate: 2020/5/20 10:43
  * @Description: 自适应 Banner
  */
-public class PreviewPager<T extends IPreviewPagerParams> extends FrameLayout implements ViewPager.OnPageChangeListener {
+public class PreviewPager<T extends IPreviewParams> extends FrameLayout implements ViewPager.OnPageChangeListener {
 
     private int mNormalHeight = 0;
 
@@ -36,9 +39,7 @@ public class PreviewPager<T extends IPreviewPagerParams> extends FrameLayout imp
 
     private ViewPager mViewPager;
 
-    private AppCompatImageView mPreview;
-
-    private AppCompatTextView mViewPagerCount;
+    private AppCompatTextView mPagerCount;
 
     private PreviewPagerAdapter<T> mPagerAdapter;
 
@@ -66,15 +67,14 @@ public class PreviewPager<T extends IPreviewPagerParams> extends FrameLayout imp
      */
     private void initView() {
         View inflate = LayoutInflater.from(getContext()).inflate(R.layout.layout_preview_pager, this, true);
-        this.mPreview = inflate.findViewById(R.id.layout_preview);
         this.mViewPager = inflate.findViewById(R.id.layout_preview_pager);
         this.mViewPager.addOnPageChangeListener(this);
         this.mViewPager.setAdapter(mPagerAdapter = new PreviewPagerAdapter<>());
-        this.mViewPagerCount = inflate.findViewById(R.id.layout_preview_pager_count);
+        this.mPagerCount = inflate.findViewById(R.id.layout_pager_count);
     }
 
     /**
-     * 赋值 媒体数据列表
+     * 配置 媒体数据列表
      *
      * @param mediaList mediaList
      */
@@ -84,6 +84,8 @@ public class PreviewPager<T extends IPreviewPagerParams> extends FrameLayout imp
         this.setLayoutParams(this.mMediaList.get(0));
         // 配置 ViewPager 页数
         this.setCurrentCount();
+        // 配置 Data
+        this.mPagerAdapter.setMediaList(this.mMediaList);
     }
 
     /**
@@ -91,28 +93,20 @@ public class PreviewPager<T extends IPreviewPagerParams> extends FrameLayout imp
      *
      * @param pagerParams pagerParams
      */
-    private void setLayoutParams(IPreviewPagerParams pagerParams) {
+    private void setLayoutParams(IPreviewParams pagerParams) {
         // 等比例缩放宽高
         int[] screenSize = DensityUtil.scaleScreenSize(getContext(), pagerParams.getWidth(), pagerParams.getHeight(), 1);
         this.mNormalHeight = screenSize[1];
         this.getLayoutParams().width = screenSize[0];
         this.getLayoutParams().height = screenSize[1];
         this.setLayoutParams(getLayoutParams());
-
-        // 显示预览图
-        ViewGroup.LayoutParams layoutParams = this.mPreview.getLayoutParams();
-        layoutParams.width = screenSize[0];
-        layoutParams.height = screenSize[1];
-        this.mPreview.setLayoutParams(layoutParams);
-
-        GlideUtil.loadImage(getContext(), pagerParams.getMediaUrl(), this.mPreview);
     }
 
     /**
      * 配置 ViewPager 页数
      */
     private void setCurrentCount() {
-        this.mViewPagerCount.setText(String.format(getContext().getString(R.string.preview_count), (this.mViewPager.getCurrentItem() + 1), this.mMediaList.size()));
+        this.mPagerCount.setText(String.format(getContext().getString(R.string.preview_count), (this.mViewPager.getCurrentItem() + 1), this.mMediaList.size()));
     }
 
     @Override
@@ -124,9 +118,9 @@ public class PreviewPager<T extends IPreviewPagerParams> extends FrameLayout imp
         // 高度数据
         int[] itemHeight = mPagerAdapter.getItemHeight();
         // 动态配置ViewPager高度达到自适应效果
-        getLayoutParams().height = (int) ((itemHeight[position] == 0 ? mNormalHeight : itemHeight[position]) * (1 - positionOffset) +
+        this.getLayoutParams().height = (int) ((itemHeight[position] == 0 ? mNormalHeight : itemHeight[position]) * (1 - positionOffset) +
                 (itemHeight[position + 1] == 0 ? mNormalHeight : itemHeight[position + 1]) * positionOffset);
-        setLayoutParams(getLayoutParams());
+        this.setLayoutParams(getLayoutParams());
     }
 
     @Override
@@ -141,27 +135,11 @@ public class PreviewPager<T extends IPreviewPagerParams> extends FrameLayout imp
     }
 
     /**
-     * 刷新 Adapter
-     */
-    public void notifyDataSetChanged() {
-        this.mPagerAdapter.setMediaList(this.mMediaList);
-
-        this.mViewPager.getViewTreeObserver().addOnDrawListener(new ViewTreeObserver.OnDrawListener() {
-            @Override
-            public void onDraw() {
-                // 隐藏预览图
-                mPreview.setVisibility(View.GONE);
-//                mViewPager.getViewTreeObserver().removeOnDrawListener(this);
-            }
-        });
-    }
-
-    /**
      * Adapter
      *
-     * @param <T> {@link IPreviewPagerParams}
+     * @param <T> {@link IPreviewParams}
      */
-    static class PreviewPagerAdapter<T extends IPreviewPagerParams> extends PagerAdapter {
+    static class PreviewPagerAdapter<T extends IPreviewParams> extends PagerAdapter {
 
         private int[] mItemHeight;
 
@@ -198,36 +176,47 @@ public class PreviewPager<T extends IPreviewPagerParams> extends FrameLayout imp
         @NonNull
         @Override
         public Object instantiateItem(@NonNull ViewGroup container, int position) {
-            // Data
-            IPreviewPagerParams pagerParams = this.mMediaList.get(position);
+            T pagerParams = this.mMediaList.get(position);
             // RootView
-            FrameLayout itemView = new FrameLayout(container.getContext());
-            container.addView(itemView);
-            // AddItemView
-            this.addItemView(pagerParams, position, itemView);
-            // Return
-            return itemView;
-        }
-
-        private void addItemView(IPreviewPagerParams pagerParams, int position, FrameLayout rooView) {
+            View itemView = View.inflate(container.getContext(), R.layout.layout_preview_item, null);
+            // 预览图
+            SimpleDraweeView imageView = itemView.findViewById(R.id.item_preview_image);
+            // 等比例缩放宽高
+            int[] screenSize = DensityUtil.scaleScreenSize(container.getContext(), pagerParams.getWidth(), pagerParams.getHeight(), 1);
+            // 存储高度
+            this.mItemHeight[position] = screenSize[1];
+            // LoadImage
+            DraweeController draweeController = Fresco.newDraweeControllerBuilder()
+                    .setUri(pagerParams.getPictureUrl())
+                    // 设置加载图片完成后是否直接进行播放
+                    .setAutoPlayAnimations(true)
+                    .build();
+            imageView.setController(draweeController);
+            // Play按钮
+            AppCompatImageView videoPlay = itemView.findViewById(R.id.item_preview_play);
+            KsgVideoPlayer videoPlayer = imageView.findViewById(R.id.item_preview_player);
             // 类型区分
             switch (pagerParams.getMediaType()) {
                 case "image":
-                    AppCompatImageView imageView = new AppCompatImageView(rooView.getContext());
-                    // Add
-                    rooView.addView(imageView);
-                    // 等比例缩放宽高
-                    int[] screenSize = DensityUtil.scaleScreenSize(rooView.getContext(), pagerParams.getWidth(), pagerParams.getHeight(), 1);
-                    // 存储高度
-                    this.mItemHeight[position] = screenSize[1];
-                    // LoadImage
-                    GlideUtil.loadImage(rooView.getContext(), pagerParams.getMediaUrl(), imageView);
+                    // AddView
+
                     break;
                 case "video":
+                    videoPlay.setVisibility(View.VISIBLE);
+                    videoPlayer.setVisibility(View.VISIBLE);
+                    videoPlayer.setDecoderView(new KsgIjkPlayer(container.getContext()));
+
+                    DataSource dataSource = new DataSource(pagerParams.getVideoUrl());
+
+                    videoPlayer.setDataSource(dataSource);
+                    videoPlayer.start();
                     break;
                 default:
                     break;
             }
+            container.addView(itemView);
+            // Return
+            return itemView;
         }
     }
 }

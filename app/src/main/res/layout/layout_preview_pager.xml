@@ -2,23 +2,18 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="match_parent">
 
     <!-- 视图-->
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/layout_preview_pager"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:overScrollMode="never" />
 
-    <!-- 预览图-->
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/layout_preview"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
     <!-- 页数-->
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/layout_preview_pager_count"
+        android:id="@+id/layout_pager_count"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"

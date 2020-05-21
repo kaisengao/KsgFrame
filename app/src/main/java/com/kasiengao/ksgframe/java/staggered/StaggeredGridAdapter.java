@@ -6,7 +6,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ActivityOptionsCompat;
@@ -15,8 +14,10 @@ import androidx.core.view.ViewCompat;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.module.LoadMoreModule;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
+import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.interfaces.DraweeController;
+import com.facebook.drawee.view.SimpleDraweeView;
 import com.kasiengao.base.util.DensityUtil;
-import com.kasiengao.base.util.GlideUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.element.PreviewBean;
 import com.kasiengao.ksgframe.java.element.ShareElementActivity;
@@ -33,7 +34,7 @@ public class StaggeredGridAdapter extends BaseQuickAdapter<StaggeredGridBean, St
 
     private AppCompatActivity mCompatActivity;
 
-    public StaggeredGridAdapter(AppCompatActivity compatActivity) {
+    StaggeredGridAdapter(AppCompatActivity compatActivity) {
         super(R.layout.item_staggered_grid);
         this.mCompatActivity = compatActivity;
         this.getLoadMoreModule().setEnableLoadMoreIfNotFullPage(false);
@@ -52,19 +53,21 @@ public class StaggeredGridAdapter extends BaseQuickAdapter<StaggeredGridBean, St
             layoutParams.width = screenSize[0];
             layoutParams.height = screenSize[1];
             holder.mPicture.setLayoutParams(layoutParams);
-            // Load
-            GlideUtil.loadImage(getContext(), previewBean.mMediaUrl, layoutParams.width, layoutParams.height, holder.mPicture);
+            // LoadImage
+            DraweeController controller = Fresco.newDraweeControllerBuilder()
+                    .setUri(previewBean.mPictureUrl)
+                    .setAutoPlayAnimations(true)
+                    .build();
+            holder.mPicture.setController(controller);
         }
 
         holder.mName.setText(item.mName);
         holder.mContent.setText(item.mContent);
-
-        ViewCompat.setTransitionName(holder.mPicture, getContext().getString(R.string.share_element_picture) + holder.getLayoutPosition());
     }
 
     class ViewHolder extends BaseViewHolder {
 
-        private final AppCompatImageView mPicture;
+        private final SimpleDraweeView mPicture;
         private final AppCompatTextView mName;
         private final AppCompatTextView mContent;
 
@@ -74,6 +77,8 @@ public class StaggeredGridAdapter extends BaseQuickAdapter<StaggeredGridBean, St
             this.mPicture = itemView.findViewById(R.id.item_staggered_grid_picture);
             this.mName = itemView.findViewById(R.id.item_staggered_grid_name);
             this.mContent = itemView.findViewById(R.id.item_staggered_grid_content);
+
+            ViewCompat.setTransitionName(mPicture, getContext().getString(R.string.share_element_picture) + getLayoutPosition());
 
             itemView.setOnClickListener(v -> {
                 int layoutPosition = getLayoutPosition();

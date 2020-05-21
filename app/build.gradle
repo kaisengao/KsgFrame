@@ -37,8 +37,12 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
+    // Ijk
+    implementation "tv.danmaku.ijk.media:ijkplayer-java:0.8.8"
     // MVP
     implementation project(':lib_mvp')
     // Rx + Retrofit
     implementation project(':lib_rx_retrofit')
+    // KsgPlayer
+    implementation project(':lib_ksgPlayer')
 }

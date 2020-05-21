@@ -10,10 +10,10 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.facebook.drawee.view.SimpleDraweeView
             android:id="@+id/item_staggered_grid_picture"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:transitionName="@string/share_element_picture"
             tools:src="#00f" />
 

@@ -19,6 +19,8 @@
     <string name="rx_retrofit_menu_dialog">Dialog 请求</string>
     <string name="rx_retrofit_menu_loadsir">LoadSir 请求</string>
 
+    <string name="staggered_grid_title">图片缓存（%s）</string>
+
     <string name="share_element_title">ShareElement</string>
     <string name="share_element_picture">picture_</string>
     <string name="share_element_content">content_</string>

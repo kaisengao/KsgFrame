@@ -20,6 +20,7 @@ public class StaggeredGridModel {
         // 集合对象
         List<StaggeredGridBean> gridBeans = new ArrayList<>();
 
+        gridBeans.add(createBean0());
         gridBeans.add(createBean1());
         gridBeans.add(createBean2());
         gridBeans.add(createBean3());
@@ -157,6 +158,24 @@ public class StaggeredGridModel {
         return gridBeans;
     }
 
+    private StaggeredGridBean createBean0() {
+        StaggeredGridBean gridBean = new StaggeredGridBean();
+
+        gridBean.mName = "九龙不败 终极版预告";
+        gridBean.mContent = "张晋《九龙不败》终极预告现飞龙出海";
+        gridBean.mDetailContent = "张晋《九龙不败》终极预告现飞龙出海";
+
+        List<PreviewBean> previewBeans = new ArrayList<>();
+
+        previewBeans.add(createPreview(1000, 562, "video",
+                "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1931435122,2201742156&fm=26&gp=0.jpg",
+                "http://vfx.mtime.cn/Video/2019/06/27/mp4/190627104816316366.mp4"));
+
+        gridBean.mPreviewBeans = previewBeans;
+
+        return gridBean;
+    }
+
     private StaggeredGridBean createBean1() {
         StaggeredGridBean gridBean = new StaggeredGridBean();
 
@@ -168,7 +187,13 @@ public class StaggeredGridModel {
 
         List<PreviewBean> previewBeans = new ArrayList<>();
 
-        previewBeans.add(createPreview(290, 200, "image",
+        previewBeans.add(createPreview(700, 350, "image",
+                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589973046620&di=a1bea927f4af23b0791f7f0ca93fdf1d&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201411%2F27%2F20141127112915_PPPFV.thumb.700_0.gif"));
+
+        previewBeans.add(createPreview(474, 842, "image",
+                "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2259647140,2312250263&fm=26&gp=0.jpg"));
+
+        previewBeans.add(createPreview(700, 319, "image",
                 "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589973046620&di=a1bea927f4af23b0791f7f0ca93fdf1d&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201411%2F27%2F20141127112915_PPPFV.thumb.700_0.gif"));
 
         previewBeans.add(createPreview(580, 319, "image",
@@ -176,9 +201,6 @@ public class StaggeredGridModel {
 
         previewBeans.add(createPreview(800, 480, "image",
                 "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589952204408&di=7d2762e7dbf5d6127c5aa6ee641f4333&imgtype=0&src=http%3A%2F%2Fsinastorage.com%2Fdata.ent.sina.com.cn%2Fmovie%2Fstills%2F9801%2F2b83c1717f6515c1d165979b58360610.jpg"));
-
-        previewBeans.add(createPreview(474, 842, "image",
-                "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2259647140,2312250263&fm=26&gp=0.jpg"));
 
         gridBean.mPreviewBeans = previewBeans;
 
@@ -381,12 +403,23 @@ public class StaggeredGridModel {
      * @param width  资源高度
      * @param height 资源宽度
      */
-    private PreviewBean createPreview(int width, int height, String type, String mediaUrl) {
+    private PreviewBean createPreview(int width, int height, String type, String pictureUrl) {
+        return this.createPreview(width, height, type, pictureUrl, "");
+    }
+
+    /**
+     * 生成 预览数据
+     *
+     * @param width  资源高度
+     * @param height 资源宽度
+     */
+    private PreviewBean createPreview(int width, int height, String type, String pictureUrl, String videoUrl) {
         PreviewBean previewBean = new PreviewBean();
         previewBean.mWidth = width;
         previewBean.mHeight = height;
         previewBean.mMediaType = type;
-        previewBean.mMediaUrl = mediaUrl;
+        previewBean.mPictureUrl = pictureUrl;
+        previewBean.mVideoUrl = videoUrl;
         return previewBean;
     }
 }

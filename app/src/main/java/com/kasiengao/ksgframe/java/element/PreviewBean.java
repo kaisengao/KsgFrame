@@ -8,7 +8,7 @@ import java.io.Serializable;
  * @CreateDate: 2020/5/19 16:31
  * @Description: 预览资源 Bean
  */
-public class PreviewBean implements IPreviewPagerParams, Serializable {
+public class PreviewBean implements IPreviewParams, Serializable {
 
     public int mWidth;
 
@@ -16,7 +16,9 @@ public class PreviewBean implements IPreviewPagerParams, Serializable {
 
     public String mMediaType;
 
-    public String mMediaUrl;
+    public String mPictureUrl;
+
+    public String mVideoUrl;
 
     @Override
     public int getWidth() {
@@ -34,8 +36,12 @@ public class PreviewBean implements IPreviewPagerParams, Serializable {
     }
 
     @Override
-    public String getMediaUrl() {
-        return this.mMediaUrl;
+    public String getPictureUrl() {
+        return this.mPictureUrl;
     }
 
+    @Override
+    public String getVideoUrl() {
+        return mVideoUrl;
+    }
 }

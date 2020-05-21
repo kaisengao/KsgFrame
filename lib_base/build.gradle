@@ -32,10 +32,11 @@ dependencies {
     api rootProject.ext.androidx["kotlin"]
     api rootProject.ext.androidx["material"]
     // Glide图片加载库
-    api(rootProject.ext.dependencies.glide) {
-        exclude group: 'com.android.support'
-    }
+    api rootProject.ext.dependencies.glide
     annotationProcessor rootProject.ext.dependencies["glide-compiler"]
+    // Fresco
+    api rootProject.ext.dependencies.fresco
+    api rootProject.ext.dependencies["fresco-gif"]
     // BaseRecyclerViewAdapterHelper
     api rootProject.ext.dependencies["recycler-adapter"]
 }

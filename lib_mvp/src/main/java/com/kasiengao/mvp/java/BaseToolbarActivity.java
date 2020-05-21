@@ -161,9 +161,16 @@ public abstract class BaseToolbarActivity extends BaseActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            this.finish();
+            this.onClickBack();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 返回键
+     */
+    protected void onClickBack() {
+        this.finish();
     }
 }
