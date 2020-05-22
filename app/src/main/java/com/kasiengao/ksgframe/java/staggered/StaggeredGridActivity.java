@@ -87,7 +87,7 @@ public class StaggeredGridActivity extends BaseToolbarActivity {
                     } else {
                         this.mAdapter.getLoadMoreModule().loadMoreComplete();
                     }
-                }, 3000));
+                }, 1000));
         // recycler
         RecyclerView recyclerView = findViewById(R.id.java_staggered_gird);
         // Recycler

@@ -3,110 +3,186 @@ package com.ksg.ksgplayer.listener;
 import android.os.Bundle;
 
 import com.ksg.ksgplayer.player.IKsgPlayer;
-import com.ksg.ksgplayer.proxy.TimerCounterProxy;
 
 /**
- * @author kaisengao
- * @create: 2019/1/7 14:25
- * @describe: 播放器的播放、准备事件
+ * @ClassName: OnPlayerEventListener
+ * @Author: KaiSenGao
+ * @CreateDate: 2020/5/22 13:22
+ * @Description: 播放器的基础事件
  */
 public interface OnPlayerEventListener {
 
     /**
-     * 直播
-     */
-    int PLAYER_EVENT_ON_LIVE = -99000;
-
-    /**
-     * 设置数据源
+     * when decoder set data source
      */
     int PLAYER_EVENT_ON_DATA_SOURCE_SET = -99001;
 
     /**
-     * start {@link IKsgPlayer#start()}
+     * when surface holder update
      */
-    int PLAYER_EVENT_ON_START = -99002;
+    int PLAYER_EVENT_ON_SURFACE_HOLDER_UPDATE = -99002;
 
     /**
-     * pause {@link IKsgPlayer#pause()}
+     * when surface update
      */
-    int PLAYER_EVENT_ON_PAUSE = -99003;
+    int PLAYER_EVENT_ON_SURFACE_UPDATE = -99003;
 
     /**
-     * resume {@link IKsgPlayer#resume()}
+     * when you call {@link IKsgPlayer#start()}
      */
-    int PLAYER_EVENT_ON_RESUME = -99004;
+    int PLAYER_EVENT_ON_START = -99004;
 
     /**
-     * stop {@link IKsgPlayer#stop()}
+     * when you call {@link IKsgPlayer#pause()}
      */
-    int PLAYER_EVENT_ON_STOP = -99005;
+    int PLAYER_EVENT_ON_PAUSE = -99005;
 
     /**
-     * reset {@link IKsgPlayer#reset()}
+     * when you call {@link IKsgPlayer#resume()}
      */
-    int PLAYER_EVENT_ON_RESET = -99006;
+    int PLAYER_EVENT_ON_RESUME = -99006;
 
     /**
-     * destroy {@link IKsgPlayer#destroy()}
+     * when you call {@link IKsgPlayer#stop()}
      */
-    int PLAYER_EVENT_ON_DESTROY = -99007;
+    int PLAYER_EVENT_ON_STOP = -99007;
 
     /**
-     * 开始缓冲流
+     * when you call {@link IKsgPlayer#reset()}
      */
-    int PLAYER_EVENT_ON_BUFFERING_START = -99008;
+    int PLAYER_EVENT_ON_RESET = -99008;
 
     /**
-     * 缓冲流结束
+     * when you call {@link IKsgPlayer#destroy()}
      */
-    int PLAYER_EVENT_ON_BUFFERING_END = -99009;
+    int PLAYER_EVENT_ON_DESTROY = -99009;
 
     /**
-     * seekTo {@link IKsgPlayer#seekTo(int)}
+     * when decoder start buffering stream
      */
-    int PLAYER_EVENT_ON_SEEK_TO = -99010;
+    int PLAYER_EVENT_ON_BUFFERING_START = -99010;
 
     /**
-     * 开始渲染视频
+     * when decoder buffering stream end
      */
-    int PLAYER_EVENT_ON_VIDEO_RENDER_START = -99011;
+    int PLAYER_EVENT_ON_BUFFERING_END = -99011;
 
     /**
-     * 播放完成
+     * when decoder buffering percentage update
      */
-    int PLAYER_EVENT_ON_PLAY_COMPLETE = -99012;
+    @Deprecated
+    int PLAYER_EVENT_ON_BUFFERING_UPDATE = -99012;
 
     /**
-     * 视频大小变化
+     * when you call {@link IKsgPlayer#seekTo(int)}
      */
-    int PLAYER_EVENT_ON_VIDEO_SIZE_CHANGE = -99013;
+    int PLAYER_EVENT_ON_SEEK_TO = -99013;
 
     /**
-     * 译码器准备
+     * when seek complete
      */
-    int PLAYER_EVENT_ON_PREPARED = -99014;
+    int PLAYER_EVENT_ON_SEEK_COMPLETE = -99014;
 
     /**
-     * 定时器更新 {@link TimerCounterProxy}
-     * 如果计时器停止,你不能接收这个事件代码.
+     * when player start render video stream
      */
-    int PLAYER_EVENT_ON_TIMER_UPDATE = -99015;
+    int PLAYER_EVENT_ON_VIDEO_RENDER_START = -99015;
 
     /**
-     * 播放进度更新 {@link OnPlaybackProgressListener}
+     * when play complete
      */
-    int PLAYER_EVENT_ON_PLAYBACK_PROGRESS = -99016;
+    int PLAYER_EVENT_ON_PLAY_COMPLETE = -99016;
 
     /**
-     * 播放状态更新
+     * on video size change
      */
-    int PLAYER_EVENT_ON_STATUS_CHANGE = -99017;
+    int PLAYER_EVENT_ON_VIDEO_SIZE_CHANGE = -99017;
 
     /**
-     * 网络环境不佳警告
+     * on decoder prepared
      */
-    int PLAYER_EVENT_ON_NET_BUSY = -99018;
+    int PLAYER_EVENT_ON_PREPARED = -99018;
+
+    /**
+     * NONE
+     */
+    int PLAYER_EVENT_ON_NONE = -99019;
+
+    /**
+     * on get video rotation.
+     */
+    int PLAYER_EVENT_ON_VIDEO_ROTATION_CHANGED = 99020;
+
+    /**
+     * when player start render audio stream
+     */
+    int PLAYER_EVENT_ON_AUDIO_RENDER_START = -99021;
+
+    /**
+     * when audio decoder start
+     */
+    int PLAYER_EVENT_ON_AUDIO_DECODER_START = -99022;
+
+    /**
+     * when audio seek rendering start
+     */
+    int PLAYER_EVENT_ON_AUDIO_SEEK_RENDERING_START = -99023;
+
+    /**
+     * network bandwidth
+     */
+    int PLAYER_EVENT_ON_NETWORK_BANDWIDTH = -99024;
+
+    /**
+     * bad interleaving
+     */
+    int PLAYER_EVENT_ON_BAD_INTERLEAVING = -99025;
+
+    /**
+     * not support seek ,may be live.
+     */
+    int PLAYER_EVENT_ON_NOT_SEEK_ABLE = -99026;
+
+    /**
+     * on meta data update
+     */
+    int PLAYER_EVENT_ON_METADATA_UPDATE = -99027;
+
+    /**
+     * Failed to handle timed text track properly.
+     */
+    int PLAYER_EVENT_ON_TIMED_TEXT_ERROR = -99028;
+
+    /**
+     * Subtitle track was not supported by the media framework.
+     */
+    int PLAYER_EVENT_ON_UNSUPPORTED_SUBTITLE = -99029;
+
+    /**
+     * Reading the subtitle track takes too long.
+     */
+    int PLAYER_EVENT_ON_SUBTITLE_TIMED_OUT = -99030;
+
+    /**
+     * on play status update
+     */
+    int PLAYER_EVENT_ON_STATUS_CHANGE = -99031;
+
+
+    /**
+     * if you set data provider for player, call back this method when provider start load data.
+     */
+    int PLAYER_EVENT_ON_PROVIDER_DATA_START = -99050;
+
+    /**
+     * call back this method when provider load data success.
+     */
+    int PLAYER_EVENT_ON_PROVIDER_DATA_SUCCESS = -99051;
+
+    /**
+     * call back this method when provider load data error.
+     */
+    int PLAYER_EVENT_ON_PROVIDER_DATA_ERROR = -99052;
 
     /**
      * 发送事件

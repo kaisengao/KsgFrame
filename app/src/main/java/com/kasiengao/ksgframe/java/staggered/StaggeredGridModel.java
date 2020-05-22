@@ -161,15 +161,15 @@ public class StaggeredGridModel {
     private StaggeredGridBean createBean0() {
         StaggeredGridBean gridBean = new StaggeredGridBean();
 
-        gridBean.mName = "九龙不败 终极版预告";
-        gridBean.mContent = "张晋《九龙不败》终极预告现飞龙出海";
-        gridBean.mDetailContent = "张晋《九龙不败》终极预告现飞龙出海";
+        gridBean.mName = "蜘蛛侠：英雄远征 内地定档预告";
+        gridBean.mContent = "《蜘蛛侠：英雄远征》定档预告";
+        gridBean.mDetailContent = "《蜘蛛侠：英雄远征》定档预告";
 
         List<PreviewBean> previewBeans = new ArrayList<>();
 
         previewBeans.add(createPreview(1000, 562, "video",
-                "https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=1931435122,2201742156&fm=26&gp=0.jpg",
-                "http://vfx.mtime.cn/Video/2019/06/27/mp4/190627104816316366.mp4"));
+                "http://img5.mtime.cn/mg/2019/05/31/164845.22030068_120X90X4.jpg",
+                "http://vfx.mtime.cn/Video/2019/05/31/mp4/190531170200490672.mp4"));
 
         gridBean.mPreviewBeans = previewBeans;
 

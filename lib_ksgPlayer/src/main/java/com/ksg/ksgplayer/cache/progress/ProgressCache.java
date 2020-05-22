@@ -1,55 +1,73 @@
-package com.ksg.ksgplayer.record;
+package com.ksg.ksgplayer.cache.progress;
 
 import android.os.Bundle;
 
-import com.ksg.ksgplayer.entity.DataSource;
+import com.ksg.ksgplayer.cache.PlayValueGetter;
 import com.ksg.ksgplayer.listener.OnPlayerEventListener;
 import com.ksg.ksgplayer.player.IKsgPlayer;
 import com.ksg.ksgplayer.player.IKsgPlayerProxy;
 
 /**
- * @author kaisengao
- * @create: 2019/1/15 15:24
- * @describe: 记录代理的播放器
+ * @ClassName: ProgressCache
+ * @Author: KaiSenGao
+ * @CreateDate: 2020/5/22 13:31
+ * @Description: 记录播放进度缓存
  */
-public class RecordProxyPlayer implements IKsgPlayerProxy {
+public class ProgressCache implements IKsgPlayerProxy {
 
     private PlayValueGetter mPlayValueGetter;
 
-    private DataSource mDataSource;
+    private String mDataSource;
 
-    public RecordProxyPlayer(PlayValueGetter valueGetter) {
+    public ProgressCache(PlayValueGetter valueGetter) {
         this.mPlayValueGetter = valueGetter;
     }
 
+    /**
+     * 设置视频播放地址
+     *
+     * @param dataSource 播放地址
+     */
     @Override
-    public void onDataSourceReady(DataSource dataSource) {
-        // 更改数据源,记录它们
-        record();
+    public void onDataSourceReady(String dataSource) {
+        // 数据源改变 记录上一个视频的进度
+        this.record();
         this.mDataSource = dataSource;
     }
 
+    /**
+     * 播放 停止状态
+     */
     @Override
     public void onIntentStop() {
-        record();
+        this.record();
     }
 
+    /**
+     * 播放 重置状态
+     */
     @Override
     public void onIntentReset() {
-        record();
+        this.record();
     }
 
+    /**
+     * 播放 销毁状态
+     */
     @Override
     public void onIntentDestroy() {
-        record();
+        this.record();
     }
 
+    /**
+     * 播放器的基础事件
+     */
     @Override
     public void onPlayerEvent(int eventCode, Bundle bundle) {
         switch (eventCode) {
             case OnPlayerEventListener.PLAYER_EVENT_ON_PAUSE:
-                // 暂停,记录位置.
-                record();
+                // 播放暂停事件,记录进度.
+                this.record();
                 break;
             case OnPlayerEventListener.PLAYER_EVENT_ON_PLAY_COMPLETE:
                 // 播放完成重置播放位置.
@@ -72,19 +90,9 @@ public class RecordProxyPlayer implements IKsgPlayerProxy {
     /**
      * 播放进度
      */
-    private int getProgress() {
+    private long getProgress() {
         if (mPlayValueGetter != null) {
-            return mPlayValueGetter.getProgress();
-        }
-        return 0;
-    }
-
-    /**
-     * 播放进度
-     */
-    private int getDuration() {
-        if (mPlayValueGetter != null) {
-            return mPlayValueGetter.getDuration();
+            return mPlayValueGetter.getCurrentPosition();
         }
         return 0;
     }
@@ -102,13 +110,19 @@ public class RecordProxyPlayer implements IKsgPlayerProxy {
                 && state != IKsgPlayer.STATE_PLAYBACK_COMPLETE;
     }
 
+    /**
+     * 获取本地缓存
+     *
+     * @param dataSource 播放地址
+     * @return 本地缓存的播放进度
+     */
     @Override
-    public void onErrorEvent(int eventCode, Bundle bundle) {
-
+    public long getRecord(String dataSource) {
+        return PlayRecord.getInstance().getRecord(dataSource);
     }
 
     @Override
-    public int getRecord(DataSource dataSource) {
-        return PlayRecord.getInstance().getRecord(dataSource);
+    public void onErrorEvent(int eventCode, Bundle bundle) {
+
     }
 }

@@ -3,8 +3,6 @@ package com.ksg.ksgplayer.event;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
-import com.ksg.ksgplayer.listener.OnPlaybackProgressListener;
-import com.ksg.ksgplayer.listener.OnPlayerEventListener;
 import com.ksg.ksgplayer.receiver.IReceiver;
 import com.ksg.ksgplayer.receiver.IReceiverGroup;
 
@@ -29,30 +27,12 @@ public final class EventDispatcher implements IEventDispatcher {
      */
     @Override
     public void dispatchPlayEvent(final int eventCode, final Bundle bundle) {
-        switch (eventCode) {
-            case OnPlayerEventListener.PLAYER_EVENT_ON_TIMER_UPDATE:
-            case OnPlayerEventListener.PLAYER_EVENT_ON_PLAYBACK_PROGRESS:
-                mReceiverGroup.forEach(new IReceiverGroup.OnLoopListener() {
-                    @Override
-                    public void onEach(IReceiver receiver) {
-                        if (receiver instanceof OnPlaybackProgressListener && bundle != null) {
-                            ((OnPlaybackProgressListener) receiver).onPlaybackProgress(
-                                    bundle.getInt(EventKey.INT_ARG1),
-                                    bundle.getInt(EventKey.INT_ARG2),
-                                    bundle.getInt(EventKey.INT_ARG3));
-                        }
-                    }
-                });
-                break;
-            default:
-                mReceiverGroup.forEach(new IReceiverGroup.OnLoopListener() {
-                    @Override
-                    public void onEach(IReceiver receiver) {
-                        receiver.onPlayerEvent(eventCode, bundle);
-                    }
-                });
-                break;
-        }
+        mReceiverGroup.forEach(new IReceiverGroup.OnLoopListener() {
+            @Override
+            public void onEach(IReceiver receiver) {
+                receiver.onPlayerEvent(eventCode, bundle);
+            }
+        });
         recycleBundle(bundle);
     }
 

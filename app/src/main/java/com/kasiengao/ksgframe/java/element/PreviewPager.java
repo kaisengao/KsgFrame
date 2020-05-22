@@ -19,7 +19,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.ksgframe.R;
-import com.ksg.ksgplayer.entity.DataSource;
+import com.kasiengao.ksgframe.java.player.KsgIjkPlayer;
 import com.ksg.ksgplayer.widget.KsgVideoPlayer;
 
 import java.util.ArrayList;
@@ -194,7 +194,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
             imageView.setController(draweeController);
             // Play按钮
             AppCompatImageView videoPlay = itemView.findViewById(R.id.item_preview_play);
-            KsgVideoPlayer videoPlayer = imageView.findViewById(R.id.item_preview_player);
+            KsgVideoPlayer videoPlayer = itemView.findViewById(R.id.item_preview_player);
             // 类型区分
             switch (pagerParams.getMediaType()) {
                 case "image":
@@ -202,13 +202,9 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
                     break;
                 case "video":
-                    videoPlay.setVisibility(View.VISIBLE);
                     videoPlayer.setVisibility(View.VISIBLE);
                     videoPlayer.setDecoderView(new KsgIjkPlayer(container.getContext()));
-
-                    DataSource dataSource = new DataSource(pagerParams.getVideoUrl());
-
-                    videoPlayer.setDataSource(dataSource);
+                    videoPlayer.setDataSource(pagerParams.getVideoUrl());
                     videoPlayer.start();
                     break;
                 default:

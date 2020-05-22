@@ -1,17 +1,17 @@
 package com.ksg.ksgplayer.config;
 
-
 /**
- * @author kaisengao
- * @create: 2019/3/11 14:15
- * @describe: 编码器配置
+ * @ClassName: PlayerConfig
+ * @Author: KaiSenGao
+ * @CreateDate: 2020/5/22 13:25
+ * @Description: 播放器 全局配置
  */
 public class PlayerConfig {
 
     /**
-     * 是否开启缓存
+     * 播放进度本地缓存
      */
-    private boolean mPlayRecordState = true;
+    private boolean mPlayProgressCache = true;
 
     /**
      * 是否默认添加网络状态生产者
@@ -26,6 +26,14 @@ public class PlayerConfig {
         static final PlayerConfig PLAYER_CONFIG = new PlayerConfig();
     }
 
+    public boolean isPlayProgressCache() {
+        return mPlayProgressCache;
+    }
+
+    public void setPlayProgressCache(boolean playProgressCache) {
+        mPlayProgressCache = playProgressCache;
+    }
+
     /**
      * 是否添加网络状态
      */
@@ -35,16 +43,5 @@ public class PlayerConfig {
 
     public void setNetworkEventProducer(boolean networkEventProducer) {
         mNetworkEventProducer = networkEventProducer;
-    }
-
-    /**
-     * 是否开启缓存
-     */
-    public boolean isPlayRecordState() {
-        return mPlayRecordState;
-    }
-
-    public void setPlayRecordState(boolean playRecordState) {
-        mPlayRecordState = playRecordState;
     }
 }

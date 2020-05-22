@@ -1,24 +1,25 @@
-package com.ksg.ksgplayer.record;
+package com.ksg.ksgplayer.cache.progress;
 
 import android.text.TextUtils;
 import android.util.LruCache;
 
 /**
- * @author kaisengao
- * @create: 2019/1/15 16:39
- * @describe: 播放内存位置记录, 使用LruCache。
+ * @ClassName: RecordCache
+ * @Author: KaiSenGao
+ * @CreateDate: 2020/5/22 14:08
+ * @Description: 播放内存位置记录, 使用LruCache。
  */
 class RecordCache {
 
-    private LruCache<String, Integer> mLruCache;
+    private LruCache<String, Long> mLruCache;
 
     /**
      * 最大缓存数量
      */
     RecordCache(int maxCacheCount) {
-        mLruCache = new LruCache<String, Integer>(maxCacheCount * 4) {
+        mLruCache = new LruCache<String, Long>(maxCacheCount * 4) {
             @Override
-            protected int sizeOf(String key, Integer value) {
+            protected int sizeOf(String key, Long value) {
                 return 4;
             }
         };
@@ -27,9 +28,9 @@ class RecordCache {
     /**
      * 添加 缓存
      */
-    int putRecord(String key, int record) {
-        Integer integer = mLruCache.put(key, record);
-        return integer != null ? integer : 0;
+    long putRecord(String key, long record) {
+        Long aLong = mLruCache.put(key, record);
+        return aLong != null ? aLong : 0;
     }
 
     /**
@@ -42,14 +43,14 @@ class RecordCache {
     /**
      * 获取 缓存
      */
-    int getRecord(String key) {
+    long getRecord(String key) {
 
         if (TextUtils.isEmpty(key)) {
             return 0;
         }
 
-        Integer integer = mLruCache.get(key);
-        return integer != null ? integer : 0;
+        Long aLong = mLruCache.get(key);
+        return aLong != null ? aLong : 0;
     }
 
     /**

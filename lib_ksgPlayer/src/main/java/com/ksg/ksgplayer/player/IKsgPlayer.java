@@ -1,17 +1,17 @@
 package com.ksg.ksgplayer.player;
 
 import android.os.Bundle;
-import android.view.View;
+import android.view.Surface;
+import android.view.SurfaceHolder;
 
-import com.ksg.ksgplayer.entity.DataSource;
 import com.ksg.ksgplayer.listener.OnErrorEventListener;
 import com.ksg.ksgplayer.listener.OnPlayerEventListener;
 
-
 /**
- * @author kaisengao
- * @create: 2019/1/4 14:13
- * @describe: 播放器一些基本状态
+ * @ClassName: IKsgPlayer
+ * @Author: KaiSenGao
+ * @CreateDate: 2020/5/22 13:22
+ * @Description: 播放器抽象接口
  */
 public interface IKsgPlayer {
 
@@ -53,15 +53,19 @@ public interface IKsgPlayer {
     int STATE_PLAYBACK_COMPLETE = 6;
 
     /**
-     * 返回渲染视图view
+     * 获取当前state
      *
-     * @return view
+     * @return 返回状态
      */
-    View getPlayerView();
+    int getState();
 
     /**
-     * 使用此方法,您可以发送一些播放器init参数或开关设置。
-     * 比如一些配置选项(使用媒体编解码器或超时或连接等等)解码器init。
+     * 初始化 播放器
+     */
+    void initPlayer();
+
+    /**
+     * 自定义事件
      *
      * @param code   code
      * @param bundle bundle
@@ -69,11 +73,132 @@ public interface IKsgPlayer {
     void option(int code, Bundle bundle);
 
     /**
-     * 设置视频基本信息
+     * 设置视频播放地址
      *
-     * @param dataSource 数据源
+     * @param dataSource 播放地址
      */
-    void setDataSource(DataSource dataSource);
+    void setDataSource(String dataSource);
+
+    /**
+     * 设置渲染视频的View,主要用于TextureView
+     *
+     * @param surface surface
+     */
+    void setSurface(Surface surface);
+
+    /**
+     * 设置渲染视频的View,主要用于SurfaceView
+     *
+     * @param holder surfaceHolder
+     */
+    void setDisplay(SurfaceHolder holder);
+
+    /**
+     * 设置音量
+     */
+    void setVolume(float v1, float v2);
+
+    /**
+     * 设置是否循环播放
+     */
+    void setLooping(boolean isLooping);
+
+    /**
+     * 设置播放速度
+     */
+    void setSpeed(float speed);
+
+    /**
+     * 获取播放速度
+     */
+    float getSpeed();
+
+    /**
+     * 获取当前缓冲的网速
+     */
+    long getTcpSpeed();
+
+    /**
+     * 获取缓冲进度百分比
+     *
+     * @return 缓冲进度
+     */
+    int getBufferedPercentage();
+
+    /**
+     * 获取当前播放的位置
+     *
+     * @return 播放进度
+     */
+    long getCurrentPosition();
+
+    /**
+     * 获取视频总时长
+     *
+     * @return 总时长
+     */
+    long getDuration();
+
+    /**
+     * 获取播放状态
+     *
+     * @return 播放状态 true 播放 反之
+     */
+    boolean isPlaying();
+
+    /**
+     * seekTo
+     *
+     * @param msc 在指定的位置播放
+     */
+    void seekTo(int msc);
+
+    /**
+     * 准备开始播放（异步）
+     */
+    void prepareAsync();
+
+    /**
+     * 播放
+     */
+    void start();
+
+    /**
+     * start
+     *
+     * @param msc 在指定的位置开始播放
+     */
+    void start(long msc);
+
+    /**
+     * 暂停
+     */
+    void pause();
+
+    /**
+     * 继续播放
+     */
+    void resume();
+
+    /**
+     * 停止
+     */
+    void stop();
+
+    /**
+     * 重置播放器
+     */
+    void reset();
+
+    /**
+     * 释放播放器
+     */
+    void release();
+
+    /**
+     * 销毁资源
+     */
+    void destroy();
 
     /**
      * 设置 播放器状态事件
@@ -88,84 +213,4 @@ public interface IKsgPlayer {
      * @param onErrorEventListener onErrorEventListener
      */
     void setOnErrorEventListener(OnErrorEventListener onErrorEventListener);
-
-    /**
-     * 获取当前视频
-     *
-     * @return 缓冲进度
-     */
-    int getBuffer();
-
-    /**
-     * 获取当前视频
-     *
-     * @return 播放进度
-     */
-    int getProgress();
-
-    /**
-     * 获取当前视频
-     *
-     * @return 总时长
-     */
-    int getDuration();
-
-    /**
-     * 获取当前视频
-     *
-     * @return 播放状态 true 播放 反之
-     */
-    boolean isPlaying();
-
-    /**
-     * 获取当前state
-     *
-     * @return 返回状态
-     */
-    int getState();
-
-    /**
-     * start
-     */
-    void start();
-
-    /**
-     * start
-     *
-     * @param msc 在指定的位置开始播放
-     */
-    void start(int msc);
-
-    /**
-     * pause
-     */
-    void pause();
-
-    /**
-     * resume
-     */
-    void resume();
-
-    /**
-     * seekTo
-     *
-     * @param msc 在指定的位置播放
-     */
-    void seekTo(int msc);
-
-    /**
-     * stop
-     */
-    void stop();
-
-    /**
-     * reset
-     */
-    void reset();
-
-    /**
-     * destroy
-     */
-    void destroy();
-
 }

@@ -1,9 +1,9 @@
 package com.ksg.ksgplayer.assist;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 
-import com.ksg.ksgplayer.entity.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.player.IKsgPlayer;
 import com.ksg.ksgplayer.widget.KsgVideoPlayer;
@@ -81,13 +81,13 @@ public class OnVideoViewEventHandler extends BaseEventAssistHandler<KsgVideoPlay
     @Override
     public void requestPlayDataSource(KsgVideoPlayer assist, Bundle bundle) {
         if (bundle != null) {
-            DataSource data = (DataSource) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
-            if (data == null) {
+            String dataSource = bundle.getString(EventKey.STRING_DATA, "");
+            if (TextUtils.isEmpty(dataSource)) {
                 Log.e("OnVideoViewEventHandler", "requestPlayDataSource need legal data source");
                 return;
             }
             assist.stop();
-            assist.setDataSource(data);
+            assist.setDataSource(dataSource);
             assist.start();
         }
     }

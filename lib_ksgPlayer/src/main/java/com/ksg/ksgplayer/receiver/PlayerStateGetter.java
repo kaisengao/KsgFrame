@@ -32,14 +32,14 @@ public interface PlayerStateGetter {
      *
      * @return current
      */
-    int getProgress();
+    long getProgress();
 
     /**
      * 获取总时长
      *
      * @return duration
      */
-    int getDuration();
+    long getDuration();
 
     /**
      * 获取缓冲进度.

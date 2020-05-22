@@ -32,6 +32,13 @@
             android:text="@string/btn_staggered_grid"
             android:textAllCaps="false" />
 
+        <!-- KsgVideoPlayer-->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/java_player"
+            style="@style/btn_style"
+            android:text="@string/btn_player"
+            android:textAllCaps="false" />
+
         <!--        &lt;!&ndash; ShareElement&ndash;&gt;-->
         <!--        <androidx.appcompat.widget.AppCompatImageButton-->
         <!--            android:id="@+id/java_share_element"-->

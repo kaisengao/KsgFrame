@@ -2,21 +2,20 @@ package com.ksg.ksgplayer.player;
 
 import android.os.Bundle;
 
-import com.ksg.ksgplayer.entity.DataSource;
-
 /**
- * @author kaisengao
- * @create: 2019/1/15 15:11
- * @describe: 记录代理的播放器
+ * @ClassName: IKsgPlayerProxy
+ * @Author: KaiSenGao
+ * @CreateDate: 2020/5/22 13:26
+ * @Description: 播放器的基础信息代理接口
  */
 public interface IKsgPlayerProxy {
 
     /**
-     * 初始化
+     * 设置视频播放地址
      *
-     * @param dataSource 数据源
+     * @param dataSource 播放地址
      */
-    void onDataSourceReady(DataSource dataSource);
+    void onDataSourceReady(String dataSource);
 
     /**
      * 播放 停止状态
@@ -34,7 +33,7 @@ public interface IKsgPlayerProxy {
     void onIntentDestroy();
 
     /**
-     * 事件传递
+     * 播放器的基础事件
      *
      * @param eventCode code
      * @param bundle    bundle
@@ -42,7 +41,7 @@ public interface IKsgPlayerProxy {
     void onPlayerEvent(int eventCode, Bundle bundle);
 
     /**
-     * 错误 事件传递
+     * 播放器的错误事件
      *
      * @param eventCode code
      * @param bundle    bundle
@@ -52,8 +51,8 @@ public interface IKsgPlayerProxy {
     /**
      * 获取本地缓存
      *
-     * @param dataSource 数据源
-     * @return 历史播放进度
+     * @param dataSource 播放地址
+     * @return 本地缓存的播放进度
      */
-    int getRecord(DataSource dataSource);
+    long getRecord(String dataSource);
 }

@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.mvp.MvpActivity;
+import com.kasiengao.ksgframe.java.player.PlayerActivity;
 import com.kasiengao.ksgframe.java.retrofit.RxRetrofitActivity;
 import com.kasiengao.ksgframe.java.staggered.StaggeredGridActivity;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
@@ -40,6 +41,11 @@ public class JavaActivity extends BaseToolbarActivity {
         this.findViewById(R.id.java_staggered_grid).setOnClickListener(v -> {
             // Rx+Retrofit
             this.startActivity(new Intent(this, StaggeredGridActivity.class));
+        });
+        // KsgVideoPlayer
+        this.findViewById(R.id.java_player).setOnClickListener(v -> {
+            // Rx+KsgVideoPlayer
+            this.startActivity(new Intent(this, PlayerActivity.class));
         });
     }
 }
