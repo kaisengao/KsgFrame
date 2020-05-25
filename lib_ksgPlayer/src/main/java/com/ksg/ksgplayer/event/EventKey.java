@@ -23,6 +23,11 @@ public interface EventKey {
     String INT_ARG3 = "int_arg3";
     String INT_ARG4 = "int_arg4";
 
+    String LONG_ARG1 = "long_arg1";
+    String LONG_ARG2 = "long_arg2";
+    String LONG_ARG3 = "long_arg3";
+    String LONG_ARG4 = "long_arg4";
+
     String STRING_ARG1 = "STRING_ARG1";
     String STRING_ARG2 = "STRING_ARG2";
 }

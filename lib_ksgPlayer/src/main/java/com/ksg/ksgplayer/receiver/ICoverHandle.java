@@ -92,4 +92,8 @@ public interface ICoverHandle {
      * @param bundle bundle
      */
     void requestRemoveEventProducer(Bundle bundle);
+
+    void requestNotifyTimer();
+
+    void requestStopTimer();
 }

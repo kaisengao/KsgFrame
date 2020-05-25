@@ -26,8 +26,6 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
 
     private long mStartSeekPos;
 
-    private int mBufferedPercent;
-
     private int mVideoWidth, mVideoHeight;
 
     private IjkMediaPlayer mMediaPlayer;
@@ -131,8 +129,8 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
      * 设置音量
      */
     @Override
-    public void setVolume(float v1, float v2) {
-        this.mMediaPlayer.setVolume(v1, v2);
+    public void setVolume(float left, float right) {
+        this.mMediaPlayer.setVolume(left, right);
     }
 
     /**
@@ -173,8 +171,8 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
      * @return 缓冲进度
      */
     @Override
-    public int getBufferedPercentage() {
-        return this.mBufferedPercent;
+    public int getBufferPercentage() {
+        return this.mBufferPercentage;
     }
 
     /**
@@ -398,9 +396,17 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
      * 播放器 准备完成 事件
      */
     private IMediaPlayer.OnPreparedListener mPreparedListener = iMediaPlayer -> {
+
+        this.mVideoWidth = iMediaPlayer.getVideoWidth();
+        this.mVideoHeight = iMediaPlayer.getVideoHeight();
+
+        Bundle bundle = BundlePool.obtain();
+        bundle.putInt(EventKey.INT_ARG1, mVideoWidth);
+        bundle.putInt(EventKey.INT_ARG2, mVideoHeight);
+
         // 译码器准备完成
         this.updateStatus(STATE_PREPARED);
-        this.submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_PREPARED, null);
+        this.submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_PREPARED, bundle);
 
         long seekToPosition = this.mStartSeekPos;
         if (seekToPosition != 0) {
@@ -484,7 +490,7 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
      */
     private IMediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener = (iMediaPlayer, percent) -> {
         // 缓冲进度
-        this.mBufferedPercent = percent;
+        this.setBufferPercentage(percent);
     };
 
     /**

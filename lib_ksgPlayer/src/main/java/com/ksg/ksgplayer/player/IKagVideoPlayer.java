@@ -1,8 +1,9 @@
-package com.ksg.ksgplayer.widget;
+package com.ksg.ksgplayer.player;
 
 import android.os.Bundle;
+import android.view.ViewGroup;
 
-import com.ksg.ksgplayer.player.BaseInternalPlayer;
+import com.ksg.ksgplayer.render.IRender;
 
 /**
  * @ClassName: IKagVideoPlayer
@@ -11,6 +12,21 @@ import com.ksg.ksgplayer.player.BaseInternalPlayer;
  * @Description: 播放器 基参
  */
 public interface IKagVideoPlayer {
+
+    /**
+     * 容器
+     *
+     * @param userContainer ViewGroup
+     */
+    void attachContainer(ViewGroup userContainer);
+
+    /**
+     * 容器
+     *
+     * @param userContainer ViewGroup
+     * @param updateRender  是否更新渲染view
+     */
+    void attachContainer(ViewGroup userContainer, boolean updateRender);
 
     /**
      * 获取当前state
@@ -35,6 +51,13 @@ public interface IKagVideoPlayer {
     void setDataSource(String dataSource);
 
     /**
+     * 设置渲染视图类型
+     *
+     * @param renderType {@link IRender}
+     */
+    void setRenderType(int renderType);
+
+    /**
      * 设置（播放器）解码器
      *
      * @param decoderView {@link BaseInternalPlayer}
@@ -44,7 +67,7 @@ public interface IKagVideoPlayer {
     /**
      * 设置音量
      */
-    void setVolume(float v1, float v2);
+    void setVolume(float left, float right);
 
     /**
      * 设置是否循环播放

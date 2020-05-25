@@ -5,10 +5,7 @@ import android.view.View;
 import com.kasiengao.base.util.KLog;
 
 /**
- * @ClassName: RenderMeasure
- * @Author: KaiSenGao
- * @CreateDate: 2020/5/22 16:51
- * @Description:
+ * 视图宽高比算法
  */
 public final class RenderMeasure {
 
@@ -28,6 +25,8 @@ public final class RenderMeasure {
 
     public void doMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
+        //Log.i("@@@@", "onMeasure(" + MeasureSpec.toString(widthMeasureSpec) + ", "
+        //        + MeasureSpec.toString(heightMeasureSpec) + ")");
         if (mVideoRotationDegree == 90 || mVideoRotationDegree == 270) {
             int tempSpec = widthMeasureSpec;
             widthMeasureSpec = heightMeasureSpec;

@@ -32,4 +32,8 @@ public interface InterEvent {
 
     int CODE_REQUEST_EVENT_REMOVE_PRODUCER = -66016;
 
+    int CODE_REQUEST_NOTIFY_TIMER = -66017;
+
+    int CODE_REQUEST_STOP_TIMER = -66018;
+
 }

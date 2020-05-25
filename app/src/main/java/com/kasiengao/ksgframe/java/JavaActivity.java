@@ -44,7 +44,7 @@ public class JavaActivity extends BaseToolbarActivity {
         });
         // KsgVideoPlayer
         this.findViewById(R.id.java_player).setOnClickListener(v -> {
-            // Rx+KsgVideoPlayer
+            // KsgVideoPlayer
             this.startActivity(new Intent(this, PlayerActivity.class));
         });
     }

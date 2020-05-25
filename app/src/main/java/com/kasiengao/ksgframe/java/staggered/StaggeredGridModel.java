@@ -30,131 +30,6 @@ public class StaggeredGridModel {
         gridBeans.add(createBean7());
         gridBeans.add(createBean8());
 
-//
-//        StaggeredGridBean bean9 = new StaggeredGridBean();
-//        bean9.mPicture = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589878513495&di=087381701a0f00870d7152a100bc176f&imgtype=0&src=http%3A%2F%2Fi1.hdslb.com%2Fbfs%2Farchive%2Fc9889b5c50b2e943f74bb040147381f34b86262b.png";
-//        bean9.mName = "赤井秀一";
-//        bean9.mContent = "充满神秘感的FBI搜查官。";
-//        bean9.mDetailContent = "充满神秘感的FBI搜查官。以“诸星大”的化名潜入黑衣组织，获得很高的地位，得到“Rye（黑麦威士忌）”的代号，被黑衣组织称为“银色子弹”；后脱离组织；假死后以冲矢昴的身份进行活动。\n" +
-//                "\n" +
-//                "年龄不详。冲矢昴的年龄介绍为27岁，但是否为赤井的真实年龄尚存疑；青山刚昌在答读者问时表示自己也不知道赤井的真实年龄。\n" +
-//                "\n" +
-//                "性格冷峻，坚定，有些自闭，眼神慑人，充满神秘感。眼下部有单褶，原来是长发（为了向组织报仇剪掉长发）。总喜欢戴着黑色的针织帽，左撇子（和琴酒相同）。\n" +
-//                "\n" +
-//                "喜欢喝波本威士忌（TV 563）、苏格兰威士忌（File.898）、罐装黑咖啡（TV 734）。爱车是雪佛兰C-1500，车牌号为新宿800 た 12-02（12月2日是其声优池田秀一的生日）。";
-//        bean9.mWidth = 628;
-//        bean9.mHeight = 393;
-//        gridBeans.add(bean9);
-//
-//        StaggeredGridBean bean10 = new StaggeredGridBean();
-//        bean10.mPicture = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589878574001&di=b313c0be40c00b61bf0cdbefd6e67b25&imgtype=0&src=http%3A%2F%2Ftc.sinaimg.cn%2Fmaxwidth.800%2Ftc.service.weibo.com%2Fmmbiz_qpic_cn%2F7da4814853cd42b75b016eb592321ffb.jpg";
-//        bean10.mName = "贝尔摩德";
-//        bean10.mContent = "黑衣组织重要成员，真实身份是美国女明星莎朗•温亚德。";
-//        bean10.mDetailContent = "擅长易容术与变声术，各方面能力出众。在组织中负责收集重要的情报，是“那位先生”欣赏的人。经常单独行动，被称为“神秘主义者”。早年与工藤有希子在黑羽盗一（第一代怪盗基德）门下学习易容，成为朋友。曾易容为杀人魔后，被工藤新一、毛利兰救下。\n" +
-//                "\n" +
-//                "知道江户川柯南和灰原哀的真实身份，却并没有上报组织。认为柯南是可以摧毁组织的“银色子弹”。\n" +
-//                "\n" +
-//                "她既是荧幕上风情万种的女明星，又是为组织清除障碍的女杀手，也曾假扮成多个身份刺探情报。谜样的多重身份和种种诡异的举动总是能让人感到不寒而栗，但是对柯南和小兰又极力保护，表现出善良的一面。与琴酒相比多了份人性与神秘，少了份冷血与凶残。她的行迹和想法都无法掌握揣度，是个让人无法猜透的神秘人物。\n" +
-//                "\n";
-//        bean10.mWidth = 500;
-//        bean10.mHeight = 281;
-//        gridBeans.add(bean10);
-//
-//        StaggeredGridBean bean11 = new StaggeredGridBean();
-//        bean11.mPicture = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589878629408&di=7347d004a7c8f809217d30dcbbb626e9&imgtype=0&src=http%3A%2F%2Fimgsrc.baidu.com%2Fforum%2Fw%3D580%2Fsign%3D5b14ee4d758da9774e2f86238050f872%2Fe6b5a9119313b07edb047d760ad7912396dd8cdd.jpg";
-//        bean11.mName = "波本";
-//        bean11.mContent = "真实身份为日本公安警察派入黑衣组织的卧底，组织代号“波本”";
-//        bean11.mDetailContent = "本名降谷零，化名安室透。\n" +
-//                "\n" +
-//                "真实身份为日本公安警察派入黑衣组织的卧底，组织代号“波本”（Bourbon）。表面职业为私家侦探、餐厅服务生，在毛利侦探事务所楼下的波洛咖啡厅打工，并拜毛利小五郎为师。擅长搜集情报，有极强的观察力与推理能力。与FBI搜查官赤井秀一相互厌恶，因此伪装成伤疤赤井来观察赤井秀一是否已死。\n" +
-//                "\n" +
-//                "为了调查毛利小五郎与雪莉是否有关联而接近毛利，后对柯南的身份产生了兴趣。对FBI成员进行了一系列试探，推断出赤井秀一未死和赤井假扮为冲矢昴活动。由赤井秀一揭晓其真名和日本公安警察的身份。";
-//        bean11.mWidth = 580;
-//        bean11.mHeight = 326;
-//        gridBeans.add(bean11);
-//
-//        StaggeredGridBean bean12 = new StaggeredGridBean();
-//        bean12.mPicture = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589878672186&di=b0c50cb00555ac7d793f5d7c465ff691&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20181226%2F1593a2981c4d42cb89f84ae2a5f6698c.jpeg";
-//        bean12.mName = "琴酒";
-//        bean12.mContent = "黑衣组织重要成员，经常和伏特加一起出现。";
-//        bean12.mDetailContent = "黑衣组织重要成员。经常和伏特加一起出现。身材高大，身穿黑色风衣，肤色偏白（很多人猜测他是混血），银色（早期为金色）长发，冰冷凌厉的双眼，墨绿色的瞳孔，左脸颊近眼睛处有被赤井秀一击伤所留下的疤痕，脸总被帽子和刘海半遮掩着，左撇子。嘴边总是少不了一支烟，外型冷峻孤傲，头脑冷静，眼神冷厉，似乎可以毫不犹豫地杀死任何人。\n" +
-//                "\n" +
-//                "经常执行各种暗杀和清除组织内奸的任务，在第1集《云霄飞车杀人事件》里，由于工藤新一偷窥到伏特加和一公司经理进行非法交易的画面，被琴酒发现后，强行给他灌下了尚在试验中的APTX4869，从此让新一身体缩小，也开始了整个故事。\n" +
-//                "\n" +
-//                "其主要任务是负责组织的安全，专门消灭组织的敌人（赤井秀一、土门康辉等）、铲除叛徒及暴露身份的组织成员（如宫野姐妹、皮斯克、爱尔兰等）。还负责重要的交易，营救值得拯救的组织成员（例如接走了被赤井击伤的贝尔摩德、被FBI软禁的基尔）。";
-//        bean12.mWidth = 628;
-//        bean12.mHeight = 374;
-//        gridBeans.add(bean12);
-//
-//        StaggeredGridBean bean13 = new StaggeredGridBean();
-//        bean13.mPicture = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589878819968&di=16de27f5d78b1aab6f8dfb3d72856060&imgtype=0&src=http%3A%2F%2Fgss0.baidu.com%2F7Po3dSag_xI4khGko9WTAnF6hhy%2Fzhidao%2Fpic%2Fitem%2Fcc11728b4710b912c7eb7a60c3fdfc0392452201.jpg";
-//        bean13.mName = "冲矢昂";
-//        bean13.mContent = "自称是东都大学工科研究生，真实身份为FBI搜查官赤井秀一。";
-//        bean13.mDetailContent = "自称是东都大学工科研究生，由于原来租住的房屋在一次事件中被纵火，现暂住在工藤新一家。\n" +
-//                "\n" +
-//                "左撇子，总是眯着眼睛，身手矫健，推理能力极强，和安室透（波本）是对手。\n" +
-//                "\n" +
-//                "知晓柯南真实身份，经常协助柯南等人，柯南对他也非常信任。TV 783（File.898）确认其真实身份为FBI搜查官赤井秀一。赤井在设计假死后以冲矢昴身份出现，目的是暗中保护灰原哀。";
-//        bean13.mWidth = 628;
-//        bean13.mHeight = 358;
-//        gridBeans.add(bean13);
-//
-//        StaggeredGridBean bean14 = new StaggeredGridBean();
-//        bean14.mPicture = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589878940969&di=d079a95716ee4bb77869517d3fa3f8bd&imgtype=0&src=http%3A%2F%2Fx0.ifengimg.com%2Fres%2F2019%2F82BC88FCD07F78BDC3D165BF31846AC2D4D4A91D_size54_w1024_h577.jpeg";
-//        bean14.mName = "京极真";
-//        bean14.mContent = "全日本空手道冠军，有“蹴击贵公子”的称号";
-//        bean14.mDetailContent = "全日本空手道冠军，有“蹴击贵公子”的称号。在某次空手道比赛中看见铃木园子为好友毛利兰拼命加油的身姿之后便开始喜欢园子。之后园子和兰、柯南在伊豆度假中，京极真亲手救下了受杀人犯威胁的园子，并向园子表白。之后去国外留学，因而平常很少和园子碰面，平时主要凭借电话和园子联系。但是多次在园子遇到危难的时候及时出现并救了她，在TV 458的时候竟然为了等园子放弃401连胜。\n" +
-//                "\n" +
-//                " \n" +
-//                "\n" +
-//                "他人评价：\n" +
-//                "\n" +
-//                "铃木园子：\n" +
-//                "\n" +
-//                "与其说阿真他像个王子，不如说更像是个满身伤痕的武士。（TV 172）\n" +
-//                "\n" +
-//                "他是个又帅气又温柔的好男人！！（TV 744）\n" +
-//                "\n" +
-//                " \n" +
-//                "\n" +
-//                "江户川柯南：\n" +
-//                "\n" +
-//                "这个男人早晚会因为破坏公物而被抓的。（TV 744）\n" +
-//                "\n" +
-//                " \n" +
-//                "\n" +
-//                "铃木史郎：\n" +
-//                "\n" +
-//                "这小伙子挺可靠的嘛！（TV 747）\n" +
-//                "\n" +
-//                " \n" +
-//                "\n" +
-//                "铃木朋子：\n" +
-//                "\n" +
-//                "是个认真而朴实，谦逊却强韧的男人……值得调教……（TV 747）";
-//        bean14.mWidth = 628;
-//        bean14.mHeight = 354;
-//        gridBeans.add(bean14);
-//
-//        StaggeredGridBean bean15 = new StaggeredGridBean();
-//        bean15.mPicture = "https://bkimg.cdn.bcebos.com/pic/37d12f2eb9389b5085487a808e35e5dde6116ea9?x-bce-process=image/watermark,g_7,image_d2F0ZXIvYmFpa2U4MA==,xp_5,yp_5";
-//        bean15.mName = "铃木园子";
-//        bean15.mContent = "是铃木财团的二小姐，个性却大大咧咧";
-//        bean15.mDetailContent = "就读于帝丹高中二年B班的女高中生，工藤新一和毛利兰的同班同学，小兰的闺蜜。出身名门，是铃木财团的二小姐，个性却大大咧咧。\n" +
-//                "经常被柯南用麻醉枪弄睡后，借用她的嘴巴推理案情然后屡破奇案，人称“推理女王”。但因为是睡着的关系，所以根本不记得推理案情的经过，只是怀疑自己是“左脑使用过度，所以右脑失去记忆了”的样子。";
-//        bean15.mWidth = 377;
-//        bean15.mHeight = 720;
-//        gridBeans.add(bean15);
-//
-//        StaggeredGridBean bean16 = new StaggeredGridBean();
-//        bean16.mPicture = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589879145482&di=02fd3d3f30e69427248b306115bf9795&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20171018%2F76f3b23898aa407a879ab9cd95e0aef2.jpeg";
-//        bean16.mName = "妃英理";
-//        bean16.mContent = "著名律师，拥有“律政界女王”的称号。与毛利小五郎分居中。";
-//        bean16.mDetailContent = "毛利小五郎的妻子，毛利兰的母亲，工藤有希子的好友。著名律师，拥有“律政界女王”的称号。与毛利小五郎分居中。";
-//        bean16.mWidth = 530;
-//        bean16.mHeight = 335;
-//        gridBeans.add(bean16);
-
         return gridBeans;
     }
 
@@ -166,6 +41,16 @@ public class StaggeredGridModel {
         gridBean.mDetailContent = "《蜘蛛侠：英雄远征》定档预告";
 
         List<PreviewBean> previewBeans = new ArrayList<>();
+
+        previewBeans.add(createPreview(1000, 562, "video",
+                "http://img5.mtime.cn/mg/2019/05/31/164845.22030068_120X90X4.jpg",
+                "http://vfx.mtime.cn/Video/2019/05/31/mp4/190531170200490672.mp4"));
+
+        previewBeans.add(createPreview(700, 350, "image",
+                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589973046620&di=a1bea927f4af23b0791f7f0ca93fdf1d&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201411%2F27%2F20141127112915_PPPFV.thumb.700_0.gif"));
+
+        previewBeans.add(createPreview(474, 842, "image",
+                "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2259647140,2312250263&fm=26&gp=0.jpg"));
 
         previewBeans.add(createPreview(1000, 562, "video",
                 "http://img5.mtime.cn/mg/2019/05/31/164845.22030068_120X90X4.jpg",

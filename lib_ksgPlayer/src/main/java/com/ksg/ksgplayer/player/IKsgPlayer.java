@@ -96,7 +96,7 @@ public interface IKsgPlayer {
     /**
      * 设置音量
      */
-    void setVolume(float v1, float v2);
+    void setVolume(float left, float right);
 
     /**
      * 设置是否循环播放
@@ -123,7 +123,7 @@ public interface IKsgPlayer {
      *
      * @return 缓冲进度
      */
-    int getBufferedPercentage();
+    int getBufferPercentage();
 
     /**
      * 获取当前播放的位置

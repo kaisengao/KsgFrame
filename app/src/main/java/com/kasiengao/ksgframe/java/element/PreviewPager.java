@@ -9,7 +9,6 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -20,7 +19,7 @@ import com.facebook.drawee.view.SimpleDraweeView;
 import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.KsgIjkPlayer;
-import com.ksg.ksgplayer.widget.KsgVideoPlayer;
+import com.ksg.ksgplayer.widget.KsgAssistView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +37,8 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     private List<T> mMediaList;
 
     private ViewPager mViewPager;
+
+    private KsgAssistView mKsgAssistView;
 
     private AppCompatTextView mPagerCount;
 
@@ -59,7 +60,8 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
      * Init
      */
     private void init() {
-
+        this.mKsgAssistView = new KsgAssistView(getContext());
+        this.mKsgAssistView.setDecoderView(new KsgIjkPlayer(getContext()));
     }
 
     /**
@@ -125,6 +127,8 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     @Override
     public void onPageSelected(int position) {
+        mKsgAssistView.stop();
+        playPosition(position);
         // 配置 ViewPager 页数
         this.setCurrentCount();
     }
@@ -132,6 +136,16 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     @Override
     public void onPageScrollStateChanged(int state) {
 
+    }
+
+    private void playPosition(int position) {
+        T t = mMediaList.get(position);
+        FrameLayout container = mViewPager.findViewWithTag(t.getVideoUrl());
+        if (container != null) {
+            mKsgAssistView.attachContainer(container, true);
+            mKsgAssistView.setDataSource(t.getVideoUrl());
+            mKsgAssistView.play();
+        }
     }
 
     /**
@@ -192,9 +206,6 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                     .setAutoPlayAnimations(true)
                     .build();
             imageView.setController(draweeController);
-            // Play按钮
-            AppCompatImageView videoPlay = itemView.findViewById(R.id.item_preview_play);
-            KsgVideoPlayer videoPlayer = itemView.findViewById(R.id.item_preview_player);
             // 类型区分
             switch (pagerParams.getMediaType()) {
                 case "image":
@@ -202,10 +213,8 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
                     break;
                 case "video":
-                    videoPlayer.setVisibility(View.VISIBLE);
-                    videoPlayer.setDecoderView(new KsgIjkPlayer(container.getContext()));
-                    videoPlayer.setDataSource(pagerParams.getVideoUrl());
-                    videoPlayer.start();
+                    FrameLayout playerContainer = itemView.findViewById(R.id.item_preview_player);
+                    playerContainer.setTag(pagerParams.getVideoUrl());
                     break;
                 default:
                     break;

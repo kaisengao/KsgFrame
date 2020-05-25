@@ -4,9 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 
-import com.ksg.ksgplayer.assist.InterEvent;
-
 import androidx.annotation.IntRange;
+
+import com.ksg.ksgplayer.assist.InterEvent;
 
 /**
  * @author kaisengao
@@ -157,6 +157,16 @@ public abstract class BaseCover extends BaseReceiver implements ICover, ICoverHa
     @Override
     public void requestRemoveEventProducer(Bundle bundle) {
         notifyReceiverEvent(InterEvent.CODE_REQUEST_EVENT_REMOVE_PRODUCER, bundle);
+    }
+
+    @Override
+    public final void requestNotifyTimer() {
+        notifyReceiverEvent(InterEvent.CODE_REQUEST_NOTIFY_TIMER, null);
+    }
+
+    @Override
+    public final void requestStopTimer() {
+        notifyReceiverEvent(InterEvent.CODE_REQUEST_STOP_TIMER, null);
     }
 
     @Override

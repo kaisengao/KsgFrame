@@ -8,7 +8,8 @@ import com.kasiengao.ksgframe.R;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 import com.ksg.ksgplayer.listener.OnErrorEventListener;
 import com.ksg.ksgplayer.listener.OnPlayerEventListener;
-import com.ksg.ksgplayer.widget.KsgVideoPlayer;
+import com.ksg.ksgplayer.receiver.ReceiverGroup;
+import com.ksg.ksgplayer.widget.KsgVideoView;
 
 /**
  * @ClassName: PlayerVideo
@@ -18,7 +19,7 @@ import com.ksg.ksgplayer.widget.KsgVideoPlayer;
  */
 public class PlayerActivity extends BaseToolbarActivity implements View.OnClickListener {
 
-    private KsgVideoPlayer mVideoPlayer;
+    private KsgVideoView mKsgVideoView;
 
     @Override
     protected int getContentLayoutId() {
@@ -31,15 +32,16 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
         // Toolbar Title
         this.setTitle(R.string.player_title);
         // KsgVideoPlayer
-        this.mVideoPlayer = findViewById(R.id.player);
-        this.mVideoPlayer.setDecoderView(new KsgIjkPlayer(this));
-        this.mVideoPlayer.setOnPlayerEventListener(new OnPlayerEventListener() {
+        this.mKsgVideoView = findViewById(R.id.player);
+        this.mKsgVideoView.setDecoderView(new KsgIjkPlayer(this));
+        this.mKsgVideoView.getVideoPlayer().setReceiverGroup(new ReceiverGroup());
+        this.mKsgVideoView.getVideoPlayer().setOnPlayerEventListener(new OnPlayerEventListener() {
             @Override
             public void onPlayerEvent(int eventCode, Bundle bundle) {
                 KLog.d("zzz", "onPlayerEvent eventCode = " + eventCode);
             }
         });
-        this.mVideoPlayer.setOnErrorEventListener(new OnErrorEventListener() {
+        this.mKsgVideoView.getVideoPlayer().setOnErrorEventListener(new OnErrorEventListener() {
             @Override
             public void onErrorEvent(int eventCode, Bundle bundle) {
                 KLog.d("zzz", "onErrorEvent eventCode = " + eventCode);
@@ -57,21 +59,21 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
         switch (v.getId()) {
             case R.id.player_start:
                 // 播放
-                this.mVideoPlayer.setDataSource("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4");
-                this.mVideoPlayer.setLooping(true);
-                this.mVideoPlayer.start();
+                this.mKsgVideoView.setDataSource("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4");
+                this.mKsgVideoView.setLooping(true);
+                this.mKsgVideoView.start();
                 break;
             case R.id.player_resume:
                 // 继续
-                this.mVideoPlayer.resume();
+                this.mKsgVideoView.resume();
                 break;
             case R.id.player_pause:
                 // 暂停
-                this.mVideoPlayer.pause();
+                this.mKsgVideoView.pause();
                 break;
             case R.id.player_stop:
                 // 停止
-                this.mVideoPlayer.stop();
+                this.mKsgVideoView.stop();
                 break;
             default:
                 break;
@@ -82,6 +84,6 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
     protected void onDestroy() {
         super.onDestroy();
         // 销毁
-        this.mVideoPlayer.destroy();
+        this.mKsgVideoView.destroy();
     }
 }

@@ -18,6 +18,8 @@ public abstract class BaseInternalPlayer implements IKsgPlayer {
 
     protected final Context mContext;
 
+    protected int mBufferPercentage;
+
     /**
      * 当前播放器状态
      */
@@ -101,6 +103,13 @@ public abstract class BaseInternalPlayer implements IKsgPlayer {
             bundle.putString(EventKey.STRING_DATA, error);
             this.mOnErrorEventListener.onErrorEvent(eventCode, bundle);
         }
+    }
+
+    /**
+     * @param bufferPercentage 缓冲进度
+     */
+    protected final void setBufferPercentage(int bufferPercentage) {
+        this.mBufferPercentage = bufferPercentage;
     }
 
     /**

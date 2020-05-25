@@ -1,4 +1,4 @@
-package com.ksg.ksgplayer;
+package com.ksg.ksgplayer.player;
 
 import android.os.Bundle;
 import android.view.Surface;
@@ -7,12 +7,11 @@ import android.view.SurfaceHolder;
 import com.ksg.ksgplayer.cache.PlayValueGetter;
 import com.ksg.ksgplayer.cache.progress.ProgressCache;
 import com.ksg.ksgplayer.config.PlayerConfig;
+import com.ksg.ksgplayer.event.BundlePool;
+import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.listener.OnErrorEventListener;
 import com.ksg.ksgplayer.listener.OnPlayerEventListener;
-import com.ksg.ksgplayer.player.BaseInternalPlayer;
-import com.ksg.ksgplayer.player.IKsgPlayer;
-import com.ksg.ksgplayer.player.IKsgPlayerProxy;
-import com.ksg.ksgplayer.widget.KsgVideoPlayer;
+import com.ksg.ksgplayer.proxy.TimerCounterProxy;
 
 /**
  * @ClassName: KsgPlayerProxy
@@ -22,10 +21,17 @@ import com.ksg.ksgplayer.widget.KsgVideoPlayer;
  */
 public final class KsgPlayerProxy implements IKsgPlayer {
 
+    private float mVolumeLeft = -1, mVolumeRight = -1;
+
     /**
      * 视频播放地址
      */
     private String mDataSource;
+
+    /**
+     * 进度更新计时代理
+     */
+    private TimerCounterProxy mTimerCounterProxy;
 
     /**
      * 播放器
@@ -50,6 +56,8 @@ public final class KsgPlayerProxy implements IKsgPlayer {
     public KsgPlayerProxy() {
         // 初始化 播放进度缓存代理
         this.initProgressCache();
+        // 初始化 进度更新计时代理
+        this.mTimerCounterProxy = new TimerCounterProxy(1000);
     }
 
     /**
@@ -66,7 +74,7 @@ public final class KsgPlayerProxy implements IKsgPlayer {
 
                 @Override
                 public int getBufferedPercentage() {
-                    return KsgPlayerProxy.this.getBufferedPercentage();
+                    return KsgPlayerProxy.this.getBufferPercentage();
                 }
 
                 @Override
@@ -80,6 +88,15 @@ public final class KsgPlayerProxy implements IKsgPlayer {
                 }
             });
         }
+    }
+
+    /**
+     * 代理状态
+     *
+     * @param useTimerProxy 开/关
+     */
+    public void setUseTimerProxy(boolean useTimerProxy) {
+        this.mTimerCounterProxy.setUseProxy(useTimerProxy);
     }
 
     /**
@@ -156,6 +173,7 @@ public final class KsgPlayerProxy implements IKsgPlayer {
      * 配置 事件监听
      */
     private void initListener() {
+        this.mTimerCounterProxy.setOnCounterUpdateListener(mOnCounterUpdateListener);
         if (isPlayerAvailable()) {
             this.mInternalPlayer.setOnPlayerEventListener(mInternalPlayerEventListener);
             this.mInternalPlayer.setOnErrorEventListener(mInternalErrorEventListener);
@@ -166,6 +184,7 @@ public final class KsgPlayerProxy implements IKsgPlayer {
      * 重置 事件监听
      */
     private void resetListener() {
+        this.mTimerCounterProxy.setOnCounterUpdateListener(null);
         if (isPlayerAvailable()) {
             this.mInternalPlayer.setOnPlayerEventListener(null);
             this.mInternalPlayer.setOnErrorEventListener(null);
@@ -213,9 +232,11 @@ public final class KsgPlayerProxy implements IKsgPlayer {
      * 设置音量
      */
     @Override
-    public void setVolume(float v1, float v2) {
+    public void setVolume(float left, float right) {
+        this.mVolumeLeft = left;
+        this.mVolumeRight = right;
         if (isPlayerAvailable()) {
-            this.mInternalPlayer.setVolume(v1, v2);
+            this.mInternalPlayer.setVolume(left, right);
         }
     }
 
@@ -267,9 +288,9 @@ public final class KsgPlayerProxy implements IKsgPlayer {
      * @return 缓冲进度
      */
     @Override
-    public int getBufferedPercentage() {
+    public int getBufferPercentage() {
         if (isPlayerAvailable()) {
-            return this.mInternalPlayer.getBufferedPercentage();
+            return this.mInternalPlayer.getBufferPercentage();
         }
         return 0;
     }
@@ -450,6 +471,9 @@ public final class KsgPlayerProxy implements IKsgPlayer {
         if (isPlayerAvailable()) {
             this.mInternalPlayer.destroy();
         }
+        if (mTimerCounterProxy != null) {
+            this.mTimerCounterProxy.cancel();
+        }
         // 销毁 事件监听
         this.resetListener();
     }
@@ -473,11 +497,55 @@ public final class KsgPlayerProxy implements IKsgPlayer {
     }
 
     /**
+     * 进度更新计时代理
+     */
+    private TimerCounterProxy.OnCounterUpdateListener mOnCounterUpdateListener =
+            new TimerCounterProxy.OnCounterUpdateListener() {
+                @Override
+                public void onCounter() {
+                    long curr = getCurrentPosition();
+                    long duration = getDuration();
+                    long bufferPercentage = getBufferPercentage();
+                    if (duration <= 0) {
+                        return;
+                    }
+                    onTimerUpdateEvent(curr, duration, bufferPercentage);
+                }
+            };
+
+    /**
+     * @param curr             播放进度
+     * @param duration         播放总时长
+     * @param bufferPercentage 缓冲进度
+     */
+    private void onTimerUpdateEvent(long curr, long duration, long bufferPercentage) {
+        Bundle bundle = BundlePool.obtain();
+        bundle.putLong(EventKey.LONG_ARG1, curr);
+        bundle.putLong(EventKey.LONG_ARG2, duration);
+        bundle.putLong(EventKey.LONG_ARG3, bufferPercentage);
+        this.callBackPlayEventListener(OnPlayerEventListener.PLAYER_EVENT_ON_TIMER_UPDATE, bundle);
+    }
+
+    /**
      * 播放器的基础事件
      */
     private OnPlayerEventListener mInternalPlayerEventListener = new OnPlayerEventListener() {
         @Override
         public void onPlayerEvent(int eventCode, Bundle bundle) {
+            mTimerCounterProxy.proxyPlayEvent(eventCode, bundle);
+
+            if (eventCode == OnPlayerEventListener.PLAYER_EVENT_ON_PREPARED) {
+                if (mVolumeLeft >= 0 || mVolumeRight >= 0) {
+                    mInternalPlayer.setVolume(mVolumeLeft, mVolumeRight);
+                }
+            } else if (eventCode == OnPlayerEventListener.PLAYER_EVENT_ON_PLAY_COMPLETE) {
+                long duration = getDuration();
+                long bufferPercentage = getBufferPercentage();
+                if (duration <= 0) {
+                    return;
+                }
+                onTimerUpdateEvent(duration, duration, bufferPercentage);
+            }
             // 验证 播放进度缓存
             if (isProgressCacheOpen()) {
                 mProgressCache.onPlayerEvent(eventCode, bundle);
@@ -493,6 +561,11 @@ public final class KsgPlayerProxy implements IKsgPlayer {
     private OnErrorEventListener mInternalErrorEventListener = new OnErrorEventListener() {
         @Override
         public void onErrorEvent(int eventCode, Bundle bundle) {
+            mTimerCounterProxy.proxyErrorEvent(eventCode, bundle);
+            // 验证 播放进度缓存
+            if (isProgressCacheOpen()) {
+                mProgressCache.onErrorEvent(eventCode, bundle);
+            }
             // 回调 播放器的错误事件
             callBackErrorEventListener(eventCode, bundle);
         }

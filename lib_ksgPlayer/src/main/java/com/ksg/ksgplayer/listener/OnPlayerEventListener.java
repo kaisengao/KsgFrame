@@ -3,6 +3,7 @@ package com.ksg.ksgplayer.listener;
 import android.os.Bundle;
 
 import com.ksg.ksgplayer.player.IKsgPlayer;
+import com.ksg.ksgplayer.proxy.TimerCounterProxy;
 
 /**
  * @ClassName: OnPlayerEventListener
@@ -104,9 +105,9 @@ public interface OnPlayerEventListener {
     int PLAYER_EVENT_ON_PREPARED = -99018;
 
     /**
-     * NONE
+     * on player timer counter update {@link TimerCounterProxy}
      */
-    int PLAYER_EVENT_ON_NONE = -99019;
+    int PLAYER_EVENT_ON_TIMER_UPDATE = -99019;
 
     /**
      * on get video rotation.

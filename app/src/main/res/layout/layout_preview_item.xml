@@ -11,17 +11,9 @@
         android:layout_gravity="center"
         app:actualImageScaleType="focusCrop" />
 
-    <com.ksg.ksgplayer.widget.KsgVideoPlayer
+    <FrameLayout
         android:id="@+id/item_preview_player"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/item_preview_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:src="@mipmap/icon_preview_play"
-        android:visibility="gone" />
 
 </FrameLayout>

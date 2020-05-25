@@ -1,28 +1,29 @@
-package com.ksg.ksgplayer.widget;
+package com.ksg.ksgplayer.player;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
+import android.view.ViewParent;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-
-import com.ksg.ksgplayer.KsgPlayerProxy;
+import com.kasiengao.base.util.KLog;
+import com.ksg.ksgplayer.assist.InterEvent;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
 import com.ksg.ksgplayer.config.PlayerConfig;
+import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.extension.BaseEventProducer;
 import com.ksg.ksgplayer.listener.OnErrorEventListener;
 import com.ksg.ksgplayer.listener.OnPlayerEventListener;
 import com.ksg.ksgplayer.listener.OnReceiverEventListener;
-import com.ksg.ksgplayer.player.BaseInternalPlayer;
-import com.ksg.ksgplayer.player.IKsgPlayer;
 import com.ksg.ksgplayer.producer.NetworkEventProducer;
 import com.ksg.ksgplayer.receiver.IReceiverGroup;
 import com.ksg.ksgplayer.receiver.PlayerStateGetter;
 import com.ksg.ksgplayer.receiver.StateGetter;
+import com.ksg.ksgplayer.render.AspectRatio;
+import com.ksg.ksgplayer.render.IRender;
+import com.ksg.ksgplayer.render.RenderSurfaceView;
 import com.ksg.ksgplayer.render.RenderTextureView;
+import com.ksg.ksgplayer.widget.KsgContainer;
 
 import java.util.List;
 
@@ -30,17 +31,35 @@ import java.util.List;
  * @ClassName: KsgVideoPlayer
  * @Author: KaiSenGao
  * @CreateDate: 2020/5/22 14:08
- * @Description: 播放器
+ * @Description: 播放器  {借鉴 @link https://juejin.im/post/5b0d4e6bf265da090f7376d2  掘金大神的PlayerBase}
  */
-public class KsgVideoPlayer extends FrameLayout implements IKagVideoPlayer {
+public class KsgVideoPlayer implements IKagVideoPlayer {
 
     private Context mContext;
+
+    public int mRenderType = IRender.RENDER_TYPE_TEXTURE_VIEW;
+
+    private int mVideoWidth;
+
+    private int mVideoHeight;
+
+    private int mVideoSarNum;
+
+    private int mVideoSarDen;
+
+    private int mVideoRotation;
 
     private boolean mIsBuffering;
 
     private KsgPlayerProxy mKsgPlayer;
 
     private KsgContainer mKsgContainer;
+
+    public IRender mRender;
+
+    private IRender.IRenderHolder mRenderHolder;
+
+    private AspectRatio mAspectRatio = AspectRatio.AspectRatio_FIT_PARENT;
 
     private OnPlayerEventListener mOnPlayerEventListener;
 
@@ -49,18 +68,8 @@ public class KsgVideoPlayer extends FrameLayout implements IKagVideoPlayer {
     private OnReceiverEventListener mOnReceiverEventListener;
 
     private OnVideoViewEventHandler mOnVideoViewEventHandler;
-    private RenderTextureView mRenderView;
 
     public KsgVideoPlayer(Context context) {
-        this(context, null);
-    }
-
-    public KsgVideoPlayer(@NonNull Context context, @Nullable AttributeSet attrs) {
-        this(context, attrs, 0);
-    }
-
-    public KsgVideoPlayer(@NonNull Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
         // Init
         this.init(context);
     }
@@ -76,9 +85,6 @@ public class KsgVideoPlayer extends FrameLayout implements IKagVideoPlayer {
         this.mKsgPlayer = createKsgPlayer();
         // 初始化容器
         this.mKsgContainer = onCreateKsgContainer(context);
-        // AddView
-        this.addView(mKsgContainer, new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT,
-                ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
     /**
@@ -96,7 +102,7 @@ public class KsgVideoPlayer extends FrameLayout implements IKagVideoPlayer {
      *
      * @param context context
      */
-    protected KsgContainer onCreateKsgContainer(Context context) {
+    private KsgContainer onCreateKsgContainer(Context context) {
         KsgContainer ksgContainer = new KsgContainer(context);
         ksgContainer.setStateGetter(mInternalStateGetter);
         ksgContainer.setOnReceiverEventListener(mInternalReceiverEventListener);
@@ -144,6 +150,43 @@ public class KsgVideoPlayer extends FrameLayout implements IKagVideoPlayer {
     }
 
     /**
+     * 容器
+     *
+     * @param userContainer ViewGroup
+     */
+    @Override
+    public void attachContainer(ViewGroup userContainer) {
+        this.attachContainer(userContainer, false);
+    }
+
+    /**
+     * 容器
+     *
+     * @param userContainer ViewGroup
+     * @param updateRender  是否更新渲染view
+     */
+    @Override
+    public void attachContainer(ViewGroup userContainer, boolean updateRender) {
+        this.detachSuperContainer();
+        // attach container
+        if (userContainer != null) {
+            userContainer.addView(mKsgContainer, new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT));
+        }
+    }
+
+    /**
+     * 初始化容器
+     */
+    private void detachSuperContainer() {
+        ViewParent parent = this.mKsgContainer.getParent();
+        if (parent instanceof ViewGroup) {
+            ((ViewGroup) parent).removeView(this.mKsgContainer);
+        }
+    }
+
+    /**
      * 获取当前state
      * {@link IKsgPlayer#STATE_END}
      * {@link IKsgPlayer#STATE_ERROR}
@@ -177,10 +220,86 @@ public class KsgVideoPlayer extends FrameLayout implements IKagVideoPlayer {
      */
     @Override
     public void setDataSource(String dataSource) {
-        // 设置RenderView
-        this.setRenderView();
+        // 请求获取音频焦点
+        this.requestAudioFocus();
         // 设置数据源
         this.mKsgPlayer.setDataSource(dataSource);
+    }
+
+    /**
+     * 请求获取音频焦点
+     */
+    private void requestAudioFocus() {
+        KLog.d("zzz", ">>requestAudioFocus<<");
+        AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager != null) {
+            // 请求焦点的参数说明：
+            // AUDIOFOCUS_GAIN：想要长期占有焦点，失去焦点者stop播放和释放
+            // AUDIOFOCUS_GAIN_TRANSIENT：想要短暂占有焦点，失去焦点者pause播放
+            // AUDIOFOCUS_GAIN_TRANSIENT_MAY_DUCK：想要短暂占有焦点，失去焦点者可以继续播放但是音量需要调低
+            // AUDIOFOCUS_GAIN_TRANSIENT_EXCLUSIVE：想要短暂占有焦点，但希望失去焦点者不要有声音播放
+            audioManager.requestAudioFocus(null, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN);
+        }
+    }
+
+    /**
+     * 释放音频焦点
+     */
+    private void releaseAudioFocus() {
+        KLog.d("zzz", "<<releaseAudioFocus>>");
+        AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
+        if (audioManager != null) {
+            audioManager.abandonAudioFocus(null);
+        }
+    }
+
+    /**
+     * 设置渲染视图类型
+     *
+     * @param renderType {@link IRender}
+     */
+    @Override
+    public void setRenderType(int renderType) {
+        this.mRenderType = renderType;
+        // 销毁视图资源
+        this.releaseRender();
+        // 判断类型
+        switch (renderType) {
+            case IRender.RENDER_TYPE_SURFACE_VIEW:
+                // SurfaceView
+                this.mRender = new RenderSurfaceView(mContext);
+                break;
+            default:
+            case IRender.RENDER_TYPE_TEXTURE_VIEW:
+                // 默认 TextureView
+                this.mRender = new RenderTextureView(mContext);
+                ((RenderTextureView) mRender).setTakeOverSurfaceTexture(true);
+                break;
+        }
+        // 初始化 RenderHolder
+        this.mRenderHolder = null;
+        this.mKsgPlayer.setSurface(null);
+        this.mRender.updateAspectRatio(mAspectRatio);
+        this.mRender.setRenderCallback(mRenderCallback);
+        // 设置画面宽高
+        this.mRender.updateVideoSize(mVideoWidth, mVideoHeight);
+        this.mRender.setVideoSampleAspectRatio(mVideoSarNum, mVideoSarDen);
+        // 设置视频旋转角度
+        this.mRender.setVideoRotation(mVideoRotation);
+        // add to container
+        this.mKsgContainer.setRenderView(mRender.getRenderView());
+    }
+
+    /**
+     * 销毁视图资源
+     * <p>
+     * {@link RenderTextureView#release()}
+     */
+    public void releaseRender() {
+        if (mRender != null) {
+            this.mRender.release();
+            this.mRender = null;
+        }
     }
 
     /**
@@ -195,41 +314,18 @@ public class KsgVideoPlayer extends FrameLayout implements IKagVideoPlayer {
         if (oldDecoderView != null && oldDecoderView == decoderView) {
             return;
         }
+        // 销毁视图资源
+        this.releaseRender();
         // 设置新（播放器）解码器
         this.mKsgPlayer.setDecoderView(decoderView);
-    }
-
-    /**
-     * 设置 RenderView
-     */
-    private void setRenderView() {
-
-        this.releaseRender();
-
-        mRenderView = new RenderTextureView(mContext);
-        mRenderView.attachToPlayer(mKsgPlayer.getDecoderView());
-        // 添加到容器内
-        this.mKsgContainer.setRenderView(mRenderView.getView());
-    }
-
-    /**
-     * 释放 RenderView
-     * <p>
-     * {@link RenderTextureView#release()}
-     */
-    private void releaseRender() {
-        if (this.mRenderView != null) {
-            this.mRenderView.release();
-            this.mRenderView = null;
-        }
     }
 
     /**
      * 设置音量
      */
     @Override
-    public void setVolume(float v1, float v2) {
-        this.mKsgPlayer.setVolume(v1, v2);
+    public void setVolume(float left, float right) {
+        this.mKsgPlayer.setVolume(left, right);
     }
 
     /**
@@ -271,7 +367,7 @@ public class KsgVideoPlayer extends FrameLayout implements IKagVideoPlayer {
      */
     @Override
     public int getBufferedPercentage() {
-        return this.mKsgPlayer.getBufferedPercentage();
+        return this.mKsgPlayer.getBufferPercentage();
     }
 
     /**
@@ -387,8 +483,12 @@ public class KsgVideoPlayer extends FrameLayout implements IKagVideoPlayer {
      */
     @Override
     public void destroy() {
+        this.releaseRender();
+        this.releaseAudioFocus();
+        this.mRenderHolder = null;
         this.mKsgPlayer.destroy();
         this.mKsgContainer.destroy();
+        this.detachSuperContainer();
     }
 
     public void setOnPlayerEventListener(OnPlayerEventListener onPlayerEventListener) {
@@ -414,12 +514,45 @@ public class KsgVideoPlayer extends FrameLayout implements IKagVideoPlayer {
         @Override
         public void onPlayerEvent(int eventCode, Bundle bundle) {
             switch (eventCode) {
-                case OnPlayerEventListener.PLAYER_EVENT_ON_PREPARED:
-                    mKsgContainer.setKeepScreenOn(true);
+                case OnPlayerEventListener.PLAYER_EVENT_ON_VIDEO_SIZE_CHANGE:
+                    // 视频大小改变，更新渲染
+                    if (bundle != null) {
+                        mVideoWidth = bundle.getInt(EventKey.INT_ARG1);
+                        mVideoHeight = bundle.getInt(EventKey.INT_ARG2);
+                        mVideoSarNum = bundle.getInt(EventKey.INT_ARG3);
+                        mVideoSarDen = bundle.getInt(EventKey.INT_ARG4);
+                        if (mRender != null) {
+                            // 设置画面宽高
+                            mRender.updateVideoSize(mVideoWidth, mVideoHeight);
+                            // 设置视频采样率
+                            mRender.setVideoSampleAspectRatio(mVideoSarNum, mVideoSarDen);
+                        }
+                        KLog.d("zzz", "onVideoSizeChange : videoWidth = " + mVideoWidth
+                                + ", videoHeight = " + mVideoHeight
+                                + ", videoSarNum = " + mVideoSarNum
+                                + ", videoSarDen = " + mVideoSarDen);
+                    }
                     break;
-                case OnPlayerEventListener.PLAYER_EVENT_ON_PLAY_COMPLETE:
-                case OnPlayerEventListener.PLAYER_EVENT_ON_STOP:
-                    mKsgContainer.setKeepScreenOn(false);
+                case OnPlayerEventListener.PLAYER_EVENT_ON_VIDEO_ROTATION_CHANGED:
+                    // 视频发生旋转，更新渲染
+                    if (bundle != null) {
+                        // 判断如果需要旋转在更新渲染
+                        mVideoRotation = bundle.getInt(EventKey.INT_DATA);
+                        KLog.d("zzz", "onVideoRotationChange : videoRotation = " + mVideoRotation);
+                        if (mRender != null) {
+                            mRender.setVideoRotation(mVideoRotation);
+                        }
+                    }
+                    break;
+                case OnPlayerEventListener.PLAYER_EVENT_ON_PREPARED:
+                    // 播放器准备完毕
+                    if (bundle != null && mRender != null) {
+                        mVideoWidth = bundle.getInt(EventKey.INT_ARG1);
+                        mVideoHeight = bundle.getInt(EventKey.INT_ARG2);
+                        mRender.updateVideoSize(mVideoWidth, mVideoHeight);
+                    }
+                    // 视图绑定
+                    bindRenderHolder(mRenderHolder);
                     break;
                 case OnPlayerEventListener.PLAYER_EVENT_ON_BUFFERING_START:
                     mIsBuffering = true;
@@ -474,7 +607,7 @@ public class KsgVideoPlayer extends FrameLayout implements IKagVideoPlayer {
 
                 @Override
                 public int getBufferPercentage() {
-                    return mKsgPlayer.getBufferedPercentage();
+                    return mKsgPlayer.getBufferPercentage();
                 }
 
                 @Override
@@ -491,12 +624,54 @@ public class KsgVideoPlayer extends FrameLayout implements IKagVideoPlayer {
     private OnReceiverEventListener mInternalReceiverEventListener = new OnReceiverEventListener() {
         @Override
         public void onReceiverEvent(int eventCode, Bundle bundle) {
+            if (eventCode == InterEvent.CODE_REQUEST_NOTIFY_TIMER) {
+                mKsgPlayer.setUseTimerProxy(true);
+            } else if (eventCode == InterEvent.CODE_REQUEST_STOP_TIMER) {
+                mKsgPlayer.setUseTimerProxy(false);
+            }
             if (mOnVideoViewEventHandler != null) {
                 mOnVideoViewEventHandler.onAssistHandle(KsgVideoPlayer.this, eventCode, bundle);
             }
             if (mOnReceiverEventListener != null) {
                 mOnReceiverEventListener.onReceiverEvent(eventCode, bundle);
             }
+        }
+    };
+
+    /**
+     * 视图绑定
+     *
+     * @param renderHolder renderHolder
+     */
+    private void bindRenderHolder(IRender.IRenderHolder renderHolder) {
+        if (renderHolder != null) {
+            renderHolder.bindPlayer(mKsgPlayer);
+        }
+    }
+
+    /**
+     * 视图渲染回调
+     */
+    private IRender.IRenderCallback mRenderCallback = new IRender.IRenderCallback() {
+        @Override
+        public void onSurfaceCreated(IRender.IRenderHolder renderHolder, int width, int height) {
+            KLog.d("zzz", "onSurfaceCreated : width = " + width + ", height = " + height);
+            //on surface create ,try to attach player.
+            mRenderHolder = renderHolder;
+            bindRenderHolder(mRenderHolder);
+        }
+
+        @Override
+        public void onSurfaceChanged(IRender.IRenderHolder renderHolder,
+                                     int format, int width, int height) {
+            //not handle some...
+        }
+
+        @Override
+        public void onSurfaceDestroy(IRender.IRenderHolder renderHolder) {
+            KLog.d("zzz", "onSurfaceDestroy...");
+            //on surface destroy detach player
+            mRenderHolder = null;
         }
     };
 }

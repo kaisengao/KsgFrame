@@ -6,7 +6,7 @@ import android.util.Log;
 
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.player.IKsgPlayer;
-import com.ksg.ksgplayer.widget.KsgVideoPlayer;
+import com.ksg.ksgplayer.player.KsgVideoPlayer;
 
 /**
  * @author kaisengao
@@ -18,7 +18,6 @@ public class OnVideoViewEventHandler extends BaseEventAssistHandler<KsgVideoPlay
     @Override
     public void requestOption(KsgVideoPlayer assist, Bundle bundle) {
         int code = bundle.getInt(EventKey.INT_ARG1);
-
         assist.option(code, bundle);
     }
 
