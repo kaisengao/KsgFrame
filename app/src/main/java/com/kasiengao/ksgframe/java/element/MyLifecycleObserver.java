@@ -27,8 +27,8 @@ public abstract class MyLifecycleObserver implements LifecycleObserver {
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    public void onActivityOnDestroy() {
-        KLog.d("onActivityOnDestroy");
+    public void onActivityDestroy() {
+        KLog.d("onActivityDestroy");
         this.onAcDestroy();
     }
 

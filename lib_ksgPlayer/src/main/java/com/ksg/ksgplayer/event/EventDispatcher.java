@@ -37,9 +37,9 @@ public final class EventDispatcher implements IEventDispatcher {
                     public void onEach(IReceiver receiver) {
                         if (receiver instanceof OnTimerUpdateListener && bundle != null)
                             ((OnTimerUpdateListener) receiver).onTimerUpdate(
-                                    bundle.getInt(EventKey.INT_ARG1),
-                                    bundle.getInt(EventKey.INT_ARG2),
-                                    bundle.getInt(EventKey.INT_ARG3));
+                                    bundle.getLong(EventKey.LONG_ARG1),
+                                    bundle.getLong(EventKey.LONG_ARG2),
+                                    bundle.getLong(EventKey.LONG_ARG3));
                         receiver.onPlayerEvent(eventCode, bundle);
                     }
                 });

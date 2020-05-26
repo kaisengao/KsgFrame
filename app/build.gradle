@@ -45,4 +45,6 @@ dependencies {
     implementation project(':lib_rx_retrofit')
     // KsgPlayer
     implementation project(':lib_ksgPlayer')
+    // ButterKnife
+    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
 }

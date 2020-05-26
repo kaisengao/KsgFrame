@@ -23,6 +23,8 @@ import com.kasiengao.base.util.CommonUtil;
 import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.KsgIjkPlayer;
+import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
+import com.ksg.ksgplayer.receiver.ReceiverGroup;
 import com.ksg.ksgplayer.widget.KsgAssistView;
 
 import java.util.ArrayList;
@@ -40,7 +42,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     private List<T> mMediaList;
 
-    private final Lifecycle mLifecycle;
+    private Lifecycle mLifecycle;
 
     private ViewPager mViewPager;
 
@@ -59,8 +61,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         // Init View
         this.initView();
         // Lifecycle
-        this.mLifecycle = CommonUtil.scanForActivity(context).getLifecycle();
-        this.mLifecycle.addObserver(mLifecycleObserver);
+        this.mLifecycle = LifecycleSensitiveHelper.registerLifecycle(context, mLifecycleObserver);
     }
 
     /**
@@ -82,6 +83,12 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
             this.mKsgAssistView = new KsgAssistView(getContext());
             this.mKsgAssistView.setDecoderView(new KsgIjkPlayer(getContext()));
             this.mKsgAssistView.getVideoPlayer().getKsgContainer().setBackgroundColor(Color.BLACK);
+
+            ReceiverGroup receiverGroup = new ReceiverGroup();
+
+            receiverGroup.addReceiver("controller", new ControllerCover(getContext()));
+
+            this.mKsgAssistView.getVideoPlayer().setReceiverGroup(receiverGroup);
         }
     }
 
@@ -161,10 +168,10 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         if (this.mKsgAssistView != null) {
             this.mKsgAssistView.stop();
         }
+        // container
+        FrameLayout container = mViewPager.findViewWithTag(position);
         // 类型区分
-        if ("video".equals(pagerParams.getMediaType())) {
-            // container
-            FrameLayout container = mViewPager.findViewWithTag(position);
+        if (container != null && "video".equals(pagerParams.getMediaType())) {
             container.setVisibility(VISIBLE);
             // 初始化辅助播放器
             this.initAssistVideo();
@@ -201,9 +208,9 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                 mKsgAssistView.destroy();
                 mKsgAssistView = null;
             }
-            mLifecycle.removeObserver(mLifecycleObserver);
-            mLifecycleObserver = null;
             mViewPager.removeOnPageChangeListener(PreviewPager.this);
+            LifecycleSensitiveHelper.unRegisterLifecycle(mLifecycle, mLifecycleObserver);
+            mLifecycleObserver = null;
         }
     };
 
@@ -265,9 +272,12 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                     .setAutoPlayAnimations(true)
                     .build();
             imageView.setController(draweeController);
-            // 播放器容器
-            FrameLayout playerContainer = itemView.findViewById(R.id.item_preview_player);
-            playerContainer.setTag(position);
+            // 类型区分
+            if ("video".equals(pagerParams.getMediaType())) {
+                // 播放器容器
+                FrameLayout playerContainer = itemView.findViewById(R.id.item_preview_player);
+                playerContainer.setTag(position);
+            }
             // ViewPager 视图添加
             container.addView(itemView);
             // Return

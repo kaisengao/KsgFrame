@@ -34,6 +34,9 @@ dependencies {
     // Glide图片加载库
     api rootProject.ext.dependencies.glide
     annotationProcessor rootProject.ext.dependencies["glide-compiler"]
+    // ButterKnife
+    api rootProject.ext.dependencies.butterknife
+    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
     // Fresco
     api rootProject.ext.dependencies.fresco
     api rootProject.ext.dependencies["fresco-gif"]
