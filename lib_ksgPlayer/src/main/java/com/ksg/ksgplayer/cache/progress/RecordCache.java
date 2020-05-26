@@ -54,6 +54,13 @@ class RecordCache {
     }
 
     /**
+     * 重置 缓存
+     */
+    void resetRecord(String key) {
+        putRecord(key, 0L);
+    }
+
+    /**
      * 清除 缓存
      */
     void clearRecord() {

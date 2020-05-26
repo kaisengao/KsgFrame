@@ -53,18 +53,7 @@ public class PlayRecord {
      */
     void reset(String dataSource) {
         if (!TextUtils.isEmpty(dataSource)) {
-            this.mRecordCache.putRecord(dataSource, 0);
-        }
-    }
-
-    /**
-     * 删除记录
-     *
-     * @param dataSource 数据源
-     */
-    void removeRecord(String dataSource) {
-        if (!TextUtils.isEmpty(dataSource)) {
-            this.mRecordCache.removeRecord(dataSource);
+            this.mRecordCache.putRecord(dataSource, 0L);
         }
     }
 

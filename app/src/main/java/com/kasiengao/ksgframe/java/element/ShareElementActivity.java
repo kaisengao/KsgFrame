@@ -27,6 +27,8 @@ public class ShareElementActivity extends BaseToolbarActivity {
 
     private StaggeredGridBean mGridBean;
 
+    private PreviewPager<PreviewBean> mPreviewPager;
+
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_share_element;
@@ -69,11 +71,11 @@ public class ShareElementActivity extends BaseToolbarActivity {
      */
     private void initPreview() {
         // findViewById
-        PreviewPager<PreviewBean> previewPager = findViewById(R.id.share_element_pager);
+        this.mPreviewPager = findViewById(R.id.share_element_pager);
         // Data
-        previewPager.setMediaList(mGridBean.mPreviewBeans);
+        this.mPreviewPager.setMediaList(mGridBean.mPreviewBeans);
         // ShareElement
-        ViewCompat.setTransitionName(previewPager, getString(R.string.share_element_picture) + mPosition);
+        ViewCompat.setTransitionName(mPreviewPager, getString(R.string.share_element_picture) + mPosition);
     }
 
     @Override

@@ -6,7 +6,7 @@ import android.view.SurfaceHolder;
 
 import com.ksg.ksgplayer.cache.PlayValueGetter;
 import com.ksg.ksgplayer.cache.progress.ProgressCache;
-import com.ksg.ksgplayer.config.PlayerConfig;
+import com.ksg.ksgplayer.config.KsgPlayerConfig;
 import com.ksg.ksgplayer.event.BundlePool;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.listener.OnErrorEventListener;
@@ -65,7 +65,7 @@ public final class KsgPlayerProxy implements IKsgPlayer {
      */
     private void initProgressCache() {
         // 验证是否开启本地播放进度缓存
-        if (PlayerConfig.getInstance().isPlayProgressCache()) {
+        if (KsgPlayerConfig.getInstance().isPlayProgressCache()) {
             this.mProgressCache = new ProgressCache(new PlayValueGetter() {
                 @Override
                 public long getCurrentPosition() {
@@ -493,7 +493,7 @@ public final class KsgPlayerProxy implements IKsgPlayer {
      * @return boolean
      */
     private boolean isProgressCacheOpen() {
-        return PlayerConfig.getInstance().isPlayProgressCache() && this.mProgressCache != null;
+        return KsgPlayerConfig.getInstance().isPlayProgressCache() && this.mProgressCache != null;
     }
 
     /**

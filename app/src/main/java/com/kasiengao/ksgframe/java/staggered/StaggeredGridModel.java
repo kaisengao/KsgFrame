@@ -36,9 +36,9 @@ public class StaggeredGridModel {
     private StaggeredGridBean createBean0() {
         StaggeredGridBean gridBean = new StaggeredGridBean();
 
-        gridBean.mName = "蜘蛛侠：英雄远征 内地定档预告";
-        gridBean.mContent = "《蜘蛛侠：英雄远征》定档预告";
-        gridBean.mDetailContent = "《蜘蛛侠：英雄远征》定档预告";
+        gridBean.mName = "视频";
+        gridBean.mContent = "视频（Video）泛指将一系列静态影像以电信号的方式加以捕捉、纪录、处理、储存、传送与重现的各种技术。";
+        gridBean.mDetailContent = "视频（Video）泛指将一系列静态影像以电信号的方式加以捕捉、纪录、处理、储存、传送与重现的各种技术。连续的图像变化每秒超过24帧（frame）画面以上时，根据视觉暂留原理，人眼无法辨别单幅的静态画面；看上去是平滑连续的视觉效果，这样连续的画面叫做视频。视频技术最早是为了电视系统而发展，但现在已经发展为各种不同的格式以利消费者将视频记录下来。网络技术的发达也促使视频的纪录片段以串流媒体的形式存在于因特网之上并可被电脑接收与播放。视频与电影属于不同的技术，后者是利用照相术将动态的影像捕捉为一系列的静态照片。";
 
         List<PreviewBean> previewBeans = new ArrayList<>();
 
@@ -46,15 +46,26 @@ public class StaggeredGridModel {
                 "http://img5.mtime.cn/mg/2019/05/31/164845.22030068_120X90X4.jpg",
                 "http://vfx.mtime.cn/Video/2019/05/31/mp4/190531170200490672.mp4"));
 
-        previewBeans.add(createPreview(700, 350, "image",
-                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1589973046620&di=a1bea927f4af23b0791f7f0ca93fdf1d&imgtype=0&src=http%3A%2F%2Fb-ssl.duitang.com%2Fuploads%2Fitem%2F201411%2F27%2F20141127112915_PPPFV.thumb.700_0.gif"));
-
-        previewBeans.add(createPreview(474, 842, "image",
-                "https://ss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=2259647140,2312250263&fm=26&gp=0.jpg"));
+        previewBeans.add(createPreview(640, 640, "image",
+                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590475063673&di=676e607ad1c890810d0f8234fb75c19b&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20190502%2F8e512530ed9b4e779f6165fd19052a75.jpeg"));
 
         previewBeans.add(createPreview(1000, 562, "video",
-                "http://img5.mtime.cn/mg/2019/05/31/164845.22030068_120X90X4.jpg",
-                "http://vfx.mtime.cn/Video/2019/05/31/mp4/190531170200490672.mp4"));
+                "http://img5.mtime.cn/mg/2019/06/27/224744.68512147_120X90X4.jpg",
+                "http://vfx.mtime.cn/Video/2019/06/28/mp4/190628075308350550.mp4"));
+
+        previewBeans.add(createPreview(1000, 562, "video",
+                "http://img5.mtime.cn/mg/2019/06/27/231348.59732586_120X90X4.jpg",
+                "http://vfx.mtime.cn/Video/2019/06/27/mp4/190627231412433967.mp4"));
+
+        previewBeans.add(createPreview(786, 393, "image",
+                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590474964335&di=4d7ffb2b63c1f1d2a5a070a74f79bacb&imgtype=0&src=http%3A%2F%2Fn.sinaimg.cn%2Fsinacn21%2F379%2Fw786h393%2F20180801%2Ff7ab-hhacrcf2630014.jpg"));
+
+        previewBeans.add(createPreview(1024, 1462, "image",
+                "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590474861478&di=6cf3cbc6277d7d2224446cc8c2f77c0b&imgtype=0&src=http%3A%2F%2Fn.sinaimg.cn%2Fsinacn20121%2F86%2Fw1024h1462%2F20190410%2Faed5-hvntnkq3542565.jpg"));
+
+        previewBeans.add(createPreview(1000, 562, "video",
+                "http://img5.mtime.cn/mg/2019/05/30/225810.33511868_120X90X4.jpg",
+                "http://vfx.mtime.cn/Video/2019/05/30/mp4/190530225814072789.mp4"));
 
         gridBean.mPreviewBeans = previewBeans;
 

@@ -9,7 +9,7 @@ import android.view.ViewParent;
 import com.kasiengao.base.util.KLog;
 import com.ksg.ksgplayer.assist.InterEvent;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
-import com.ksg.ksgplayer.config.PlayerConfig;
+import com.ksg.ksgplayer.config.KsgPlayerConfig;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.extension.BaseEventProducer;
 import com.ksg.ksgplayer.listener.OnErrorEventListener;
@@ -36,8 +36,6 @@ import java.util.List;
 public class KsgVideoPlayer implements IKagVideoPlayer {
 
     private Context mContext;
-
-    public int mRenderType = IRender.RENDER_TYPE_TEXTURE_VIEW;
 
     private int mVideoWidth;
 
@@ -107,7 +105,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
         ksgContainer.setStateGetter(mInternalStateGetter);
         ksgContainer.setOnReceiverEventListener(mInternalReceiverEventListener);
         // 添加网络状态更改事件
-        if (PlayerConfig.getInstance().isNetworkEventProducer()) {
+        if (KsgPlayerConfig.getInstance().isNetworkEventProducer()) {
             ksgContainer.addEventProducer(new NetworkEventProducer(mContext));
         }
         return ksgContainer;
@@ -147,6 +145,15 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
      */
     public List<BaseEventProducer> getEventProducers() {
         return mKsgContainer.getEventProducers();
+    }
+
+    /**
+     * 返回Ksg容器
+     *
+     * @return KsgContainer
+     */
+    public KsgContainer getKsgContainer() {
+        return mKsgContainer;
     }
 
     /**
@@ -260,7 +267,8 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
      */
     @Override
     public void setRenderType(int renderType) {
-        this.mRenderType = renderType;
+        // 存储类型
+        KsgPlayerConfig.getInstance().setDefaultRenderType(renderType);
         // 销毁视图资源
         this.releaseRender();
         // 判断类型
@@ -415,7 +423,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
      */
     @Override
     public void start() {
-        this.start(0);
+        this.mKsgPlayer.start();
     }
 
     /**
@@ -545,6 +553,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
                     }
                     break;
                 case OnPlayerEventListener.PLAYER_EVENT_ON_PREPARED:
+                    mKsgContainer.setKeepScreenOn(true);
                     // 播放器准备完毕
                     if (bundle != null && mRender != null) {
                         mVideoWidth = bundle.getInt(EventKey.INT_ARG1);
@@ -553,6 +562,10 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
                     }
                     // 视图绑定
                     bindRenderHolder(mRenderHolder);
+                    break;
+                case OnPlayerEventListener.PLAYER_EVENT_ON_PLAY_COMPLETE:
+                case OnPlayerEventListener.PLAYER_EVENT_ON_STOP:
+                    mKsgContainer.setKeepScreenOn(false);
                     break;
                 case OnPlayerEventListener.PLAYER_EVENT_ON_BUFFERING_START:
                     mIsBuffering = true;

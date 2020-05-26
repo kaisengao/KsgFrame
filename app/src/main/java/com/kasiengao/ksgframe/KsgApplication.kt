@@ -1,7 +1,7 @@
 package com.kasiengao.ksgframe
 
 import com.kasiengao.base.BaseApplication
-import com.ksg.ksgplayer.config.PlayerConfig
+import com.ksg.ksgplayer.config.KsgPlayerConfig
 
 /**
  * @ClassName: KsgApplication
@@ -13,7 +13,7 @@ class KsgApplication : BaseApplication() {
     override fun onCreate() {
         super.onCreate()
         // 播放器 全局配置
-        PlayerConfig.getInstance().isPlayProgressCache = true
-        PlayerConfig.getInstance().isNetworkEventProducer = false
+        KsgPlayerConfig.getInstance().isPlayProgressCache = true
+        KsgPlayerConfig.getInstance().isNetworkEventProducer = false
     }
 }

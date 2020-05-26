@@ -164,7 +164,7 @@ public interface IKsgPlayer {
     void start();
 
     /**
-     * start
+     * 播放
      *
      * @param msc 在指定的位置开始播放
      */

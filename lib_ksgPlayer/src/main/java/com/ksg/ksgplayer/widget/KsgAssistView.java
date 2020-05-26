@@ -2,8 +2,10 @@ package com.ksg.ksgplayer.widget;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.ViewGroup;
 
+import com.ksg.ksgplayer.config.KsgPlayerConfig;
 import com.ksg.ksgplayer.player.BaseInternalPlayer;
 import com.ksg.ksgplayer.player.IKagVideoPlayer;
 import com.ksg.ksgplayer.player.KsgVideoPlayer;
@@ -13,54 +15,69 @@ import com.ksg.ksgplayer.render.IRender;
  * @ClassName: KsgAssistView
  * @Author: KaiSenGao
  * @CreateDate: 2020/5/25 16:17
- * @Description:
+ * @Description: 辅助播放器
  */
-public class KsgAssistView implements IKagVideoPlayer {
+public class KsgAssistView implements IKsgVideoView {
 
-    private final Context mContext;
-
-    private KsgVideoPlayer mVideoPlayer;
+    private int mDefaultRenderType;
 
     private String mDataSource;
 
     private boolean mRenderTypeChange;
 
+    private KsgVideoPlayer mVideoPlayer;
+
     public KsgAssistView(Context context) {
-        this.mContext = context;
+        // 播放器
         this.mVideoPlayer = new KsgVideoPlayer(context);
+        // 默认使用的视图类型
+        this.mDefaultRenderType = KsgPlayerConfig.getInstance().getDefaultRenderType();
     }
 
-    public KsgVideoPlayer getVideoPlayer() {
-        return mVideoPlayer;
+    /**
+     * 返回 播放器对象
+     *
+     * @return {@link KsgVideoPlayer}
+     */
+    @Override
+    public final KsgVideoPlayer getVideoPlayer() {
+        return this.mVideoPlayer;
     }
 
+    /**
+     * 容器
+     *
+     * @param userContainer ViewGroup
+     */
     @Override
     public void attachContainer(ViewGroup userContainer) {
         this.attachContainer(userContainer, false);
     }
 
+    /**
+     * 容器
+     *
+     * @param userContainer ViewGroup
+     * @param updateRender  是否更新渲染view
+     */
     @Override
     public void attachContainer(ViewGroup userContainer, boolean updateRender) {
-
+        // 验证是否更新Render或者 是否强制更新Render
         if (updateRender || isNeedForceUpdateRender()) {
-            releaseRender();
-            //update render view.
-            updateRender();
+            // 释放Render
+            this.releaseRender();
+            // 更新Render
+            this.updateRender();
         }
-
+        // 添加容器
         this.mVideoPlayer.attachContainer(userContainer, updateRender);
     }
 
-    @Override
-    public int getState() {
-        return this.mVideoPlayer.getState();
-    }
-
-    @Override
-    public void option(int code, Bundle bundle) {
-        this.mVideoPlayer.option(code, bundle);
-    }
-
+    /**
+     * 设置视频播放地址
+     *
+     * @param dataSource 播放地址
+     */
     @Override
     public void setDataSource(String dataSource) {
         // 设置数据源
@@ -74,22 +91,33 @@ public class KsgAssistView implements IKagVideoPlayer {
      */
     @Override
     public void setRenderType(int renderType) {
-        mRenderTypeChange = this.mVideoPlayer.mRenderType != renderType;
-        this.mVideoPlayer.mRenderType = renderType;
-        updateRender();
+        this.mRenderTypeChange = this.mDefaultRenderType != renderType;
+        this.mDefaultRenderType = renderType;
+        this.updateRender();
     }
 
+    /**
+     * 验证是否需要强制更新Render
+     *
+     * @return boolean
+     */
     private boolean isNeedForceUpdateRender() {
         return this.mVideoPlayer.mRender == null || this.mVideoPlayer.mRender.isReleased() || mRenderTypeChange;
     }
 
+    /**
+     * 更新Render
+     */
     private void updateRender() {
         if (isNeedForceUpdateRender()) {
-            mRenderTypeChange = false;
-            this.mVideoPlayer.setRenderType(this.mVideoPlayer.mRenderType);
+            this.mRenderTypeChange = false;
+            this.mVideoPlayer.setRenderType(mDefaultRenderType);
         }
     }
 
+    /**
+     * 释放Render
+     */
     private void releaseRender() {
         if (this.mVideoPlayer.mRender != null) {
             this.mVideoPlayer.mRender.setRenderCallback(null);
@@ -98,136 +126,67 @@ public class KsgAssistView implements IKagVideoPlayer {
         this.mVideoPlayer.mRender = null;
     }
 
+    /**
+     * 设置（播放器）解码器
+     *
+     * @param decoderView {@link BaseInternalPlayer}
+     */
     @Override
     public void setDecoderView(BaseInternalPlayer decoderView) {
         this.mVideoPlayer.setDecoderView(decoderView);
     }
 
-    @Override
-    public void setVolume(float left, float right) {
-        this.mVideoPlayer.setVolume(left, right);
-    }
-
-    @Override
-    public void setLooping(boolean isLooping) {
-        this.mVideoPlayer.setLooping(isLooping);
-    }
-
-    @Override
-    public void setSpeed(float speed) {
-        this.mVideoPlayer.setSpeed(speed);
-    }
-
-    @Override
-    public float getSpeed() {
-        return this.mVideoPlayer.getSpeed();
-    }
-
-    @Override
-    public long getTcpSpeed() {
-        return this.mVideoPlayer.getTcpSpeed();
-    }
-
-    @Override
-    public int getBufferedPercentage() {
-        return this.mVideoPlayer.getBufferedPercentage();
-    }
-
-    @Override
-    public long getCurrentPosition() {
-        return this.mVideoPlayer.getCurrentPosition();
-    }
-
-    @Override
-    public long getDuration() {
-        return this.mVideoPlayer.getDuration();
-    }
-
-    @Override
-    public boolean isPlaying() {
-        return this.mVideoPlayer.isPlaying();
-    }
-
-    @Override
-    public void seekTo(int msc) {
-        this.mVideoPlayer.seekTo(msc);
-    }
-
-    public void play() {
-        play(false);
-    }
-
-    public void play(boolean updateRender) {
-        if (updateRender) {
-            releaseRender();
-            updateRender();
-        }
-        if (mDataSource != null) {
-            onInternalSetDataSource(mDataSource);
-            onInternalStart();
-        }
-    }
-
-    private void onInternalSetDataSource(String dataSource) {
-        this.mVideoPlayer.setDataSource(dataSource);
-    }
-
-    private void onInternalStart(int msc) {
-        this.mVideoPlayer.start(msc);
-    }
-
-    private void onInternalStart() {
-        this.mVideoPlayer.start();
-    }
-
-    @Override
+    /**
+     * 播放
+     */
     public void start() {
-        this.mVideoPlayer.start();
+        this.start(false);
     }
 
-    @Override
-    public void start(long msc) {
-        this.mVideoPlayer.start(msc);
+    /**
+     * 播放
+     *
+     * @param updateRender 是否更新Render
+     */
+    public void start(boolean updateRender) {
+        if (updateRender) {
+            // 释放Render
+            this.releaseRender();
+            // 更新Render
+            this.updateRender();
+        }
+        // 播放
+        if (!TextUtils.isEmpty(mDataSource)) {
+            this.mVideoPlayer.setDataSource(mDataSource);
+            this.mVideoPlayer.start();
+        }
     }
 
-    @Override
+    /**
+     * 暂停
+     */
     public void pause() {
         this.mVideoPlayer.pause();
     }
 
-    @Override
+    /**
+     * 继续
+     */
     public void resume() {
         this.mVideoPlayer.resume();
     }
 
-    @Override
+    /**
+     * 停止
+     */
     public void stop() {
         this.mVideoPlayer.stop();
     }
 
-    @Override
-    public void rePlay(int msc) {
-        if (mDataSource != null) {
-            onInternalSetDataSource(mDataSource);
-            onInternalStart(msc);
-        }
-    }
-
-    @Override
-    public void reset() {
-        this.mVideoPlayer.reset();
-    }
-
-    @Override
-    public void release() {
-        this.mVideoPlayer.release();
-    }
-
-    @Override
+    /**
+     * 销毁
+     */
     public void destroy() {
-        releaseRender();
         this.mVideoPlayer.destroy();
-        this.mVideoPlayer = null;
     }
-
 }

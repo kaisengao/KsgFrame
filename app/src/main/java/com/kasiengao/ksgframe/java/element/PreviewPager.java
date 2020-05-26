@@ -1,6 +1,7 @@
 package com.kasiengao.ksgframe.java.element;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +10,16 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
+import androidx.lifecycle.Lifecycle;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
+import com.kasiengao.base.util.CommonUtil;
 import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.KsgIjkPlayer;
@@ -28,13 +32,15 @@ import java.util.List;
  * @ClassName: PreviewPager
  * @Author: KaiSenGao
  * @CreateDate: 2020/5/20 10:43
- * @Description: 自适应 Banner
+ * @Description: 自适应 预览 Banner
  */
 public class PreviewPager<T extends IPreviewParams> extends FrameLayout implements ViewPager.OnPageChangeListener {
 
     private int mNormalHeight = 0;
 
     private List<T> mMediaList;
+
+    private final Lifecycle mLifecycle;
 
     private ViewPager mViewPager;
 
@@ -50,18 +56,11 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     public PreviewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-        // Init
-        this.init();
         // Init View
         this.initView();
-    }
-
-    /**
-     * Init
-     */
-    private void init() {
-        this.mKsgAssistView = new KsgAssistView(getContext());
-        this.mKsgAssistView.setDecoderView(new KsgIjkPlayer(getContext()));
+        // Lifecycle
+        this.mLifecycle = CommonUtil.scanForActivity(context).getLifecycle();
+        this.mLifecycle.addObserver(mLifecycleObserver);
     }
 
     /**
@@ -73,6 +72,17 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         this.mViewPager.addOnPageChangeListener(this);
         this.mViewPager.setAdapter(mPagerAdapter = new PreviewPagerAdapter<>());
         this.mPagerCount = inflate.findViewById(R.id.layout_pager_count);
+    }
+
+    /**
+     * initAssistVideo
+     */
+    private void initAssistVideo() {
+        if (this.mKsgAssistView == null) {
+            this.mKsgAssistView = new KsgAssistView(getContext());
+            this.mKsgAssistView.setDecoderView(new KsgIjkPlayer(getContext()));
+            this.mKsgAssistView.getVideoPlayer().getKsgContainer().setBackgroundColor(Color.BLACK);
+        }
     }
 
     /**
@@ -88,6 +98,8 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         this.setCurrentCount();
         // 配置 Data
         this.mPagerAdapter.setMediaList(this.mMediaList);
+        // 默认执行
+        this.mViewPager.post(() -> onPageSelected(0));
     }
 
     /**
@@ -127,8 +139,8 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     @Override
     public void onPageSelected(int position) {
-        mKsgAssistView.stop();
-        playPosition(position);
+        // 播放Item
+        this.playPosition(position);
         // 配置 ViewPager 页数
         this.setCurrentCount();
     }
@@ -138,15 +150,62 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     }
 
+    /**
+     * 播放视频
+     *
+     * @param position 位置
+     */
     private void playPosition(int position) {
-        T t = mMediaList.get(position);
-        FrameLayout container = mViewPager.findViewWithTag(t.getVideoUrl());
-        if (container != null) {
-            mKsgAssistView.attachContainer(container, true);
-            mKsgAssistView.setDataSource(t.getVideoUrl());
-            mKsgAssistView.play();
+        T pagerParams = mMediaList.get(position);
+        // 不管图片还是视频只要发生改变 停止就完了
+        if (this.mKsgAssistView != null) {
+            this.mKsgAssistView.stop();
+        }
+        // 类型区分
+        if ("video".equals(pagerParams.getMediaType())) {
+            // container
+            FrameLayout container = mViewPager.findViewWithTag(position);
+            container.setVisibility(VISIBLE);
+            // 初始化辅助播放器
+            this.initAssistVideo();
+            // 添加容器 播放
+            this.mKsgAssistView.attachContainer(container, true);
+            this.mKsgAssistView.setDataSource(pagerParams.getVideoUrl());
+            this.mKsgAssistView.start();
+            this.mKsgAssistView.getVideoPlayer().setLooping(true);
         }
     }
+
+    /**
+     * Ac 生命周期
+     */
+    private MyLifecycleObserver mLifecycleObserver = new MyLifecycleObserver() {
+
+        @Override
+        protected void onAcResume() {
+            if (mKsgAssistView != null) {
+                mKsgAssistView.resume();
+            }
+        }
+
+        @Override
+        protected void onAcPause() {
+            if (mKsgAssistView != null) {
+                mKsgAssistView.pause();
+            }
+        }
+
+        @Override
+        protected void onAcDestroy() {
+            if (mKsgAssistView != null) {
+                mKsgAssistView.destroy();
+                mKsgAssistView = null;
+            }
+            mLifecycle.removeObserver(mLifecycleObserver);
+            mLifecycleObserver = null;
+            mViewPager.removeOnPageChangeListener(PreviewPager.this);
+        }
+    };
 
     /**
      * Adapter
@@ -206,19 +265,10 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                     .setAutoPlayAnimations(true)
                     .build();
             imageView.setController(draweeController);
-            // 类型区分
-            switch (pagerParams.getMediaType()) {
-                case "image":
-                    // AddView
-
-                    break;
-                case "video":
-                    FrameLayout playerContainer = itemView.findViewById(R.id.item_preview_player);
-                    playerContainer.setTag(pagerParams.getVideoUrl());
-                    break;
-                default:
-                    break;
-            }
+            // 播放器容器
+            FrameLayout playerContainer = itemView.findViewById(R.id.item_preview_player);
+            playerContainer.setTag(position);
+            // ViewPager 视图添加
             container.addView(itemView);
             // Return
             return itemView;
