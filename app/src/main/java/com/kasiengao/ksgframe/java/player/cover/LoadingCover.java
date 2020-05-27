@@ -65,8 +65,9 @@ public class LoadingCover extends BaseCover {
             case OnPlayerEventListener.PLAYER_EVENT_ON_STOP:
             case OnPlayerEventListener.PLAYER_EVENT_ON_PROVIDER_DATA_ERROR:
             case OnPlayerEventListener.PLAYER_EVENT_ON_SEEK_COMPLETE:
-            default:
                 this.setLoadingState(false);
+                break;
+            default:
                 break;
         }
     }

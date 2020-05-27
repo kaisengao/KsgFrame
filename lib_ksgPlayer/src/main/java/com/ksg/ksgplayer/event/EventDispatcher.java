@@ -3,7 +3,6 @@ package com.ksg.ksgplayer.event;
 import android.os.Bundle;
 import android.view.MotionEvent;
 
-import com.kasiengao.base.util.KLog;
 import com.ksg.ksgplayer.listener.OnPlayerEventListener;
 import com.ksg.ksgplayer.listener.OnTimerUpdateListener;
 import com.ksg.ksgplayer.receiver.IReceiver;
@@ -35,11 +34,12 @@ public final class EventDispatcher implements IEventDispatcher {
                 mReceiverGroup.forEach(new IReceiverGroup.OnLoopListener() {
                     @Override
                     public void onEach(IReceiver receiver) {
-                        if (receiver instanceof OnTimerUpdateListener && bundle != null)
+                        if (receiver instanceof OnTimerUpdateListener && bundle != null) {
                             ((OnTimerUpdateListener) receiver).onTimerUpdate(
                                     bundle.getLong(EventKey.LONG_ARG1),
                                     bundle.getLong(EventKey.LONG_ARG2),
                                     bundle.getLong(EventKey.LONG_ARG3));
+                        }
                         receiver.onPlayerEvent(eventCode, bundle);
                     }
                 });
