@@ -120,6 +120,7 @@ public abstract class BaseToolbarActivity extends BaseActivity {
      */
     @Override
     protected void initWidget() {
+        super.initWidget();
         // 初始化Toolbar
         this.initToolbar();
     }

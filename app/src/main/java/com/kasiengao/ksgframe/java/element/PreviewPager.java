@@ -1,7 +1,10 @@
 package com.kasiengao.ksgframe.java.element;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Color;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,9 +13,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.lifecycle.Lifecycle;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -24,6 +25,10 @@ import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.KsgIjkPlayer;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
+import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
+import com.ksg.ksgplayer.assist.DataInter;
+import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
+import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.receiver.ReceiverGroup;
 import com.ksg.ksgplayer.widget.KsgAssistView;
 
@@ -40,17 +45,21 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     private int mNormalHeight = 0;
 
-    private List<T> mMediaList;
+    private boolean mIsLandScape;
 
-    private Lifecycle mLifecycle;
+    private List<T> mMediaList;
 
     private ViewPager mViewPager;
 
     private KsgAssistView mKsgAssistView;
 
+    private ReceiverGroup mReceiverGroup;
+
     private AppCompatTextView mPagerCount;
 
     private PreviewPagerAdapter<T> mPagerAdapter;
+
+    private MyLifecycleObserver mLifecycleObserver;
 
     public PreviewPager(@NonNull Context context) {
         this(context, null);
@@ -60,8 +69,8 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         super(context, attrs);
         // Init View
         this.initView();
-        // Lifecycle
-        this.mLifecycle = LifecycleSensitiveHelper.registerLifecycle(context, mLifecycleObserver);
+        // Init Lifecycle
+        this.initLifecycle();
     }
 
     /**
@@ -76,6 +85,41 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     }
 
     /**
+     * Init Lifecycle
+     */
+    private void initLifecycle() {
+        this.mLifecycleObserver = new MyLifecycleObserver(getContext()) {
+
+            @Override
+            protected void onAcResume() {
+                if (mKsgAssistView != null) {
+                    mKsgAssistView.resume();
+                }
+            }
+
+            @Override
+            protected void onAcPause() {
+                if (mKsgAssistView != null) {
+                    mKsgAssistView.pause();
+                }
+            }
+
+            @Override
+            protected void onAcDestroy() {
+                if (mKsgAssistView != null) {
+                    mKsgAssistView.destroy();
+                    mKsgAssistView = null;
+                }
+                mViewPager.removeOnPageChangeListener(PreviewPager.this);
+                mLifecycleObserver.removeLifecycle();
+                mLifecycleObserver = null;
+            }
+        };
+        // addObserver
+        this.mLifecycleObserver.addObserver();
+    }
+
+    /**
      * initAssistVideo
      */
     private void initAssistVideo() {
@@ -84,11 +128,27 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
             this.mKsgAssistView.setDecoderView(new KsgIjkPlayer(getContext()));
             this.mKsgAssistView.getVideoPlayer().getKsgContainer().setBackgroundColor(Color.BLACK);
 
-            ReceiverGroup receiverGroup = new ReceiverGroup();
+            this.mReceiverGroup = new ReceiverGroup();
+            this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_CONTROLLER_COVER, new ControllerCover(getContext()));
 
-            receiverGroup.addReceiver("controller", new ControllerCover(getContext()));
-
-            this.mKsgAssistView.getVideoPlayer().setReceiverGroup(receiverGroup);
+            this.mKsgAssistView.getVideoPlayer().setReceiverGroup(mReceiverGroup);
+            this.mKsgAssistView.getVideoPlayer().setOnVideoViewEventHandler(new OnVideoViewEventHandler() {
+                @Override
+                public void onAssistHandle(KsgVideoPlayer assist, int eventCode, Bundle bundle) {
+                    super.onAssistHandle(assist, eventCode, bundle);
+                    switch (eventCode) {
+                        case DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN:
+                            // 横竖屏切换
+                            CommonUtil.scanForActivity(getContext())
+                                    .setRequestedOrientation(mIsLandScape ?
+                                            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
+                                            ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            });
         }
     }
 
@@ -172,7 +232,6 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         FrameLayout container = mViewPager.findViewWithTag(position);
         // 类型区分
         if (container != null && "video".equals(pagerParams.getMediaType())) {
-            container.setVisibility(VISIBLE);
             // 初始化辅助播放器
             this.initAssistVideo();
             // 添加容器 播放
@@ -184,35 +243,41 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     }
 
     /**
-     * Ac 生命周期
+     * Activity 横竖屏切换事件
+     *
+     * @param playerContainer 播放器容器
+     * @param newConfig       newConfig
      */
-    private MyLifecycleObserver mLifecycleObserver = new MyLifecycleObserver() {
-
-        @Override
-        protected void onAcResume() {
-            if (mKsgAssistView != null) {
-                mKsgAssistView.resume();
+    public void onConfigurationChanged(PlayerContainerView playerContainer, Configuration newConfig) {
+        this.mIsLandScape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
+        // 播放器
+        if (this.mKsgAssistView != null) {
+            // 拦截事件
+            playerContainer.setIntercept(mIsLandScape);
+            if (mIsLandScape) {
+                // 更换播放器的容器
+                this.mKsgAssistView.attachContainer(playerContainer, false);
+            } else {
+                // container
+                FrameLayout container = mViewPager.findViewWithTag(mViewPager.getCurrentItem());
+                // 更换播放器的容器
+                if (container != null) {
+                    this.mKsgAssistView.attachContainer(container, false);
+                }
             }
+            // 通知组件横竖屏切换
+            this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_IS_LANDSCAPE, mIsLandScape);
         }
+    }
 
-        @Override
-        protected void onAcPause() {
-            if (mKsgAssistView != null) {
-                mKsgAssistView.pause();
-            }
-        }
-
-        @Override
-        protected void onAcDestroy() {
-            if (mKsgAssistView != null) {
-                mKsgAssistView.destroy();
-                mKsgAssistView = null;
-            }
-            mViewPager.removeOnPageChangeListener(PreviewPager.this);
-            LifecycleSensitiveHelper.unRegisterLifecycle(mLifecycle, mLifecycleObserver);
-            mLifecycleObserver = null;
-        }
-    };
+    /**
+     * 是否横屏
+     *
+     * @return boolean
+     */
+    public boolean isLandScape() {
+        return this.mIsLandScape;
+    }
 
     /**
      * Adapter

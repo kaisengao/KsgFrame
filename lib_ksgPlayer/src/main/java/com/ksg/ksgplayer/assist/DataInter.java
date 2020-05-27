@@ -10,7 +10,7 @@ public interface DataInter {
         int EVENT_CODE_REQUEST_BACK = -100;
 
         /**
-         * 横竖屏切换事件
+         * 全屏切换事件
          */
         int EVENT_CODE_REQUEST_TOGGLE_SCREEN = -101;
     }
@@ -21,6 +21,8 @@ public interface DataInter {
     }
 
     interface ReceiverKey {
+
+        String KEY_CONTROLLER_COVER = "controller_cover";
 
     }
 

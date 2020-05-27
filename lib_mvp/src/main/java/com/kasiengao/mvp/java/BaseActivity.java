@@ -9,6 +9,8 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.kasiengao.base.util.ToastUtil;
 
+import butterknife.ButterKnife;
+
 /**
  * @ClassName: BaseActivity
  * @Author: KaiSenGao
@@ -64,6 +66,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 初始化控件
      */
     protected void initWidget() {
+        ButterKnife.bind(this);
 
     }
 

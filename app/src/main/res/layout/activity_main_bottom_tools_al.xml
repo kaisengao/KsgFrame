@@ -1,0 +1,88 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/bottom_tools_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom">
+
+    <!--
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_gravity="top"
+            android:layout_marginTop="18dp"
+            android:background="#CCCCCC" />
+    -->
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
+
+        <TextView
+            android:id="@+id/tv_house_keeping"
+            style="@style/item_tab_group_bottom"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:text="textviewtextview1textview11"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_cloud_storage"
+            style="@style/item_tab_group_bottom"
+            android:layout_gravity="center"
+            android:text="textview2"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
+
+        <RelativeLayout
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:gravity="center">
+
+            <ImageButton
+                android:id="@+id/tv_call_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:background="@drawable/icon_error" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_video_history"
+            style="@style/item_tab_group_bottom"
+            android:layout_gravity="center"
+            android:text="textview1textextview1textview1textview1textview1textview1textview1textview1textview1tview1"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_video_album"
+            style="@style/item_tab_group_bottom"
+            android:layout_gravity="center"
+            android:text="textview4"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tv_more"
+            style="@style/item_tab_group_bottom"
+            android:text="textview5"
+            android:textColor="#000000"
+            android:textSize="@dimen/sp_14"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+
+    </LinearLayout>
+
+</FrameLayout>
+

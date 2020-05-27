@@ -24,4 +24,13 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <style name="item_tab_group_bottom">
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:background">@color/white</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">70dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+
 </resources>

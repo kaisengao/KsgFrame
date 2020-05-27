@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.Window
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
+import butterknife.ButterKnife
 import com.kasiengao.base.util.ToastUtil
 
 /**
@@ -55,7 +56,9 @@ abstract class BaseActivity : AppCompatActivity() {
     /**
      * 初始化控件
      */
-    protected open fun initWidget() {}
+    protected open fun initWidget() {
+        ButterKnife.bind(this)
+    }
 
     /**
      * 初始化数据

@@ -106,6 +106,7 @@ abstract class BaseToolbarActivity : BaseActivity() {
      * 初始化控件
      */
     override fun initWidget() {
+        super.initWidget()
         // 初始化Toolbar
         this.initToolbar()
     }

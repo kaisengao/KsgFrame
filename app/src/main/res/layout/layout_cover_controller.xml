@@ -1,13 +1,79 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:background="@color/black">
 
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/cover_controller_progress"
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/white"
-        android:textSize="@dimen/sp_14" />
+        android:layout_height="48dp"
+        android:background="@drawable/icon_cover_controller_bg_top"
+        android:visibility="gone" />
+
+    <!-- Bottom Controller-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/icon_cover_controller_bg_bottom"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp">
+
+        <!-- Start/Pause-->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cover_controller_play_status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/selector_cover_controller_play_status" />
+
+        <!-- Curr Time-->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cover_controller_curr_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:text="00:00" />
+
+        <!-- SeekBar -->
+        <androidx.appcompat.widget.AppCompatSeekBar
+            android:id="@+id/cover_controller_seek"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_weight="1"
+            android:maxHeight="3dp"
+            android:minHeight="3dp"
+            android:progressDrawable="@drawable/shape_cover_controller_seek_bar"
+            android:splitTrack="false"
+            android:thumb="@drawable/selector_cover_controller_seek_bar_thumb" />
+
+        <!-- Duration Time-->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cover_controller_duration_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:splitTrack="false"
+            android:textColor="@color/white"
+            android:textSize="@dimen/sp_14"
+            tools:text="00:00" />
+
+        <!-- Fullscreen/FullscreenExit-->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cover_controller_fullscreen_status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/selector_cover_controller_fullscreen_status" />
+
+    </LinearLayout>
 
 </FrameLayout>

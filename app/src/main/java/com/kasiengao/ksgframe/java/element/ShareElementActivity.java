@@ -1,7 +1,10 @@
 package com.kasiengao.ksgframe.java.element;
 
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.view.ViewCompat;
 
@@ -9,7 +12,10 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.staggered.StaggeredGridBean;
+import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
+
+import butterknife.BindView;
 
 /**
  * @ClassName: ShareElement
@@ -23,11 +29,14 @@ public class ShareElementActivity extends BaseToolbarActivity {
 
     public static final String POSITION = "POSITION";
 
+    @BindView(R.id.share_player_container)
+    PlayerContainerView mPlayerContainer;
+    @BindView(R.id.share_element_pager)
+    PreviewPager<PreviewBean> mPreviewPager;
+
     private int mPosition;
 
     private StaggeredGridBean mGridBean;
-
-    private PreviewPager<PreviewBean> mPreviewPager;
 
     @Override
     protected int getContentLayoutId() {
@@ -70,8 +79,6 @@ public class ShareElementActivity extends BaseToolbarActivity {
      * Init Preview
      */
     private void initPreview() {
-        // findViewById
-        this.mPreviewPager = findViewById(R.id.share_element_pager);
         // Data
         this.mPreviewPager.setMediaList(mGridBean.mPreviewBeans);
         // ShareElement
@@ -80,6 +87,30 @@ public class ShareElementActivity extends BaseToolbarActivity {
 
     @Override
     protected void onClickBack() {
-        this.supportFinishAfterTransition();
+        this.onBackPressed();
+    }
+
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+
+        this.mPreviewPager.onConfigurationChanged(mPlayerContainer, newConfig);
+
+        boolean landScape = this.mPreviewPager.isLandScape();
+
+        if(landScape){
+            getSupportActionBar().hide();
+        }else {
+            getSupportActionBar().show();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (this.mPreviewPager.isLandScape()) {
+            super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            return;
+        }
+        super.onBackPressed();
     }
 }
