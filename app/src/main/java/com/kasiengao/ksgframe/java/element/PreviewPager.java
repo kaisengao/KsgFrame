@@ -25,6 +25,7 @@ import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.KsgIjkPlayer;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
+import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
 import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
@@ -129,6 +130,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
             this.mKsgAssistView.getVideoPlayer().getKsgContainer().setBackgroundColor(Color.BLACK);
 
             this.mReceiverGroup = new ReceiverGroup();
+            this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_LOADING_COVER, new LoadingCover(getContext()));
             this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_CONTROLLER_COVER, new ControllerCover(getContext()));
 
             this.mKsgAssistView.getVideoPlayer().setReceiverGroup(mReceiverGroup);

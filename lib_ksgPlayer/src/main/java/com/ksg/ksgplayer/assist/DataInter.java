@@ -22,6 +22,8 @@ public interface DataInter {
 
     interface ReceiverKey {
 
+        String KEY_LOADING_COVER = "loading_cover";
+
         String KEY_CONTROLLER_COVER = "controller_cover";
 
     }

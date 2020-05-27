@@ -72,7 +72,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
         // Handler
         this.mHandler = ThreadPool.MainThreadHandler.getInstance();
         // SeekBar
-        this.mSeekBar.setOnSeekBarChangeListener(mOnSeekBarChangeListener);
+        this.mSeekBar.setOnSeekBarChangeListener(mSeekBarChangeListener);
         // 组件间通信
         this.getGroupValue().registerOnGroupValueUpdateListener(mGroupValueUpdateListener);
     }
@@ -98,7 +98,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
                 // 新的播放地址 初始化数据
                 this.mTimeFormat = null;
                 this.mBufferPercentage = 0;
-                this.onRenewUI(0, 0);
+                this.onRenewUi(0, 0);
                 break;
             case OnPlayerEventListener.PLAYER_EVENT_ON_STATUS_CHANGE:
                 // 播放状态改变
@@ -142,7 +142,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
             this.mTimeFormat = TimeUtil.getFormat(duration);
         }
         // 更新Ui
-        this.onRenewUI(curr, duration);
+        this.onRenewUi(curr, duration);
     }
 
     @OnClick({R.id.cover_controller_play_status, R.id.cover_controller_fullscreen_status})
@@ -202,7 +202,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
      * @param curr     播放进度
      * @param duration 总进度
      */
-    private void onRenewUI(long curr, long duration) {
+    private void onRenewUi(long curr, long duration) {
         // 更新进度
         this.setSeekProgress(curr, duration);
         this.setSeekProgressTime(curr, duration);
@@ -236,13 +236,13 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     /**
      * Seek
      */
-    private SeekBar.OnSeekBarChangeListener mOnSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+    private SeekBar.OnSeekBarChangeListener mSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
             if (fromUser) {
                 // 更新Ui
-                onRenewUI(progress, seekBar.getMax());
+                onRenewUi(progress, seekBar.getMax());
             }
         }
 
@@ -271,4 +271,8 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
         this.mTimerUpdatePause = false;
     };
 
+    @Override
+    public int getCoverLevel() {
+        return super.levelHigh(1);
+    }
 }

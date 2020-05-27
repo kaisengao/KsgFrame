@@ -5,7 +5,11 @@ import android.view.View;
 
 import com.kasiengao.base.util.KLog;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
+import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
+import com.ksg.ksgplayer.assist.DataInter;
+import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
 import com.ksg.ksgplayer.listener.OnErrorEventListener;
 import com.ksg.ksgplayer.listener.OnPlayerEventListener;
 import com.ksg.ksgplayer.player.KsgVideoPlayer;
@@ -24,6 +28,8 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
 
     private KsgVideoPlayer mVideoPlayer;
 
+    private ReceiverGroup mReceiverGroup;
+
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_player;
@@ -39,7 +45,14 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
         this.mVideoView.setDecoderView(new KsgIjkPlayer(this));
 
         this.mVideoPlayer = mVideoView.getVideoPlayer();
-        this.mVideoPlayer.setReceiverGroup(new ReceiverGroup());
+
+        this.mReceiverGroup = new ReceiverGroup();
+        this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_LOADING_COVER, new LoadingCover(this));
+        this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_CONTROLLER_COVER, new ControllerCover(this));
+
+        this.mVideoPlayer.setReceiverGroup(mReceiverGroup);
+        this.mVideoPlayer.setOnVideoViewEventHandler(new OnVideoViewEventHandler());
+
         this.mVideoPlayer.setOnPlayerEventListener(new OnPlayerEventListener() {
             @Override
             public void onPlayerEvent(int eventCode, Bundle bundle) {
