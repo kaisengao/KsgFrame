@@ -25,12 +25,14 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
 
     private boolean mGestureEnable = true;
 
+    private boolean mSlidingEnable = false;
+
     private GestureDetector mGestureDetector;
 
     private OnTouchGestureListener mOnTouchGestureListener;
 
     public GestureTouchHelper(Context context) {
-        mGestureDetector = new GestureDetector(context, this);
+        this.mGestureDetector = new GestureDetector(context, this);
     }
 
     public void setWidthHeight(int width, int height) {
@@ -42,21 +44,23 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
         this.mGestureEnable = enable;
     }
 
+    public void setSlidingEnable(boolean slidingEnable) {
+        this.mSlidingEnable = slidingEnable;
+    }
+
     public void setOnTouchGestureListener(OnTouchGestureListener onTouchGestureListener) {
         this.mOnTouchGestureListener = onTouchGestureListener;
     }
 
     public boolean onTouch(MotionEvent event) {
-        switch (event.getAction()) {
-            case MotionEvent.ACTION_UP:
+        if (event.getAction() == MotionEvent.ACTION_UP) {
+            if (mSlidingEnable) {
                 if (mHorizontalSlide) {
                     onSlidingEndGesture();
                 } else {
                     onEndGesture();
                 }
-                break;
-            default:
-                break;
+            }
         }
         return mGestureDetector.onTouchEvent(event);
     }
@@ -89,7 +93,7 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        if (!mGestureEnable) {
+        if (!mGestureEnable || !mSlidingEnable) {
             return true;
         }
 

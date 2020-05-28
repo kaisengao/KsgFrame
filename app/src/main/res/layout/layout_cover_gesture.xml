@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:background="@color/white">
+
+    <LinearLayout
+        android:id="@+id/cover_gesture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@drawable/shape_radius_b3_black"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:paddingStart="15dp"
+        android:paddingTop="7dp"
+        android:paddingEnd="15dp"
+        android:paddingBottom="7dp"
+        android:visibility="invisible"
+        tools:ignore="UselessParent"
+        tools:visibility="visible">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cover_gesture_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:src="@drawable/icon_cover_brightness_high" />
+
+        <ProgressBar
+            android:id="@+id/cover_gesture_progress"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="140dp"
+            android:layout_height="wrap_content"
+            android:max="100"
+            android:maxHeight="4dp"
+            android:minHeight="4dp"
+            android:paddingStart="10dp"
+            android:paddingEnd="0dp"
+            android:progressDrawable="@drawable/shape_cover_controller_seek_bar"
+            tools:progress="30" />
+
+    </LinearLayout>
+
+</FrameLayout>

@@ -30,14 +30,12 @@ public class BrightnessHelper {
 
     public static int addLight100(Activity activity) {
         int a = getAppLight100(activity) + STEP_LIGHT_100;
-        a = a >= 100 ? 100 : a;
-        return setAppLight100(activity, a);
+        return setAppLight100(activity, Math.min(a, 100));
     }
 
     public static int subLight100(Activity activity) {
         int a = getAppLight100(activity) - STEP_LIGHT_100;
-        a = a <= 0 ? 0 : a;
-        return setAppLight100(activity, a);
+        return setAppLight100(activity, Math.max(a, 0));
     }
 
     /**
@@ -47,8 +45,8 @@ public class BrightnessHelper {
      * @param paramInt 0 - 100
      */
     public static int setAppLight100(Activity activity, int paramInt) {
-        paramInt = paramInt <= 0 ? 0 : paramInt;
-        paramInt = paramInt >= 100 ? 100 : paramInt;
+        paramInt = Math.max(paramInt, 0);
+        paramInt = Math.min(paramInt, 100);
         Window localWindow = activity.getWindow();
         WindowManager.LayoutParams localLayoutParams = localWindow.getAttributes();
         localLayoutParams.screenBrightness = paramInt * 0.01f;

@@ -91,10 +91,9 @@ public class LoadingCover extends BaseCover {
         this.setCoverVisibility(visibility ? View.VISIBLE : View.GONE);
     }
 
-
     @Override
     public int getCoverLevel() {
-        return levelMedium(1);
+        return levelHigh(5);
     }
 
 }

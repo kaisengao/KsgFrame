@@ -79,22 +79,6 @@ public class DefaultLevelCoverContainer extends BaseLevelCoverContainer {
     }
 
     /**
-     * 开启 状态栏 导航栏 适配
-     */
-    @Override
-    public void setFitsSystemWindows() {
-        getContainerView().setFitsSystemWindows(true);
-    }
-
-    /**
-     * 清除 状态栏 导航栏 适配 默认添加的padding
-     */
-    @Override
-    public void clearFitsSystemWindows() {
-        getContainerView().setPadding(0, 0, 0, 0);
-    }
-
-    /**
      * 默认 LayoutParams
      */
     private ViewGroup.LayoutParams getNewMatchLayoutParams() {

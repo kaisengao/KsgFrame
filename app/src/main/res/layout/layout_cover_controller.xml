@@ -7,15 +7,29 @@
     tools:background="@color/black">
 
     <LinearLayout
+        android:id="@+id/cover_controller_top"
         android:layout_width="wrap_content"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
+        android:layout_gravity="top"
         android:background="@drawable/icon_cover_controller_bg_top"
-        android:visibility="gone" />
+        android:visibility="gone"
+        tools:visibility="visible">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cover_controller_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:paddingStart="12dp"
+            android:paddingEnd="0dp"
+            android:src="@drawable/icon_cover_controller_arrow_back" />
+
+    </LinearLayout>
 
     <!-- Bottom Controller-->
     <LinearLayout
+        android:id="@+id/cover_controller_bottom"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:layout_gravity="bottom"
         android:background="@drawable/icon_cover_controller_bg_bottom"
         android:orientation="horizontal"
@@ -28,6 +42,13 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:src="@drawable/selector_cover_controller_play_status" />
+
+        <!-- Volume off/Volume Up-->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cover_controller_volume_status"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/selector_cover_controller_volume_status" />
 
         <!-- Curr Time-->
         <androidx.appcompat.widget.AppCompatTextView
@@ -75,5 +96,20 @@
             android:src="@drawable/selector_cover_controller_fullscreen_status" />
 
     </LinearLayout>
+
+    <!-- BottomSeekBar -->
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/cover_controller_bottom_seek"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:maxHeight="1dp"
+        android:minHeight="1dp"
+        android:paddingStart="0dp"
+        android:paddingEnd="0dp"
+        android:progressDrawable="@drawable/shape_cover_controller_seek_bar"
+        android:thumb="@null"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </FrameLayout>

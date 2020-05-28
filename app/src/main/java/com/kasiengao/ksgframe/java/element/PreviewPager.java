@@ -1,5 +1,6 @@
 package com.kasiengao.ksgframe.java.element;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
@@ -25,10 +26,12 @@ import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.KsgIjkPlayer;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
+import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
 import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
+import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.receiver.ReceiverGroup;
 import com.ksg.ksgplayer.widget.KsgAssistView;
@@ -47,6 +50,8 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     private int mNormalHeight = 0;
 
     private boolean mIsLandScape;
+
+    private Activity mActivity;
 
     private List<T> mMediaList;
 
@@ -68,6 +73,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     public PreviewPager(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
+        this.mActivity = CommonUtil.scanForActivity(context);
         // Init View
         this.initView();
         // Init Lifecycle
@@ -89,7 +95,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
      * Init Lifecycle
      */
     private void initLifecycle() {
-        this.mLifecycleObserver = new MyLifecycleObserver(getContext()) {
+        this.mLifecycleObserver = new MyLifecycleObserver(mActivity) {
 
             @Override
             protected void onAcResume() {
@@ -130,6 +136,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
             this.mKsgAssistView.getVideoPlayer().getKsgContainer().setBackgroundColor(Color.BLACK);
 
             this.mReceiverGroup = new ReceiverGroup();
+            this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new GestureCover(getContext()));
             this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_LOADING_COVER, new LoadingCover(getContext()));
             this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_CONTROLLER_COVER, new ControllerCover(getContext()));
 
@@ -139,12 +146,27 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                 public void onAssistHandle(KsgVideoPlayer assist, int eventCode, Bundle bundle) {
                     super.onAssistHandle(assist, eventCode, bundle);
                     switch (eventCode) {
+                        case DataInter.Event.EVENT_CODE_REQUEST_BACK:
+                            // 回退
+                            mActivity.onBackPressed();
+                            break;
                         case DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN:
-                            // 横竖屏切换
-                            CommonUtil.scanForActivity(getContext())
-                                    .setRequestedOrientation(mIsLandScape ?
-                                            ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
-                                            ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                            // 全屏切换事件
+                            mActivity.setRequestedOrientation(mIsLandScape ?
+                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
+                                    ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                            break;
+                        case DataInter.Event.EVENT_CODE_REQUEST_VOLUME_ALTER:
+                            // 声音开关事件
+                            boolean volumeStatus = bundle.getBoolean(EventKey.BOOL_DATA, false);
+                            if (volumeStatus) {
+                                // 开放
+                                assist.setVolume(1f, 1f);
+                            } else {
+                                // 静音
+                                assist.setVolume(0f, 0f);
+                            }
+                            mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_VOLUME_ALTER, !volumeStatus);
                             break;
                         default:
                             break;
@@ -256,6 +278,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         if (this.mKsgAssistView != null) {
             // 拦截事件
             playerContainer.setIntercept(mIsLandScape);
+            // 横竖屏
             if (mIsLandScape) {
                 // 更换播放器的容器
                 this.mKsgAssistView.attachContainer(playerContainer, false);

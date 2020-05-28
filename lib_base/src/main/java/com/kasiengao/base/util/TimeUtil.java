@@ -53,7 +53,7 @@ public class TimeUtil {
             return String.format(format, hours, minutes, seconds);
         }
         if (TextUtils.isEmpty(format)) {
-            format = TIME_FORMAT_02;
+            format = TIME_FORMAT_01;
         }
         return String.format(format, hours, minutes, seconds);
     }

@@ -49,14 +49,4 @@ public interface ICoverStrategy {
      * @return RootView
      */
     ViewGroup getContainerView();
-
-    /**
-     * 开启 状态栏、导航栏适配
-     */
-    void setFitsSystemWindows();
-
-    /**
-     * 清除 状态栏 导航栏 适配 默认添加的padding
-     */
-    void clearFitsSystemWindows();
 }

@@ -3,10 +3,10 @@ package com.ksg.ksgplayer.helper;
 import android.content.Context;
 import android.media.AudioManager;
 
+import androidx.annotation.IntDef;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-import androidx.annotation.IntDef;
 
 /**
  * @author kaisengao
@@ -173,8 +173,8 @@ public class VolumeHelper {
      */
     public int setVoice100(int num) {
         int a = (int) Math.ceil((num) * getSystemMaxVolume() * 0.01);
-        a = a <= 0 ? 0 : a;
-        a = a >= 100 ? 100 : a;
+        a = Math.max(a, 0);
+        a = Math.min(a, 100);
         mAudioManager.setStreamVolume(mTypeMusic, a, 0);
         return num;
     }
@@ -187,8 +187,8 @@ public class VolumeHelper {
      */
     public int addVoice100() {
         int a = (int) Math.ceil((mVoiceStep100 + get100CurrentVolume()) * getSystemMaxVolume() * 0.01);
-        a = a <= 0 ? 0 : a;
-        a = a >= 100 ? 100 : a;
+        a = Math.max(a, 0);
+        a = Math.min(a, 100);
         mAudioManager.setStreamVolume(mTypeMusic, a, mNowFlag);
         return get100CurrentVolume();
     }
@@ -201,8 +201,8 @@ public class VolumeHelper {
      */
     public int subVoice100() {
         int a = (int) Math.floor((get100CurrentVolume() - mVoiceStep100) * getSystemMaxVolume() * 0.01);
-        a = a <= 0 ? 0 : a;
-        a = a >= 100 ? 100 : a;
+        a = Math.max(a, 0);
+        a = Math.min(a, 100);
         mAudioManager.setStreamVolume(mTypeMusic, a, mNowFlag);
         return get100CurrentVolume();
     }

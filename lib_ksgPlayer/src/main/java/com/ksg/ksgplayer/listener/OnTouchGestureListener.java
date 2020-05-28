@@ -6,6 +6,7 @@ package com.ksg.ksgplayer.listener;
  * @describe: 手势 触摸事件回调
  */
 public interface OnTouchGestureListener {
+
     /**
      * 亮度手势，手指在Layout左半部上下滑动时候调用
      *

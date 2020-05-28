@@ -1,10 +1,12 @@
 package com.kasiengao.ksgframe.java.element;
 
+import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.view.ViewCompat;
 
@@ -85,6 +87,27 @@ public class ShareElementActivity extends BaseToolbarActivity {
         ViewCompat.setTransitionName(mPreviewPager, getString(R.string.share_element_picture) + mPosition);
     }
 
+    /**
+     * ActionBar
+     */
+    private void actionBarStatus() {
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            if (this.mPreviewPager.isLandScape()) {
+                supportActionBar.hide();
+            } else {
+                supportActionBar.show();
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // ActionBar
+        this.actionBarStatus();
+    }
+
     @Override
     protected void onClickBack() {
         this.onBackPressed();
@@ -93,18 +116,13 @@ public class ShareElementActivity extends BaseToolbarActivity {
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-
+        // 横竖屏切换事件
         this.mPreviewPager.onConfigurationChanged(mPlayerContainer, newConfig);
-
-        boolean landScape = this.mPreviewPager.isLandScape();
-
-        if(landScape){
-            getSupportActionBar().hide();
-        }else {
-            getSupportActionBar().show();
-        }
+        // ActionBar
+        this.actionBarStatus();
     }
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onBackPressed() {
         if (this.mPreviewPager.isLandScape()) {
