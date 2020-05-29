@@ -216,7 +216,7 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
      * @param msc 在指定的位置播放
      */
     @Override
-    public void seekTo(int msc) {
+    public void seekTo(long msc) {
         if (msc < 0) {
             return;
         }
@@ -237,7 +237,7 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
             }
             // seekTo
             Bundle bundle = BundlePool.obtain();
-            bundle.putInt(EventKey.INT_DATA, msc);
+            bundle.putLong(EventKey.LONG_DATA, msc);
             this.submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_SEEK_TO, bundle);
         }
     }

@@ -125,7 +125,7 @@ public class ShareElementActivity extends BaseToolbarActivity {
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onBackPressed() {
-        if (this.mPreviewPager.isLandScape()) {
+        if (mPreviewPager.isLandScape()) {
             super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             return;
         }

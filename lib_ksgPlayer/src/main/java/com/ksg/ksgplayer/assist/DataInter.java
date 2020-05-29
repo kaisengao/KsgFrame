@@ -55,7 +55,7 @@ public interface DataInter {
 
     interface PrivateEvent {
 
-        int EVENT_CODE_UPDATE_SEEK = -201;
+        int EVENT_CODE_GESTURE_SLIDE_SEEK = -201;
     }
 
 }

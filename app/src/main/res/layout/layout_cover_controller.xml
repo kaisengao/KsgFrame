@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_gravity="top"
-        android:background="@drawable/icon_cover_controller_bg_top"
+        android:background="@drawable/icon_cover_bg_top"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:paddingStart="12dp"
             android:paddingEnd="0dp"
-            android:src="@drawable/icon_cover_controller_arrow_back" />
+            android:src="@drawable/icon_cover_arrow_back" />
 
     </LinearLayout>
 
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="bottom"
-        android:background="@drawable/icon_cover_controller_bg_bottom"
+        android:background="@drawable/icon_cover_bg_bottom"
         android:orientation="horizontal"
         android:paddingStart="12dp"
         android:paddingEnd="12dp">
@@ -41,14 +41,14 @@
             android:id="@+id/cover_controller_play_status"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/selector_cover_controller_play_status" />
+            android:src="@drawable/selector_cover_play_status" />
 
         <!-- Volume off/Volume Up-->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cover_controller_volume_status"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/selector_cover_controller_volume_status" />
+            android:src="@drawable/selector_cover_volume_status" />
 
         <!-- Curr Time-->
         <androidx.appcompat.widget.AppCompatTextView
@@ -71,9 +71,9 @@
             android:layout_weight="1"
             android:maxHeight="3dp"
             android:minHeight="3dp"
-            android:progressDrawable="@drawable/shape_cover_controller_seek_bar"
+            android:progressDrawable="@drawable/shape_cover_seek_bar"
             android:splitTrack="false"
-            android:thumb="@drawable/selector_cover_controller_seek_bar_thumb" />
+            android:thumb="@drawable/selector_cover_seek_bar_thumb" />
 
         <!-- Duration Time-->
         <androidx.appcompat.widget.AppCompatTextView
@@ -93,22 +93,20 @@
             android:id="@+id/cover_controller_fullscreen_status"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/selector_cover_controller_fullscreen_status" />
+            android:src="@drawable/selector_cover_fullscreen_status" />
 
     </LinearLayout>
 
     <!-- BottomSeekBar -->
-    <androidx.appcompat.widget.AppCompatSeekBar
+    <ProgressBar
+        style="?android:attr/progressBarStyleHorizontal"
         android:id="@+id/cover_controller_bottom_seek"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         android:maxHeight="1dp"
         android:minHeight="1dp"
-        android:paddingStart="0dp"
-        android:paddingEnd="0dp"
-        android:progressDrawable="@drawable/shape_cover_controller_seek_bar"
-        android:thumb="@null"
+        android:progressDrawable="@drawable/shape_cover_seek_bar"
         android:visibility="gone"
         tools:visibility="visible" />
 

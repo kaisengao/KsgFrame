@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.SeekBar;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -47,7 +49,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     @BindView(R.id.cover_controller_seek)
     AppCompatSeekBar mSeekBar;
     @BindView(R.id.cover_controller_bottom_seek)
-    AppCompatSeekBar mBottomSeekBar;
+    ProgressBar mBottomProgress;
     @BindView(R.id.cover_controller_play_status)
     AppCompatImageView mPlayStatus;
     @BindView(R.id.cover_controller_volume_status)
@@ -145,6 +147,19 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     @Override
     public void onReceiverEvent(int eventCode, Bundle bundle) {
 
+    }
+
+    @Nullable
+    @Override
+    public Bundle onPrivateEvent(int eventCode, Bundle bundle) {
+        switch (eventCode) {
+            case DataInter.PrivateEvent.EVENT_CODE_GESTURE_SLIDE_SEEK:
+                // 手势快进通知暂停自动更新
+                this.onRenewUi(bundle.getLong(EventKey.LONG_ARG1), bundle.getLong(EventKey.LONG_ARG2));
+                this.mTimerUpdatePause = bundle.getBoolean(EventKey.BOOL_DATA);
+                break;
+        }
+        return super.onPrivateEvent(eventCode, bundle);
     }
 
     /**
@@ -260,10 +275,10 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
      * Top/Bottom 菜单
      */
     private void onControllerStatus() {
-        // Top 菜单  (必须在横屏状态下才会显示)
-        this.setControllerTopStatus(mControllerStatus);
-        // Bottom 菜单
-        this.setControllerBottomStatus(mControllerStatus);
+        // SystemUi 全屏状态下 且 需要隐藏Ui
+        if (this.mFullscreenStatus.isSelected() && !mControllerStatus) {
+            SystemUiUtil.hideVideoSystemUI(getContext());
+        }
         // 验证Controller是否在显示状态中
         if (this.mControllerStatus) {
             // 计时 菜单状态 开始
@@ -272,6 +287,10 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
             // 计时 菜单状态 停止
             this.onRemoveDelayedControllerStatus();
         }
+        // Top 菜单  (必须在横屏状态下才会显示)
+        this.setControllerTopStatus(mControllerStatus);
+        // Bottom 菜单
+        this.setControllerBottomStatus(mControllerStatus);
     }
 
     /**
@@ -314,11 +333,11 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
      */
     private void setControllerBottomStatus(boolean status) {
         if (status) {
-            this.mBottomSeekBar.setVisibility(View.GONE);
+            this.mBottomProgress.setVisibility(View.GONE);
             this.mControllerBottom.setVisibility(View.VISIBLE);
             this.mControllerBottom.setAnimation(AnimUtil.getBottomInAnim(getContext()));
         } else {
-            this.mBottomSeekBar.setVisibility(View.VISIBLE);
+            this.mBottomProgress.setVisibility(View.VISIBLE);
             this.mControllerBottom.setVisibility(View.GONE);
             this.mControllerBottom.setAnimation(AnimUtil.getBottomOutAnim(getContext()));
         }
@@ -346,8 +365,8 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     private void onRenewUi(long curr, long duration) {
         // 更新进度
         this.setSeekProgressTime(curr, duration);
-        this.setSeekProgress(mSeekBar, curr, duration);
-        this.setSeekProgress(mBottomSeekBar, curr, duration);
+        this.setSeekProgress(curr, duration);
+        this.setBottomProgress(curr, duration);
     }
 
     /**
@@ -356,12 +375,26 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
      * @param curr     播放进度
      * @param duration 总进度
      */
-    private void setSeekProgress(AppCompatSeekBar seekBar, long curr, long duration) {
-        seekBar.setMax((int) duration);
-        seekBar.setProgress((int) curr);
+    private void setSeekProgress(long curr, long duration) {
+        this.mSeekBar.setMax((int) duration);
+        this.mSeekBar.setProgress((int) curr);
         float secondProgress = mBufferPercentage * 1.0f / 100 * duration;
         // 缓冲进度
-        seekBar.setSecondaryProgress((int) secondProgress);
+        this.mSeekBar.setSecondaryProgress((int) secondProgress);
+    }
+
+    /**
+     * 设置 底部播放进度
+     *
+     * @param curr     播放进度
+     * @param duration 总进度
+     */
+    private void setBottomProgress(long curr, long duration) {
+        this.mBottomProgress.setMax((int) duration);
+        this.mBottomProgress.setProgress((int) curr);
+        float secondProgress = mBufferPercentage * 1.0f / 100 * duration;
+        // 缓冲进度
+        this.mBottomProgress.setSecondaryProgress((int) secondProgress);
     }
 
     /**
@@ -417,7 +450,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
      */
     private Runnable mSeekEventRunnable = () -> {
         Bundle bundle = BundlePool.obtain();
-        bundle.putInt(EventKey.INT_DATA, mSeekBar.getProgress());
+        bundle.putLong(EventKey.LONG_DATA, mSeekBar.getProgress());
         this.requestSeek(bundle);
         // 开放进度更新
         this.mTimerUpdatePause = false;

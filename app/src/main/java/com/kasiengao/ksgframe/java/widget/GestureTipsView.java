@@ -5,6 +5,7 @@ import android.view.animation.AlphaAnimation;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kasiengao.ksgframe.R;
 
@@ -20,8 +21,9 @@ public class GestureTipsView {
 
     private boolean mSliding = false;
 
-    public void setRooView(View rooView) {
+    public GestureTipsView setRooView(View rooView) {
         this.mRootView = rooView;
+        return this;
     }
 
     public GestureTipsView setBrightnessIcon(AppCompatImageView imageView, int brightness) {
@@ -46,8 +48,22 @@ public class GestureTipsView {
         return this;
     }
 
+    public GestureTipsView setSliding(AppCompatImageView imageView, float progress) {
+        if (progress < 0) {
+            imageView.setImageResource(R.drawable.icon_cover_fast_rewind);
+        } else {
+            imageView.setImageResource(R.drawable.icon_cover_fast_forward);
+        }
+        return this;
+    }
+
     public GestureTipsView setProgress(ProgressBar progressBar, int progress) {
         progressBar.setProgress(progress);
+        return this;
+    }
+
+    public GestureTipsView setTime(AppCompatTextView textView, String time) {
+        textView.setText(time);
         return this;
     }
 

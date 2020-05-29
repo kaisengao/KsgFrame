@@ -414,7 +414,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
      * @param msc 在指定的位置播放
      */
     @Override
-    public void seekTo(int msc) {
+    public void seekTo(long msc) {
         this.mKsgPlayer.seekTo(msc);
     }
 

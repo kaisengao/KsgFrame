@@ -122,7 +122,7 @@ public interface IKagVideoPlayer {
      *
      * @param msc 在指定的位置播放
      */
-    void seekTo(int msc);
+    void seekTo(long msc);
 
     /**
      * 播放

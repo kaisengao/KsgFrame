@@ -275,7 +275,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     public void onConfigurationChanged(PlayerContainerView playerContainer, Configuration newConfig) {
         this.mIsLandScape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
         // 播放器
-        if (this.mKsgAssistView != null) {
+        if (mKsgAssistView != null) {
             // 拦截事件
             playerContainer.setIntercept(mIsLandScape);
             // 横竖屏

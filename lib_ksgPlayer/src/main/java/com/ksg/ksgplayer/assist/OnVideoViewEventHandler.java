@@ -46,9 +46,9 @@ public class OnVideoViewEventHandler extends BaseEventAssistHandler<KsgVideoPlay
 
     @Override
     public void requestSeek(KsgVideoPlayer videoView, Bundle bundle) {
-        int pos = 0;
+        long pos = 0;
         if (bundle != null) {
-            pos = bundle.getInt(EventKey.INT_DATA);
+            pos = bundle.getLong(EventKey.LONG_DATA);
         }
         videoView.seekTo(pos);
     }

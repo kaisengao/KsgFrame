@@ -3,29 +3,32 @@ package com.kasiengao.ksgframe.java.player.cover;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Point;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
 import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatTextView;
 
+import com.kasiengao.base.configure.ThreadPool;
 import com.kasiengao.base.util.CommonUtil;
-import com.kasiengao.base.util.ToastUtil;
+import com.kasiengao.base.util.DensityUtil;
+import com.kasiengao.base.util.TimeUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.widget.GestureTipsView;
 import com.ksg.ksgplayer.assist.DataInter;
+import com.ksg.ksgplayer.event.BundlePool;
+import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.helper.BrightnessHelper;
 import com.ksg.ksgplayer.helper.GestureTouchHelper;
 import com.ksg.ksgplayer.helper.VolumeHelper;
 import com.ksg.ksgplayer.listener.OnTouchGestureListener;
 import com.ksg.ksgplayer.receiver.BaseCover;
 import com.ksg.ksgplayer.receiver.IReceiverGroup;
+import com.ksg.ksgplayer.receiver.PlayerStateGetter;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,16 +46,30 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
 
     @BindView(R.id.cover_gesture)
     LinearLayout mGestureTipsRoot;
+    @BindView(R.id.cover_gesture_sliding)
+    LinearLayout mGestureTipsSlidingRoot;
     @BindView(R.id.cover_gesture_icon)
     AppCompatImageView mGestureIcon;
     @BindView(R.id.cover_gesture_progress)
     ProgressBar mGestureProgress;
+    @BindView(R.id.cover_gesture_sliding_status)
+    AppCompatImageView mGestureSlidingStatus;
+    @BindView(R.id.cover_gesture_sliding_time)
+    AppCompatTextView mGestureSlidingTime;
 
-    private int mScreenWidth, mScreenHeight;
+    private int mViewWidth, mViewHeight;
 
     private int mMaxAppLight;
 
     private int mCurrentVolume;
+
+    private long mProgress;
+
+    private long mDuration;
+
+    private long mSlideProgress;
+
+    private String mTimeFormat;
 
     private boolean mIsLandscape;
 
@@ -63,6 +80,8 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
     private final GestureTipsView mGestureTipsView;
 
     private final GestureTouchHelper mGestureTouchHelper;
+
+    private ThreadPool.MainThreadHandler mHandler;
 
     public GestureCover(Context context) {
         super(context);
@@ -88,8 +107,8 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
         this.getScreenSize(getContext());
         // OnTouch事件
         this.getView().setOnTouchListener(this);
-        // setRooView
-        this.mGestureTipsView.setRooView(mGestureTipsRoot);
+        // Handler
+        this.mHandler = ThreadPool.MainThreadHandler.getInstance();
         // 注册手势事件
         this.mGestureTouchHelper.setOnTouchGestureListener(mTouchGestureListener);
         // 组件间通信
@@ -121,6 +140,22 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
 
     }
 
+    /**
+     * 视频总时长
+     */
+    private long getDuration() {
+        PlayerStateGetter playerStateGetter = getPlayerStateGetter();
+        return playerStateGetter == null ? 0 : playerStateGetter.getDuration();
+    }
+
+    /**
+     * 视频播放进度
+     */
+    private long getProgress() {
+        PlayerStateGetter playerStateGetter = getPlayerStateGetter();
+        return playerStateGetter == null ? 0 : playerStateGetter.getProgress();
+    }
+
     @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent event) {
@@ -146,7 +181,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
                     // 获取视图宽高
                     getScreenSize(getContext());
                     // 横竖屏切换
-                    mGestureTouchHelper.setSlidingEnable(mIsLandscape);
+                    mGestureTouchHelper.setSlideEnabled(mIsLandscape);
                     break;
                 default:
                     break;
@@ -159,6 +194,8 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
      */
     private OnTouchGestureListener mTouchGestureListener = new OnTouchGestureListener() {
 
+        final Bundle contrallerBndle = BundlePool.obtain();
+
         /**
          * 亮度手势，手指在Layout左半部上下滑动时候调用
          *
@@ -167,11 +204,12 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
         @Override
         public void onBrightnessGesture(float percent) {
             // 新的亮度
-            int newBrightness = (int) (percent / (mScreenHeight - 30 * 2) * 100 + mMaxAppLight);
+            int newBrightness = (int) (percent / (mViewHeight - 30 * 2) * 100 + mMaxAppLight);
             // 百分比计算
             int brightness = BrightnessHelper.setAppLight100(mActivity, newBrightness);
             // 提示
             mGestureTipsView
+                    .setRooView(mGestureTipsRoot)
                     .setBrightnessIcon(mGestureIcon, brightness)
                     .setProgress(mGestureProgress, brightness)
                     .show();
@@ -185,11 +223,12 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
         @Override
         public void onVolumeGesture(float percent) {
             // 新的音量
-            int newVolume = (int) (percent / (mScreenHeight - 30 * 2) * 100 + mCurrentVolume);
+            int newVolume = (int) (percent / (mViewHeight - 30 * 2) * 100 + mCurrentVolume);
             // 百分比计算
             int volume = mVolumeHelper.setVoice100(newVolume);
             // 提示
             mGestureTipsView
+                    .setRooView(mGestureTipsRoot)
                     .setVolumeIcon(mGestureIcon, volume)
                     .setProgress(mGestureProgress, volume)
                     .show();
@@ -201,8 +240,23 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
          * @param percent 百分比
          */
         @Override
-        public void onSlidingGesture(float percent) {
-            ToastUtil.showShort("onSlidingGesture");
+        public void onSeekGesture(float percent) {
+            // 计算手势滑动产生的新进度
+            mSlideProgress = (long) (percent / mViewWidth * 120000 + mProgress);
+            mSlideProgress = mSlideProgress <= 0 ? 0 : mSlideProgress;
+            mSlideProgress = Math.min(mSlideProgress, mDuration);
+            // 时间转换
+            String curr = TimeUtil.getTime(mTimeFormat, mSlideProgress);
+            String duration = TimeUtil.getTime(mTimeFormat, mDuration);
+            String time = curr + " / " + duration;
+            // 提示
+            mGestureTipsView
+                    .setRooView(mGestureTipsSlidingRoot)
+                    .setSliding(mGestureSlidingStatus, percent)
+                    .setTime(mGestureSlidingTime, time)
+                    .show();
+            // 通知 ControllerCover 自动更新进度
+            notifyReceiverController(true);
         }
 
         /**
@@ -228,6 +282,13 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
          */
         @Override
         public void onDown() {
+            mSlideProgress = 0;
+            // 初始化进度
+            mProgress = getProgress();
+            // 初始化总时长
+            mDuration = getDuration();
+            // 初始化时间格式
+            mTimeFormat = TimeUtil.getFormat(mDuration);
             // 初始化音频数据
             mCurrentVolume = mVolumeHelper.get100CurrentVolume();
             // 初始化亮度数据
@@ -238,8 +299,15 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
          * 快进后退手势 滑动结束
          */
         @Override
-        public void onSlidingEndGesture() {
-            ToastUtil.showShort("onSlidingEndGesture");
+        public void onSeekEndGesture() {
+            mGestureTipsView.dismiss();
+            // 更新进度
+            if (mSlideProgress >= 0) {
+                mHandler.removeCallbacks(mSeekEventRunnable);
+                mHandler.post(mSeekEventRunnable, 300);
+            }
+            // 通知 ControllerCover 自动更新进度
+            notifyReceiverController(false);
         }
 
         /**
@@ -249,6 +317,30 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
         public void onEndGesture() {
             mGestureTipsView.dismiss();
         }
+
+        /**
+         * 通知 ControllerCover 自动更新进度
+         *
+         * @param  timerUpdatePause 暂停
+         */
+        private void notifyReceiverController(boolean timerUpdatePause) {
+            contrallerBndle.putLong(EventKey.LONG_ARG1, mSlideProgress);
+            contrallerBndle.putLong(EventKey.LONG_ARG2, mDuration);
+            contrallerBndle.putBoolean(EventKey.BOOL_DATA, timerUpdatePause);
+            notifyReceiverPrivateEvent(
+                    DataInter.ReceiverKey.KEY_CONTROLLER_COVER,
+                    DataInter.PrivateEvent.EVENT_CODE_GESTURE_SLIDE_SEEK,
+                    contrallerBndle);
+        }
+    };
+
+    /**
+     * 进度跳转
+     */
+    private Runnable mSeekEventRunnable = () -> {
+        Bundle bundle = BundlePool.obtain();
+        bundle.putLong(EventKey.LONG_DATA, mSlideProgress);
+        this.requestSeek(bundle);
     };
 
     /**
@@ -257,25 +349,19 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
      * @param context context
      */
     private void getScreenSize(Context context) {
-        WindowManager windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
-        if (windowManager != null && mIsLandscape) {
-            final Display display = windowManager.getDefaultDisplay();
-            Point outPoint = new Point();
-            display.getRealSize(outPoint);
-            // 手机屏幕真实宽度
-            this.mScreenWidth = outPoint.x;
-            // 手机屏幕真实高度
-            this.mScreenHeight = outPoint.y;
-            // 配置宽高
-            this.mGestureTouchHelper.setWidthHeight(mScreenWidth, mScreenHeight);
+        if (mIsLandscape) {
+            int[] screenSize = DensityUtil.getScreenSize(context);
+            this.mViewWidth = screenSize[0];
+            this.mViewHeight = screenSize[1];
+            this.mGestureTouchHelper.setViewWidth(mViewWidth);
         } else {
             // 竖屏获取当前view的宽高
             this.getView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
                 public void onGlobalLayout() {
-                    mScreenWidth = getView().getWidth();
-                    mScreenHeight = getView().getHeight();
-                    mGestureTouchHelper.setWidthHeight(mScreenWidth, mScreenHeight);
+                    mViewWidth = getView().getWidth();
+                    mViewHeight = getView().getHeight();
+                    mGestureTouchHelper.setViewWidth(mViewWidth);
                     getView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
             });

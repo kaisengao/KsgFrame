@@ -75,7 +75,7 @@ public interface OnPlayerEventListener {
     int PLAYER_EVENT_ON_BUFFERING_UPDATE = -99012;
 
     /**
-     * when you call {@link IKsgPlayer#seekTo(int)}
+     * when you call {@link IKsgPlayer#seekTo(long)}
      */
     int PLAYER_EVENT_ON_SEEK_TO = -99013;
 

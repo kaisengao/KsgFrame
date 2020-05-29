@@ -151,7 +151,7 @@ public interface IKsgPlayer {
      *
      * @param msc 在指定的位置播放
      */
-    void seekTo(int msc);
+    void seekTo(long msc);
 
     /**
      * 准备开始播放（异步）
