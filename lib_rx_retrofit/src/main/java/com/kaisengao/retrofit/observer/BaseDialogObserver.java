@@ -3,6 +3,7 @@ package com.kaisengao.retrofit.observer;
 import android.app.ProgressDialog;
 import android.content.Context;
 
+import com.kaisengao.retrofit.widget.LoadingDialog;
 import com.kasiengao.base.util.ToastUtil;
 
 import io.reactivex.disposables.Disposable;
@@ -15,54 +16,62 @@ import io.reactivex.disposables.Disposable;
  */
 public abstract class BaseDialogObserver<T> extends BaseRxObserver<T> {
 
-    private ProgressDialog mDialog;
+    private LoadingDialog mLoadingDialog;
 
     protected BaseDialogObserver(Context context) {
         super(context);
+
+        this.initDialog();
     }
 
     /**
-     * 初始化对话框
+     * 初始化Loading
      */
     private void initDialog() {
-        if (this.mContext == null) {
-            throw new IllegalArgumentException("You haven't set the context.");
-        }
+        this.mLoadingDialog = new LoadingDialog.Builder(mContext)
+                .loadText(mLoadingText)
+                .loadColor(mLoadingColor)
+                .build();
+    }
 
-        if (this.mDialog == null) {
-            new ProgressDialog
-                    .Builder(this.mContext)
-                    .create()
-//                    .loadText(this.mLoadingText)
-//                    .loadColor(this.mLoadingColor)
-                    .show();
-        } else {
-            this.mDialog.show();
-        }
+    /**
+     * 设置 加载提示语句
+     *
+     * @param loadingText 提示语句
+     */
+    @Override
+    public BaseRxObserver<T> setLoadingText(int loadingText) {
+        this.mLoadingDialog.loadText(loadingText);
+        return super.setLoadingText(loadingText);
+    }
+
+    /**
+     * 设置 加载字体颜色
+     *
+     * @param loadingColor 颜色 R.color....
+     */
+    @Override
+    public BaseRxObserver<T> setLoadingColor(int loadingColor) {
+        this.mLoadingDialog.loadColor(loadingColor);
+        return super.setLoadingColor(loadingColor);
     }
 
     @Override
     public void onSubscribe(Disposable d) {
         super.onSubscribe(d);
 
-        this.initDialog();
+        this.mLoadingDialog.show();
     }
 
     @Override
-    protected void onError(int icon, int backgroundColor, int color, String message) {
-        super.onError(icon, backgroundColor, color, message);
+    protected void onError(String message) {
 
         ToastUtil.showShortSafe(message);
-
-        this.onComplete();
     }
 
     @Override
     public void onComplete() {
-        super.onComplete();
-
-        if (this.mDialog != null) {
-            this.mDialog.dismiss();
-        }
+        this.mLoadingDialog.dismiss();
     }
+
 }

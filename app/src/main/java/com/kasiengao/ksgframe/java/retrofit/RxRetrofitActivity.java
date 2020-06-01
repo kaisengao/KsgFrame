@@ -9,12 +9,15 @@ import com.kaisengao.retrofit.RxCompose;
 import com.kaisengao.retrofit.observer.BaseDialogObserver;
 import com.kaisengao.retrofit.observer.BaseLoadSirObserver;
 import com.kaisengao.retrofit.observer.BaseRxObserver;
+import com.kasiengao.base.util.KLog;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
 
 /**
  * @ClassName: RxRetrofitActivity
@@ -80,6 +83,8 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
      */
     private void requestNormal() {
 
+        mMessage.setText("");
+
         this.requestNewsTop()
                 .as(RxCompose.bindLifecycle(this))
                 .subscribe(new BaseRxObserver<NewsTopBean>(this) {
@@ -87,7 +92,7 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
                     protected void onResult(NewsTopBean topBean) {
 
                         if (topBean != null) {
-                            mMessage.setText(topBean.toString());
+                            mMessage.setText("Success");
                         }
                     }
                 });
@@ -98,6 +103,8 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
      */
     private void requestDialog() {
 
+        mMessage.setText("");
+
         this.requestNewsTop()
                 .as(RxCompose.bindLifecycle(this))
                 .subscribe(new BaseDialogObserver<NewsTopBean>(this) {
@@ -105,7 +112,7 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
                     protected void onResult(NewsTopBean topBean) {
 
                         if (topBean != null) {
-                            mMessage.setText(topBean.toString());
+                            mMessage.setText("Success");
                         }
                     }
                 });
@@ -116,6 +123,8 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
      */
     private void requestLoadSir() {
 
+        mMessage.setText("");
+
         this.requestNewsTop()
                 .as(RxCompose.bindLifecycle(this))
                 .subscribe(new BaseLoadSirObserver<NewsTopBean>(this, getInflate()) {
@@ -123,7 +132,7 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
                     protected void onResult(NewsTopBean topBean) {
 
                         if (topBean != null) {
-                            mMessage.setText(topBean.toString());
+                            mMessage.setText("Success");
                         }
                     }
 
@@ -139,11 +148,10 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
      * 聚合数据 新闻
      */
     private Observable<NewsTopBean> requestNewsTop() {
-        // 延时 3 秒
-        Observable<Long> timer = Observable.timer(3, TimeUnit.SECONDS);
-        // 聚合数据
-        Observable<NewsTopBean> newsTop = this.mModel.requestNewsTop();
-        // zip
-        return Observable.zip(timer, newsTop, (aLong, newsTopBean) -> newsTopBean);
+        return Observable
+                // 延时3秒
+                .timer(3, TimeUnit.SECONDS)
+                // 聚合数据
+                .flatMap((Function<Long, ObservableSource<NewsTopBean>>) aLong -> mModel.requestNewsTop());
     }
 }

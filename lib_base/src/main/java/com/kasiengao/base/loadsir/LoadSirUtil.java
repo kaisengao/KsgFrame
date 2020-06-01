@@ -46,7 +46,7 @@ public class LoadSirUtil {
             oldContent = contentParent != null ? contentParent.getChildAt(0) : null;
         }
         if (oldContent == null) {
-            throw new IllegalArgumentException(String.format("enexpected error when register LoadSir in %s", target
+            throw new IllegalArgumentException(String.format("enexpected icon_error when register LoadSir in %s", target
                     .getClass().getSimpleName()));
         }
         if (contentParent != null) {

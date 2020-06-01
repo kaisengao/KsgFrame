@@ -42,4 +42,6 @@ dependencies {
     api rootProject.ext.dependencies["fresco-gif"]
     // BaseRecyclerViewAdapterHelper
     api rootProject.ext.dependencies["recycler-adapter"]
+    // AVLoadingIndicatorView
+    api 'com.wang.avi:library:2.1.3'
 }

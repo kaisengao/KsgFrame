@@ -3,7 +3,7 @@
     android:id="@+id/error_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/black"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -11,6 +11,7 @@
         android:id="@+id/error_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:tint="@color/white"
         android:src="@drawable/icon_error"/>
 
     <TextView

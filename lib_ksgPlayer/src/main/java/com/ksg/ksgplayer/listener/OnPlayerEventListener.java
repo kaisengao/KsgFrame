@@ -181,7 +181,7 @@ public interface OnPlayerEventListener {
     int PLAYER_EVENT_ON_PROVIDER_DATA_SUCCESS = -99051;
 
     /**
-     * call back this method when provider load data error.
+     * call back this method when provider load data icon_error.
      */
     int PLAYER_EVENT_ON_PROVIDER_DATA_ERROR = -99052;
 

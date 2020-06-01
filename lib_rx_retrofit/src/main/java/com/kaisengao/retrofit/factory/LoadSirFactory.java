@@ -80,6 +80,21 @@ public class LoadSirFactory {
         }
     }
 
+    private synchronized LoadService createLoadSir(Object target) {
+        return LoadSir.getDefault().register(target, new Callback.OnReloadListener() {
+            @Override
+            public void onReload(View v) {
+
+                OnLoadSirReloadListener onReloadListener = mReloadListeners.get(v.getContext());
+
+                if (onReloadListener != null) {
+
+                    onReloadListener.onLoadSirReload(target);
+                }
+            }
+        });
+    }
+
     public synchronized void showSuccess(final Context context, final Object target) {
 
         ConcurrentHashMap<Object, LoadService> loadServices = mContextLoadServices.get(context);
@@ -168,21 +183,6 @@ public class LoadSirFactory {
                 });
             }
         }
-    }
-
-    private synchronized LoadService createLoadSir(Object target) {
-        return LoadSir.getDefault().register(target, new Callback.OnReloadListener() {
-            @Override
-            public void onReload(View v) {
-
-                OnLoadSirReloadListener onReloadListener = mReloadListeners.get(v.getContext());
-
-                if (onReloadListener != null) {
-
-                    onReloadListener.onLoadSirReload(target);
-                }
-            }
-        });
     }
 
     /**

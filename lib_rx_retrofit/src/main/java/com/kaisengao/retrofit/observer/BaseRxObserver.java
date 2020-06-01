@@ -24,16 +24,16 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
     Context mContext;
 
     @ColorRes
-    int mBackgroundColor = R.color.white;
+    protected int mBackgroundColor = R.color.white;
 
     @ColorRes
-    int mLoadingColor = R.color.black;
+    protected int mLoadingColor = R.color.black;
 
     @StringRes
-    int mLoadingText = R.string.loading;
+    protected int mLoadingText = R.string.loading;
 
     @DrawableRes
-    private int mErrorIcon = R.drawable.icon_error;
+    protected int mErrorIcon = R.drawable.icon_error;
 
     protected BaseRxObserver(Context context) {
         this.mContext = context;
@@ -101,7 +101,7 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
             exception = ExceptionHandle.handleException(mContext, e);
         }
 
-        this.onError(this.mErrorIcon, this.mBackgroundColor, this.mLoadingColor, exception);
+        this.onError(exception);
     }
 
     @Override
@@ -119,13 +119,9 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
     /**
      * Error
      *
-     * @param icon            错误图片
-     * @param backgroundColor 背景颜色
-     * @param color           loading 与 字体颜色
-     * @param message         错误信息
+     * @param message 错误信息
      */
-    protected void onError(@DrawableRes int icon, int backgroundColor, @ColorRes int color, String message) {
+    protected void onError(String message) {
 
     }
-
 }

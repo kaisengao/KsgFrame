@@ -56,7 +56,7 @@ public final class EventDispatcher implements IEventDispatcher {
     }
 
     /**
-     * dispatch error event
+     * dispatch icon_error event
      *
      * @param eventCode eventCode
      * @param bundle    bundle

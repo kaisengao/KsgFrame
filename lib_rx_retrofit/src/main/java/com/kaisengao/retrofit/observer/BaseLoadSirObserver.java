@@ -53,10 +53,16 @@ public abstract class BaseLoadSirObserver<T> extends BaseRxObserver<T> implement
     }
 
     @Override
-    protected void onError(int icon, int backgroundColor, int color, String message) {
-        super.onError(icon, backgroundColor, color, message);
+    protected void onError(String message) {
 
-        this.mLoadSirFactory.showError(this.mContext, this.mTarget, icon, backgroundColor, color, message);
+        this.mLoadSirFactory
+                .showError(
+                        this.mContext,
+                        this.mTarget,
+                        this.mErrorIcon,
+                        this.mBackgroundColor,
+                        this.mLoadingColor,
+                        message);
     }
 
     @Override
