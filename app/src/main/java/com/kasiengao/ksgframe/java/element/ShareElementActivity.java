@@ -1,18 +1,15 @@
 package com.kasiengao.ksgframe.java.element;
 
 import android.annotation.SuppressLint;
-import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.view.ViewCompat;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.java.player.cover.ScreenState;
 import com.kasiengao.ksgframe.java.staggered.StaggeredGridBean;
 import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
@@ -81,31 +78,11 @@ public class ShareElementActivity extends BaseToolbarActivity {
      * Init Preview
      */
     private void initPreview() {
+        this.mPreviewPager.setPlayerContainer(mPlayerContainer);
         // Data
         this.mPreviewPager.setMediaList(mGridBean.mPreviewBeans);
         // ShareElement
         ViewCompat.setTransitionName(mPreviewPager, getString(R.string.share_element_picture) + mPosition);
-    }
-
-    /**
-     * ActionBar
-     */
-    private void actionBarStatus() {
-        ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            if (this.mPreviewPager.isLandScape()) {
-                supportActionBar.hide();
-            } else {
-                supportActionBar.show();
-            }
-        }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        // ActionBar
-        this.actionBarStatus();
     }
 
     @Override
@@ -113,20 +90,11 @@ public class ShareElementActivity extends BaseToolbarActivity {
         this.onBackPressed();
     }
 
-    @Override
-    public void onConfigurationChanged(@NonNull Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        // 横竖屏切换事件
-        this.mPreviewPager.onConfigurationChanged(mPlayerContainer, newConfig);
-        // ActionBar
-        this.actionBarStatus();
-    }
-
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onBackPressed() {
-        if (mPreviewPager.isLandScape()) {
-            super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        if (mPreviewPager.isFullScreen()) {
+            this.mPreviewPager.onScreenChang(ScreenState.normal);
             return;
         }
         super.onBackPressed();

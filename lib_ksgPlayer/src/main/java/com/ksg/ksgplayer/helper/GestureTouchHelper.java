@@ -1,9 +1,10 @@
 package com.ksg.ksgplayer.helper;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
+import com.kasiengao.base.util.TimeUtil;
 import com.ksg.ksgplayer.listener.OnTouchGestureListener;
 
 /**
@@ -13,10 +14,21 @@ import com.ksg.ksgplayer.listener.OnTouchGestureListener;
  */
 public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener {
 
-    /**
-     * View 宽
-     */
-    private int mViewWidth;
+    private Activity mActivity;
+
+    private int mViewWidth, mViewHeight;
+
+    private int mMaxAppLight;
+
+    private int mCurrentVolume;
+
+    private long mProgress;
+
+    private long mDuration;
+
+    private long mSlideProgress;
+
+    private String mTimeFormat;
 
     private boolean mSlipRegion;
 
@@ -32,19 +44,26 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
 
     private boolean mIsGestureEnabled = true;
 
-    private GestureDetector mGestureDetector;
+    private final VolumeHelper mVolumeHelper;
+
+    private final GestureDetector mGestureDetector;
 
     private OnTouchGestureListener mOnTouchGestureListener;
 
-    public GestureTouchHelper(Context context) {
+    public GestureTouchHelper(Activity context) {
+        this.mActivity = context;
+        // 音频帮助类
+        this.mVolumeHelper = new VolumeHelper(context);
+        // GestureDetector
         this.mGestureDetector = new GestureDetector(context, this);
     }
 
     /**
      * 设置  View宽
      */
-    public void setViewWidth(int viewWidth) {
+    public void setView(int viewWidth, int viewHeight) {
         this.mViewWidth = viewWidth;
+        this.mViewHeight = viewHeight;
     }
 
     /**
@@ -62,12 +81,37 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
     }
 
     /**
+     * 初始化基参
+     */
+    public void setParams(long progress, long duration) {
+        this.mSlideProgress = 0;
+        // 初始化进度
+        this.mProgress = progress;
+        // 初始化总时长
+        this.mDuration = duration;
+        // 初始化音频数据
+        this.mCurrentVolume = mVolumeHelper.get100CurrentVolume();
+        // 初始化亮度数据
+        this.mMaxAppLight = BrightnessHelper.getAppLight100(this.mActivity);
+        // 初始化时间格式
+        this.mTimeFormat = TimeUtil.getFormat(mDuration);
+    }
+
+    /**
      * 手势回调监听
      *
      * @param onTouchGestureListener onTouchGestureListener
      */
     public void setOnTouchGestureListener(OnTouchGestureListener onTouchGestureListener) {
         this.mOnTouchGestureListener = onTouchGestureListener;
+    }
+
+    public long getDuration() {
+        return mDuration;
+    }
+
+    public long getSlideProgress() {
+        return mSlideProgress;
     }
 
     /**
@@ -182,13 +226,23 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      * @param deltaX deltaX
      */
     private void slideToChangePosition(float e1x, float deltaX) {
-        // 计算滑动区域 左侧百分之%07的位置开始计算 小于不算
-        //             右侧百分之%93的位置开始计算 大于不算
-        this.mSlipRegion = (e1x > (mViewWidth * 0.07) && e1x < (mViewWidth * 0.93));
-        if (this.mSlipRegion) {
-            deltaX = -deltaX;
-            if (mOnTouchGestureListener != null) {
-                mOnTouchGestureListener.onSeekGesture(deltaX);
+        if (mOnTouchGestureListener != null) {
+            // 计算滑动区域 左侧百分之%07的位置开始计算 小于不算
+            //             右侧百分之%93的位置开始计算 大于不算
+            this.mSlipRegion = (e1x > (mViewWidth * 0.07) && e1x < (mViewWidth * 0.93));
+            // 验证是否符合区域
+            if (this.mSlipRegion) {
+                deltaX = -deltaX;
+                // 计算手势滑动产生的新进度
+                mSlideProgress = (long) (deltaX / mViewWidth * 120000 + mProgress);
+                mSlideProgress = mSlideProgress <= 0 ? 0 : mSlideProgress;
+                mSlideProgress = Math.min(mSlideProgress, mDuration);
+                // 时间转换
+                String curr = TimeUtil.getTime(mTimeFormat, mSlideProgress);
+                String duration = TimeUtil.getTime(mTimeFormat, mDuration);
+                String time = curr + " / " + duration;
+                // 回调
+                this.mOnTouchGestureListener.onSeekGesture(deltaX, time);
             }
         }
     }
@@ -200,7 +254,12 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      */
     private void slideToChangeBrightness(float deltaY) {
         if (mOnTouchGestureListener != null) {
-            mOnTouchGestureListener.onBrightnessGesture(deltaY);
+            // 新的亮度
+            int newBrightness = (int) (deltaY / (mViewHeight - 30 * 2) * 100 + mMaxAppLight);
+            // 百分比计算
+            int brightness = BrightnessHelper.setAppLight100(mActivity, newBrightness);
+            // 回调
+            this.mOnTouchGestureListener.onBrightnessGesture(brightness);
         }
     }
 
@@ -211,7 +270,12 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      */
     private void slideToChangeVolume(float deltaY) {
         if (mOnTouchGestureListener != null) {
-            mOnTouchGestureListener.onVolumeGesture(deltaY);
+            // 新的音量
+            int newVolume = (int) (deltaY / (mViewHeight - 30 * 2) * 100 + mCurrentVolume);
+            // 百分比计算
+            int volume = mVolumeHelper.setVoice100(newVolume);
+            // 回调
+            this.mOnTouchGestureListener.onVolumeGesture(volume);
         }
     }
 
@@ -220,7 +284,7 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      */
     private void onSeekEndGesture() {
         if (mOnTouchGestureListener != null && mSlipRegion) {
-            mOnTouchGestureListener.onSeekEndGesture();
+            this.mOnTouchGestureListener.onSeekEndGesture();
         }
     }
 
@@ -229,7 +293,7 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      */
     private void onEndGesture() {
         if (mOnTouchGestureListener != null) {
-            mOnTouchGestureListener.onEndGesture();
+            this.mOnTouchGestureListener.onEndGesture();
         }
     }
 }

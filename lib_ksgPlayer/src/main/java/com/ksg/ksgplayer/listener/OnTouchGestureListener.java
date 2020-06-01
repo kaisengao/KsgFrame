@@ -12,21 +12,22 @@ public interface OnTouchGestureListener {
      *
      * @param percent 百分比
      */
-    void onBrightnessGesture(float percent);
+    void onBrightnessGesture(int percent);
 
     /**
      * 音量手势，手指在Layout右半部上下滑动时候调用
      *
      * @param percent 百分比
      */
-    void onVolumeGesture(float percent);
+    void onVolumeGesture(int percent);
 
     /**
      * 快进快退手势，手指在Layout左右滑动的时候调用
      *
      * @param percent 百分比
+     * @param time    时间
      */
-    void onSeekGesture(float percent);
+    void onSeekGesture(float percent, String time);
 
     /**
      * 单击手势，确认是单击的时候调用

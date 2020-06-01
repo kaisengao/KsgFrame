@@ -183,33 +183,6 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
         this.onRenewUi(curr, duration);
     }
 
-    @OnClick({R.id.cover_controller_back, R.id.cover_controller_play_status
-            , R.id.cover_controller_fullscreen_status, R.id.cover_controller_volume_status})
-    void onViewClick(View view) {
-        switch (view.getId()) {
-            case R.id.cover_controller_back:
-                // 回退
-                this.notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_BACK, null);
-                break;
-            case R.id.cover_controller_play_status:
-                // 播放状态
-                this.onSwitchPlayStatus();
-                break;
-            case R.id.cover_controller_fullscreen_status:
-                // 全屏状态
-                this.notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN, null);
-                break;
-            case R.id.cover_controller_volume_status:
-                // 声音状态
-                Bundle obtain = BundlePool.obtain();
-                obtain.putBoolean(EventKey.BOOL_DATA, mVolumeStatus.isSelected());
-                this.notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_VOLUME_ALTER, obtain);
-                break;
-            default:
-                break;
-        }
-    }
-
     /**
      * 组件间通信
      */
@@ -228,13 +201,13 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
         public void onValueUpdate(String key, Object value) {
             switch (key) {
                 case DataInter.Key.KEY_IS_LANDSCAPE:
-                    boolean isLandscape = (boolean) value;
-                    // 横竖屏切换
-                    mFullscreenStatus.setSelected(isLandscape);
-                    // SystemUi
-                    setSystemUiStatus(isLandscape);
-                    // Top 顶部菜单
-                    setControllerTopStatus(isLandscape);
+                    ScreenState screenState = (ScreenState) value;
+                    // 验证屏幕状态
+                    boolean slideEnabled =
+                            screenState == ScreenState.PortraitFullScreen ||
+                                    screenState == ScreenState.LandscapeFullScreen;
+                    // 全屏切换
+                    mFullscreenStatus.setSelected(slideEnabled);
                     break;
                 case DataInter.Key.KEY_VOLUME_ALTER:
                     // 声音开关事件
@@ -256,6 +229,39 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
         }
     };
 
+    @OnClick({R.id.cover_controller_back, R.id.cover_controller_play_status
+            , R.id.cover_controller_fullscreen_status, R.id.cover_controller_volume_status})
+    void onViewClick(View view) {
+        switch (view.getId()) {
+            case R.id.cover_controller_back:
+                // 回退
+                this.notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_BACK, null);
+                break;
+            case R.id.cover_controller_play_status:
+                // 播放状态
+                this.onSwitchPlayStatus();
+                break;
+            case R.id.cover_controller_fullscreen_status:
+                Bundle fullscreen = BundlePool.obtain();
+                if (!mFullscreenStatus.isSelected()) {
+                    fullscreen.putSerializable(EventKey.SERIALIZABLE_DATA, ScreenState.PortraitFullScreen);
+                } else {
+                    fullscreen.putSerializable(EventKey.SERIALIZABLE_DATA, ScreenState.normal);
+                }
+                // 全屏状态
+                this.notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN, fullscreen);
+                break;
+            case R.id.cover_controller_volume_status:
+                // 声音状态
+                Bundle volume = BundlePool.obtain();
+                volume.putBoolean(EventKey.BOOL_DATA, mVolumeStatus.isSelected());
+                this.notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_VOLUME_ALTER, volume);
+                break;
+            default:
+                break;
+        }
+    }
+
     /**
      * 计时 菜单状态 开始
      */
@@ -275,10 +281,6 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
      * Top/Bottom 菜单
      */
     private void onControllerStatus() {
-        // SystemUi 全屏状态下 且 需要隐藏Ui
-        if (this.mFullscreenStatus.isSelected() && !mControllerStatus) {
-            SystemUiUtil.hideVideoSystemUI(getContext());
-        }
         // 验证Controller是否在显示状态中
         if (this.mControllerStatus) {
             // 计时 菜单状态 开始

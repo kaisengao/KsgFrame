@@ -17,6 +17,7 @@ import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
+import com.kasiengao.ksgframe.java.player.cover.ScreenState;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
@@ -37,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PlayerActivity extends BaseToolbarActivity implements View.OnClickListener {
 
-    private boolean mIsLandScape;
+    private ScreenState mScreenState;
 
     private KsgVideoView mVideoView;
 
@@ -78,7 +79,7 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
                         break;
                     case DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN:
                         // 全屏切换事件
-                        setRequestedOrientation(mIsLandScape ?
+                        setRequestedOrientation(mScreenState==ScreenState.LandscapeFullScreen ?
                                 ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
                                 ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                         break;
@@ -148,8 +149,7 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
     @Override
     public void onConfigurationChanged(@NotNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        this.mIsLandScape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
-        this.setVideoHeight(mIsLandScape);
+        this.setVideoHeight(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE);
         // ActionBar
         this.actionBarStatus();
     }
@@ -160,14 +160,16 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
     private void setVideoHeight(boolean landscape) {
         ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mVideoView.getLayoutParams();
         if (landscape) {
+            mScreenState = ScreenState.LandscapeFullScreen;
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
             layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
         } else {
+            mScreenState = ScreenState.normal;
             layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
             layoutParams.height = (int) getScreenSize(this);
         }
         this.mVideoView.setLayoutParams(layoutParams);
-        this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_IS_LANDSCAPE, mIsLandScape);
+        this.mReceiverGroup.getGroupValue().putObject(DataInter.Key.KEY_IS_LANDSCAPE, mScreenState);
     }
 
     /**
@@ -184,7 +186,7 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
     private void actionBarStatus() {
         ActionBar supportActionBar = getSupportActionBar();
         if (supportActionBar != null) {
-            if (mIsLandScape) {
+            if (mScreenState == ScreenState.LandscapeFullScreen) {
                 supportActionBar.hide();
             } else {
                 supportActionBar.show();
@@ -209,7 +211,7 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onBackPressed() {
-        if (mIsLandScape) {
+        if (mScreenState == ScreenState.LandscapeFullScreen) {
             super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             return;
         }

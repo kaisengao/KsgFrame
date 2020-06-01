@@ -1,5 +1,6 @@
 package com.kasiengao.ksgframe.java.element;
 
+import android.app.ActionBar;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -28,6 +29,7 @@ import com.kasiengao.ksgframe.java.player.KsgIjkPlayer;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
+import com.kasiengao.ksgframe.java.player.cover.ScreenState;
 import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
@@ -49,19 +51,23 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     private int mNormalHeight = 0;
 
-    private boolean mIsLandScape;
-
-    private Activity mActivity;
+    private boolean mIsFullScreen;
 
     private List<T> mMediaList;
 
+    private Activity mActivity;
+
     private ViewPager mViewPager;
+
+    private ScreenState mScreenState;
 
     private KsgAssistView mKsgAssistView;
 
     private ReceiverGroup mReceiverGroup;
 
     private AppCompatTextView mPagerCount;
+
+    private PlayerContainerView mPlayerContainer;
 
     private PreviewPagerAdapter<T> mPagerAdapter;
 
@@ -151,10 +157,10 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                             mActivity.onBackPressed();
                             break;
                         case DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN:
-                            // 全屏切换事件
-                            mActivity.setRequestedOrientation(mIsLandScape ?
-                                    ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
-                                    ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                            // 屏幕状态
+                            ScreenState screenState = (ScreenState) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
+                            // 屏幕改变
+                            onScreenChang(screenState);
                             break;
                         case DataInter.Event.EVENT_CODE_REQUEST_VOLUME_ALTER:
                             // 声音开关事件
@@ -214,6 +220,15 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         this.mPagerCount.setText(String.format(getContext().getString(R.string.preview_count), (this.mViewPager.getCurrentItem() + 1), this.mMediaList.size()));
     }
 
+    /**
+     * 配置 播放器容器
+     *
+     * @param playerContainer PlayerContainerView
+     */
+    public void setPlayerContainer(PlayerContainerView playerContainer) {
+        this.mPlayerContainer = playerContainer;
+    }
+
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
         // 验证 最后一个item不作处理
@@ -267,21 +282,20 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     }
 
     /**
-     * Activity 横竖屏切换事件
-     *
-     * @param playerContainer 播放器容器
-     * @param newConfig       newConfig
+     * 屏幕改变
      */
-    public void onConfigurationChanged(PlayerContainerView playerContainer, Configuration newConfig) {
-        this.mIsLandScape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
+    public void onScreenChang(ScreenState screenState) {
+        this.mScreenState = screenState;
         // 播放器
         if (mKsgAssistView != null) {
+            this.mIsFullScreen = this.mScreenState == ScreenState.LandscapeFullScreen ||
+                    this.mScreenState == ScreenState.PortraitFullScreen;
             // 拦截事件
-            playerContainer.setIntercept(mIsLandScape);
-            // 横竖屏
-            if (mIsLandScape) {
+            this.mPlayerContainer.setIntercept(mIsFullScreen);
+            // 全屏
+            if (mIsFullScreen) {
                 // 更换播放器的容器
-                this.mKsgAssistView.attachContainer(playerContainer, false);
+                this.mKsgAssistView.attachContainer(mPlayerContainer, false);
             } else {
                 // container
                 FrameLayout container = mViewPager.findViewWithTag(mViewPager.getCurrentItem());
@@ -291,17 +305,12 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                 }
             }
             // 通知组件横竖屏切换
-            this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_IS_LANDSCAPE, mIsLandScape);
+            this.mReceiverGroup.getGroupValue().putObject(DataInter.Key.KEY_IS_LANDSCAPE, mScreenState);
         }
     }
 
-    /**
-     * 是否横屏
-     *
-     * @return boolean
-     */
-    public boolean isLandScape() {
-        return this.mIsLandScape;
+    public boolean isFullScreen() {
+        return mIsFullScreen;
     }
 
     /**
