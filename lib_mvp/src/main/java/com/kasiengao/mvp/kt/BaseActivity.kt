@@ -5,6 +5,7 @@ import android.view.Window
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import butterknife.ButterKnife
+import com.kasiengao.base.util.StatusBarUtil
 import com.kasiengao.base.util.ToastUtil
 
 /**
@@ -48,10 +49,14 @@ abstract class BaseActivity : AppCompatActivity() {
      */
     protected open fun initArgs(bundle: Bundle?) {}
 
+
     /**
      * 初始化控件调用之前
      */
-    protected open fun initBefore() {}
+    protected open fun initBefore() {
+        StatusBarUtil.StatusBarDarkMode(this)
+        StatusBarUtil.transparencyBar(this)
+    }
 
     /**
      * 初始化控件

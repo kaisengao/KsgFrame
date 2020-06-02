@@ -3,7 +3,6 @@ package com.kasiengao.mvp.kt
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.LinearLayout
 import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
@@ -53,15 +52,11 @@ abstract class BaseToolbarActivity : BaseActivity() {
         this.mParentLinearLayout!!.orientation = LinearLayout.VERTICAL
         // 将线性布局添加入父容器中，作为Ac页面布局的父容器
         viewGroup.addView(this.mParentLinearLayout)
+        // Padding一下状态栏高度
+        // Padding一下状态栏高度
+        StatusBarUtil.setPaddingSmart(this, mParentLinearLayout)
         // 将Toolbar添加到父容器布局中
         this.layoutInflater.inflate(getToolbarLayoutId(), this.mParentLinearLayout)
-        if (this.mParentLinearLayout!!.childCount > 0) { // 沉浸式状态栏 添加padding高度
-            StatusBarUtil.setPaddingSmart(this, this.mParentLinearLayout!!.getChildAt(0))
-            StatusBarUtil.setStatusBarColor(this, R.color.white)
-            StatusBarUtil.darkMode(this)
-        } else { // 如果没有添加Toolbar就移除沉浸式效果
-            this.window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        }
         // 将ContentLayout添加到父容器布局中
         this.layoutInflater.inflate(layoutResId, this.mParentLinearLayout)
         // 获取ContentLayout的View 以作为LoadSir的注册布局

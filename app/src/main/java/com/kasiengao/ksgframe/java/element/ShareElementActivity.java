@@ -8,6 +8,7 @@ import androidx.core.view.ViewCompat;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
+import com.kasiengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.cover.ScreenState;
 import com.kasiengao.ksgframe.java.staggered.StaggeredGridBean;
@@ -43,6 +44,11 @@ public class ShareElementActivity extends BaseToolbarActivity {
     }
 
     @Override
+    protected boolean isDisplayToolbar() {
+        return false;
+    }
+
+    @Override
     protected void initWindow() {
         super.initWindow();
         // 解决 页面跳转的时候SimpleDraweeView不显示图片
@@ -60,6 +66,12 @@ public class ShareElementActivity extends BaseToolbarActivity {
 
         this.mPosition = bundle.getInt(POSITION, -1);
         this.mGridBean = (StaggeredGridBean) bundle.getSerializable(DATA);
+    }
+
+    @Override
+    protected void initBefore() {
+        super.initBefore();
+        StatusBarUtil.StatusBarLightMode(this);
     }
 
     @Override

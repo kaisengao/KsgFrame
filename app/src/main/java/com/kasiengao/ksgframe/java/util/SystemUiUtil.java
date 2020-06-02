@@ -30,9 +30,6 @@ public class SystemUiUtil {
         window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // 恢复初始默认值
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
-        // 自定义状态栏
-        StatusBarUtil.setStatusBarColor(activity, R.color.white);
-        StatusBarUtil.darkMode(activity);
     }
 
     /**

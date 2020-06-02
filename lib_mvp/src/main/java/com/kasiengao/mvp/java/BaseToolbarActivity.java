@@ -49,28 +49,21 @@ public abstract class BaseToolbarActivity extends BaseActivity {
      */
     private void initContentView(@LayoutRes int layoutResId) {
         // 获取Ac父容器content
-        ViewGroup viewGroup = this.findViewById(android.R.id.content);
+        ViewGroup viewGroup = findViewById(android.R.id.content);
         viewGroup.removeAllViews();
         // 创建一个垂直线性布局
         this.mParentLinearLayout = new LinearLayout(this);
         this.mParentLinearLayout.setOrientation(LinearLayout.VERTICAL);
         // 将线性布局添加入父容器中，作为Ac页面布局的父容器
-        viewGroup.addView(this.mParentLinearLayout);
+        viewGroup.addView(mParentLinearLayout);
+        // Padding一下状态栏高度
+        StatusBarUtil.setPaddingSmart(this, mParentLinearLayout);
         // 将Toolbar添加到父容器布局中
         this.getLayoutInflater().inflate(getToolbarLayoutId(), mParentLinearLayout);
-        if (this.mParentLinearLayout.getChildCount() > 0) {
-            // 沉浸式状态栏 添加padding高度
-            StatusBarUtil.setPaddingSmart(this, this.mParentLinearLayout.getChildAt(0));
-            StatusBarUtil.setStatusBarColor(this, R.color.white);
-            StatusBarUtil.darkMode(this);
-        } else {
-            // 如果没有添加Toolbar就移除沉浸式效果
-            this.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
         // 将ContentLayout添加到父容器布局中
-        this.getLayoutInflater().inflate(layoutResId, this.mParentLinearLayout);
+        this.getLayoutInflater().inflate(layoutResId, mParentLinearLayout);
         // 获取ContentLayout的View 以作为LoadSir的注册布局
-        this.mContentLayout = this.mParentLinearLayout.getChildAt(1);
+        this.mContentLayout = mParentLinearLayout.getChildAt(1);
     }
 
     /**

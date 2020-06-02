@@ -1,12 +1,15 @@
 package com.kasiengao.mvp.java;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.ViewGroup;
 import android.view.Window;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.kasiengao.base.util.StatusBarUtil;
 import com.kasiengao.base.util.ToastUtil;
 
 import butterknife.ButterKnife;
@@ -42,8 +45,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 初始化窗口
      */
     protected void initWindow() {
-        //设置noTitle
-        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
+
     }
 
     /**
@@ -59,7 +61,8 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 初始化控件调用之前
      */
     protected void initBefore() {
-
+        StatusBarUtil.StatusBarDarkMode(this);
+        StatusBarUtil.transparencyBar(this);
     }
 
     /**
