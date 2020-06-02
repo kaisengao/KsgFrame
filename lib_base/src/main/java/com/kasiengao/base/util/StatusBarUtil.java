@@ -43,9 +43,20 @@ public final class StatusBarUtil {
      * @param activity 需要设置的activity
      */
     public static void transparencyBar(Activity activity) {
+        transparencyBar(activity, 0);
+    }
+
+    /**
+     * 设置颜色状态栏
+     *
+     * @param activity 需要设置的activity
+     * @param color    颜色
+     */
+    public static void transparencyBar(Activity activity, int color) {
+        int barColor = color == 0 ? Color.TRANSPARENT : color;
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
-        activity.getWindow().setStatusBarColor(Color.TRANSPARENT);
+        activity.getWindow().setStatusBarColor(barColor);
         int systemUiVisibility =
                 activity.getWindow().getDecorView().getSystemUiVisibility()
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
@@ -171,7 +182,7 @@ public final class StatusBarUtil {
                 }
                 meizuFlags.setInt(lp, value);
                 window.setAttributes(lp);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -199,7 +210,7 @@ public final class StatusBarUtil {
                     // 清除黑色字体
                     extraFlagField.invoke(window, 0, darkModeFlag);
                 }
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }
@@ -226,8 +237,7 @@ public final class StatusBarUtil {
         if (resId > 0) {
             result = context.getResources().getDimensionPixelSize(resId);
         } else {
-            result = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                    result, Resources.getSystem().getDisplayMetrics());
+            result = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, result, Resources.getSystem().getDisplayMetrics());
         }
         return result;
     }

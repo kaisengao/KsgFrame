@@ -1,6 +1,7 @@
 package com.kasiengao.ksgframe.java.element;
 
 import android.annotation.SuppressLint;
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatTextView;
@@ -70,8 +71,8 @@ public class ShareElementActivity extends BaseToolbarActivity {
 
     @Override
     protected void initBefore() {
-        super.initBefore();
         StatusBarUtil.StatusBarLightMode(this);
+        StatusBarUtil.transparencyBar(this);
     }
 
     @Override

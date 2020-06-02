@@ -1,5 +1,6 @@
 package com.kasiengao.mvp.kt
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.Window
 import androidx.annotation.LayoutRes
@@ -49,13 +50,12 @@ abstract class BaseActivity : AppCompatActivity() {
      */
     protected open fun initArgs(bundle: Bundle?) {}
 
-
     /**
      * 初始化控件调用之前
      */
     protected open fun initBefore() {
         StatusBarUtil.StatusBarDarkMode(this)
-        StatusBarUtil.transparencyBar(this)
+        StatusBarUtil.transparencyBar(this, Color.WHITE)
     }
 
     /**

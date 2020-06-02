@@ -62,7 +62,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected void initBefore() {
         StatusBarUtil.StatusBarDarkMode(this);
-        StatusBarUtil.transparencyBar(this);
+        StatusBarUtil.transparencyBar(this, Color.WHITE);
     }
 
     /**

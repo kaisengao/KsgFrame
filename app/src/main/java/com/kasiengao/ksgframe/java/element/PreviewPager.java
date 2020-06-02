@@ -24,6 +24,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.kasiengao.base.util.CommonUtil;
 import com.kasiengao.base.util.DensityUtil;
+import com.kasiengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.KsgIjkPlayer;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
@@ -95,6 +96,9 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         this.mViewPager.addOnPageChangeListener(this);
         this.mViewPager.setAdapter(mPagerAdapter = new PreviewPagerAdapter<>());
         this.mPagerCount = inflate.findViewById(R.id.layout_pager_count);
+
+        FrameLayout toolbar = inflate.findViewById(R.id.layout_toolbar);
+        StatusBarUtil.setPaddingSmart(getContext(), toolbar);
     }
 
     /**
