@@ -2,14 +2,9 @@ package com.kasiengao.ksgframe.java.player;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
-
-import androidx.appcompat.app.ActionBar;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.base.util.KLog;
@@ -17,7 +12,6 @@ import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
-import com.kasiengao.ksgframe.java.player.cover.ScreenState;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
@@ -37,8 +31,6 @@ import org.jetbrains.annotations.NotNull;
  * @Description: 视频播放器
  */
 public class PlayerActivity extends BaseToolbarActivity implements View.OnClickListener {
-
-    private ScreenState mScreenState;
 
     private KsgVideoView mVideoView;
 
@@ -79,9 +71,9 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
                         break;
                     case DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN:
                         // 全屏切换事件
-                        setRequestedOrientation(mScreenState==ScreenState.LandscapeFullScreen ?
-                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
-                                ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+//                        setRequestedOrientation(mScreenState==ScreenState.LandscapeFullScreen ?
+//                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
+//                                ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                         break;
                     case DataInter.Event.EVENT_CODE_REQUEST_VOLUME_ALTER:
                         // 声音开关事件
@@ -158,18 +150,18 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
      * 修改播放器的宽高比
      */
     private void setVideoHeight(boolean landscape) {
-        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mVideoView.getLayoutParams();
-        if (landscape) {
-            mScreenState = ScreenState.LandscapeFullScreen;
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-        } else {
-            mScreenState = ScreenState.normal;
-            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            layoutParams.height = (int) getScreenSize(this);
-        }
-        this.mVideoView.setLayoutParams(layoutParams);
-        this.mReceiverGroup.getGroupValue().putObject(DataInter.Key.KEY_IS_LANDSCAPE, mScreenState);
+//        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mVideoView.getLayoutParams();
+//        if (landscape) {
+//            mScreenState = ScreenState.LandscapeFullScreen;
+//            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
+//        } else {
+//            mScreenState = ScreenState.normal;
+//            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
+//            layoutParams.height = (int) getScreenSize(this);
+//        }
+//        this.mVideoView.setLayoutParams(layoutParams);
+//        this.mReceiverGroup.getGroupValue().putObject(DataInter.Key.KEY_FULLSCREEN, mScreenState);
     }
 
     /**
@@ -184,14 +176,14 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
      * ActionBar
      */
     private void actionBarStatus() {
-        ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            if (mScreenState == ScreenState.LandscapeFullScreen) {
-                supportActionBar.hide();
-            } else {
-                supportActionBar.show();
-            }
-        }
+//        ActionBar supportActionBar = getSupportActionBar();
+//        if (supportActionBar != null) {
+//            if (mScreenState == ScreenState.LandscapeFullScreen) {
+//                supportActionBar.hide();
+//            } else {
+//                supportActionBar.show();
+//            }
+//        }
     }
 
     @Override
@@ -211,10 +203,10 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onBackPressed() {
-        if (mScreenState == ScreenState.LandscapeFullScreen) {
-            super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            return;
-        }
+//        if (mScreenState == ScreenState.LandscapeFullScreen) {
+//            super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//            return;
+//        }
         super.onBackPressed();
     }
 }

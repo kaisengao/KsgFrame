@@ -1,4 +1,4 @@
-package com.kasiengao.ksgframe.java.element;
+package com.kasiengao.ksgframe.java.observer;
 
 import android.content.Context;
 
@@ -19,7 +19,7 @@ public abstract class MyLifecycleObserver implements LifecycleObserver {
 
     private final Lifecycle mLifecycle;
 
-    public MyLifecycleObserver(Context context) {
+    protected MyLifecycleObserver(Context context) {
         this.mLifecycle = CommonUtil.scanForActivity(context).getLifecycle();
     }
 
@@ -54,5 +54,4 @@ public abstract class MyLifecycleObserver implements LifecycleObserver {
     protected abstract void onAcPause();
 
     protected abstract void onAcDestroy();
-
 }

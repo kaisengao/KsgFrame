@@ -8,7 +8,6 @@ import android.view.WindowManager;
 
 import com.kasiengao.base.util.CommonUtil;
 import com.kasiengao.base.util.StatusBarUtil;
-import com.kasiengao.ksgframe.R;
 
 /**
  * @ClassName: SystemUiUtil
@@ -30,6 +29,8 @@ public class SystemUiUtil {
         window.clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         // 恢复初始默认值
         window.getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
+        // 默认 全透明状态栏
+        StatusBarUtil.transparencyBar(activity);
     }
 
     /**
@@ -48,8 +49,7 @@ public class SystemUiUtil {
                 View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                         // 视图延伸至导航栏区域，导航栏上浮于视图之上
                         | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE;
-
+                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY;
         /*
          * SYSTEM_UI_FLAG_IMMERSIVE 正如前面所说的 SYSTEM_UI_FLAG_HIDE_NAVIGATION 和 SYSTEM_UI_FLAG_FULLSCREEN在用户与屏幕有任何交互时，都会被清除。
          * 过后如需隐藏目的，又得重新设置。而此标签正是防止这种情况而加入，设置此标签后，只有从屏幕上方下滑，或者从屏幕下方上滑时才会执行清除，其他普通交互不会变化。

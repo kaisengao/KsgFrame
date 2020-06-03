@@ -39,7 +39,7 @@ public class JavaActivity extends BaseToolbarActivity {
         });
         // StaggeredGrid
         this.findViewById(R.id.java_staggered_grid).setOnClickListener(v -> {
-            // Rx+Retrofit
+            // StaggeredGrid
             this.startActivity(new Intent(this, StaggeredGridActivity.class));
         });
         // KsgVideoPlayer

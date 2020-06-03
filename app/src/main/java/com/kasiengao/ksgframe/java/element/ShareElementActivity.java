@@ -1,7 +1,7 @@
 package com.kasiengao.ksgframe.java.element;
 
 import android.annotation.SuppressLint;
-import android.graphics.Color;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatTextView;
@@ -11,7 +11,8 @@ import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.kasiengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
-import com.kasiengao.ksgframe.java.player.cover.ScreenState;
+import com.kasiengao.ksgframe.java.preview.PreviewBean;
+import com.kasiengao.ksgframe.java.preview.PreviewPager;
 import com.kasiengao.ksgframe.java.staggered.StaggeredGridBean;
 import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
@@ -106,10 +107,18 @@ public class ShareElementActivity extends BaseToolbarActivity {
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onBackPressed() {
-        if (mPreviewPager.isFullScreen()) {
-            this.mPreviewPager.onScreenChang(ScreenState.normal);
+        // 1、验证横竖屏
+        if (mPreviewPager.isLandscape()) {
+            this.mPreviewPager.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
             return;
         }
+        // 2、验证全屏
+        if (mPreviewPager.isFullScreen()) {
+            this.mPreviewPager.setFullScreen(false);
+            this.mPreviewPager.onFullScreen(false);
+            return;
+        }
+        // 剩下的基操给系统
         super.onBackPressed();
     }
 }

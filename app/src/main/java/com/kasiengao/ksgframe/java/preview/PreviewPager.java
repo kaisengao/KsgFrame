@@ -1,6 +1,6 @@
-package com.kasiengao.ksgframe.java.element;
+package com.kasiengao.ksgframe.java.preview;
 
-import android.app.ActionBar;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
@@ -26,11 +26,12 @@ import com.kasiengao.base.util.CommonUtil;
 import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.java.observer.MyLifecycleObserver;
 import com.kasiengao.ksgframe.java.player.KsgIjkPlayer;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
-import com.kasiengao.ksgframe.java.player.cover.ScreenState;
+import com.kasiengao.ksgframe.java.util.SystemUiUtil;
 import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
@@ -52,15 +53,15 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     private int mNormalHeight = 0;
 
-    private boolean mIsFullScreen;
+    private boolean mFullScreen;
+
+    private boolean mIsLandscape;
 
     private List<T> mMediaList;
 
     private Activity mActivity;
 
     private ViewPager mViewPager;
-
-    private ScreenState mScreenState;
 
     private KsgAssistView mKsgAssistView;
 
@@ -112,6 +113,10 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                 if (mKsgAssistView != null) {
                     mKsgAssistView.resume();
                 }
+                if (mIsLandscape) {
+                    // 隐藏系统Ui
+                    SystemUiUtil.hideVideoSystemUI(getContext());
+                }
             }
 
             @Override
@@ -139,6 +144,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     /**
      * initAssistVideo
      */
+    @SuppressLint("SourceLockedOrientationActivity")
     private void initAssistVideo() {
         if (this.mKsgAssistView == null) {
             this.mKsgAssistView = new KsgAssistView(getContext());
@@ -160,11 +166,26 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                             // 回退
                             mActivity.onBackPressed();
                             break;
+                        case DataInter.Event.EVENT_CODE_REQUEST_SCREEN_ORIENTATION:
+                            // 横竖屏切换
+                            boolean screenOrientation = bundle.getBoolean(EventKey.BOOL_DATA, false);
+                            // 改变横竖屏
+                            setRequestedOrientation(screenOrientation
+                                    ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                    // 横屏自动旋转 180°
+                                    : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                            break;
                         case DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN:
-                            // 屏幕状态
-                            ScreenState screenState = (ScreenState) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
+                            // 全屏切换事件
+                            boolean fullscreen = bundle.getBoolean(EventKey.BOOL_DATA, false);
+                            // 如果在横屏状态下推出了全屏模式需要设置会竖屏
+                            if (mIsLandscape && !fullscreen) {
+                                setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                            }
+                            // 存储变量
+                            setFullScreen(fullscreen);
                             // 屏幕改变
-                            onScreenChang(screenState);
+                            onFullScreen(mFullScreen);
                             break;
                         case DataInter.Event.EVENT_CODE_REQUEST_VOLUME_ALTER:
                             // 声音开关事件
@@ -287,17 +308,16 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     /**
      * 屏幕改变
+     *
+     * @param fullScreen 屏幕状态
      */
-    public void onScreenChang(ScreenState screenState) {
-        this.mScreenState = screenState;
+    public void onFullScreen(boolean fullScreen) {
         // 播放器
         if (mKsgAssistView != null) {
-            this.mIsFullScreen = this.mScreenState == ScreenState.LandscapeFullScreen ||
-                    this.mScreenState == ScreenState.PortraitFullScreen;
             // 拦截事件
-            this.mPlayerContainer.setIntercept(mIsFullScreen);
+            this.mPlayerContainer.setIntercept(fullScreen);
             // 全屏
-            if (mIsFullScreen) {
+            if (fullScreen) {
                 // 更换播放器的容器
                 this.mKsgAssistView.attachContainer(mPlayerContainer, false);
             } else {
@@ -308,13 +328,55 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                     this.mKsgAssistView.attachContainer(container, false);
                 }
             }
-            // 通知组件横竖屏切换
-            this.mReceiverGroup.getGroupValue().putObject(DataInter.Key.KEY_IS_LANDSCAPE, mScreenState);
+            // 通知组件横屏幕改变
+            this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_FULLSCREEN, fullScreen);
         }
     }
 
+    @Override
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // 验证是否横屏状态
+        this.mIsLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
+        // 横屏
+        if (mIsLandscape) {
+            // 如果直接选择的横屏且屏幕不在全屏状态下 默认设置横屏且全屏
+            if (!mFullScreen) {
+                // 改为全屏布局
+                this.onFullScreen(true);
+            }
+            // 隐藏系统Ui
+            SystemUiUtil.hideVideoSystemUI(getContext());
+        } else {
+            // 竖屏
+            this.onFullScreen(mFullScreen);
+            // 恢复系统Ui
+            SystemUiUtil.recoverySystemUI(getContext());
+        }
+        // 通知组件横竖屏切换
+        this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_SCREEN_ORIENTATION, mIsLandscape);
+    }
+
+    /**
+     * 设置横竖屏
+     *
+     * @param requestedOrientation requestedOrientation
+     */
+    @SuppressLint("SourceLockedOrientationActivity")
+    public void setRequestedOrientation(int requestedOrientation) {
+        this.mActivity.setRequestedOrientation(requestedOrientation);
+    }
+
+    public void setFullScreen(boolean fullScreen) {
+        this.mFullScreen = fullScreen;
+    }
+
     public boolean isFullScreen() {
-        return mIsFullScreen;
+        return mFullScreen;
+    }
+
+    public boolean isLandscape() {
+        return mIsLandscape;
     }
 
     /**

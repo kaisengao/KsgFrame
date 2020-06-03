@@ -1,23 +1,17 @@
 package com.kasiengao.base.util;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-
-import androidx.annotation.FloatRange;
-import androidx.annotation.RequiresApi;
-import androidx.core.content.ContextCompat;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -224,6 +218,17 @@ public final class StatusBarUtil {
             // 增高
             lp.height += getStatusBarHeight(context);
         }
+        view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + getStatusBarHeight(context),
+                view.getPaddingRight(), view.getPaddingBottom());
+    }
+
+    /**
+     * 增加View的高度以及paddingTop,增加的值为状态栏高度.一般是在沉浸式全屏给ToolBar用的
+     */
+    public static void setHeightAndPadding(Context context, View view) {
+        ViewGroup.LayoutParams lp = view.getLayoutParams();
+        //增高
+        lp.height += getStatusBarHeight(context);
         view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + getStatusBarHeight(context),
                 view.getPaddingRight(), view.getPaddingBottom());
     }

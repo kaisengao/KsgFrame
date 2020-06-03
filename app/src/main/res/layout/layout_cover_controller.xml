@@ -88,6 +88,14 @@
             android:textSize="@dimen/sp_14"
             tools:text="00:00" />
 
+        <!-- landscape/portrait -->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cover_controller_screen_orientation"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="6dp"
+            android:src="@drawable/icon_cover_rotate" />
+
         <!-- Fullscreen/FullscreenExit-->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cover_controller_fullscreen_status"
@@ -99,8 +107,8 @@
 
     <!-- BottomSeekBar -->
     <ProgressBar
-        style="?android:attr/progressBarStyleHorizontal"
         android:id="@+id/cover_controller_bottom_seek"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

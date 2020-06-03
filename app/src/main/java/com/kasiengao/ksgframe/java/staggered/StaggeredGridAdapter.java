@@ -19,7 +19,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.ksgframe.R;
-import com.kasiengao.ksgframe.java.element.PreviewBean;
+import com.kasiengao.ksgframe.java.preview.PreviewBean;
 import com.kasiengao.ksgframe.java.element.ShareElementActivity;
 
 import org.jetbrains.annotations.NotNull;

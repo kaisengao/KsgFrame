@@ -1,6 +1,6 @@
 package com.kasiengao.ksgframe.java.staggered;
 
-import com.kasiengao.ksgframe.java.element.PreviewBean;
+import com.kasiengao.ksgframe.java.preview.PreviewBean;
 
 import java.util.ArrayList;
 import java.util.List;

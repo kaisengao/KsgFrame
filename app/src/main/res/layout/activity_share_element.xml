@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.kasiengao.ksgframe.java.element.PreviewPager
+            <com.kasiengao.ksgframe.java.preview.PreviewPager
                 android:id="@+id/share_element_pager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />

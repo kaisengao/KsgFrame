@@ -10,22 +10,32 @@ public interface DataInter {
         int EVENT_CODE_REQUEST_BACK = -100;
 
         /**
+         * 横竖屏切换
+         */
+        int EVENT_CODE_REQUEST_SCREEN_ORIENTATION = -101;
+
+        /**
          * 全屏切换事件
          */
-        int EVENT_CODE_REQUEST_TOGGLE_SCREEN = -101;
+        int EVENT_CODE_REQUEST_TOGGLE_SCREEN = -102;
 
         /**
          * 声音开关事件
          */
-        int EVENT_CODE_REQUEST_VOLUME_ALTER = -102;
+        int EVENT_CODE_REQUEST_VOLUME_ALTER = -103;
     }
 
     interface Key extends InterKey {
 
         /**
+         * 横竖屏切换
+         */
+        String KEY_SCREEN_ORIENTATION = "screenOrientation";
+
+        /**
          * 全屏切换
          */
-        String KEY_IS_LANDSCAPE = "isLandscape";
+        String KEY_FULLSCREEN = "fullscreen";
 
         /**
          * 声音开关

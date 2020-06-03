@@ -494,8 +494,8 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
      * 播放器 缓冲进度 事件
      */
     private IMediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener = (iMediaPlayer, percent) -> {
-        // 缓冲进度
-        this.setBufferPercentage(percent);
+        // 缓冲进度 (不知道为啥他的进度只显示99)
+        this.setBufferPercentage(percent >= 99 ? 100 : percent);
     };
 
     /**

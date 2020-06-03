@@ -145,26 +145,19 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
         @Override
         public String[] filterKeys() {
             return new String[]{
-                    DataInter.Key.KEY_IS_LANDSCAPE
+                    DataInter.Key.KEY_FULLSCREEN
             };
         }
 
         @Override
         public void onValueUpdate(String key, Object value) {
-            switch (key) {
-                case DataInter.Key.KEY_IS_LANDSCAPE:
-                    ScreenState screenState = (ScreenState) value;
-                    // 获取视图宽高
-                    getScreenSize();
-                    // 验证屏幕状态
-                    boolean slideEnabled =
-                            screenState == ScreenState.PortraitFullScreen ||
-                                    screenState == ScreenState.LandscapeFullScreen;
-                    // 是否开启滑动手势
-                    mGestureTouchHelper.setSlideEnabled(slideEnabled);
-                    break;
-                default:
-                    break;
+            // 全屏状态切换
+            if (DataInter.Key.KEY_FULLSCREEN.equals(key)) {
+                boolean fullScreen = (boolean) value;
+                // 获取视图宽高
+                getScreenSize();
+                // 是否开启滑动手势 (全屏开启)
+                mGestureTouchHelper.setSlideEnabled(fullScreen);
             }
         }
     };

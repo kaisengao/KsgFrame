@@ -17,7 +17,6 @@ import com.kasiengao.base.configure.ThreadPool;
 import com.kasiengao.base.util.TimeUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.util.AnimUtil;
-import com.kasiengao.ksgframe.java.util.SystemUiUtil;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.event.BundlePool;
 import com.ksg.ksgplayer.event.EventKey;
@@ -54,6 +53,8 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     AppCompatImageView mPlayStatus;
     @BindView(R.id.cover_controller_volume_status)
     AppCompatImageView mVolumeStatus;
+    @BindView(R.id.cover_controller_screen_orientation)
+    AppCompatImageView mScreenOrientation;
     @BindView(R.id.cover_controller_fullscreen_status)
     AppCompatImageView mFullscreenStatus;
     @BindView(R.id.cover_controller_curr_time)
@@ -152,12 +153,10 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     @Nullable
     @Override
     public Bundle onPrivateEvent(int eventCode, Bundle bundle) {
-        switch (eventCode) {
-            case DataInter.PrivateEvent.EVENT_CODE_GESTURE_SLIDE_SEEK:
-                // 手势快进通知暂停自动更新
-                this.onRenewUi(bundle.getLong(EventKey.LONG_ARG1), bundle.getLong(EventKey.LONG_ARG2));
-                this.mTimerUpdatePause = bundle.getBoolean(EventKey.BOOL_DATA);
-                break;
+        // 手势快进通知暂停自动更新
+        if (eventCode == DataInter.PrivateEvent.EVENT_CODE_GESTURE_SLIDE_SEEK) {
+            this.onRenewUi(bundle.getLong(EventKey.LONG_ARG1), bundle.getLong(EventKey.LONG_ARG2));
+            this.mTimerUpdatePause = bundle.getBoolean(EventKey.BOOL_DATA);
         }
         return super.onPrivateEvent(eventCode, bundle);
     }
@@ -190,7 +189,8 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
         @Override
         public String[] filterKeys() {
             return new String[]{
-                    DataInter.Key.KEY_IS_LANDSCAPE,
+                    DataInter.Key.KEY_SCREEN_ORIENTATION,
+                    DataInter.Key.KEY_FULLSCREEN,
                     DataInter.Key.KEY_VOLUME_ALTER,
                     DataInter.Key.KEY_CONTROLLER_STATUS,
                     DataInter.Key.KEY_CONTROLLER_PLAY_STATUS
@@ -200,14 +200,16 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
         @Override
         public void onValueUpdate(String key, Object value) {
             switch (key) {
-                case DataInter.Key.KEY_IS_LANDSCAPE:
-                    ScreenState screenState = (ScreenState) value;
-                    // 验证屏幕状态
-                    boolean slideEnabled =
-                            screenState == ScreenState.PortraitFullScreen ||
-                                    screenState == ScreenState.LandscapeFullScreen;
+                case DataInter.Key.KEY_SCREEN_ORIENTATION:
+                    boolean isLandscape = (boolean) value;
+                    // 横竖屏切换
+                    mScreenOrientation.setSelected(isLandscape);
+                    // 隐藏 Top 顶部菜单
+                    mControllerTop.setVisibility(View.GONE);
+                    break;
+                case DataInter.Key.KEY_FULLSCREEN:
                     // 全屏切换
-                    mFullscreenStatus.setSelected(slideEnabled);
+                    mFullscreenStatus.setSelected((boolean) value);
                     break;
                 case DataInter.Key.KEY_VOLUME_ALTER:
                     // 声音开关事件
@@ -229,8 +231,11 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
         }
     };
 
-    @OnClick({R.id.cover_controller_back, R.id.cover_controller_play_status
-            , R.id.cover_controller_fullscreen_status, R.id.cover_controller_volume_status})
+    @OnClick({
+            R.id.cover_controller_back, R.id.cover_controller_play_status,
+            R.id.cover_controller_screen_orientation, R.id.cover_controller_fullscreen_status,
+            R.id.cover_controller_volume_status
+    })
     void onViewClick(View view) {
         switch (view.getId()) {
             case R.id.cover_controller_back:
@@ -241,14 +246,16 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
                 // 播放状态
                 this.onSwitchPlayStatus();
                 break;
+            case R.id.cover_controller_screen_orientation:
+                // 横竖屏切换  (true为横屏)
+                Bundle screenOrientation = BundlePool.obtain();
+                screenOrientation.putBoolean(EventKey.BOOL_DATA, mScreenOrientation.isSelected());
+                this.notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_SCREEN_ORIENTATION, screenOrientation);
+                break;
             case R.id.cover_controller_fullscreen_status:
+                // 全屏切换状态 (true为全屏)
                 Bundle fullscreen = BundlePool.obtain();
-                if (!mFullscreenStatus.isSelected()) {
-                    fullscreen.putSerializable(EventKey.SERIALIZABLE_DATA, ScreenState.PortraitFullScreen);
-                } else {
-                    fullscreen.putSerializable(EventKey.SERIALIZABLE_DATA, ScreenState.normal);
-                }
-                // 全屏状态
+                fullscreen.putBoolean(EventKey.BOOL_DATA, !mFullscreenStatus.isSelected());
                 this.notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN, fullscreen);
                 break;
             case R.id.cover_controller_volume_status:
@@ -292,20 +299,9 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
         // Top 菜单  (必须在横屏状态下才会显示)
         this.setControllerTopStatus(mControllerStatus);
         // Bottom 菜单
-        this.setControllerBottomStatus(mControllerStatus);
-    }
-
-    /**
-     * 系统 Ui
-     *
-     * @param isLandscape 横竖屏
-     */
-    private void setSystemUiStatus(boolean isLandscape) {
-        if (isLandscape) {
-            SystemUiUtil.hideVideoSystemUI(getContext());
-        } else {
-            SystemUiUtil.recoverySystemUI(getContext());
-        }
+        this.setControllerBottomStatus(mControllerBottom, mControllerStatus);
+        // Bottom 底部进度条
+        this.setControllerBottomStatus(mBottomProgress, !mControllerStatus);
     }
 
     /**
@@ -314,35 +310,40 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
      * @param status 状态
      */
     private void setControllerTopStatus(boolean status) {
-        // 非横屏下隐藏
-        if (!mFullscreenStatus.isSelected()) {
-            this.mControllerTop.setVisibility(View.GONE);
-            return;
-        }
-        if (status) {
-            this.mControllerTop.setVisibility(View.VISIBLE);
-            this.mControllerTop.setAnimation(AnimUtil.getTopInAnim(getContext()));
-        } else {
-            this.mControllerTop.setVisibility(View.GONE);
-            this.mControllerTop.setAnimation(AnimUtil.getTopOutAnim(getContext()));
+        // 横屏状态下才开放
+        if (mScreenOrientation.isSelected()) {
+            // 区分一下状态
+            int visibility = status ? View.VISIBLE : View.GONE;
+            // 过滤一下重复动画
+            if (this.mControllerTop.getVisibility() == visibility) {
+                return;
+            }
+            // 赋值并执行动画
+            this.mControllerTop.setVisibility(visibility);
+            this.mControllerTop.setAnimation(status
+                    ? AnimUtil.getTopInAnim(getContext())
+                    : AnimUtil.getTopOutAnim(getContext()));
         }
     }
 
     /**
      * Bottom 底部菜单
      *
-     * @param status 状态
+     * @param bottomView View
+     * @param status     状态
      */
-    private void setControllerBottomStatus(boolean status) {
-        if (status) {
-            this.mBottomProgress.setVisibility(View.GONE);
-            this.mControllerBottom.setVisibility(View.VISIBLE);
-            this.mControllerBottom.setAnimation(AnimUtil.getBottomInAnim(getContext()));
-        } else {
-            this.mBottomProgress.setVisibility(View.VISIBLE);
-            this.mControllerBottom.setVisibility(View.GONE);
-            this.mControllerBottom.setAnimation(AnimUtil.getBottomOutAnim(getContext()));
+    private void setControllerBottomStatus(View bottomView, boolean status) {
+        // 区分一下状态
+        int visibility = status ? View.VISIBLE : View.GONE;
+        // 过滤一下重复动画
+        if (bottomView.getVisibility() == visibility) {
+            return;
         }
+        // 赋值并执行动画
+        bottomView.setVisibility(visibility);
+        bottomView.setAnimation(status
+                ? AnimUtil.getBottomInAnim(getContext())
+                : AnimUtil.getBottomOutAnim(getContext()));
     }
 
     /**
@@ -444,7 +445,9 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
         this.mControllerStatus = false;
         // Top/Bottom 菜单
         this.setControllerTopStatus(false);
-        this.setControllerBottomStatus(false);
+        this.setControllerBottomStatus(mControllerBottom, false);
+        // Bottom 底部进度条
+        this.setControllerBottomStatus(mBottomProgress, true);
     };
 
     /**
