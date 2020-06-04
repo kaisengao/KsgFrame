@@ -67,7 +67,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
         // 手势操作 提示View
         this.mGestureTipsView = new GestureTipsView();
         // 手势操作帮助类
-        this.mGestureTouchHelper = new GestureTouchHelper(activity);
+        this.mGestureTouchHelper = new GestureTouchHelper(activity, mTouchGestureListener);
     }
 
     @Override
@@ -85,8 +85,6 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
         this.getView().setOnTouchListener(this);
         // Handler
         this.mHandler = ThreadPool.MainThreadHandler.getInstance();
-        // 注册手势事件
-        this.mGestureTouchHelper.setOnTouchGestureListener(mTouchGestureListener);
         // 组件间通信
         this.getGroupValue().registerOnGroupValueUpdateListener(mGroupValueUpdateListener);
     }
@@ -95,8 +93,6 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
     public void onReceiverUnBind() {
         super.onReceiverUnBind();
         this.mBind.unbind();
-        // 取消手势事件
-        this.mGestureTouchHelper.setOnTouchGestureListener(null);
         // 组件间通信
         this.getGroupValue().unregisterOnGroupValueUpdateListener(mGroupValueUpdateListener);
     }
@@ -172,9 +168,9 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
     /**
      * 手势操作事件
      */
-    private OnTouchGestureListener mTouchGestureListener = new OnTouchGestureListener() {
+    private final OnTouchGestureListener mTouchGestureListener = new OnTouchGestureListener() {
 
-        final Bundle controllerBundle = BundlePool.obtain();
+        final Bundle seekBundle = BundlePool.obtain();
 
         /**
          * 亮度手势，手指在Layout左半部上下滑动时候调用
@@ -221,7 +217,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
                     .setTime(mGestureSlidingTime, time)
                     .show();
             // 通知 ControllerCover 自动更新进度
-            notifyReceiverController(true);
+            notifyReceiverControllerSeek(true);
         }
 
         /**
@@ -263,7 +259,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
                 mHandler.post(mSeekEventRunnable, 300);
             }
             // 通知 ControllerCover 自动更新进度
-            notifyReceiverController(false);
+            notifyReceiverControllerSeek(false);
         }
 
         /**
@@ -279,15 +275,15 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
          *
          * @param  timerUpdatePause 暂停
          */
-        private void notifyReceiverController(boolean timerUpdatePause) {
+        private void notifyReceiverControllerSeek(boolean timerUpdatePause) {
             mSlidProgress = mGestureTouchHelper.getSlideProgress();
-            controllerBundle.putLong(EventKey.LONG_ARG1, mSlidProgress);
-            controllerBundle.putLong(EventKey.LONG_ARG2, mGestureTouchHelper.getDuration());
-            controllerBundle.putBoolean(EventKey.BOOL_DATA, timerUpdatePause);
+            seekBundle.putLong(EventKey.LONG_ARG1, mSlidProgress);
+            seekBundle.putLong(EventKey.LONG_ARG2, mGestureTouchHelper.getDuration());
+            seekBundle.putBoolean(EventKey.BOOL_DATA, timerUpdatePause);
             notifyReceiverPrivateEvent(
                     DataInter.ReceiverKey.KEY_CONTROLLER_COVER,
                     DataInter.PrivateEvent.EVENT_CODE_GESTURE_SLIDE_SEEK,
-                    controllerBundle);
+                    seekBundle);
         }
     };
 

@@ -1,17 +1,32 @@
 package com.kasiengao.ksgframe.java.player;
 
+import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.base.util.KLog;
+import com.kasiengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
+import com.kasiengao.ksgframe.java.util.SystemUiUtil;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
@@ -32,6 +47,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class PlayerActivity extends BaseToolbarActivity implements View.OnClickListener {
 
+    private boolean mFullscreen;
+
     private KsgVideoView mVideoView;
 
     private KsgVideoPlayer mVideoPlayer;
@@ -41,6 +58,17 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_player;
+    }
+
+    @Override
+    protected boolean isDisplayToolbar() {
+        return false;
+    }
+
+    @Override
+    protected void initBefore() {
+        StatusBarUtil.StatusBarLightMode(this);
+        StatusBarUtil.transparencyBar(this);
     }
 
     @Override
@@ -55,9 +83,9 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
         this.mVideoPlayer = mVideoView.getVideoPlayer();
 
         this.mReceiverGroup = new ReceiverGroup();
-        this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new GestureCover(this));
-        this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_LOADING_COVER, new LoadingCover(this));
         this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_CONTROLLER_COVER, new ControllerCover(this));
+        this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_LOADING_COVER, new LoadingCover(this));
+        this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new GestureCover(this));
 
         this.mVideoPlayer.setReceiverGroup(mReceiverGroup);
         this.mVideoPlayer.setOnVideoViewEventHandler(new OnVideoViewEventHandler() {
@@ -69,47 +97,34 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
                         // 回退
                         onBackPressed();
                         break;
+                    case DataInter.Event.EVENT_CODE_REQUEST_SCREEN_ORIENTATION:
+                        // 横竖屏切换
+                        boolean screenOrientation = bundle.getBoolean(EventKey.BOOL_DATA, false);
+                        // 改变横竖屏
+                        setRequestedOrientation(screenOrientation
+                                ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                // 横屏自动旋转 180°
+                                : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                        break;
                     case DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN:
                         // 全屏切换事件
-//                        setRequestedOrientation(mScreenState==ScreenState.LandscapeFullScreen ?
-//                                ActivityInfo.SCREEN_ORIENTATION_PORTRAIT :
-//                                ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-                        break;
-                    case DataInter.Event.EVENT_CODE_REQUEST_VOLUME_ALTER:
-                        // 声音开关事件
-                        boolean volumeStatus = bundle.getBoolean(EventKey.BOOL_DATA, false);
-                        if (volumeStatus) {
-                            // 开放
-                            assist.setVolume(1f, 1f);
-                        } else {
-                            // 静音
-                            assist.setVolume(0f, 0f);
-                        }
-                        mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_VOLUME_ALTER, !volumeStatus);
+                        boolean fullscreen = bundle.getBoolean(EventKey.BOOL_DATA, false);
+                        // 屏幕改变
+                        onFullscreen(fullscreen);
                         break;
                     default:
                         break;
                 }
             }
         });
-
-        this.mVideoPlayer.setOnPlayerEventListener(new OnPlayerEventListener() {
-            @Override
-            public void onPlayerEvent(int eventCode, Bundle bundle) {
-                KLog.d("zzz", "onPlayerEvent eventCode = " + eventCode);
-            }
-        });
-        this.mVideoPlayer.setOnErrorEventListener(new OnErrorEventListener() {
-            @Override
-            public void onErrorEvent(int eventCode, Bundle bundle) {
-                KLog.d("zzz", "onErrorEvent eventCode = " + eventCode);
-            }
-        });
         // onClick
-        findViewById(R.id.player_start).setOnClickListener(this);
+        AppCompatButton start = findViewById(R.id.player_start);
+        start.setOnClickListener(this);
         findViewById(R.id.player_resume).setOnClickListener(this);
         findViewById(R.id.player_pause).setOnClickListener(this);
         findViewById(R.id.player_stop).setOnClickListener(this);
+
+        start.performClick();
     }
 
     @Override
@@ -138,59 +153,96 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
         }
     }
 
+    /**
+     * 屏幕改变
+     *
+     * @param fullscreen 屏幕状态
+     */
+    public void onFullscreen(boolean fullscreen) {
+        this.mFullscreen = fullscreen;
+
+        int from, to;
+
+        // 获取View在屏幕上的高度位置
+        int viewHeight = (int) (DensityUtil.getWidthInPx(this) * 9 / 16);
+        int screenHeight = (int) DensityUtil.getHeightInPx(this);
+
+        // 全屏/非全屏
+        if (fullscreen) {
+            from = viewHeight;
+            to = screenHeight;
+        } else {
+            from = screenHeight;
+            to = viewHeight;
+        }
+
+        // 执行动画
+        this.startValAnim(from, to, 300, animation -> {
+            // 更新高度
+            this.mVideoView.getLayoutParams().height = (int) animation.getAnimatedValue();
+            this.mVideoView.requestLayout();
+        });
+        // 通知组件横屏幕改变
+        this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_FULLSCREEN, fullscreen);
+    }
+
+    /**
+     * 全屏过度动画
+     *
+     * @param from     起点
+     * @param to       终点
+     * @param duration 时长
+     * @param listener 事件
+     */
+    public void startValAnim(int from, int to, long duration, ValueAnimator.AnimatorUpdateListener listener) {
+        ValueAnimator animator = ValueAnimator.ofInt(from, to);
+        // 设置动画时长
+        animator.setDuration(duration);
+        // 回调监听
+        animator.addUpdateListener(listener);
+        // 结束监听
+        animator.addListener(new Animator.AnimatorListener() {
+
+            @Override
+            public void onAnimationStart(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // 动画结束 如果是全屏 设置 match_parent
+                if (mFullscreen) {
+                    mVideoView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
+                    mVideoView.requestLayout();
+                }
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+
+            }
+        });
+        // 启动动画
+        animator.start();
+    }
+
     @Override
-    public void onConfigurationChanged(@NotNull Configuration newConfig) {
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        this.setVideoHeight(newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE);
-        // ActionBar
-        this.actionBarStatus();
-    }
-
-    /**
-     * 修改播放器的宽高比
-     */
-    private void setVideoHeight(boolean landscape) {
-//        ConstraintLayout.LayoutParams layoutParams = (ConstraintLayout.LayoutParams) mVideoView.getLayoutParams();
-//        if (landscape) {
-//            mScreenState = ScreenState.LandscapeFullScreen;
-//            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-//            layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT;
-//        } else {
-//            mScreenState = ScreenState.normal;
-//            layoutParams.width = ViewGroup.LayoutParams.MATCH_PARENT;
-//            layoutParams.height = (int) getScreenSize(this);
-//        }
-//        this.mVideoView.setLayoutParams(layoutParams);
-//        this.mReceiverGroup.getGroupValue().putObject(DataInter.Key.KEY_FULLSCREEN, mScreenState);
-    }
-
-    /**
-     * @return 16比9的高度
-     */
-    public static float getScreenSize(Context context) {
-        float width = DensityUtil.getWidthInPx(context);
-        return width * 9 / 16;
-    }
-
-    /**
-     * ActionBar
-     */
-    private void actionBarStatus() {
-//        ActionBar supportActionBar = getSupportActionBar();
-//        if (supportActionBar != null) {
-//            if (mScreenState == ScreenState.LandscapeFullScreen) {
-//                supportActionBar.hide();
-//            } else {
-//                supportActionBar.show();
-//            }
-//        }
+        // 验证是否横屏状态
+        boolean isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
+        // 通知组件横竖屏切换
+        this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_SCREEN_ORIENTATION, isLandscape);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        // ActionBar
-        this.actionBarStatus();
         this.mVideoPlayer.resume();
     }
 

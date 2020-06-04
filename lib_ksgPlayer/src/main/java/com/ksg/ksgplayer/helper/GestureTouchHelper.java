@@ -48,10 +48,15 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
 
     private final GestureDetector mGestureDetector;
 
-    private OnTouchGestureListener mOnTouchGestureListener;
+    private final OnTouchGestureListener mOnTouchGestureListener;
 
-    public GestureTouchHelper(Activity context) {
+    /**
+     * @param context                context
+     * @param onTouchGestureListener 手势监听回调
+     */
+    public GestureTouchHelper(Activity context, OnTouchGestureListener onTouchGestureListener) {
         this.mActivity = context;
+        this.mOnTouchGestureListener = onTouchGestureListener;
         // 音频帮助类
         this.mVolumeHelper = new VolumeHelper(context);
         // GestureDetector
@@ -97,15 +102,6 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
         this.mTimeFormat = TimeUtil.getFormat(mDuration);
     }
 
-    /**
-     * 手势回调监听
-     *
-     * @param onTouchGestureListener onTouchGestureListener
-     */
-    public void setOnTouchGestureListener(OnTouchGestureListener onTouchGestureListener) {
-        this.mOnTouchGestureListener = onTouchGestureListener;
-    }
-
     public long getDuration() {
         return mDuration;
     }
@@ -141,9 +137,7 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      */
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
-        if (mOnTouchGestureListener != null) {
-            mOnTouchGestureListener.onSingleTapGesture();
-        }
+        this.mOnTouchGestureListener.onSingleTapGesture();
         return super.onSingleTapConfirmed(e);
     }
 
@@ -152,9 +146,7 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      */
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        if (mOnTouchGestureListener != null) {
-            mOnTouchGestureListener.onDoubleTapGesture();
-        }
+        this.mOnTouchGestureListener.onDoubleTapGesture();
         return super.onDoubleTap(e);
     }
 
@@ -170,9 +162,7 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
         this.mChangePosition = false;
         this.mChangeBrightness = false;
         // 回调Down事件
-        if (mOnTouchGestureListener != null) {
-            mOnTouchGestureListener.onDown();
-        }
+        this.mOnTouchGestureListener.onDown();
         // 是否开启手势
         return mIsGestureEnabled;
     }
@@ -226,24 +216,22 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      * @param deltaX deltaX
      */
     private void slideToChangePosition(float e1x, float deltaX) {
-        if (mOnTouchGestureListener != null) {
-            // 计算滑动区域 左侧百分之%07的位置开始计算 小于不算
-            //             右侧百分之%93的位置开始计算 大于不算
-            this.mSlipRegion = (e1x > (mViewWidth * 0.07) && e1x < (mViewWidth * 0.93));
-            // 验证是否符合区域
-            if (this.mSlipRegion) {
-                deltaX = -deltaX;
-                // 计算手势滑动产生的新进度
-                mSlideProgress = (long) (deltaX / mViewWidth * 120000 + mProgress);
-                mSlideProgress = mSlideProgress <= 0 ? 0 : mSlideProgress;
-                mSlideProgress = Math.min(mSlideProgress, mDuration);
-                // 时间转换
-                String curr = TimeUtil.getTime(mTimeFormat, mSlideProgress);
-                String duration = TimeUtil.getTime(mTimeFormat, mDuration);
-                String time = curr + " / " + duration;
-                // 回调
-                this.mOnTouchGestureListener.onSeekGesture(deltaX, time);
-            }
+        // 计算滑动区域 左侧百分之%07的位置开始计算 小于不算
+        //             右侧百分之%93的位置开始计算 大于不算
+        this.mSlipRegion = (e1x > (mViewWidth * 0.07) && e1x < (mViewWidth * 0.93));
+        // 验证是否符合区域
+        if (this.mSlipRegion) {
+            deltaX = -deltaX;
+            // 计算手势滑动产生的新进度
+            mSlideProgress = (long) (deltaX / mViewWidth * 120000 + mProgress);
+            mSlideProgress = mSlideProgress <= 0 ? 0 : mSlideProgress;
+            mSlideProgress = Math.min(mSlideProgress, mDuration);
+            // 时间转换
+            String curr = TimeUtil.getTime(mTimeFormat, mSlideProgress);
+            String duration = TimeUtil.getTime(mTimeFormat, mDuration);
+            String time = curr + " / " + duration;
+            // 回调
+            this.mOnTouchGestureListener.onSeekGesture(deltaX, time);
         }
     }
 
@@ -253,14 +241,12 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      * @param deltaY deltaY
      */
     private void slideToChangeBrightness(float deltaY) {
-        if (mOnTouchGestureListener != null) {
-            // 新的亮度
-            int newBrightness = (int) (deltaY / (mViewHeight - 30 * 2) * 100 + mMaxAppLight);
-            // 百分比计算
-            int brightness = BrightnessHelper.setAppLight100(mActivity, newBrightness);
-            // 回调
-            this.mOnTouchGestureListener.onBrightnessGesture(brightness);
-        }
+        // 新的亮度
+        int newBrightness = (int) (deltaY / (mViewHeight - 30 * 2) * 100 + mMaxAppLight);
+        // 百分比计算
+        int brightness = BrightnessHelper.setAppLight100(mActivity, newBrightness);
+        // 回调
+        this.mOnTouchGestureListener.onBrightnessGesture(brightness);
     }
 
     /**
@@ -269,21 +255,19 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      * @param deltaY deltaY
      */
     private void slideToChangeVolume(float deltaY) {
-        if (mOnTouchGestureListener != null) {
-            // 新的音量
-            int newVolume = (int) (deltaY / (mViewHeight - 30 * 2) * 100 + mCurrentVolume);
-            // 百分比计算
-            int volume = mVolumeHelper.setVoice100(newVolume);
-            // 回调
-            this.mOnTouchGestureListener.onVolumeGesture(volume);
-        }
+        // 新的音量
+        int newVolume = (int) (deltaY / (mViewHeight - 30 * 2) * 100 + mCurrentVolume);
+        // 百分比计算
+        int volume = mVolumeHelper.setVoice100(newVolume);
+        // 回调
+        this.mOnTouchGestureListener.onVolumeGesture(volume);
     }
 
     /**
      * 快进后退手势 滑动结束
      */
     private void onSeekEndGesture() {
-        if (mOnTouchGestureListener != null && mSlipRegion) {
+        if (mSlipRegion) {
             this.mOnTouchGestureListener.onSeekEndGesture();
         }
     }
@@ -292,8 +276,6 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      * 滑动结束
      */
     private void onEndGesture() {
-        if (mOnTouchGestureListener != null) {
-            this.mOnTouchGestureListener.onEndGesture();
-        }
+        this.mOnTouchGestureListener.onEndGesture();
     }
 }

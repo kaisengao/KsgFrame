@@ -18,11 +18,6 @@ public interface DataInter {
          * 全屏切换事件
          */
         int EVENT_CODE_REQUEST_TOGGLE_SCREEN = -102;
-
-        /**
-         * 声音开关事件
-         */
-        int EVENT_CODE_REQUEST_VOLUME_ALTER = -103;
     }
 
     interface Key extends InterKey {
@@ -36,11 +31,6 @@ public interface DataInter {
          * 全屏切换
          */
         String KEY_FULLSCREEN = "fullscreen";
-
-        /**
-         * 声音开关
-         */
-        String KEY_VOLUME_ALTER = "volumeAlter";
 
         /**
          * Controller 状态
@@ -65,7 +55,7 @@ public interface DataInter {
 
     interface PrivateEvent {
 
-        int EVENT_CODE_GESTURE_SLIDE_SEEK = -201;
+        int EVENT_CODE_GESTURE_SLIDE_SEEK = -200;
     }
 
 }

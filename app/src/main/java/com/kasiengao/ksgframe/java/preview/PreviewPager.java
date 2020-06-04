@@ -53,7 +53,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     private int mNormalHeight = 0;
 
-    private boolean mFullScreen;
+    private boolean mFullscreen;
 
     private boolean mIsLandscape;
 
@@ -152,9 +152,9 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
             this.mKsgAssistView.getVideoPlayer().getKsgContainer().setBackgroundColor(Color.BLACK);
 
             this.mReceiverGroup = new ReceiverGroup();
-            this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new GestureCover(getContext()));
-            this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_LOADING_COVER, new LoadingCover(getContext()));
             this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_CONTROLLER_COVER, new ControllerCover(getContext()));
+            this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_LOADING_COVER, new LoadingCover(getContext()));
+            this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new GestureCover(getContext()));
 
             this.mKsgAssistView.getVideoPlayer().setReceiverGroup(mReceiverGroup);
             this.mKsgAssistView.getVideoPlayer().setOnVideoViewEventHandler(new OnVideoViewEventHandler() {
@@ -178,26 +178,14 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                         case DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN:
                             // 全屏切换事件
                             boolean fullscreen = bundle.getBoolean(EventKey.BOOL_DATA, false);
-                            // 如果在横屏状态下推出了全屏模式需要设置会竖屏
+                            // 如果在横屏状态下退出了全屏模式需要设置回竖屏
                             if (mIsLandscape && !fullscreen) {
                                 setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
                             }
                             // 存储变量
-                            setFullScreen(fullscreen);
+                            setFullscreen(fullscreen);
                             // 屏幕改变
-                            onFullScreen(mFullScreen);
-                            break;
-                        case DataInter.Event.EVENT_CODE_REQUEST_VOLUME_ALTER:
-                            // 声音开关事件
-                            boolean volumeStatus = bundle.getBoolean(EventKey.BOOL_DATA, false);
-                            if (volumeStatus) {
-                                // 开放
-                                assist.setVolume(1f, 1f);
-                            } else {
-                                // 静音
-                                assist.setVolume(0f, 0f);
-                            }
-                            mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_VOLUME_ALTER, !volumeStatus);
+                            onFullscreen(fullscreen);
                             break;
                         default:
                             break;
@@ -309,15 +297,15 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     /**
      * 屏幕改变
      *
-     * @param fullScreen 屏幕状态
+     * @param fullscreen 屏幕状态
      */
-    public void onFullScreen(boolean fullScreen) {
+    public void onFullscreen(boolean fullscreen) {
         // 播放器
         if (mKsgAssistView != null) {
             // 拦截事件
-            this.mPlayerContainer.setIntercept(fullScreen);
+            this.mPlayerContainer.setIntercept(fullscreen);
             // 全屏
-            if (fullScreen) {
+            if (fullscreen) {
                 // 更换播放器的容器
                 this.mKsgAssistView.attachContainer(mPlayerContainer, false);
             } else {
@@ -329,7 +317,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                 }
             }
             // 通知组件横屏幕改变
-            this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_FULLSCREEN, fullScreen);
+            this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_FULLSCREEN, fullscreen);
         }
     }
 
@@ -341,15 +329,15 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         // 横屏
         if (mIsLandscape) {
             // 如果直接选择的横屏且屏幕不在全屏状态下 默认设置横屏且全屏
-            if (!mFullScreen) {
+            if (!mFullscreen) {
                 // 改为全屏布局
-                this.onFullScreen(true);
+                this.onFullscreen(true);
             }
             // 隐藏系统Ui
             SystemUiUtil.hideVideoSystemUI(getContext());
         } else {
             // 竖屏
-            this.onFullScreen(mFullScreen);
+            this.onFullscreen(mFullscreen);
             // 恢复系统Ui
             SystemUiUtil.recoverySystemUI(getContext());
         }
@@ -367,12 +355,12 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         this.mActivity.setRequestedOrientation(requestedOrientation);
     }
 
-    public void setFullScreen(boolean fullScreen) {
-        this.mFullScreen = fullScreen;
+    public void setFullscreen(boolean fullscreen) {
+        this.mFullscreen = fullscreen;
     }
 
-    public boolean isFullScreen() {
-        return mFullScreen;
+    public boolean isFullscreen() {
+        return mFullscreen;
     }
 
     public boolean isLandscape() {

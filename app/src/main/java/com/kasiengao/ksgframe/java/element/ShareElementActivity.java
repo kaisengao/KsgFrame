@@ -113,9 +113,9 @@ public class ShareElementActivity extends BaseToolbarActivity {
             return;
         }
         // 2、验证全屏
-        if (mPreviewPager.isFullScreen()) {
-            this.mPreviewPager.setFullScreen(false);
-            this.mPreviewPager.onFullScreen(false);
+        if (mPreviewPager.isFullscreen()) {
+            this.mPreviewPager.setFullscreen(false);
+            this.mPreviewPager.onFullscreen(false);
             return;
         }
         // 剩下的基操给系统

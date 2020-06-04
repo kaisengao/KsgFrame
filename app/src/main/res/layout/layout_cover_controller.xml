@@ -43,13 +43,6 @@
             android:layout_height="match_parent"
             android:src="@drawable/selector_cover_play_status" />
 
-        <!-- Volume off/Volume Up-->
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/cover_controller_volume_status"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:src="@drawable/selector_cover_volume_status" />
-
         <!-- Curr Time-->
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/cover_controller_curr_time"
@@ -93,8 +86,8 @@
             android:id="@+id/cover_controller_screen_orientation"
             android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:paddingStart="4dp"
-            android:paddingEnd="4dp"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             android:src="@mipmap/icon_cover_rotate" />
 
         <!-- Fullscreen/FullscreenExit-->

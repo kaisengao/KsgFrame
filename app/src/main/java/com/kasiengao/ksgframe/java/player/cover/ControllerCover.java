@@ -51,8 +51,6 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     ProgressBar mBottomProgress;
     @BindView(R.id.cover_controller_play_status)
     AppCompatImageView mPlayStatus;
-    @BindView(R.id.cover_controller_volume_status)
-    AppCompatImageView mVolumeStatus;
     @BindView(R.id.cover_controller_screen_orientation)
     AppCompatImageView mScreenOrientation;
     @BindView(R.id.cover_controller_fullscreen_status)
@@ -191,7 +189,6 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
             return new String[]{
                     DataInter.Key.KEY_SCREEN_ORIENTATION,
                     DataInter.Key.KEY_FULLSCREEN,
-                    DataInter.Key.KEY_VOLUME_ALTER,
                     DataInter.Key.KEY_CONTROLLER_STATUS,
                     DataInter.Key.KEY_CONTROLLER_PLAY_STATUS
             };
@@ -210,10 +207,6 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
                 case DataInter.Key.KEY_FULLSCREEN:
                     // 全屏切换
                     mFullscreenStatus.setSelected((boolean) value);
-                    break;
-                case DataInter.Key.KEY_VOLUME_ALTER:
-                    // 声音开关事件
-                    mVolumeStatus.setSelected((boolean) value);
                     break;
                 case DataInter.Key.KEY_CONTROLLER_STATUS:
                     // Controller 状态事件
@@ -234,7 +227,6 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     @OnClick({
             R.id.cover_controller_back, R.id.cover_controller_play_status,
             R.id.cover_controller_screen_orientation, R.id.cover_controller_fullscreen_status,
-            R.id.cover_controller_volume_status
     })
     void onViewClick(View view) {
         switch (view.getId()) {
@@ -257,12 +249,6 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
                 Bundle fullscreen = BundlePool.obtain();
                 fullscreen.putBoolean(EventKey.BOOL_DATA, !mFullscreenStatus.isSelected());
                 this.notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN, fullscreen);
-                break;
-            case R.id.cover_controller_volume_status:
-                // 声音状态
-                Bundle volume = BundlePool.obtain();
-                volume.putBoolean(EventKey.BOOL_DATA, mVolumeStatus.isSelected());
-                this.notifyReceiverEvent(DataInter.Event.EVENT_CODE_REQUEST_VOLUME_ALTER, volume);
                 break;
             default:
                 break;

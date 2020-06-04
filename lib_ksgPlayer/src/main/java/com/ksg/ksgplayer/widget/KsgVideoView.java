@@ -1,7 +1,6 @@
 package com.ksg.ksgplayer.widget;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -10,9 +9,8 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.ksg.ksgplayer.config.KsgPlayerConfig;
-import com.ksg.ksgplayer.player.IKagVideoPlayer;
-import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.player.BaseInternalPlayer;
+import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.render.IRender;
 
 /**
