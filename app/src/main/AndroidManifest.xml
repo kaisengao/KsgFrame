@@ -16,7 +16,6 @@
         android:theme="@style/AppTheme"
         tools:ignore="LockedOrientationActivity"
         tools:targetApi="n">
-
         <activity
             android:name=".MainActivity"
             android:screenOrientation="portrait">
@@ -36,6 +35,9 @@
             android:name=".java.mvp.MvpActivity"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".java.mvvm.MvvmActivity"
+            android:screenOrientation="portrait" />
+        <activity
             android:name=".java.retrofit.RxRetrofitActivity"
             android:screenOrientation="portrait" />
         <activity
@@ -44,8 +46,8 @@
             android:theme="@style/ShareElementAppTheme" />
         <activity
             android:name=".java.element.ShareElementActivity"
-            android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/ShareElementAppTheme" />
         <activity
             android:name=".java.player.PlayerActivity"

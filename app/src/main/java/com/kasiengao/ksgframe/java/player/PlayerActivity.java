@@ -3,41 +3,28 @@ package com.kasiengao.ksgframe.java.player;
 import android.animation.Animator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
-import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatImageView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.kasiengao.base.util.DensityUtil;
-import com.kasiengao.base.util.KLog;
 import com.kasiengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
-import com.kasiengao.ksgframe.java.util.SystemUiUtil;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
 import com.ksg.ksgplayer.event.EventKey;
-import com.ksg.ksgplayer.listener.OnErrorEventListener;
-import com.ksg.ksgplayer.listener.OnPlayerEventListener;
 import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.receiver.ReceiverGroup;
 import com.ksg.ksgplayer.widget.KsgVideoView;
-
-import org.jetbrains.annotations.NotNull;
 
 /**
  * @ClassName: PlayerVideo

@@ -18,6 +18,12 @@
             style="@style/btn_style"
             android:text="@string/btn_mvp" />
 
+        <!-- MVVM-->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/java_mvvm"
+            style="@style/btn_style"
+            android:text="@string/btn_mvvm" />
+
         <!-- RxRetrofit-->
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/java_rx_retrofit"

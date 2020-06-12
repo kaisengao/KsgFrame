@@ -4,6 +4,7 @@ import android.content.Intent;
 
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.mvp.MvpActivity;
+import com.kasiengao.ksgframe.java.mvvm.MvvmActivity;
 import com.kasiengao.ksgframe.java.player.PlayerActivity;
 import com.kasiengao.ksgframe.java.retrofit.RxRetrofitActivity;
 import com.kasiengao.ksgframe.java.staggered.StaggeredGridActivity;
@@ -31,6 +32,11 @@ public class JavaActivity extends BaseToolbarActivity {
         this.findViewById(R.id.java_mvp).setOnClickListener(v -> {
             // Mvp 模式
             this.startActivity(new Intent(this, MvpActivity.class));
+        });
+        // MvVM 模式
+        this.findViewById(R.id.java_mvvm).setOnClickListener(v -> {
+            // MvVM 模式
+            this.startActivity(new Intent(this, MvvmActivity.class));
         });
         // Rx+Retrofit
         this.findViewById(R.id.java_rx_retrofit).setOnClickListener(v -> {

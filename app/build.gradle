@@ -1,6 +1,7 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-kapt'
 
 android {
 
@@ -27,6 +28,9 @@ android {
         }
     }
 
+    dataBinding {
+        enabled true
+    }
     // Java8
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
@@ -41,10 +45,14 @@ dependencies {
     implementation "tv.danmaku.ijk.media:ijkplayer-java:0.8.8"
     // MVP
     implementation project(':lib_mvp')
+    // MVVM
+    implementation project(':lib_mvvm')
     // Rx + Retrofit
     implementation project(':lib_rx_retrofit')
     // KsgPlayer
     implementation project(':lib_ksgPlayer')
     // ButterKnife
-    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
+    kapt rootProject.ext.dependencies["butterknife-compiler"]
+
+    kapt 'com.android.databinding:compiler:3.1.4'
 }

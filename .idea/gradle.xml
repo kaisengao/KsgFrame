@@ -14,6 +14,7 @@
             <option value="$PROJECT_DIR$/lib_base" />
             <option value="$PROJECT_DIR$/lib_ksgPlayer" />
             <option value="$PROJECT_DIR$/lib_mvp" />
+            <option value="$PROJECT_DIR$/lib_mvvm" />
             <option value="$PROJECT_DIR$/lib_rx_retrofit" />
           </set>
         </option>

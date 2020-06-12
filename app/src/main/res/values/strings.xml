@@ -8,6 +8,7 @@
     <string name="kotlin_title">Kotlin版本</string>
 
     <string name="btn_mvp">MVP模式</string>
+    <string name="btn_mvvm">MVVM模式</string>
     <string name="btn_rx_retrofit">RxRetrofit</string>
     <string name="btn_staggered_grid">StaggeredGrid</string>
     <string name="btn_player">KsgVideoPlayer</string>

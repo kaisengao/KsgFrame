@@ -1,5 +1,7 @@
+rootProject.name='KsgFrame'
 include ':app'
 include ':lib_mvp'
+include ':lib_mvvm'
 include ':lib_base'
 include ':lib_rx_retrofit'
 include ':lib_ksgPlayer'
