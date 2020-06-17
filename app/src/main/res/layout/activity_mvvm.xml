@@ -4,21 +4,31 @@
     <data class="MvvmBinding">
 
         <variable
-            name="user"
-            type="com.kasiengao.ksgframe.java.mvvm.User" />
+            name="viewModel"
+            type="com.kasiengao.ksgframe.java.mvvm.MvvmViewModel" />
+
     </data>
 
-    <FrameLayout xmlns:tools="http://schemas.android.com/tools"
+    <LinearLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
         tools:context=".java.mvvm.MvvmActivity">
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/btn_mvvm"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@{user.name+'\n'+user.content}" />
+            android:text="@{viewModel.liveData}" />
 
-    </FrameLayout>
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{viewModel.onClick}"
+            android:text="Btn" />
+
+    </LinearLayout>
 
 </layout>

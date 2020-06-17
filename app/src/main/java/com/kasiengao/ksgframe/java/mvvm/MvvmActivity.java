@@ -1,20 +1,26 @@
 package com.kasiengao.ksgframe.java.mvvm;
 
-import android.os.Bundle;
+import androidx.databinding.library.baseAdapters.BR;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
+import com.kaisengao.mvvm.base.activity.BaseVmActivity;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.databinding.MvvmBinding;
 
-public class MvvmActivity extends AppCompatActivity {
+/**
+ * @ClassName: MvvmActivity
+ * @Author: KaiSenGao
+ * @CreateDate: 2020/6/11 13:02
+ * @Description: MVVM
+ */
+public class MvvmActivity extends BaseVmActivity<MvvmBinding, MvvmViewModel> {
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        MvvmBinding binding = DataBindingUtil.setContentView(this, R.layout.activity_mvvm);
-        User user = new User("123", "213213");
-        binding.setUser(user);
+    protected int getContentLayoutId() {
+        return R.layout.activity_mvvm;
+    }
+
+    @Override
+    public int initVariableId() {
+        return BR.viewModel;
     }
 }

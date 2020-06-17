@@ -40,4 +40,14 @@ public class PlayerContainerView extends FrameLayout {
         }
         return super.onTouchEvent(event);
     }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+    }
 }
