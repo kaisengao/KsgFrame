@@ -1,14 +1,10 @@
 package com.kaisengao.retrofit.factory;
 
 import android.content.Context;
+import android.graphics.drawable.ColorDrawable;
+import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
-
-import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
-import androidx.core.content.ContextCompat;
 
 import com.kaisengao.retrofit.R;
 import com.kaisengao.retrofit.listener.OnLoadSirReloadListener;
@@ -18,6 +14,7 @@ import com.kasiengao.base.loadsir.callback.LoadingCallback;
 import com.kasiengao.base.loadsir.core.LoadService;
 import com.kasiengao.base.loadsir.core.LoadSir;
 import com.kasiengao.base.loadsir.core.Transport;
+import com.wang.avi.AVLoadingIndicatorView;
 
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -112,9 +109,9 @@ public class LoadSirFactory {
 
     public synchronized void showLoading(final Context context,
                                          final Object target,
-                                         final @ColorRes int color,
-                                         final @ColorRes int backgroundColor,
-                                         final String message) {
+                                         final String loadMessage,
+                                         final ColorDrawable loadColor,
+                                         final ColorDrawable loadBgColor) {
 
         ConcurrentHashMap<Object, LoadService> loadServices = mContextLoadServices.get(context);
 
@@ -128,14 +125,18 @@ public class LoadSirFactory {
                 loadService.setCallBack(LoadingCallback.class, new Transport() {
                     @Override
                     public void order(Context context, View view) {
-                        if (backgroundColor != -1) {
-                            view.setBackgroundColor(ContextCompat.getColor(context, backgroundColor));
-                        }
-
                         TextView loadingText = view.findViewById(R.id.loading_text);
-
-                        loadingText.setText(message);
-                        loadingText.setTextColor(ContextCompat.getColor(context, color));
+                        AVLoadingIndicatorView indicatorView = view.findViewById(R.id.loading);
+                        if (!TextUtils.isEmpty(loadMessage)) {
+                            loadingText.setText(loadMessage);
+                        }
+                        if (loadColor != null) {
+                            loadingText.setTextColor(loadColor.getColor());
+                            indicatorView.setIndicatorColor(loadColor.getColor());
+                        }
+                        if (loadBgColor != null) {
+                            view.setBackground(loadBgColor);
+                        }
                     }
                 });
 
@@ -145,10 +146,9 @@ public class LoadSirFactory {
 
     public synchronized void showError(final Context context,
                                        final Object target,
-                                       final @DrawableRes int icon,
-                                       final @ColorRes int backgroundColor,
-                                       final @ColorRes int color,
-                                       final String message) {
+                                       final String loadMessage,
+                                       final ColorDrawable loadColor,
+                                       final ColorDrawable loadBgColor) {
 
         ConcurrentHashMap<Object, LoadService> loadServices = mContextLoadServices.get(context);
 
@@ -162,23 +162,16 @@ public class LoadSirFactory {
                 loadService.setCallBack(ErrorCallback.class, new Transport() {
                     @Override
                     public void order(Context context, View view) {
-                        if (backgroundColor != -1) {
-                            ViewGroup errorRoot = view.findViewById(R.id.error_root);
-                            errorRoot.setBackgroundColor(ContextCompat.getColor(context, backgroundColor));
-                        }
-
-                        ImageView errorImg = view.findViewById(R.id.error_icon);
                         TextView errorMsg = view.findViewById(R.id.error_msg);
-
-                        if (icon == 0) {
-                            errorImg.setVisibility(View.GONE);
-                        } else {
-                            errorImg.setVisibility(View.VISIBLE);
-                            errorImg.setImageResource(icon);
+                        if (!TextUtils.isEmpty(loadMessage)) {
+                            errorMsg.setText(loadMessage);
                         }
-
-                        errorMsg.setTextColor(ContextCompat.getColor(context, color));
-                        errorMsg.setText(message);
+                        if (loadColor != null) {
+                            errorMsg.setTextColor(loadColor.getColor());
+                        }
+                        if (loadBgColor != null) {
+                            view.setBackground(loadBgColor);
+                        }
                     }
                 });
             }

@@ -1,10 +1,10 @@
 package com.kasiengao.ksgframe.java.mvvm;
 
-import androidx.annotation.NonNull;
-
+import com.kaisengao.mvvm.base.model.BaseModel;
 import com.kaisengao.retrofit.RxCompose;
 import com.kaisengao.retrofit.api.ApiService;
 import com.kaisengao.retrofit.util.ParamsUtil;
+import com.kasiengao.ksgframe.java.mvvm.data.source.DataRepository;
 import com.kasiengao.ksgframe.java.retrofit.NewsTopBean;
 
 import java.util.HashMap;
@@ -17,12 +17,13 @@ import io.reactivex.Observable;
  * @CreateDate: 2020/6/17 14:10
  * @Description: MVVM 数据仓库
  */
-public class MvvmRepository {
+public class MvvmRepository extends BaseModel<DataRepository> {
 
     private final ApiService mApiService;
 
-    public MvvmRepository(@NonNull ApiService apiService) {
-        this.mApiService = apiService;
+    public MvvmRepository() {
+        super(Injection.provideDataRepository());
+        this.mApiService = mRepository.create(ApiService.class);
     }
 
     /**

@@ -4,8 +4,7 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-
-import com.kaisengao.mvvm.base.model.BaseModel;
+import androidx.lifecycle.MutableLiveData;
 
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -17,23 +16,12 @@ import io.reactivex.functions.Consumer;
  * @CreateDate: 2020/6/17 10:33
  * @Description: MVVM BaseViewModel
  */
-public abstract class BaseViewModel<M extends BaseModel> extends AndroidViewModel implements Consumer<Disposable> {
-
-    private M mModel;
+public abstract class BaseViewModel extends AndroidViewModel implements Consumer<Disposable> {
 
     private CompositeDisposable mDisposables;
 
     public BaseViewModel(@NonNull Application application) {
-        this(application, null);
-    }
-
-    public BaseViewModel(@NonNull Application application, M model) {
         super(application);
-        this.mModel = model;
-    }
-
-    public final M getModel() {
-        return mModel;
     }
 
     /**
@@ -56,16 +44,19 @@ public abstract class BaseViewModel<M extends BaseModel> extends AndroidViewMode
         this.addSubscribe(disposable);
     }
 
+    protected <T> MutableLiveData<T> createLiveData(MutableLiveData<T> liveData) {
+        if (liveData == null) {
+            liveData = new MutableLiveData<>();
+        }
+        return liveData;
+    }
+
     /**
      * 销毁所有资源
      */
     @Override
     protected void onCleared() {
         super.onCleared();
-        if (mModel != null) {
-            this.mModel.onCleared();
-            this.mModel = null;
-        }
         // 取消所有订阅
         if (mDisposables != null) {
             this.mDisposables.clear();

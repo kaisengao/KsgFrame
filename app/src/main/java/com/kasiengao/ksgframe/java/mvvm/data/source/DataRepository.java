@@ -2,15 +2,13 @@ package com.kasiengao.ksgframe.java.mvvm.data.source;
 
 import androidx.annotation.NonNull;
 
-import com.kaisengao.mvvm.base.model.BaseModel;
-
 /**
  * @ClassName: DataRepository
  * @Author: KaiSenGao
  * @CreateDate: 2020/6/17 13:44
  * @Description: 数据仓库
  */
-public final class DataRepository extends BaseModel implements DataSource.RemoteDataSource {
+public final class DataRepository implements DataSource.RemoteDataSource {
 
     private volatile static DataRepository INSTANCE = null;
 

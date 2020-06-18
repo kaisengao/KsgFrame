@@ -35,13 +35,13 @@ public abstract class BaseLoadSirObserver<T> extends BaseRxObserver<T> implement
     public void onSubscribe(Disposable d) {
         super.onSubscribe(d);
 
-        this.mLoadSirFactory
-                .showLoading(
-                        this.mContext,
-                        this.mTarget,
-                        this.mLoadingColor,
-                        this.mBackgroundColor,
-                        this.mContext.getString(this.mLoadingText));
+//        this.mLoadSirFactory
+//                .showLoading(
+//                        this.mContext,
+//                        this.mTarget,
+//                        this.mContext.getString(this.mLoadingText),
+//                        this.mLoadingColor,
+//                        this.mBackgroundColor);
     }
 
     @Override
@@ -55,14 +55,14 @@ public abstract class BaseLoadSirObserver<T> extends BaseRxObserver<T> implement
     @Override
     protected void onError(String message) {
 
-        this.mLoadSirFactory
-                .showError(
-                        this.mContext,
-                        this.mTarget,
-                        this.mErrorIcon,
-                        this.mBackgroundColor,
-                        this.mLoadingColor,
-                        message);
+//        this.mLoadSirFactory
+//                .showError(
+//                        this.mContext,
+//                        this.mTarget,
+//                        message,
+//                        this.mBackgroundColor,
+//                        this.mLoadingColor
+//                );
     }
 
     @Override

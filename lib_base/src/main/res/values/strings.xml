@@ -1,6 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <string name="loading" tools:ignore="TypographyEllipsis">正在加载...</string>
-    <string name="error" tools:ignore="TypographyEllipsis">空数据</string>
+    <string name="loading" tools:ignore="TypographyEllipsis">正在加载</string>
+    <string name="error" tools:ignore="TypographyEllipsis">暂无数据</string>
+    <string name="retry" tools:ignore="TypographyEllipsis">点击重试</string>
 
 </resources>

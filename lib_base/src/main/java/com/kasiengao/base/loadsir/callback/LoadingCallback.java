@@ -18,7 +18,6 @@ public class LoadingCallback extends Callback {
         return R.layout.layout_loading;
     }
 
-
     @Override
     protected boolean onReloadEvent(Context context, View view) {
         return true;

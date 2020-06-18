@@ -6,13 +6,12 @@ package com.kaisengao.mvvm.base.model;
  * @CreateDate: 2020/6/17 13:21
  * @Description: MVVM BaseModel
  */
-public class BaseModel {
+public class BaseModel<Repository> {
 
-    /**
-     * onCleared
-     */
-    public void onCleared() {
+    protected final Repository mRepository;
 
+    public BaseModel(Repository repository) {
+        this.mRepository = repository;
     }
 
 }

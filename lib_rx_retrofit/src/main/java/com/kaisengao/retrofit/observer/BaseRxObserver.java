@@ -3,7 +3,6 @@ package com.kaisengao.retrofit.observer;
 import android.content.Context;
 
 import androidx.annotation.ColorRes;
-import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
 import com.kaisengao.retrofit.R;
@@ -31,9 +30,6 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
 
     @StringRes
     protected int mLoadingText = R.string.loading;
-
-    @DrawableRes
-    protected int mErrorIcon = R.drawable.icon_error;
 
     protected BaseRxObserver(Context context) {
         this.mContext = context;
@@ -66,16 +62,6 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
      */
     public BaseRxObserver<T> setLoadingText(@StringRes int loadingText) {
         this.mLoadingText = loadingText;
-        return this;
-    }
-
-    /**
-     * 设置 错误图片
-     *
-     * @param errorIcon 错误icon
-     */
-    public BaseRxObserver<T> setErrorIcon(@DrawableRes int errorIcon) {
-        this.mErrorIcon = errorIcon;
         return this;
     }
 

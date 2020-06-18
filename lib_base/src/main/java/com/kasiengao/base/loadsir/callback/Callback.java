@@ -65,6 +65,10 @@ public abstract class Callback implements Serializable {
         return rootView;
     }
 
+    public OnReloadListener getOnReloadListener() {
+        return onReloadListener;
+    }
+
     protected View onBuildView(Context context) {
         return null;
     }

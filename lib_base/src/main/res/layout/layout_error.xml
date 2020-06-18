@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/error_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/black"
     android:gravity="center"
+    android:background="@color/white"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/error_icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:tint="@color/white"
-        android:src="@drawable/icon_error"/>
-
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/error_msg"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -23,5 +17,16 @@
         android:text="@string/error"
         android:textColor="@color/black"
         android:textSize="15sp" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/error_retry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="@string/retry"
+        android:textColor="@android:color/holo_blue_dark"
+        android:textSize="15sp"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </LinearLayout>
