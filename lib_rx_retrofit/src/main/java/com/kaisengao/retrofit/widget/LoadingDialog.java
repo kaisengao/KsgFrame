@@ -2,19 +2,20 @@ package com.kaisengao.retrofit.widget;
 
 import android.app.Dialog;
 import android.content.Context;
-import android.os.Bundle;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import androidx.annotation.ColorRes;
 import androidx.annotation.StringRes;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 
 import com.kaisengao.retrofit.R;
 import com.kasiengao.base.util.DensityUtil;
 import com.wang.avi.AVLoadingIndicatorView;
+
+import butterknife.ButterKnife;
 
 /**
  * @ClassName: LoadingDialog
@@ -24,26 +25,30 @@ import com.wang.avi.AVLoadingIndicatorView;
  */
 public class LoadingDialog extends Dialog {
 
-    private Builder mBuilder;
+    private AVLoadingIndicatorView mLoadView;
 
-    private TextView mLoadingText;
+    private AppCompatTextView mLoadText;
 
-    private AVLoadingIndicatorView mLoadingView;
+    private final Builder mBuilder;
 
     private LoadingDialog(Builder builder) {
         super(builder.mContext, R.style.loading_dialog);
-
         this.mBuilder = builder;
+        // Init
+        this.init();
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
+    /**
+     * Init
+     */
+    private void init() {
+        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-        setContentView(R.layout.layout_loading);
+        this.setContentView(R.layout.layout_loading);
 
-        setCancelable(this.mBuilder.mCancelable);
+        this.setCancelable(mBuilder.mCancelable);
+
+        ButterKnife.bind(this);
 
         // 设置宽度为屏宽, 靠近屏幕底部。
         Window window = getWindow();
@@ -53,35 +58,47 @@ public class LoadingDialog extends Dialog {
             lp.height = DensityUtil.getDp(getContext(), 100f);
             window.setAttributes(lp);
         }
-        // RootView
-        findViewById(R.id.loading_root).setBackgroundResource(R.drawable.shape_loading_bg);
 
-        this.mLoadingView = findViewById(R.id.loading);
-        this.mLoadingText = findViewById(R.id.loading_text);
+        LinearLayout loadRoot = findViewById(R.id.loading_root);
+        this.mLoadView = findViewById(R.id.loading);
+        this.mLoadText = findViewById(R.id.loading_text);
 
-        this.mLoadingView.setIndicatorColor(ContextCompat.getColor(getContext(), this.mBuilder.mLoadColor));
-
-        this.mLoadingText.setTextColor(ContextCompat.getColor(getContext(), this.mBuilder.mLoadColor));
-        this.mLoadingText.setText(this.mBuilder.mLoadText);
+        // 初始化
+        loadRoot.setBackgroundResource(R.drawable.shape_loading_bg);
+        this.loadMessage(mBuilder.mLoadMessage);
+        this.loadColor(mBuilder.mLoadColor);
     }
 
-    public void loadText(@StringRes int loadText) {
-        this.mLoadingText.setText(loadText);
+    /**
+     * 提示语句
+     *
+     * @param loadMessage loadMessage
+     */
+    public void loadMessage(@StringRes int loadMessage) {
+        if (isShowing()) {
+            this.mLoadText.setText(loadMessage);
+        }
     }
 
+    /**
+     * 提示颜色
+     *
+     * @param loadColor loadColor
+     */
     public void loadColor(@ColorRes int loadColor) {
-        this.mLoadingView.setIndicatorColor(ContextCompat.getColor(getContext(), this.mBuilder.mLoadColor));
-        this.mLoadingText.setTextColor(ContextCompat.getColor(getContext(), this.mBuilder.mLoadColor));
+        if (isShowing()) {
+            this.mLoadText.setTextColor(ContextCompat.getColor(getContext(), loadColor));
+            this.mLoadView.setIndicatorColor(ContextCompat.getColor(getContext(), loadColor));
+        }
     }
 
     public static class Builder {
 
         private Context mContext;
-
-        private int mLoadColor;
-
         @StringRes
-        private int mLoadText;
+        private int mLoadMessage;
+        @ColorRes
+        private int mLoadColor;
 
         private boolean mCancelable = false;
 
@@ -89,13 +106,13 @@ public class LoadingDialog extends Dialog {
             this.mContext = context;
         }
 
-        public Builder loadColor(@ColorRes int loadColor) {
-            this.mLoadColor = loadColor;
+        public Builder setLoadMessage(@StringRes int loadMessage) {
+            this.mLoadMessage = loadMessage;
             return this;
         }
 
-        public Builder loadText(@StringRes int loadText) {
-            this.mLoadText = loadText;
+        public Builder setLoadColor(@ColorRes int loadColor) {
+            this.mLoadColor = loadColor;
             return this;
         }
 
@@ -107,11 +124,6 @@ public class LoadingDialog extends Dialog {
         public LoadingDialog build() {
             return new LoadingDialog(this);
         }
-
-        public LoadingDialog show() {
-            LoadingDialog dialog = build();
-            dialog.show();
-            return dialog;
-        }
     }
+
 }

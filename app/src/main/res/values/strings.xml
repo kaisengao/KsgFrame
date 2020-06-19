@@ -30,5 +30,7 @@
     <string name="player_title">KsgVideoPlayer</string>
 
     <string name="preview_count">%d/%d</string>
+    
+    <string name="loading_mvvm">MVVM加载中~</string>
 
 </resources>

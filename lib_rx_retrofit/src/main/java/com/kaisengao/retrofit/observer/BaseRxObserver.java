@@ -3,6 +3,7 @@ package com.kaisengao.retrofit.observer;
 import android.content.Context;
 
 import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
 import com.kaisengao.retrofit.R;
@@ -20,48 +21,63 @@ import io.reactivex.disposables.Disposable;
  */
 public abstract class BaseRxObserver<T> implements Observer<T> {
 
-    Context mContext;
-
-    @ColorRes
-    protected int mBackgroundColor = R.color.white;
-
-    @ColorRes
-    protected int mLoadingColor = R.color.black;
+    protected Context mContext;
 
     @StringRes
-    protected int mLoadingText = R.string.loading;
+    protected int mLoadMessage;
+    @ColorRes
+    protected int mLoadColor;
+    @ColorRes
+    protected int mLoadBgColor;
+    @DrawableRes
+    protected int mLoadErrorIcon;
 
     protected BaseRxObserver(Context context) {
         this.mContext = context;
+        // 初始化
+        this.setLoadMessage(R.string.loading);
+        this.setLoadColor(R.color.black);
+        this.setLoadBgColor(R.color.white);
+        this.setLoadErrorIcon(R.drawable.icon_error);
     }
 
     /**
-     * 设置 加载背景
+     * 设置 提示语句
      *
-     * @param backgroundColor 背景 图片or颜色
+     * @param loadMessage 提示语句
      */
-    public BaseRxObserver<T> setBackgroundColor(@ColorRes int backgroundColor) {
-        this.mBackgroundColor = backgroundColor;
+    public BaseRxObserver<T> setLoadMessage(@StringRes int loadMessage) {
+        this.mLoadMessage = loadMessage;
         return this;
     }
 
     /**
-     * 设置 加载字体颜色
+     * 设置 提示颜色
      *
-     * @param loadingColor 颜色 R.color....
+     * @param loadColor 颜色 R.color....
      */
-    public BaseRxObserver<T> setLoadingColor(@ColorRes int loadingColor) {
-        this.mLoadingColor = loadingColor;
+    public BaseRxObserver<T> setLoadColor(@ColorRes int loadColor) {
+        this.mLoadColor = loadColor;
         return this;
     }
 
     /**
-     * 设置 加载提示语句
+     * 设置 提示背景颜色
      *
-     * @param loadingText 提示语句
+     * @param loadBgColor 颜色 R.color....
      */
-    public BaseRxObserver<T> setLoadingText(@StringRes int loadingText) {
-        this.mLoadingText = loadingText;
+    public BaseRxObserver<T> setLoadBgColor(@ColorRes int loadBgColor) {
+        this.mLoadBgColor = loadBgColor;
+        return this;
+    }
+
+    /**
+     * 设置 提示错误图标
+     *
+     * @param loadErrorIcon 图标 R.mipmap....
+     */
+    public BaseRxObserver<T> setLoadErrorIcon(int loadErrorIcon) {
+        this.mLoadErrorIcon = loadErrorIcon;
         return this;
     }
 
@@ -70,12 +86,22 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
 
     }
 
+    /**
+     * onNext
+     *
+     * @param result <T>
+     */
     @Override
     public void onNext(T result) {
 
         this.onResult(result);
     }
 
+    /**
+     * Error 事件
+     *
+     * @param e Throwable
+     */
     @Override
     public void onError(Throwable e) {
 
@@ -110,4 +136,5 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
     protected void onError(String message) {
 
     }
+
 }

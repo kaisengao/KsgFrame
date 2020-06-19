@@ -1,9 +1,10 @@
-package com.kaisengao.retrofit.observer;
+package com.kaisengao.retrofit.observer.mvp;
 
 import android.content.Context;
 
 import com.kaisengao.retrofit.factory.LoadSirFactory;
 import com.kaisengao.retrofit.listener.OnLoadSirReloadListener;
+import com.kaisengao.retrofit.observer.BaseRxObserver;
 
 import io.reactivex.disposables.Disposable;
 
@@ -34,35 +35,20 @@ public abstract class BaseLoadSirObserver<T> extends BaseRxObserver<T> implement
     @Override
     public void onSubscribe(Disposable d) {
         super.onSubscribe(d);
-
-//        this.mLoadSirFactory
-//                .showLoading(
-//                        this.mContext,
-//                        this.mTarget,
-//                        this.mContext.getString(this.mLoadingText),
-//                        this.mLoadingColor,
-//                        this.mBackgroundColor);
+        this.mLoadSirFactory.showLoading(mContext, mTarget, mContext.getString(mLoadMessage), mLoadColor, mLoadBgColor);
     }
 
     @Override
     public void onNext(T t) {
-
+        // Success 恢复页面
         this.mLoadSirFactory.showSuccess(this.mContext, this.mTarget);
-
+        // 回调
         super.onNext(t);
     }
 
     @Override
     protected void onError(String message) {
-
-//        this.mLoadSirFactory
-//                .showError(
-//                        this.mContext,
-//                        this.mTarget,
-//                        message,
-//                        this.mBackgroundColor,
-//                        this.mLoadingColor
-//                );
+        this.mLoadSirFactory.showError(mContext, mTarget, message, mLoadColor, mLoadBgColor,mLoadErrorIcon);
     }
 
     @Override

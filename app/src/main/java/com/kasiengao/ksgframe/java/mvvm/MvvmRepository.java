@@ -8,8 +8,11 @@ import com.kasiengao.ksgframe.java.mvvm.data.source.DataRepository;
 import com.kasiengao.ksgframe.java.retrofit.NewsTopBean;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
+import io.reactivex.ObservableSource;
+import io.reactivex.functions.Function;
 
 /**
  * @ClassName: MvvmRepository
@@ -24,6 +27,23 @@ public class MvvmRepository extends BaseModel<DataRepository> {
     public MvvmRepository() {
         super(Injection.provideDataRepository());
         this.mApiService = mRepository.create(ApiService.class);
+    }
+
+    public Observable<NewsTopBean> requestTest() {
+
+        return Observable
+                // 延时
+                .timer(2, TimeUnit.SECONDS)
+                // 聚合数据
+                .flatMap((Function<Long, ObservableSource<NewsTopBean>>) aLong -> requestNewsTop())
+                .map(newsTopBean -> {
+                    // 模拟错误
+                    int random = (int) (2 * Math.random());
+                    if (random == 1) {
+                        Integer.parseInt("高晓松");
+                    }
+                    return newsTopBean;
+                });
     }
 
     /**

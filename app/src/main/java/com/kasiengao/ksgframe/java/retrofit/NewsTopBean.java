@@ -2,6 +2,8 @@ package com.kasiengao.ksgframe.java.retrofit;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.List;
 
 /**
@@ -12,15 +14,15 @@ import java.util.List;
  */
 public class NewsTopBean {
 
-    @SerializedName("error_code")
-    private int mErrorCode;
+    @SerializedName("resultcode")
+    private String mResultCode;
     @SerializedName("reason")
     private String mReason;
     @SerializedName("result")
     private ResultBean mResult;
 
-    public int getErrorCode() {
-        return mErrorCode;
+    public String getResultCode() {
+        return mResultCode;
     }
 
     public String getReason() {
@@ -79,6 +81,7 @@ public class NewsTopBean {
                 return mUrl;
             }
 
+            @NotNull
             @Override
             public String toString() {
                 return "DataBean{" +
@@ -92,6 +95,7 @@ public class NewsTopBean {
             }
         }
 
+        @NotNull
         @Override
         public String toString() {
             return "ResultBean{" +
@@ -101,10 +105,11 @@ public class NewsTopBean {
 
     }
 
+    @NotNull
     @Override
     public String toString() {
         return "NewsTopBean{" +
-                "mErrorCode=" + mErrorCode +
+                "mResultCode='" + mResultCode + '\'' +
                 ", mReason='" + mReason + '\'' +
                 ", mResult=" + mResult +
                 '}';

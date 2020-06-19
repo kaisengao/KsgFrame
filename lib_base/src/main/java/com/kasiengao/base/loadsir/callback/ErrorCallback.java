@@ -20,11 +20,6 @@ public class ErrorCallback extends Callback {
 
     @Override
     protected boolean onReloadEvent(Context context, View view) {
-        view.findViewById(R.id.error_retry).setOnClickListener(v -> {
-            if (getOnReloadListener() != null) {
-                getOnReloadListener().onReload(view);
-            }
-        });
         return true;
     }
 }

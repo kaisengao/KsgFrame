@@ -6,10 +6,9 @@ import android.view.MenuItem;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kaisengao.retrofit.RxCompose;
-import com.kaisengao.retrofit.observer.BaseDialogObserver;
-import com.kaisengao.retrofit.observer.BaseLoadSirObserver;
+import com.kaisengao.retrofit.observer.mvp.BaseDialogObserver;
+import com.kaisengao.retrofit.observer.mvp.BaseLoadSirObserver;
 import com.kaisengao.retrofit.observer.BaseRxObserver;
-import com.kasiengao.base.util.KLog;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 

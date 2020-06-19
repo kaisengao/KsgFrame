@@ -1,14 +1,17 @@
 package com.kaisengao.retrofit.factory;
 
 import android.content.Context;
-import android.graphics.drawable.ColorDrawable;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.ColorRes;
+import androidx.annotation.DrawableRes;
+import androidx.core.content.ContextCompat;
 
 import com.kaisengao.retrofit.R;
 import com.kaisengao.retrofit.listener.OnLoadSirReloadListener;
-import com.kasiengao.base.loadsir.callback.Callback;
 import com.kasiengao.base.loadsir.callback.ErrorCallback;
 import com.kasiengao.base.loadsir.callback.LoadingCallback;
 import com.kasiengao.base.loadsir.core.LoadService;
@@ -51,8 +54,9 @@ public class LoadSirFactory {
     }
 
     public synchronized void listener(Context context, OnLoadSirReloadListener onLoadSirReloadListener) {
-
-        mReloadListeners.put(context, onLoadSirReloadListener);
+        if (onLoadSirReloadListener != null) {
+            mReloadListeners.put(context, onLoadSirReloadListener);
+        }
     }
 
     /**
@@ -78,18 +82,7 @@ public class LoadSirFactory {
     }
 
     private synchronized LoadService createLoadSir(Object target) {
-        return LoadSir.getDefault().register(target, new Callback.OnReloadListener() {
-            @Override
-            public void onReload(View v) {
-
-                OnLoadSirReloadListener onReloadListener = mReloadListeners.get(v.getContext());
-
-                if (onReloadListener != null) {
-
-                    onReloadListener.onLoadSirReload(target);
-                }
-            }
-        });
+        return LoadSir.getDefault().register(target, null);
     }
 
     public synchronized void showSuccess(final Context context, final Object target) {
@@ -109,9 +102,9 @@ public class LoadSirFactory {
 
     public synchronized void showLoading(final Context context,
                                          final Object target,
-                                         final String loadMessage,
-                                         final ColorDrawable loadColor,
-                                         final ColorDrawable loadBgColor) {
+                                         String loadMessage,
+                                         @ColorRes final int loadColor,
+                                         @ColorRes final int loadBgColor) {
 
         ConcurrentHashMap<Object, LoadService> loadServices = mContextLoadServices.get(context);
 
@@ -130,12 +123,12 @@ public class LoadSirFactory {
                         if (!TextUtils.isEmpty(loadMessage)) {
                             loadingText.setText(loadMessage);
                         }
-                        if (loadColor != null) {
-                            loadingText.setTextColor(loadColor.getColor());
-                            indicatorView.setIndicatorColor(loadColor.getColor());
+                        if (loadColor != 0) {
+                            loadingText.setTextColor(ContextCompat.getColor(context, loadColor));
+                            indicatorView.setIndicatorColor(ContextCompat.getColor(context, loadColor));
                         }
-                        if (loadBgColor != null) {
-                            view.setBackground(loadBgColor);
+                        if (loadBgColor != 0) {
+                            view.setBackgroundColor(ContextCompat.getColor(context, loadBgColor));
                         }
                     }
                 });
@@ -147,8 +140,9 @@ public class LoadSirFactory {
     public synchronized void showError(final Context context,
                                        final Object target,
                                        final String loadMessage,
-                                       final ColorDrawable loadColor,
-                                       final ColorDrawable loadBgColor) {
+                                       @ColorRes final int loadColor,
+                                       @ColorRes final int loadBgColor,
+                                       @DrawableRes final int loadErrorIcon) {
 
         ConcurrentHashMap<Object, LoadService> loadServices = mContextLoadServices.get(context);
 
@@ -162,16 +156,28 @@ public class LoadSirFactory {
                 loadService.setCallBack(ErrorCallback.class, new Transport() {
                     @Override
                     public void order(Context context, View view) {
+                        ImageView errorIcon = view.findViewById(R.id.error_icon);
+                        if (loadErrorIcon != 0) {
+                            errorIcon.setImageResource(loadErrorIcon);
+                        }
                         TextView errorMsg = view.findViewById(R.id.error_msg);
                         if (!TextUtils.isEmpty(loadMessage)) {
                             errorMsg.setText(loadMessage);
                         }
-                        if (loadColor != null) {
-                            errorMsg.setTextColor(loadColor.getColor());
+                        if (loadColor != 0) {
+                            errorMsg.setTextColor(ContextCompat.getColor(context, loadColor));
                         }
-                        if (loadBgColor != null) {
-                            view.setBackground(loadBgColor);
+                        if (loadBgColor != 0) {
+                            view.setBackgroundColor(ContextCompat.getColor(context, loadBgColor));
                         }
+                        TextView errorRetry = view.findViewById(R.id.error_retry);
+                        errorRetry.setVisibility(View.VISIBLE);
+                        errorRetry.setOnClickListener(v -> {
+                            OnLoadSirReloadListener onReloadListener = mReloadListeners.get(v.getContext());
+                            if (onReloadListener != null) {
+                                onReloadListener.onLoadSirReload(target);
+                            }
+                        });
                     }
                 });
             }

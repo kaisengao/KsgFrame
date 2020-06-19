@@ -1,13 +1,13 @@
 package com.kaisengao.mvvm.binding.adapter.loadsir;
 
-import android.annotation.SuppressLint;
-import android.graphics.drawable.ColorDrawable;
 import android.view.View;
 
 import androidx.databinding.BindingAdapter;
 
-import com.kaisengao.mvvm.emun.LoadState;
 import com.kaisengao.retrofit.factory.LoadSirFactory;
+import com.kaisengao.retrofit.listener.OnLoadSirReloadListener;
+import com.kasiengao.base.loading.LoadState;
+import com.kasiengao.base.loading.LoadingState;
 
 /**
  * @ClassName: ViewAdapter
@@ -17,30 +17,41 @@ import com.kaisengao.retrofit.factory.LoadSirFactory;
  */
 public class LoadSirAdapter {
 
-    @SuppressLint("SwitchIntDef")
-    @BindingAdapter(value = {"loadState", "loadMessage", "loadColor", "loadBgColor"}, requireAll = false)
-    public static void loadRegister(final View target,
-                                    final @LoadState int loadState,
-                                    final String loadMessage,
-                                    final ColorDrawable loadColor,
-                                    final ColorDrawable loadBgColor) {
-        // 过滤 初始化..
-        if (loadState == LoadState.INITIAL) {
-            return;
-        }
+
+    @BindingAdapter("loadRegister")
+    public static void loadRegister(final View target, final OnLoadSirReloadListener reloadListener) {
         LoadSirFactory loadSirFactory = LoadSirFactory.getInstance();
         // 注册LoadSir
         loadSirFactory.register(target.getContext(), target);
+        // Retry事件
+        loadSirFactory.listener(target.getContext(), reloadListener);
+    }
+
+    @BindingAdapter("loadState")
+    public static void loadState(final View target, final LoadingState loadState) {
+        // 非空验证
+        if (loadState == null) {
+            return;
+        }
+
+        LoadSirFactory loadSirFactory = LoadSirFactory.getInstance();
         // 区分状态
-        switch (loadState) {
+        switch (loadState.getLoadState()) {
             case LoadState.LOADING:
-                loadSirFactory.showLoading(target.getContext(), target, loadMessage, loadColor, loadBgColor);
+                loadSirFactory.showLoading(target.getContext(), target,
+                        loadState.getLoadMessage(),
+                        loadState.getLoadColor(),
+                        loadState.getLoadBgColor());
                 break;
             case LoadState.SUCCESS:
                 loadSirFactory.showSuccess(target.getContext(), target);
                 break;
             case LoadState.ERROR:
-                loadSirFactory.showError(target.getContext(), target, loadMessage, loadColor, loadBgColor);
+                loadSirFactory.showError(target.getContext(), target,
+                        loadState.getLoadMessage(),
+                        loadState.getLoadColor(),
+                        loadState.getLoadBgColor(),
+                        loadState.getLoadErrorIcon());
                 break;
             default:
                 break;

@@ -1,4 +1,4 @@
-package com.kaisengao.mvvm.emun;
+package com.kasiengao.base.loading;
 
 import androidx.annotation.IntDef;
 

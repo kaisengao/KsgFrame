@@ -16,7 +16,7 @@
         app:indicatorColor="@color/black"
         app:indicatorName="BallClipRotateIndicator" />
 
-    <TextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/loading_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

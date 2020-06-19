@@ -5,9 +5,17 @@
 
     <data class="MvvmBinding">
 
+        <import type="com.kasiengao.ksgframe.java.mvvm.MvvmViewModel" />
+
+        <import type="com.kasiengao.ksgframe.java.mvvm.MvvmActivity" />
+
         <variable
             name="viewModel"
-            type="com.kasiengao.ksgframe.java.mvvm.MvvmViewModel" />
+            type="MvvmViewModel" />
+
+        <variable
+            name="reloadListener"
+            type="MvvmActivity" />
 
     </data>
 
@@ -20,19 +28,20 @@
         tools:context=".java.mvvm.MvvmActivity">
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/load_btn_1"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{viewModel.onClick}"
+            android:onClick="@{() -> viewModel.requestTest1()}"
             android:text="LoadSir1" />
 
         <FrameLayout
+            android:id="@+id/load_root_1"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            bind:loadBgColor="@{@color/colorPrimary}"
-            bind:loadColor="@{@color/white}"
-            bind:loadState="@{viewModel.loadData}">
+            bind:loadRegister="@{reloadListener}"
+            bind:loadState="@{viewModel.loadState1}">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
@@ -44,29 +53,28 @@
         </FrameLayout>
 
         <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/load_btn_2"
             style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="@{viewModel.onClick2}"
+            android:onClick="@{() -> viewModel.requestTest2()}"
             android:text="LoadSir2" />
 
         <FrameLayout
+            android:id="@+id/load_root_2"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            bind:loadBgColor="@{@color/colorAccent}"
-            bind:loadColor="@{@color/white}"
-            bind:loadState="@{viewModel.loadData2}">
+            bind:loadRegister="@{reloadListener}"
+            bind:loadState="@{viewModel.loadState2}">
 
             <androidx.appcompat.widget.AppCompatTextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center"
-                android:text="@{viewModel.liveData2}"
+                android:text="@{viewModel.liveData}"
                 tools:text="AppCompatTextView" />
 
         </FrameLayout>
-
     </LinearLayout>
-
 </layout>
