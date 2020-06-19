@@ -256,7 +256,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         // 动态配置ViewPager高度达到自适应效果
         this.getLayoutParams().height = (int) ((itemHeight[position] == 0 ? mNormalHeight : itemHeight[position]) * (1 - positionOffset) +
                 (itemHeight[position + 1] == 0 ? mNormalHeight : itemHeight[position + 1]) * positionOffset);
-        this.setLayoutParams(getLayoutParams());
+        this.requestLayout();
     }
 
     @Override
@@ -265,7 +265,8 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         this.playPosition(position);
         // 配置 ViewPager 页数
         this.setCurrentCount();
-
+        // 设置 播放器容器的宽度与ViewPager高度保持一致
+        this.mPlayerContainer.getLayoutParams().height = mPagerAdapter.getItemHeight()[position];
     }
 
     @Override
@@ -343,11 +344,14 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         // 全屏动画
         AnimUtil.fullScreenAnim(mPlayerContainer, fullscreen, viewHeight, screenHeight, animation -> {
             // 更新高度
-            mPlayerContainer.getLayoutParams().height = (int) animation.getAnimatedValue();
-            mPlayerContainer.requestLayout();
+            this.mPlayerContainer.getLayoutParams().height = (int) animation.getAnimatedValue();
+            this.mPlayerContainer.requestLayout();
         }, animatorListenerAdapter);
     }
 
+    /**
+     * 获取一下屏幕改变事件
+     */
     @Override
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
