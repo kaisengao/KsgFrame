@@ -1,13 +1,10 @@
 package com.kasiengao.ksgframe.java.player;
 
-import android.animation.Animator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatButton;
@@ -18,6 +15,7 @@ import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
+import com.kasiengao.ksgframe.java.util.AnimUtil;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
@@ -147,75 +145,17 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
      */
     public void onFullscreen(boolean fullscreen) {
         this.mFullscreen = fullscreen;
-
-        int from, to;
-
         // 获取View在屏幕上的高度位置
         int viewHeight = (int) (DensityUtil.getWidthInPx(this) * 9 / 16);
         int screenHeight = (int) DensityUtil.getHeightInPx(this);
-
-        // 全屏/非全屏
-        if (fullscreen) {
-            from = viewHeight;
-            to = screenHeight;
-        } else {
-            from = screenHeight;
-            to = viewHeight;
-        }
-
-        // 执行动画
-        this.startValAnim(from, to, 300, animation -> {
+        // 全屏动画
+        AnimUtil.fullScreenAnim(mVideoView, fullscreen, viewHeight, screenHeight, animation -> {
             // 更新高度
             this.mVideoView.getLayoutParams().height = (int) animation.getAnimatedValue();
             this.mVideoView.requestLayout();
-        });
+        }, null);
         // 通知组件横屏幕改变
         this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_FULLSCREEN, fullscreen);
-    }
-
-    /**
-     * 全屏过度动画
-     *
-     * @param from     起点
-     * @param to       终点
-     * @param duration 时长
-     * @param listener 事件
-     */
-    public void startValAnim(int from, int to, long duration, ValueAnimator.AnimatorUpdateListener listener) {
-        ValueAnimator animator = ValueAnimator.ofInt(from, to);
-        // 设置动画时长
-        animator.setDuration(duration);
-        // 回调监听
-        animator.addUpdateListener(listener);
-        // 结束监听
-        animator.addListener(new Animator.AnimatorListener() {
-
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                // 动画结束 如果是全屏 设置 match_parent
-                if (mFullscreen) {
-                    mVideoView.getLayoutParams().height = ViewGroup.LayoutParams.MATCH_PARENT;
-                    mVideoView.requestLayout();
-                }
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        // 启动动画
-        animator.start();
     }
 
     @Override

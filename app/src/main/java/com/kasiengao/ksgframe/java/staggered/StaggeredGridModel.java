@@ -46,6 +46,10 @@ public class StaggeredGridModel {
                 "http://img5.mtime.cn/mg/2019/05/31/164845.22030068_120X90X4.jpg",
                 "http://vfx.mtime.cn/Video/2019/05/31/mp4/190531170200490672.mp4"));
 
+        previewBeans.add(createPreview(544, 960, "video",
+                "https://pic.vjshi.com/2017-11-13/77ced6d7d8a0c57907122415b37454bb/online/puzzle.jpg?x-oss-process=style/resize_w_720",
+                "https://mp4.vjshi.com/2017-11-13/77ced6d7d8a0c57907122415b37454bb.mp4"));
+
         previewBeans.add(createPreview(640, 640, "image",
                 "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1590475063673&di=676e607ad1c890810d0f8234fb75c19b&imgtype=0&src=http%3A%2F%2F5b0988e595225.cdn.sohucs.com%2Fimages%2F20190502%2F8e512530ed9b4e779f6165fd19052a75.jpeg"));
 

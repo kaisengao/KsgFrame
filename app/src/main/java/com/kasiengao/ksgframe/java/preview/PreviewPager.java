@@ -1,5 +1,7 @@
 package com.kasiengao.ksgframe.java.preview;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -31,6 +33,7 @@ import com.kasiengao.ksgframe.java.player.KsgIjkPlayer;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
+import com.kasiengao.ksgframe.java.util.AnimUtil;
 import com.kasiengao.ksgframe.java.util.SystemUiUtil;
 import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.ksg.ksgplayer.assist.DataInter;
@@ -262,6 +265,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         this.playPosition(position);
         // 配置 ViewPager 页数
         this.setCurrentCount();
+
     }
 
     @Override
@@ -308,17 +312,40 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
             if (fullscreen) {
                 // 更换播放器的容器
                 this.mKsgAssistView.attachContainer(mPlayerContainer, false);
+                // 全屏动画 开启全屏
+                this.onFullScreenAnim(true, null);
             } else {
-                // container
-                FrameLayout container = mViewPager.findViewWithTag(mViewPager.getCurrentItem());
-                // 更换播放器的容器
-                if (container != null) {
-                    this.mKsgAssistView.attachContainer(container, false);
-                }
+                // 全屏动画 结束全屏
+                this.onFullScreenAnim(false, new AnimatorListenerAdapter() {
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        // container
+                        FrameLayout container = mViewPager.findViewWithTag(mViewPager.getCurrentItem());
+                        // 更换播放器的容器
+                        if (container != null) {
+                            mKsgAssistView.attachContainer(container, false);
+                        }
+                    }
+                });
             }
             // 通知组件横屏幕改变
             this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_FULLSCREEN, fullscreen);
         }
+    }
+
+    /**
+     * 全屏动画
+     */
+    private void onFullScreenAnim(boolean fullscreen, AnimatorListenerAdapter animatorListenerAdapter) {
+        // 获取View在屏幕上的高度位置
+        int viewHeight = mPagerAdapter.getItemHeight()[mViewPager.getCurrentItem()];
+        int screenHeight = (int) DensityUtil.getHeightInPx(getContext());
+        // 全屏动画
+        AnimUtil.fullScreenAnim(mPlayerContainer, fullscreen, viewHeight, screenHeight, animation -> {
+            // 更新高度
+            mPlayerContainer.getLayoutParams().height = (int) animation.getAnimatedValue();
+            mPlayerContainer.requestLayout();
+        }, animatorListenerAdapter);
     }
 
     @Override
