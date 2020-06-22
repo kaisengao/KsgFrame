@@ -7,15 +7,9 @@
 
         <import type="com.kasiengao.ksgframe.java.mvvm.MvvmViewModel" />
 
-        <import type="com.kasiengao.ksgframe.java.mvvm.MvvmActivity" />
-
         <variable
             name="viewModel"
             type="MvvmViewModel" />
-
-        <variable
-            name="reloadListener"
-            type="MvvmActivity" />
 
     </data>
 
@@ -40,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            bind:loadRegister="@{reloadListener}"
+            bind:loadRegister="@{null}"
             bind:loadState="@{viewModel.loadState1}">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -65,7 +59,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            bind:loadRegister="@{reloadListener}"
+            bind:loadRegister="@{null}"
             bind:loadState="@{viewModel.loadState2}">
 
             <androidx.appcompat.widget.AppCompatTextView
@@ -76,5 +70,28 @@
                 tools:text="AppCompatTextView" />
 
         </FrameLayout>
+
+        <androidx.appcompat.widget.AppCompatButton
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> viewModel.requestTest3()}"
+            android:text="Dialog" />
+
+        <FrameLayout
+            android:id="@+id/load_dialog"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="@{viewModel.liveData}"
+                tools:text="AppCompatTextView" />
+
+        </FrameLayout>
+
     </LinearLayout>
 </layout>

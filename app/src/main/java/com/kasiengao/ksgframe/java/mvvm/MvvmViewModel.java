@@ -6,6 +6,8 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.kaisengao.mvvm.base.viewmodel.BaseViewModel;
+import com.kaisengao.retrofit.observer.BaseRxObserver;
+import com.kaisengao.retrofit.observer.BaseDialogObserver;
 import com.kaisengao.retrofit.observer.mvvm.BaseLoadSirObserver;
 import com.kasiengao.base.loading.LoadingState;
 import com.kasiengao.ksgframe.R;
@@ -19,7 +21,7 @@ import com.kasiengao.ksgframe.java.retrofit.NewsTopBean;
  */
 public class MvvmViewModel extends BaseViewModel {
 
-    private final MvvmRepository mMvvmRepository;
+    private final MvvmModel mMvvmRepository;
 
     private MutableLiveData<String> mLiveData;
 
@@ -29,55 +31,72 @@ public class MvvmViewModel extends BaseViewModel {
 
     public MvvmViewModel(@NonNull Application application) {
         super(application);
-        this.mMvvmRepository = new MvvmRepository();
+        this.mMvvmRepository = new MvvmModel();
     }
 
     public void requestTest1() {
 
-        this.mMvvmRepository
-                .requestTest()
-                .doOnSubscribe(this)
-                .subscribe(new BaseLoadSirObserver<NewsTopBean>(getApplication(), getLoadState1()) {
-                    @Override
-                    protected void onResult(NewsTopBean newsTopBean) {
-                        if (newsTopBean.getResultCode().equals("200")) {
-                            StringBuilder builder = new StringBuilder();
-                            for (NewsTopBean.ResultBean.DataBean topBean : newsTopBean.getResult().getData()) {
-                                builder.append(topBean.getAuthorName());
-                                builder.append("\n");
-                            }
-                            getLiveData().setValue(builder.toString());
-                        } else {
-                            onError(new Exception(newsTopBean.getReason()));
-                        }
-                    }
-                }.setLoadMessage(R.string.loading_mvvm)
-                        .setLoadColor(R.color.white)
-                        .setLoadBgColor(R.color.color_F49B3C)
-                        .setLoadErrorIcon(R.drawable.icon_empty));
+        BaseRxObserver<NewsTopBean> loadSirObserver = new BaseLoadSirObserver<NewsTopBean>(getApplication(), getLoadState1()) {
+            @Override
+            protected void onResult(NewsTopBean newsTopBean) {
+                resultData(this, newsTopBean);
+            }
+        }.setLoadMessage(R.string.loading_mvvm)
+                .setLoadColor(R.color.white)
+                .setLoadBgColor(R.color.color_F49B3C)
+                .setLoadErrorIcon(R.drawable.icon_empty);
+
+        this.requestTest(loadSirObserver);
     }
 
     public void requestTest2() {
 
+        BaseRxObserver<NewsTopBean> loadSirObserver = new BaseLoadSirObserver<NewsTopBean>(getApplication(), getLoadState2()) {
+            @Override
+            protected void onResult(NewsTopBean newsTopBean) {
+                resultData(this, newsTopBean);
+            }
+        }.setLoadColor(R.color.black)
+                .setLoadBgColor(R.color.color_FF5252);
+
+        this.requestTest(loadSirObserver);
+    }
+
+    public void requestTest3() {
+
+        BaseRxObserver<NewsTopBean> loadSirObserver = new BaseDialogObserver<NewsTopBean>(getApplication()) {
+            @Override
+            protected void onResult(NewsTopBean newsTopBean) {
+                resultData(this, newsTopBean);
+            }
+        }.setLoadColor(R.color.black);
+
+        this.requestTest(loadSirObserver);
+    }
+
+    private void requestTest(BaseRxObserver<NewsTopBean> observer) {
         this.mMvvmRepository
                 .requestTest()
                 .doOnSubscribe(this)
-                .subscribe(new BaseLoadSirObserver<NewsTopBean>(getApplication(), getLoadState2()) {
-                    @Override
-                    protected void onResult(NewsTopBean newsTopBean) {
-                        if (newsTopBean.getResultCode().equals("200")) {
-                            StringBuilder builder = new StringBuilder();
-                            for (NewsTopBean.ResultBean.DataBean topBean : newsTopBean.getResult().getData()) {
-                                builder.append(topBean.getAuthorName());
-                                builder.append("\n");
-                            }
-                            getLiveData().setValue(builder.toString());
-                        } else {
-                            onError(new Exception(newsTopBean.getReason()));
-                        }
-                    }
-                }.setLoadColor(R.color.black)
-                        .setLoadBgColor(R.color.color_FF5252));
+                .subscribe(observer);
+    }
+
+    private void resultData(BaseRxObserver<NewsTopBean> observer, NewsTopBean newsTopBean) {
+        if (newsTopBean.getResult() != null) {
+            StringBuilder builder = new StringBuilder();
+            int count = 0;
+            for (NewsTopBean.ResultBean.DataBean topBean : newsTopBean.getResult().getData()) {
+                if (count > 5) {
+                    break;
+                }
+                count++;
+                builder.append(topBean.getAuthorName());
+                builder.append("\n");
+            }
+            getLiveData().setValue(builder.toString());
+        } else {
+            observer.onError(new Exception(newsTopBean.getReason()));
+        }
     }
 
     public MutableLiveData<String> getLiveData() {

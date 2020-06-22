@@ -8,7 +8,7 @@ import androidx.annotation.NonNull;
  * @CreateDate: 2020/6/17 13:44
  * @Description: 数据仓库
  */
-public final class DataRepository implements DataSource.RemoteDataSource {
+public final class DataRepository implements DataSource.RemoteDataSource, DataSource.LocalDataSource {
 
     private volatile static DataRepository INSTANCE = null;
 
@@ -44,6 +44,13 @@ public final class DataRepository implements DataSource.RemoteDataSource {
         return INSTANCE;
     }
 
+    /**
+     * 创建 远程接口类
+     *
+     * @param service      ApiService
+     * @param <ApiService> ApiService
+     * @return ApiService
+     */
     @Override
     public <ApiService> ApiService create(Class<ApiService> service) {
         return this.mRemoteDataSource.create(service);

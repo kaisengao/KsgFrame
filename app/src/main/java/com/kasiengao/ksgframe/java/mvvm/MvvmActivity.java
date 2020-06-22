@@ -3,7 +3,7 @@ package com.kasiengao.ksgframe.java.mvvm;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.kaisengao.mvvm.base.activity.BaseVmActivity;
-import com.kaisengao.retrofit.listener.OnLoadSirReloadListener;
+import com.kasiengao.base.annotations.ReloadAnnotations;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.databinding.MvvmBinding;
 
@@ -13,7 +13,7 @@ import com.kasiengao.ksgframe.databinding.MvvmBinding;
  * @CreateDate: 2020/6/11 13:02
  * @Description: MVVM
  */
-public class MvvmActivity extends BaseVmActivity<MvvmBinding, MvvmViewModel> implements OnLoadSirReloadListener {
+public class MvvmActivity extends BaseVmActivity<MvvmBinding, MvvmViewModel> {
 
     @Override
     protected int getContentLayoutId() {
@@ -25,19 +25,12 @@ public class MvvmActivity extends BaseVmActivity<MvvmBinding, MvvmViewModel> imp
         return BR.viewModel;
     }
 
-    @Override
-    protected void initWidget() {
-        super.initWidget();
-        // 绑定LoadSir的重试事件
-        this.mBinding.setReloadListener(this);
-    }
-
     /**
      * LoadSir 点击事件回调
      *
      * @param target 绑定的View
      */
-    @Override
+    @ReloadAnnotations
     public void onLoadSirReload(Object target) {
         if (target == mBinding.loadRoot1) {
             this.mBinding.loadBtn1.performClick();

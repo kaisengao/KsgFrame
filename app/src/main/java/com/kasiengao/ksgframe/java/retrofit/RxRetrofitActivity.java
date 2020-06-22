@@ -6,7 +6,7 @@ import android.view.MenuItem;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kaisengao.retrofit.RxCompose;
-import com.kaisengao.retrofit.observer.mvp.BaseDialogObserver;
+import com.kaisengao.retrofit.observer.BaseDialogObserver;
 import com.kaisengao.retrofit.observer.mvp.BaseLoadSirObserver;
 import com.kaisengao.retrofit.observer.BaseRxObserver;
 import com.kasiengao.ksgframe.R;

@@ -1,8 +1,7 @@
-package com.kaisengao.retrofit.observer.mvp;
+package com.kaisengao.retrofit.observer;
 
 import android.content.Context;
 
-import com.kaisengao.retrofit.observer.BaseRxObserver;
 import com.kaisengao.retrofit.widget.LoadingDialog;
 import com.kasiengao.base.util.ToastUtil;
 
@@ -31,7 +30,7 @@ public abstract class BaseDialogObserver<T> extends BaseRxObserver<T> {
     public BaseRxObserver<T> setLoadMessage(int loadMessage) {
         super.setLoadMessage(loadMessage);
         if (mLoadingDialog != null) {
-            this.mLoadingDialog.loadMessage(mLoadMessage);
+            this.mLoadingDialog.loadMessage(mContext.getString(mLoadMessage));
         }
         return this;
     }
@@ -62,6 +61,8 @@ public abstract class BaseDialogObserver<T> extends BaseRxObserver<T> {
     protected void onError(String message) {
         // 错误 提示
         ToastUtil.showShortSafe(message);
+        // 完成
+        this.onComplete();
     }
 
     @Override
@@ -76,9 +77,8 @@ public abstract class BaseDialogObserver<T> extends BaseRxObserver<T> {
      */
     private void initDialog() {
         if (this.mLoadingDialog == null) {
-            this.mLoadingDialog = new LoadingDialog
-                    .Builder(mContext)
-                    .setLoadMessage(mLoadMessage)
+            this.mLoadingDialog = new LoadingDialog.Builder()
+                    .setLoadMessage(mContext.getString(mLoadMessage))
                     .setLoadColor(mLoadColor)
                     .build();
         }

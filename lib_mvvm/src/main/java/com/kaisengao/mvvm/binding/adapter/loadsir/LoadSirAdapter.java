@@ -2,12 +2,17 @@ package com.kaisengao.mvvm.binding.adapter.loadsir;
 
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.databinding.BindingAdapter;
 
 import com.kaisengao.retrofit.factory.LoadSirFactory;
 import com.kaisengao.retrofit.listener.OnLoadSirReloadListener;
+import com.kasiengao.base.annotations.ReloadAnnotations;
 import com.kasiengao.base.loading.LoadState;
 import com.kasiengao.base.loading.LoadingState;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 /**
  * @ClassName: ViewAdapter
@@ -19,12 +24,19 @@ public class LoadSirAdapter {
 
 
     @BindingAdapter("loadRegister")
-    public static void loadRegister(final View target, final OnLoadSirReloadListener reloadListener) {
+    public static void loadRegister(final View register, @Nullable OnLoadSirReloadListener onLoadSirReloadListener) {
         LoadSirFactory loadSirFactory = LoadSirFactory.getInstance();
         // 注册LoadSir
-        loadSirFactory.register(target.getContext(), target);
+        loadSirFactory.register(register.getContext(), register);
         // Retry事件
-        loadSirFactory.listener(target.getContext(), reloadListener);
+        loadSirFactory.listener(register.getContext(), target -> {
+            if (onLoadSirReloadListener != null) {
+                onLoadSirReloadListener.onLoadSirReload(target);
+            } else {
+                // 反射回调方法
+                injectReload(register.getContext(), target);
+            }
+        });
     }
 
     @BindingAdapter("loadState")
@@ -55,6 +67,36 @@ public class LoadSirAdapter {
                 break;
             default:
                 break;
+        }
+    }
+
+    /**
+     * 根据反射找到注解方法
+     *
+     * @param object class
+     * @param args   携带参数
+     */
+    private static void injectReload(final Object object, final Object... args) {
+        // 非空验证
+        if (object == null) {
+            return;
+        }
+        // 反射查找方法 进行回调
+        Class objClass = object.getClass();
+        // 获取该Class下的所有方法
+        Method[] methods = objClass.getDeclaredMethods();
+        // 遍历方法，找到注解方法
+        for (Method method : methods) {
+            ReloadAnnotations annotation = method.getAnnotation(ReloadAnnotations.class);
+            // 非空验证
+            if (annotation != null) {
+                try {
+                    // 注入回调
+                    method.invoke(object, args);
+                } catch (IllegalAccessException | InvocationTargetException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 }

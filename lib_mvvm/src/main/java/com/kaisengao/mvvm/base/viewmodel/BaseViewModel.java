@@ -44,6 +44,13 @@ public abstract class BaseViewModel extends AndroidViewModel implements Consumer
         this.addSubscribe(disposable);
     }
 
+    /**
+     * 创建 MutableLiveData
+     *
+     * @param liveData liveData
+     * @param <T>      泛型
+     * @return MutableLiveData
+     */
     protected <T> MutableLiveData<T> createLiveData(MutableLiveData<T> liveData) {
         if (liveData == null) {
             liveData = new MutableLiveData<>();

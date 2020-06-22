@@ -7,11 +7,11 @@ import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import androidx.annotation.ColorRes;
-import androidx.annotation.StringRes;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 
 import com.kaisengao.retrofit.R;
+import com.kasiengao.base.configure.ActivityManager;
 import com.kasiengao.base.util.DensityUtil;
 import com.wang.avi.AVLoadingIndicatorView;
 
@@ -74,7 +74,7 @@ public class LoadingDialog extends Dialog {
      *
      * @param loadMessage loadMessage
      */
-    public void loadMessage(@StringRes int loadMessage) {
+    public void loadMessage(String loadMessage) {
         if (isShowing()) {
             this.mLoadText.setText(loadMessage);
         }
@@ -95,18 +95,18 @@ public class LoadingDialog extends Dialog {
     public static class Builder {
 
         private Context mContext;
-        @StringRes
-        private int mLoadMessage;
+
+        private String mLoadMessage;
         @ColorRes
         private int mLoadColor;
 
         private boolean mCancelable = false;
 
-        public Builder(Context context) {
-            this.mContext = context;
+        public Builder() {
+            this.mContext = ActivityManager.getAppManager().currentActivity();
         }
 
-        public Builder setLoadMessage(@StringRes int loadMessage) {
+        public Builder setLoadMessage(String loadMessage) {
             this.mLoadMessage = loadMessage;
             return this;
         }
@@ -125,5 +125,4 @@ public class LoadingDialog extends Dialog {
             return new LoadingDialog(this);
         }
     }
-
 }

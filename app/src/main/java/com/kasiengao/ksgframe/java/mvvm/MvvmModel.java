@@ -15,16 +15,16 @@ import io.reactivex.ObservableSource;
 import io.reactivex.functions.Function;
 
 /**
- * @ClassName: MvvmRepository
+ * @ClassName: MvvmModel
  * @Author: KaiSenGao
  * @CreateDate: 2020/6/17 14:10
- * @Description: MVVM 数据仓库
+ * @Description: MVVM 数据
  */
-public class MvvmRepository extends BaseModel<DataRepository> {
+public class MvvmModel extends BaseModel<DataRepository> {
 
     private final ApiService mApiService;
 
-    public MvvmRepository() {
+    public MvvmModel() {
         super(Injection.provideDataRepository());
         this.mApiService = mRepository.create(ApiService.class);
     }
