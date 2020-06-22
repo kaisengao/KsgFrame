@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.kaisengao.mvvm.base.viewmodel.BaseViewModel;
 import com.kaisengao.retrofit.observer.BaseRxObserver;
-import com.kaisengao.retrofit.observer.BaseDialogObserver;
+import com.kaisengao.retrofit.observer.dialog.BaseDialogObserver;
 import com.kaisengao.retrofit.observer.mvvm.BaseLoadSirObserver;
 import com.kasiengao.base.loading.LoadingState;
 import com.kasiengao.ksgframe.R;
@@ -21,7 +21,7 @@ import com.kasiengao.ksgframe.java.retrofit.NewsTopBean;
  */
 public class MvvmViewModel extends BaseViewModel {
 
-    private final MvvmModel mMvvmRepository;
+    private final MvvmModel mModel;
 
     private MutableLiveData<String> mLiveData;
 
@@ -31,7 +31,7 @@ public class MvvmViewModel extends BaseViewModel {
 
     public MvvmViewModel(@NonNull Application application) {
         super(application);
-        this.mMvvmRepository = new MvvmModel();
+        this.mModel = new MvvmModel();
     }
 
     public void requestTest1() {
@@ -69,13 +69,13 @@ public class MvvmViewModel extends BaseViewModel {
             protected void onResult(NewsTopBean newsTopBean) {
                 resultData(this, newsTopBean);
             }
-        }.setLoadColor(R.color.black);
+        }.setLoadMessage(R.string.loading_mvvm).setLoadColor(R.color.black);
 
         this.requestTest(loadSirObserver);
     }
 
     private void requestTest(BaseRxObserver<NewsTopBean> observer) {
-        this.mMvvmRepository
+        this.mModel
                 .requestTest()
                 .doOnSubscribe(this)
                 .subscribe(observer);

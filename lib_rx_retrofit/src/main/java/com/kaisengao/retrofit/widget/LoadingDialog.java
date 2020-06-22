@@ -75,7 +75,7 @@ public class LoadingDialog extends Dialog {
      * @param loadMessage loadMessage
      */
     public void loadMessage(String loadMessage) {
-        if (isShowing()) {
+        if (mLoadText != null) {
             this.mLoadText.setText(loadMessage);
         }
     }
@@ -86,7 +86,7 @@ public class LoadingDialog extends Dialog {
      * @param loadColor loadColor
      */
     public void loadColor(@ColorRes int loadColor) {
-        if (isShowing()) {
+        if (this.mLoadText != null) {
             this.mLoadText.setTextColor(ContextCompat.getColor(getContext(), loadColor));
             this.mLoadView.setIndicatorColor(ContextCompat.getColor(getContext(), loadColor));
         }

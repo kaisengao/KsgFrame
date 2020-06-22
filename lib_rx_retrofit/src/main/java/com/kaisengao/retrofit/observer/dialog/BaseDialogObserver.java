@@ -1,7 +1,8 @@
-package com.kaisengao.retrofit.observer;
+package com.kaisengao.retrofit.observer.dialog;
 
 import android.content.Context;
 
+import com.kaisengao.retrofit.observer.BaseRxObserver;
 import com.kaisengao.retrofit.widget.LoadingDialog;
 import com.kasiengao.base.util.ToastUtil;
 
