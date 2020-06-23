@@ -17,6 +17,7 @@ import android.widget.FrameLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
@@ -43,7 +44,6 @@ import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.receiver.ReceiverGroup;
 import com.ksg.ksgplayer.widget.KsgAssistView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -53,6 +53,12 @@ import java.util.List;
  * @Description: 自适应 预览 Banner
  */
 public class PreviewPager<T extends IPreviewParams> extends FrameLayout implements ViewPager.OnPageChangeListener {
+
+    private int mCurrentPosition;
+
+    private int mLastPosition = 1;
+
+    private int mDataSize = 0;
 
     private int mNormalHeight = 0;
 
@@ -64,13 +70,15 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     private Activity mActivity;
 
-    private ViewPager mViewPager;
+    private ViewPagerEx mViewPager;
 
     private KsgAssistView mKsgAssistView;
 
     private ReceiverGroup mReceiverGroup;
 
     private AppCompatTextView mPagerCount;
+
+    private AppCompatImageView mDefaultImage;
 
     private PlayerContainerView mPlayerContainer;
 
@@ -100,6 +108,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         this.mViewPager.addOnPageChangeListener(this);
         this.mViewPager.setAdapter(mPagerAdapter = new PreviewPagerAdapter<>());
         this.mPagerCount = inflate.findViewById(R.id.layout_pager_count);
+        this.mDefaultImage = inflate.findViewById(R.id.layout_preview_default);
 
         FrameLayout toolbar = inflate.findViewById(R.id.layout_toolbar);
         StatusBarUtil.setPaddingSmart(getContext(), toolbar);
@@ -199,20 +208,48 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     }
 
     /**
+     * 返回真实的位置
+     *
+     * @param position 位置
+     * @return 下标从0开始
+     */
+    public int toRealPosition(int position) {
+        int realPosition = (position - 1) % mDataSize;
+        if (realPosition < 0) {
+            realPosition += mDataSize;
+        }
+        return realPosition;
+    }
+
+    /**
      * 配置 媒体数据列表
      *
      * @param mediaList mediaList
      */
     public void setMediaList(List<T> mediaList) {
-        this.mMediaList = mediaList == null ? this.mMediaList = new ArrayList<>() : mediaList;
+        if (mediaList == null || mediaList.isEmpty()) {
+            this.mDefaultImage.setVisibility(VISIBLE);
+            return;
+        }
+        this.mDefaultImage.setVisibility(GONE);
+        // 数据列表长度
+        this.mDataSize = mediaList.size();
+        // 无限循环
+        mediaList.add(0, mediaList.get(mDataSize - 1));
+        mediaList.add(mediaList.get(1));
+        this.mMediaList = mediaList;
+        // 默认position
+        this.mCurrentPosition = 1;
         // 默认以第一张图的宽高为准
-        this.setLayoutParams(this.mMediaList.get(0));
+        this.setLayoutParams(mMediaList.get(mCurrentPosition));
         // 配置 ViewPager 页数
         this.setCurrentCount();
         // 配置 Data
-        this.mPagerAdapter.setMediaList(this.mMediaList);
-        // 默认执行
-        this.mViewPager.post(() -> onPageSelected(0));
+        this.mPagerAdapter.setMediaList(mMediaList);
+        // 默认页面
+        this.mViewPager.post(() -> mViewPager.setCurrentItem(mCurrentPosition, false));
+        // 如果只有一条数据 则关闭滑动
+        this.mViewPager.setScrollable(mDataSize > 1);
     }
 
     /**
@@ -233,7 +270,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
      * 配置 ViewPager 页数
      */
     private void setCurrentCount() {
-        this.mPagerCount.setText(String.format(getContext().getString(R.string.preview_count), (this.mViewPager.getCurrentItem() + 1), this.mMediaList.size()));
+        this.mPagerCount.setText(String.format(getContext().getString(R.string.preview_count), mCurrentPosition, mDataSize));
     }
 
     /**
@@ -261,17 +298,28 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     @Override
     public void onPageSelected(int position) {
-        // 播放Item
-        this.playPosition(position);
-        // 配置 ViewPager 页数
-        this.setCurrentCount();
-        // 设置 播放器容器的宽度与ViewPager高度保持一致
-        this.mPlayerContainer.getLayoutParams().height = mPagerAdapter.getItemHeight()[position];
+        this.mCurrentPosition = position;
+        // 区分无限循环
+        if (mCurrentPosition != 0 && mCurrentPosition != (mDataSize + 1)) {
+            // 播放Item
+            this.playPosition(position);
+            // 配置 ViewPager 页数
+            this.setCurrentCount();
+            // 设置 播放器容器的宽度与ViewPager高度保持一致
+            this.mPlayerContainer.getLayoutParams().height = mPagerAdapter.getItemHeight()[position];
+        }
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-
+        // 滑动结束后
+        if (state == ViewPager.SCROLL_STATE_IDLE) {
+            if (mCurrentPosition == 0) {
+                this.mViewPager.setCurrentItem(mDataSize, false);
+            } else if (mCurrentPosition == mDataSize + 1) {
+                this.mViewPager.setCurrentItem(1, false);
+            }
+        }
     }
 
     /**
@@ -413,7 +461,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
             this.mMediaList = mediaList;
             // ItemHeight 高度数组
             this.mItemHeight = null;
-            this.mItemHeight = new int[this.getCount()];
+            this.mItemHeight = new int[getCount()];
             // notifyData
             this.notifyDataSetChanged();
         }
@@ -424,7 +472,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
         @Override
         public int getCount() {
-            return this.mMediaList == null ? 0 : this.mMediaList.size();
+            return this.mMediaList == null ? 0 : mMediaList.size();
         }
 
         @Override

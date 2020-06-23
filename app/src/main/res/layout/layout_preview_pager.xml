@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <!-- 视图-->
-    <androidx.viewpager.widget.ViewPager
+    <com.kasiengao.ksgframe.java.preview.ViewPagerEx
         android:id="@+id/layout_preview_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -33,5 +33,14 @@
             android:textColor="@color/white"
             tools:text="1/2" />
     </FrameLayout>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/layout_preview_default"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:scaleType="center"
+        android:visibility="gone"
+        android:src="@drawable/icon_empty" />
 
 </FrameLayout>

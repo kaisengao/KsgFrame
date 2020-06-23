@@ -47,6 +47,10 @@ public class AnimUtil {
      * @param animatorListenerAdapter 动画事件监听
      */
     public static void fullScreenAnim(View view, boolean fullScreen, int from, int to, ValueAnimator.AnimatorUpdateListener animatorUpdateListener, AnimatorListenerAdapter animatorListenerAdapter) {
+        // 验证一下如果是全屏状态下 且 是横竖屏切换 则不执行动画
+        if (fullScreen && view.getLayoutParams().height == ViewGroup.LayoutParams.MATCH_PARENT) {
+            return;
+        }
         // 属性动画
         ValueAnimator animator = ValueAnimator.ofInt(fullScreen ? from : to, fullScreen ? to : from);
         // 设置动画时长
