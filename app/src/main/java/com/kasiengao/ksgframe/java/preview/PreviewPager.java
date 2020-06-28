@@ -56,8 +56,6 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
 
     private int mCurrentPosition;
 
-    private int mLastPosition = 1;
-
     private int mDataSize = 0;
 
     private int mNormalHeight = 0;
@@ -208,20 +206,6 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     }
 
     /**
-     * 返回真实的位置
-     *
-     * @param position 位置
-     * @return 下标从0开始
-     */
-    public int toRealPosition(int position) {
-        int realPosition = (position - 1) % mDataSize;
-        if (realPosition < 0) {
-            realPosition += mDataSize;
-        }
-        return realPosition;
-    }
-
-    /**
      * 配置 媒体数据列表
      *
      * @param mediaList mediaList
@@ -234,12 +218,10 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         this.mDefaultImage.setVisibility(GONE);
         // 数据列表长度
         this.mDataSize = mediaList.size();
-        // 无限循环
-        mediaList.add(0, mediaList.get(mDataSize - 1));
-        mediaList.add(mediaList.get(1));
+        // 媒体数据列表
         this.mMediaList = mediaList;
         // 默认position
-        this.mCurrentPosition = 1;
+        this.mCurrentPosition = 0;
         // 默认以第一张图的宽高为准
         this.setLayoutParams(mMediaList.get(mCurrentPosition));
         // 配置 ViewPager 页数
@@ -247,7 +229,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
         // 配置 Data
         this.mPagerAdapter.setMediaList(mMediaList);
         // 默认页面
-        this.mViewPager.post(() -> mViewPager.setCurrentItem(mCurrentPosition, false));
+        this.mViewPager.post(() -> this.onPageSelected(mCurrentPosition));
         // 如果只有一条数据 则关闭滑动
         this.mViewPager.setScrollable(mDataSize > 1);
     }
@@ -270,7 +252,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
      * 配置 ViewPager 页数
      */
     private void setCurrentCount() {
-        this.mPagerCount.setText(String.format(getContext().getString(R.string.preview_count), mCurrentPosition, mDataSize));
+        this.mPagerCount.setText(String.format(getContext().getString(R.string.preview_count), (mCurrentPosition + 1), mDataSize));
     }
 
     /**
@@ -299,27 +281,17 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     @Override
     public void onPageSelected(int position) {
         this.mCurrentPosition = position;
-        // 区分无限循环
-        if (mCurrentPosition != 0 && mCurrentPosition != (mDataSize + 1)) {
-            // 播放Item
-            this.playPosition(position);
-            // 配置 ViewPager 页数
-            this.setCurrentCount();
-            // 设置 播放器容器的宽度与ViewPager高度保持一致
-            this.mPlayerContainer.getLayoutParams().height = mPagerAdapter.getItemHeight()[position];
-        }
+        // 播放Item
+        this.playPosition(position);
+        // 配置 ViewPager 页数
+        this.setCurrentCount();
+        // 设置 播放器容器的宽度与ViewPager高度保持一致
+        this.mPlayerContainer.getLayoutParams().height = mPagerAdapter.getItemHeight()[position];
     }
 
     @Override
     public void onPageScrollStateChanged(int state) {
-        // 滑动结束后
-        if (state == ViewPager.SCROLL_STATE_IDLE) {
-            if (mCurrentPosition == 0) {
-                this.mViewPager.setCurrentItem(mDataSize, false);
-            } else if (mCurrentPosition == mDataSize + 1) {
-                this.mViewPager.setCurrentItem(1, false);
-            }
-        }
+
     }
 
     /**
