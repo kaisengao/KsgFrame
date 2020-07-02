@@ -499,6 +499,21 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
         this.detachSuperContainer();
     }
 
+    /**
+     * 播放状态
+     *
+     * @return boolean
+     */
+    @Override
+    public boolean isInPlaybackState() {
+        int state = getState();
+        return state != IKsgPlayer.STATE_END
+                && state != IKsgPlayer.STATE_ERROR
+                && state != IKsgPlayer.STATE_IDLE
+                && state != IKsgPlayer.STATE_INITIALIZED
+                && state != IKsgPlayer.STATE_STOPPED;
+    }
+
     public void setOnPlayerEventListener(OnPlayerEventListener onPlayerEventListener) {
         this.mOnPlayerEventListener = onPlayerEventListener;
     }

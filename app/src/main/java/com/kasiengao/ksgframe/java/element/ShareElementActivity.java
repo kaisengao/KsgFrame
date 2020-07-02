@@ -99,11 +99,6 @@ public class ShareElementActivity extends BaseToolbarActivity {
         ViewCompat.setTransitionName(mPreviewPager, getString(R.string.share_element_picture) + mPosition);
     }
 
-    @Override
-    protected void onClickBack() {
-        this.onBackPressed();
-    }
-
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onBackPressed() {

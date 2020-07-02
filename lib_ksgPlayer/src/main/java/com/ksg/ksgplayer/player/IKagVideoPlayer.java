@@ -172,4 +172,11 @@ public interface IKagVideoPlayer {
      * 销毁资源
      */
     void destroy();
+
+    /**
+     * 播放状态
+     *
+     * @return boolean
+     */
+    boolean isInPlaybackState();
 }

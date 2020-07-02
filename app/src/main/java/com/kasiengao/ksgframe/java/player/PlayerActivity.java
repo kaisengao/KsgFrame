@@ -16,8 +16,10 @@ import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
 import com.kasiengao.ksgframe.java.util.AnimUtil;
+import com.kasiengao.ksgframe.java.util.SystemUiUtil;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 import com.ksg.ksgplayer.assist.DataInter;
+import com.ksg.ksgplayer.assist.InterEvent;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.player.KsgVideoPlayer;
@@ -32,13 +34,18 @@ import com.ksg.ksgplayer.widget.KsgVideoView;
  */
 public class PlayerActivity extends BaseToolbarActivity implements View.OnClickListener {
 
+    private boolean mUserPause;
+
     private boolean mFullscreen;
+
+    private boolean mIsLandscape;
 
     private KsgVideoView mVideoView;
 
     private KsgVideoPlayer mVideoPlayer;
 
     private ReceiverGroup mReceiverGroup;
+
 
     @Override
     protected int getContentLayoutId() {
@@ -74,10 +81,14 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
 
         this.mVideoPlayer.setReceiverGroup(mReceiverGroup);
         this.mVideoPlayer.setOnVideoViewEventHandler(new OnVideoViewEventHandler() {
+            @SuppressLint("SourceLockedOrientationActivity")
             @Override
             public void onAssistHandle(KsgVideoPlayer assist, int eventCode, Bundle bundle) {
                 super.onAssistHandle(assist, eventCode, bundle);
                 switch (eventCode) {
+                    case InterEvent.CODE_REQUEST_PAUSE:
+                        mUserPause = true;
+                        break;
                     case DataInter.Event.EVENT_CODE_REQUEST_BACK:
                         // 回退
                         onBackPressed();
@@ -94,6 +105,10 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
                     case DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN:
                         // 全屏切换事件
                         boolean fullscreen = bundle.getBoolean(EventKey.BOOL_DATA, false);
+                        // 如果在横屏状态下退出了全屏模式需要设置回竖屏
+                        if (mIsLandscape && !fullscreen) {
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        }
                         // 屏幕改变
                         onFullscreen(fullscreen);
                         break;
@@ -162,30 +177,64 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
     public void onConfigurationChanged(@NonNull Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
         // 验证是否横屏状态
-        boolean isLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
+        this.mIsLandscape = newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE;
+        // 横屏
+        if (mIsLandscape) {
+            // 如果直接选择的横屏且屏幕不在全屏状态下 默认设置横屏且全屏
+            if (!mFullscreen) {
+                // 改为全屏布局
+                this.onFullscreen(true);
+            }
+            // 隐藏系统Ui
+            SystemUiUtil.hideVideoSystemUI(this);
+        } else {
+            // 竖屏
+            this.onFullscreen(mFullscreen);
+            // 恢复系统Ui
+            SystemUiUtil.recoverySystemUI(this);
+        }
         // 通知组件横竖屏切换
-        this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_SCREEN_ORIENTATION, isLandscape);
+        this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_SCREEN_ORIENTATION, mIsLandscape);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        this.mVideoPlayer.resume();
+        if (mVideoPlayer.isInPlaybackState()) {
+            if (!mUserPause) {
+                this.mVideoPlayer.resume();
+            }
+        }
+        if (mIsLandscape) {
+            // 隐藏系统Ui
+            SystemUiUtil.hideVideoSystemUI(this);
+        }
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        this.mVideoPlayer.pause();
+        if (mVideoPlayer.isInPlaybackState()) {
+            this.mVideoPlayer.pause();
+        } else {
+            this.mVideoPlayer.stop();
+        }
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onBackPressed() {
-//        if (mScreenState == ScreenState.LandscapeFullScreen) {
-//            super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-//            return;
-//        }
+        // 1、验证横竖屏
+        if (mIsLandscape) {
+            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+            return;
+        }
+        // 2、验证全屏
+        if (mFullscreen) {
+            this.onFullscreen(false);
+            return;
+        }
+        // 剩下的基操给系统
         super.onBackPressed();
     }
 }

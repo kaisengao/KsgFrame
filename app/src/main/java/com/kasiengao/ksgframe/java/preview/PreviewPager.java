@@ -38,6 +38,7 @@ import com.kasiengao.ksgframe.java.util.AnimUtil;
 import com.kasiengao.ksgframe.java.util.SystemUiUtil;
 import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.ksg.ksgplayer.assist.DataInter;
+import com.ksg.ksgplayer.assist.InterEvent;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.player.KsgVideoPlayer;
@@ -59,6 +60,8 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     private int mDataSize = 0;
 
     private int mNormalHeight = 0;
+
+    private boolean mUserPause;
 
     private boolean mFullscreen;
 
@@ -121,7 +124,11 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
             @Override
             protected void onAcResume() {
                 if (mKsgAssistView != null) {
-                    mKsgAssistView.resume();
+                    if (mKsgAssistView.getVideoPlayer().isInPlaybackState()) {
+                        if (!mUserPause) {
+                            mKsgAssistView.resume();
+                        }
+                    }
                 }
                 if (mIsLandscape) {
                     // 隐藏系统Ui
@@ -132,7 +139,11 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
             @Override
             protected void onAcPause() {
                 if (mKsgAssistView != null) {
-                    mKsgAssistView.pause();
+                    if (mKsgAssistView.getVideoPlayer().isInPlaybackState()) {
+                        mKsgAssistView.pause();
+                    } else {
+                        mKsgAssistView.stop();
+                    }
                 }
             }
 
@@ -172,6 +183,9 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                 public void onAssistHandle(KsgVideoPlayer assist, int eventCode, Bundle bundle) {
                     super.onAssistHandle(assist, eventCode, bundle);
                     switch (eventCode) {
+                        case InterEvent.CODE_REQUEST_PAUSE:
+                            mUserPause = true;
+                            break;
                         case DataInter.Event.EVENT_CODE_REQUEST_BACK:
                             // 回退
                             mActivity.onBackPressed();
