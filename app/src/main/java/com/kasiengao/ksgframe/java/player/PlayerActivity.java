@@ -3,11 +3,10 @@ package com.kasiengao.ksgframe.java.player;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatButton;
 
 import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.base.util.StatusBarUtil;
@@ -17,6 +16,7 @@ import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
 import com.kasiengao.ksgframe.java.util.AnimUtil;
 import com.kasiengao.ksgframe.java.util.SystemUiUtil;
+import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.InterEvent;
@@ -24,7 +24,7 @@ import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.receiver.ReceiverGroup;
-import com.ksg.ksgplayer.widget.KsgVideoView;
+import com.ksg.ksgplayer.widget.KsgAssistView;
 
 /**
  * @ClassName: PlayerVideo
@@ -32,7 +32,7 @@ import com.ksg.ksgplayer.widget.KsgVideoView;
  * @CreateDate: 2020/5/22 14:33
  * @Description: 视频播放器
  */
-public class PlayerActivity extends BaseToolbarActivity implements View.OnClickListener {
+public class PlayerActivity extends BaseToolbarActivity {
 
     private boolean mUserPause;
 
@@ -40,12 +40,13 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
 
     private boolean mIsLandscape;
 
-    private KsgVideoView mVideoView;
+    private KsgAssistView mKsgAssistView;
 
     private KsgVideoPlayer mVideoPlayer;
 
     private ReceiverGroup mReceiverGroup;
 
+    private PlayerContainerView mContainerView;
 
     @Override
     protected int getContentLayoutId() {
@@ -68,18 +69,27 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
         super.initWidget();
         // Toolbar Title
         this.setTitle(R.string.player_title);
-        // KsgVideoPlayer
-        this.mVideoView = findViewById(R.id.player);
-        this.mVideoView.setDecoderView(new KsgIjkPlayer(this));
+        // Init Video
+        this.initAssistView();
+    }
 
-        this.mVideoPlayer = mVideoView.getVideoPlayer();
+    private void initAssistView() {
+
+        this.mContainerView = findViewById(R.id.player_container);
+
+        this.mKsgAssistView = new KsgAssistView(this);
+        this.mKsgAssistView.setDecoderView(new KsgIjkPlayer(this));
+        this.mKsgAssistView.getVideoPlayer().getKsgContainer().setBackgroundColor(Color.BLACK);
 
         this.mReceiverGroup = new ReceiverGroup();
         this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_CONTROLLER_COVER, new ControllerCover(this));
         this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_LOADING_COVER, new LoadingCover(this));
         this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new GestureCover(this));
 
-        this.mVideoPlayer.setReceiverGroup(mReceiverGroup);
+        this.mKsgAssistView.getVideoPlayer().setReceiverGroup(mReceiverGroup);
+
+        this.mVideoPlayer = mKsgAssistView.getVideoPlayer();
+
         this.mVideoPlayer.setOnVideoViewEventHandler(new OnVideoViewEventHandler() {
             @SuppressLint("SourceLockedOrientationActivity")
             @Override
@@ -117,40 +127,12 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
                 }
             }
         });
-        // onClick
-        AppCompatButton start = findViewById(R.id.player_start);
-        start.setOnClickListener(this);
-        findViewById(R.id.player_resume).setOnClickListener(this);
-        findViewById(R.id.player_pause).setOnClickListener(this);
-        findViewById(R.id.player_stop).setOnClickListener(this);
 
-        start.performClick();
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.player_start:
-                // 播放
-                this.mVideoView.setDataSource("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4");
-                this.mVideoPlayer.setLooping(true);
-                this.mVideoPlayer.start();
-                break;
-            case R.id.player_resume:
-                // 继续
-                this.mVideoPlayer.resume();
-                break;
-            case R.id.player_pause:
-                // 暂停
-                this.mVideoPlayer.pause();
-                break;
-            case R.id.player_stop:
-                // 停止
-                this.mVideoPlayer.stop();
-                break;
-            default:
-                break;
-        }
+        // 添加容器 播放
+        this.mKsgAssistView.attachContainer(mContainerView, true);
+        this.mKsgAssistView.setDataSource("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4");
+        this.mKsgAssistView.start();
+        this.mKsgAssistView.getVideoPlayer().setLooping(true);
     }
 
     /**
@@ -164,10 +146,10 @@ public class PlayerActivity extends BaseToolbarActivity implements View.OnClickL
         int viewHeight = (int) (DensityUtil.getWidthInPx(this) * 9 / 16);
         int screenHeight = (int) DensityUtil.getHeightInPx(this);
         // 全屏动画
-        AnimUtil.fullScreenAnim(mVideoView, fullscreen, viewHeight, screenHeight, animation -> {
+        AnimUtil.fullScreenAnim(mContainerView, fullscreen, viewHeight, screenHeight, animation -> {
             // 更新高度
-            this.mVideoView.getLayoutParams().height = (int) animation.getAnimatedValue();
-            this.mVideoView.requestLayout();
+            this.mContainerView.getLayoutParams().height = (int) animation.getAnimatedValue();
+            this.mContainerView.requestLayout();
         }, null);
         // 通知组件横屏幕改变
         this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_FULLSCREEN, fullscreen);

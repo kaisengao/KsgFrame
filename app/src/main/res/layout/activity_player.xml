@@ -4,48 +4,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.ksg.ksgplayer.widget.KsgVideoView
-        android:id="@+id/player"
+    <com.kasiengao.ksgframe.java.widget.PlayerContainerView
+        android:id="@+id/player_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/black"
         app:layout_constraintDimensionRatio="H,16:9"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/player">
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/player_start"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="播放" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/player_resume"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="继续" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/player_pause"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="暂停" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/player_stop"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="停止" />
-
-    </LinearLayout>
+        android:layout_margin="14dp"
+        android:text="窗口播放"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/player_container" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
