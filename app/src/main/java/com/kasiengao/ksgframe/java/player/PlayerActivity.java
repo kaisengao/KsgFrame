@@ -21,6 +21,7 @@ import com.kasiengao.mvp.java.BaseToolbarActivity;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.InterEvent;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
+import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.receiver.ReceiverGroup;
@@ -130,7 +131,7 @@ public class PlayerActivity extends BaseToolbarActivity {
 
         // 添加容器 播放
         this.mKsgAssistView.attachContainer(mContainerView, true);
-        this.mKsgAssistView.setDataSource("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4");
+        this.mKsgAssistView.setDataSource(new DataSource("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4"));
         this.mKsgAssistView.start();
         this.mKsgAssistView.getVideoPlayer().setLooping(true);
     }

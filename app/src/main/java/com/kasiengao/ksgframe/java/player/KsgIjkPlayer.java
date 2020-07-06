@@ -6,6 +6,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 
 import com.kasiengao.base.util.KLog;
+import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.BundlePool;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.listener.OnErrorEventListener;
@@ -80,7 +81,7 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
      * @param dataSource 播放地址
      */
     @Override
-    public void setDataSource(String dataSource) {
+    public void setDataSource(DataSource dataSource) {
         try {
             if (this.mMediaPlayer == null) {
                 this.initPlayer();
@@ -99,10 +100,10 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
             mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
             this.updateStatus(STATE_INITIALIZED);
             // dataSource
-            this.mMediaPlayer.setDataSource(dataSource);
+            this.mMediaPlayer.setDataSource(dataSource.getUrl());
             // 发送数据源事件
             Bundle bundle = BundlePool.obtain();
-            bundle.putString(EventKey.STRING_DATA, dataSource);
+            bundle.putSerializable(EventKey.SERIALIZABLE_DATA, dataSource);
             this.submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_DATA_SOURCE_SET, bundle);
         } catch (Exception e) {
             this.updateStatus(IKsgPlayer.STATE_ERROR);

@@ -10,6 +10,7 @@ import com.kasiengao.base.util.KLog;
 import com.ksg.ksgplayer.assist.InterEvent;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
 import com.ksg.ksgplayer.config.KsgPlayerConfig;
+import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.extension.BaseEventProducer;
 import com.ksg.ksgplayer.listener.OnErrorEventListener;
@@ -226,7 +227,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
      * @param dataSource 播放地址
      */
     @Override
-    public void setDataSource(String dataSource) {
+    public void setDataSource(DataSource dataSource) {
         // 请求获取音频焦点
         this.requestAudioFocus();
         // 设置数据源

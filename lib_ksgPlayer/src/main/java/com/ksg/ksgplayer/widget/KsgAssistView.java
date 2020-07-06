@@ -1,13 +1,11 @@
 package com.ksg.ksgplayer.widget;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.ViewGroup;
 
 import com.ksg.ksgplayer.config.KsgPlayerConfig;
+import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.player.BaseInternalPlayer;
-import com.ksg.ksgplayer.player.IKagVideoPlayer;
 import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.render.IRender;
 
@@ -21,9 +19,9 @@ public class KsgAssistView implements IKsgVideoView {
 
     private int mDefaultRenderType;
 
-    private String mDataSource;
-
     private boolean mRenderTypeChange;
+
+    private DataSource mDataSource;
 
     private KsgVideoPlayer mVideoPlayer;
 
@@ -79,7 +77,7 @@ public class KsgAssistView implements IKsgVideoView {
      * @param dataSource 播放地址
      */
     @Override
-    public void setDataSource(String dataSource) {
+    public void setDataSource(DataSource dataSource) {
         // 设置数据源
         this.mDataSource = dataSource;
     }
@@ -156,7 +154,7 @@ public class KsgAssistView implements IKsgVideoView {
             this.updateRender();
         }
         // 播放
-        if (!TextUtils.isEmpty(mDataSource)) {
+        if (mDataSource != null) {
             this.mVideoPlayer.setDataSource(mDataSource);
             this.mVideoPlayer.start();
         }

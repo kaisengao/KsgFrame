@@ -3,6 +3,7 @@ package com.ksg.ksgplayer.player;
 import android.os.Bundle;
 import android.view.ViewGroup;
 
+import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.render.IRender;
 
 /**
@@ -48,7 +49,7 @@ public interface IKagVideoPlayer {
      *
      * @param dataSource 播放地址
      */
-    void setDataSource(String dataSource);
+    void setDataSource(DataSource dataSource);
 
     /**
      * 设置渲染视图类型

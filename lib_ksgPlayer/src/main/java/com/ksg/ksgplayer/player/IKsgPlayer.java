@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
+import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.listener.OnErrorEventListener;
 import com.ksg.ksgplayer.listener.OnPlayerEventListener;
 
@@ -77,7 +78,7 @@ public interface IKsgPlayer {
      *
      * @param dataSource 播放地址
      */
-    void setDataSource(String dataSource);
+    void setDataSource(DataSource dataSource);
 
     /**
      * 设置渲染视频的View,主要用于TextureView

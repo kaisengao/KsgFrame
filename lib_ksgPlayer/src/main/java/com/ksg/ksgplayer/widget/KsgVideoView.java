@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.ksg.ksgplayer.config.KsgPlayerConfig;
+import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.player.BaseInternalPlayer;
 import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.render.IRender;
@@ -76,7 +77,7 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
      * @param dataSource 播放地址
      */
     @Override
-    public final void setDataSource(String dataSource) {
+    public final void setDataSource(DataSource dataSource) {
         // 销毁视图资源
         this.mVideoPlayer.releaseRender();
         // 设置渲染视图

@@ -40,6 +40,7 @@ import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.InterEvent;
 import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
+import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.receiver.ReceiverGroup;
@@ -327,7 +328,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
             this.initAssistVideo();
             // 添加容器 播放
             this.mKsgAssistView.attachContainer(container, true);
-            this.mKsgAssistView.setDataSource(pagerParams.getVideoUrl());
+            this.mKsgAssistView.setDataSource(new DataSource(pagerParams.getVideoUrl()));
             this.mKsgAssistView.start();
             this.mKsgAssistView.getVideoPlayer().setLooping(true);
         }

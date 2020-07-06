@@ -7,6 +7,7 @@ import android.view.SurfaceHolder;
 import com.ksg.ksgplayer.cache.PlayValueGetter;
 import com.ksg.ksgplayer.cache.progress.ProgressCache;
 import com.ksg.ksgplayer.config.KsgPlayerConfig;
+import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.BundlePool;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.listener.OnErrorEventListener;
@@ -26,7 +27,7 @@ public final class KsgPlayerProxy implements IKsgPlayer {
     /**
      * 视频播放地址
      */
-    private String mDataSource;
+    private DataSource mDataSource;
 
     /**
      * 进度更新计时代理
@@ -145,7 +146,7 @@ public final class KsgPlayerProxy implements IKsgPlayer {
      * @param dataSource 播放地址
      */
     @Override
-    public void setDataSource(String dataSource) {
+    public void setDataSource(DataSource dataSource) {
         this.mDataSource = dataSource;
         // 重置 事件监听
         this.resetListener();
@@ -158,10 +159,10 @@ public final class KsgPlayerProxy implements IKsgPlayer {
     /**
      * 设置 播放地址
      */
-    private void interPlayerSetDataSource(String dataSource) {
+    private void interPlayerSetDataSource(DataSource dataSource) {
         // 验证 播放进度缓存
         if (isProgressCacheOpen()) {
-            this.mProgressCache.onDataSourceReady(dataSource);
+            this.mProgressCache.onDataSourceReady(dataSource.getUrl());
         }
         // 播放器配置播放地址
         if (isPlayerAvailable()) {
@@ -350,7 +351,7 @@ public final class KsgPlayerProxy implements IKsgPlayer {
      */
     private long getProgressCache() {
         if (isProgressCacheOpen()) {
-            return this.mProgressCache.getRecord(mDataSource);
+            return this.mProgressCache.getRecord(mDataSource.getUrl());
         }
         return 0;
     }

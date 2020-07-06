@@ -2,6 +2,7 @@ package com.ksg.ksgplayer.widget;
 
 import android.view.ViewGroup;
 
+import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.player.BaseInternalPlayer;
 import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.render.IRender;
@@ -41,7 +42,7 @@ public interface IKsgVideoView {
      *
      * @param dataSource 播放地址
      */
-    void setDataSource(String dataSource);
+    void setDataSource(DataSource dataSource);
 
     /**
      * 设置渲染视图类型
