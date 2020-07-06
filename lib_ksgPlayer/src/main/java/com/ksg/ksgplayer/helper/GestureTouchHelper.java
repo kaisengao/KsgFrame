@@ -42,6 +42,8 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
 
     private boolean mIsSlideEnabled = false;
 
+    private boolean mIsSlideHEnabled = true;
+
     private boolean mIsGestureEnabled = true;
 
     private final VolumeHelper mVolumeHelper;
@@ -74,8 +76,15 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
     /**
      * 设置 是否可以手势调节进度，音量，亮度功能，默认关闭
      */
-    public void setSlideEnabled(boolean enableInNormal) {
-        this.mIsSlideEnabled = enableInNormal;
+    public void setSlideEnabled(boolean enableNormal) {
+        this.mIsSlideEnabled = enableNormal;
+    }
+
+    /**
+     * 设置 是否可以手势调节进度，默认开启
+     */
+    public void setSlideHEnabled(boolean enableNormal) {
+        this.mIsSlideHEnabled = enableNormal;
     }
 
     /**
@@ -197,8 +206,11 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
         }
 
         if (mChangePosition) {
-            // 快进后退
-            this.slideToChangePosition(e1.getX(), deltaX);
+            // 验证是否开启了 快进退
+            if (mIsSlideHEnabled) {
+                // 快进后退
+                this.slideToChangePosition(e1.getX(), deltaX);
+            }
         } else if (mChangeBrightness) {
             // 亮度
             this.slideToChangeBrightness(deltaY);

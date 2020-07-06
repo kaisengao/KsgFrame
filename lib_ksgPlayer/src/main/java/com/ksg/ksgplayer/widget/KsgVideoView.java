@@ -107,8 +107,8 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
      * @param decoderView {@link BaseInternalPlayer}
      */
     @Override
-    public final void setDecoderView(BaseInternalPlayer decoderView) {
-        this.mVideoPlayer.setDecoderView(decoderView);
+    public final boolean setDecoderView(BaseInternalPlayer decoderView) {
+        return this.mVideoPlayer.setDecoderView(decoderView);
     }
 
 

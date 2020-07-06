@@ -18,9 +18,11 @@ import com.kasiengao.base.util.CommonUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.widget.GestureTipsView;
 import com.ksg.ksgplayer.assist.DataInter;
+import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.BundlePool;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.helper.GestureTouchHelper;
+import com.ksg.ksgplayer.listener.OnPlayerEventListener;
 import com.ksg.ksgplayer.listener.OnTouchGestureListener;
 import com.ksg.ksgplayer.receiver.BaseCover;
 import com.ksg.ksgplayer.receiver.IReceiverGroup;
@@ -36,7 +38,7 @@ import butterknife.Unbinder;
  * @CreateDate: 2020/5/28 13:02
  * @Description: 手势操作 Cover
  */
-public class GestureCover extends BaseCover implements View.OnTouchListener {
+public class GestureCover extends BaseCover implements View.OnTouchListener, OnTouchGestureListener {
 
     private Unbinder mBind;
 
@@ -61,13 +63,15 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
 
     private ThreadPool.MainThreadHandler mHandler;
 
+    private final Bundle seekBundle = BundlePool.obtain();
+
     public GestureCover(Context context) {
         super(context);
         Activity activity = CommonUtil.scanForActivity(getContext());
         // 手势操作 提示View
         this.mGestureTipsView = new GestureTipsView();
         // 手势操作帮助类
-        this.mGestureTouchHelper = new GestureTouchHelper(activity, mTouchGestureListener);
+        this.mGestureTouchHelper = new GestureTouchHelper(activity, this);
     }
 
     @Override
@@ -99,7 +103,14 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
 
     @Override
     public void onPlayerEvent(int eventCode, Bundle bundle) {
-
+        // 数据源
+        if (eventCode == OnPlayerEventListener.PLAYER_EVENT_ON_DATA_SOURCE_SET) {
+            DataSource dataSource = (DataSource) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
+            if (dataSource != null) {
+                // 配置 直播页面不可 快进退
+                this.mGestureTouchHelper.setSlideHEnabled(!dataSource.isLive());
+            }
+        }
     }
 
     @Override
@@ -166,126 +177,118 @@ public class GestureCover extends BaseCover implements View.OnTouchListener {
     };
 
     /**
-     * 手势操作事件
+     * 亮度手势，手指在Layout左半部上下滑动时候调用
+     *
+     * @param percent 百分比
      */
-    private final OnTouchGestureListener mTouchGestureListener = new OnTouchGestureListener() {
+    @Override
+    public void onBrightnessGesture(int percent) {
+        // 提示
+        mGestureTipsView
+                .setRooView(mGestureTipsRoot)
+                .setBrightnessIcon(mGestureIcon, percent)
+                .setProgress(mGestureProgress, percent)
+                .show();
+    }
 
-        final Bundle seekBundle = BundlePool.obtain();
+    /**
+     * 音量手势，手指在Layout右半部上下滑动时候调用
+     *
+     * @param percent 百分比
+     */
+    @Override
+    public void onVolumeGesture(int percent) {
+        // 提示
+        mGestureTipsView
+                .setRooView(mGestureTipsRoot)
+                .setVolumeIcon(mGestureIcon, percent)
+                .setProgress(mGestureProgress, percent)
+                .show();
+    }
 
-        /**
-         * 亮度手势，手指在Layout左半部上下滑动时候调用
-         *
-         * @param percent 百分比
-         */
-        @Override
-        public void onBrightnessGesture(int percent) {
-            // 提示
-            mGestureTipsView
-                    .setRooView(mGestureTipsRoot)
-                    .setBrightnessIcon(mGestureIcon, percent)
-                    .setProgress(mGestureProgress, percent)
-                    .show();
+    /**
+     * 快进快退手势，手指在Layout左右滑动的时候调用
+     *
+     * @param percent 百分比
+     * @param time    时间
+     */
+    @Override
+    public void onSeekGesture(float percent, String time) {
+        // 提示
+        mGestureTipsView
+                .setRooView(mGestureTipsSlidingRoot)
+                .setSliding(mGestureSlidingStatus, percent)
+                .setTime(mGestureSlidingTime, time)
+                .show();
+        // 通知 ControllerCover 自动更新进度
+        notifyReceiverControllerSeek(true);
+    }
+
+    /**
+     * 单击手势，确认是单击的时候调用
+     */
+    @Override
+    public void onSingleTapGesture() {
+        // 组件间通信 通知 ControllerCover
+        getGroupValue().putString(DataInter.Key.KEY_CONTROLLER_STATUS, "");
+    }
+
+    /**
+     * 双击手势，确认是双击的时候调用
+     */
+    @Override
+    public void onDoubleTapGesture() {
+        // 组件间通信 通知 ControllerCover
+        getGroupValue().putString(DataInter.Key.KEY_CONTROLLER_PLAY_STATUS, "");
+    }
+
+    /**
+     * 按下手势，第一根手指按下时候调用
+     */
+    @Override
+    public void onDown() {
+        // 初始化基参
+        mGestureTouchHelper.setParams(getProgress(), getDuration());
+    }
+
+    /**
+     * 快进后退手势 滑动结束
+     */
+    @Override
+    public void onSeekEndGesture() {
+        mGestureTipsView.dismiss();
+        // 更新进度
+        if (mGestureTouchHelper.getSlideProgress() >= 0) {
+            mHandler.removeCallbacks(mSeekEventRunnable);
+            mHandler.post(mSeekEventRunnable, 300);
         }
+        // 通知 ControllerCover 自动更新进度
+        notifyReceiverControllerSeek(false);
+    }
 
-        /**
-         * 音量手势，手指在Layout右半部上下滑动时候调用
-         *
-         * @param percent 百分比
-         */
-        @Override
-        public void onVolumeGesture(int percent) {
-            // 提示
-            mGestureTipsView
-                    .setRooView(mGestureTipsRoot)
-                    .setVolumeIcon(mGestureIcon, percent)
-                    .setProgress(mGestureProgress, percent)
-                    .show();
-        }
+    /**
+     * 滑动结束
+     */
+    @Override
+    public void onEndGesture() {
+        mGestureTipsView.dismiss();
+    }
 
-        /**
-         * 快进快退手势，手指在Layout左右滑动的时候调用
-         *
-         * @param percent 百分比
-         * @param time 时间
-         */
-        @Override
-        public void onSeekGesture(float percent, String time) {
-            // 提示
-            mGestureTipsView
-                    .setRooView(mGestureTipsSlidingRoot)
-                    .setSliding(mGestureSlidingStatus, percent)
-                    .setTime(mGestureSlidingTime, time)
-                    .show();
-            // 通知 ControllerCover 自动更新进度
-            notifyReceiverControllerSeek(true);
-        }
-
-        /**
-         * 单击手势，确认是单击的时候调用
-         */
-        @Override
-        public void onSingleTapGesture() {
-            // 组件间通信 通知 ControllerCover
-            getGroupValue().putString(DataInter.Key.KEY_CONTROLLER_STATUS, "");
-        }
-
-        /**
-         * 双击手势，确认是双击的时候调用
-         */
-        @Override
-        public void onDoubleTapGesture() {
-            // 组件间通信 通知 ControllerCover
-            getGroupValue().putString(DataInter.Key.KEY_CONTROLLER_PLAY_STATUS, "");
-        }
-
-        /**
-         * 按下手势，第一根手指按下时候调用
-         */
-        @Override
-        public void onDown() {
-            // 初始化基参
-            mGestureTouchHelper.setParams(getProgress(), getDuration());
-        }
-
-        /**
-         * 快进后退手势 滑动结束
-         */
-        @Override
-        public void onSeekEndGesture() {
-            mGestureTipsView.dismiss();
-            // 更新进度
-            if (mGestureTouchHelper.getSlideProgress() >= 0) {
-                mHandler.removeCallbacks(mSeekEventRunnable);
-                mHandler.post(mSeekEventRunnable, 300);
-            }
-            // 通知 ControllerCover 自动更新进度
-            notifyReceiverControllerSeek(false);
-        }
-
-        /**
-         * 滑动结束
-         */
-        @Override
-        public void onEndGesture() {
-            mGestureTipsView.dismiss();
-        }
-
-        /**
-         * 通知 ControllerCover 自动更新进度
-         *
-         * @param  timerUpdatePause 暂停
-         */
-        private void notifyReceiverControllerSeek(boolean timerUpdatePause) {
-            mSlidProgress = mGestureTouchHelper.getSlideProgress();
-            seekBundle.putLong(EventKey.LONG_ARG1, mSlidProgress);
-            seekBundle.putLong(EventKey.LONG_ARG2, mGestureTouchHelper.getDuration());
-            seekBundle.putBoolean(EventKey.BOOL_DATA, timerUpdatePause);
-            notifyReceiverPrivateEvent(
-                    DataInter.ReceiverKey.KEY_CONTROLLER_COVER,
-                    DataInter.PrivateEvent.EVENT_CODE_GESTURE_SLIDE_SEEK,
-                    seekBundle);
-        }
-    };
+    /**
+     * 通知 ControllerCover 自动更新进度
+     *
+     * @param timerUpdatePause 暂停
+     */
+    private void notifyReceiverControllerSeek(boolean timerUpdatePause) {
+        mSlidProgress = mGestureTouchHelper.getSlideProgress();
+        seekBundle.putLong(EventKey.LONG_ARG1, mSlidProgress);
+        seekBundle.putLong(EventKey.LONG_ARG2, mGestureTouchHelper.getDuration());
+        seekBundle.putBoolean(EventKey.BOOL_DATA, timerUpdatePause);
+        notifyReceiverPrivateEvent(
+                DataInter.ReceiverKey.KEY_CONTROLLER_COVER,
+                DataInter.PrivateEvent.EVENT_CODE_GESTURE_SLIDE_SEEK,
+                seekBundle);
+    }
 
     /**
      * 进度跳转

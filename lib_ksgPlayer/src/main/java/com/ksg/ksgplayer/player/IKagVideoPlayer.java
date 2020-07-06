@@ -63,7 +63,7 @@ public interface IKagVideoPlayer {
      *
      * @param decoderView {@link BaseInternalPlayer}
      */
-    void setDecoderView(BaseInternalPlayer decoderView);
+    boolean setDecoderView(BaseInternalPlayer decoderView);
 
     /**
      * 设置音量

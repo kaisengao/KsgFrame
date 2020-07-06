@@ -5,8 +5,10 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.base.util.StatusBarUtil;
@@ -14,6 +16,9 @@ import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
+import com.kasiengao.ksgframe.java.player.player.KsgIjkPlayer;
+import com.kasiengao.ksgframe.java.player.player.KsgTxLivePlayer;
+import com.kasiengao.ksgframe.java.player.player.KsgTxVodPlayer;
 import com.kasiengao.ksgframe.java.util.AnimUtil;
 import com.kasiengao.ksgframe.java.util.SystemUiUtil;
 import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
@@ -27,6 +32,9 @@ import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.receiver.ReceiverGroup;
 import com.ksg.ksgplayer.widget.KsgAssistView;
 
+import butterknife.BindView;
+import butterknife.OnClick;
+
 /**
  * @ClassName: PlayerVideo
  * @Author: KaiSenGao
@@ -34,6 +42,11 @@ import com.ksg.ksgplayer.widget.KsgAssistView;
  * @Description: 视频播放器
  */
 public class PlayerActivity extends BaseToolbarActivity {
+
+    @BindView(R.id.player_container)
+    PlayerContainerView mContainerView;
+    @BindView(R.id.player_decoder)
+    AppCompatTextView mPlayerDecoder;
 
     private boolean mUserPause;
 
@@ -47,7 +60,11 @@ public class PlayerActivity extends BaseToolbarActivity {
 
     private ReceiverGroup mReceiverGroup;
 
-    private PlayerContainerView mContainerView;
+    private KsgIjkPlayer mKsgIjkPlayer;
+
+    private KsgTxVodPlayer mKsgTxVodPlayer;
+
+    private KsgTxLivePlayer mKsgTxLivePlayer;
 
     @Override
     protected int getContentLayoutId() {
@@ -76,10 +93,8 @@ public class PlayerActivity extends BaseToolbarActivity {
 
     private void initAssistView() {
 
-        this.mContainerView = findViewById(R.id.player_container);
-
         this.mKsgAssistView = new KsgAssistView(this);
-        this.mKsgAssistView.setDecoderView(new KsgIjkPlayer(this));
+        this.mKsgAssistView.setDecoderView(createTxVod());
         this.mKsgAssistView.getVideoPlayer().getKsgContainer().setBackgroundColor(Color.BLACK);
 
         this.mReceiverGroup = new ReceiverGroup();
@@ -128,12 +143,30 @@ public class PlayerActivity extends BaseToolbarActivity {
                 }
             }
         });
+        // 播放
+        this.onPlay();
+    }
 
+    /**
+     * 播放
+     */
+    private void onPlay() {
+        this.onPlay("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4", false);
+    }
+
+    /**
+     * 播放
+     */
+    private void onPlay(String url, boolean isLive) {
+        DataSource dataSource = new DataSource(url);
+        dataSource.setLive(isLive);
         // 添加容器 播放
         this.mKsgAssistView.attachContainer(mContainerView, true);
-        this.mKsgAssistView.setDataSource(new DataSource("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4"));
+        this.mKsgAssistView.setDataSource(dataSource);
         this.mKsgAssistView.start();
         this.mKsgAssistView.getVideoPlayer().setLooping(true);
+        // 当前解码器
+        this.mPlayerDecoder.setText(mVideoPlayer.getDecoderView().getClass().getSimpleName());
     }
 
     /**
@@ -219,5 +252,49 @@ public class PlayerActivity extends BaseToolbarActivity {
         }
         // 剩下的基操给系统
         super.onBackPressed();
+    }
+
+    @OnClick({R.id.player_ijk, R.id.player_tx_vod, R.id.player_tx_live})
+    public void onViewClick(View view) {
+        switch (view.getId()) {
+            case R.id.player_ijk:
+                if (mKsgAssistView.setDecoderView(createIjk())) {
+                    this.onPlay();
+                }
+                break;
+            case R.id.player_tx_vod:
+                if (mKsgAssistView.setDecoderView(createTxVod())) {
+                    this.onPlay();
+                }
+                break;
+            case R.id.player_tx_live:
+                if (mKsgAssistView.setDecoderView(createTxLive())) {
+                    this.onPlay("http://img.ksbbs.com/asset/Mon_1704/15868902d399b87.flv", true);
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    private KsgIjkPlayer createIjk() {
+        if (mKsgIjkPlayer == null) {
+            this.mKsgIjkPlayer = new KsgIjkPlayer(this);
+        }
+        return this.mKsgIjkPlayer;
+    }
+
+    private KsgTxVodPlayer createTxVod() {
+        if (mKsgTxVodPlayer == null) {
+            this.mKsgTxVodPlayer = new KsgTxVodPlayer(this);
+        }
+        return this.mKsgTxVodPlayer;
+    }
+
+    private KsgTxLivePlayer createTxLive() {
+        if (mKsgTxLivePlayer == null) {
+            this.mKsgTxLivePlayer = new KsgTxLivePlayer(this);
+        }
+        return this.mKsgTxLivePlayer;
     }
 }

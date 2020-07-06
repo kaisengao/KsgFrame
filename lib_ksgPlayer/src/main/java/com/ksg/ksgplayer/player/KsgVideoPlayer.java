@@ -272,14 +272,20 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
         KsgPlayerConfig.getInstance().setDefaultRenderType(renderType);
         // 销毁视图资源
         this.releaseRender();
+        // 先判断是否有默认的 Render
+        if (mKsgPlayer.getRenderView() != null) {
+            // add to container
+            this.mKsgContainer.setRenderView(mKsgPlayer.getRenderView());
+            return;
+        }
         // 判断类型
         switch (renderType) {
             case IRender.RENDER_TYPE_SURFACE_VIEW:
                 // SurfaceView
                 this.mRender = new RenderSurfaceView(mContext);
                 break;
-            default:
             case IRender.RENDER_TYPE_TEXTURE_VIEW:
+            default:
                 // 默认 TextureView
                 this.mRender = new RenderTextureView(mContext);
                 ((RenderTextureView) mRender).setTakeOverSurfaceTexture(true);
@@ -317,16 +323,27 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
      * @param decoderView decoderView
      */
     @Override
-    public void setDecoderView(BaseInternalPlayer decoderView) {
+    public boolean setDecoderView(BaseInternalPlayer decoderView) {
         BaseInternalPlayer oldDecoderView = this.mKsgPlayer.getDecoderView();
         // 如果与已有的解码器一致则不需要切换
         if (oldDecoderView != null && oldDecoderView == decoderView) {
-            return;
+            return false;
         }
         // 销毁视图资源
         this.releaseRender();
         // 设置新（播放器）解码器
         this.mKsgPlayer.setDecoderView(decoderView);
+
+        return true;
+    }
+
+    /**
+     * 返回 （播放器）解码器
+     *
+     * @return {@link BaseInternalPlayer}
+     */
+    public BaseInternalPlayer getDecoderView() {
+        return this.mKsgPlayer.getDecoderView();
     }
 
     /**

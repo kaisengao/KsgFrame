@@ -130,8 +130,8 @@ public class KsgAssistView implements IKsgVideoView {
      * @param decoderView {@link BaseInternalPlayer}
      */
     @Override
-    public void setDecoderView(BaseInternalPlayer decoderView) {
-        this.mVideoPlayer.setDecoderView(decoderView);
+    public boolean setDecoderView(BaseInternalPlayer decoderView) {
+       return this.mVideoPlayer.setDecoderView(decoderView);
     }
 
     /**

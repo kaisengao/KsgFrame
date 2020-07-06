@@ -1,9 +1,10 @@
-package com.kasiengao.ksgframe.java.player;
+package com.kasiengao.ksgframe.java.player.player;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.view.View;
 
 import com.kasiengao.base.util.KLog;
 import com.ksg.ksgplayer.data.DataSource;
@@ -48,7 +49,6 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
     @Override
     public void initPlayer() {
         IjkMediaPlayer ijkMediaPlayer = new IjkMediaPlayer();
-
         // ijkPlayer支持硬解码和软解码。 0表示使用av解码器，1表示使用媒体解码器。
         // 软解码时不会旋转视频角度这时需要你通过onInfo的what == IMediaPlayer.MEDIA_INFO_VIDEO_ROTATION_CHANGED去获取角度，自己旋转画面。
         // 或者开启硬解硬解码，不过硬解码容易造成黑屏无声（硬件兼容问题），下面是设置硬解码相关的代码
@@ -118,6 +118,9 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
      */
     @Override
     public void setSurface(Surface surface) {
+        if (this.mMediaPlayer == null) {
+            this.initPlayer();
+        }
         this.mMediaPlayer.setSurface(surface);
     }
 
@@ -129,6 +132,16 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
     @Override
     public void setDisplay(SurfaceHolder holder) {
         this.mMediaPlayer.setDisplay(holder);
+    }
+
+    /**
+     * 设置 播放器自定义的视图
+     *
+     * @return View
+     */
+    @Override
+    public View getRenderView() {
+        return null;
     }
 
     /**
@@ -377,12 +390,12 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
         if (mMediaPlayer == null) {
             return;
         }
-        mMediaPlayer.setOnPreparedListener(null);
-        mMediaPlayer.setOnVideoSizeChangedListener(null);
-        mMediaPlayer.setOnCompletionListener(null);
-        mMediaPlayer.setOnErrorListener(null);
-        mMediaPlayer.setOnInfoListener(null);
-        mMediaPlayer.setOnBufferingUpdateListener(null);
+        this.mMediaPlayer.setOnPreparedListener(null);
+        this.mMediaPlayer.setOnVideoSizeChangedListener(null);
+        this.mMediaPlayer.setOnCompletionListener(null);
+        this.mMediaPlayer.setOnErrorListener(null);
+        this.mMediaPlayer.setOnInfoListener(null);
+        this.mMediaPlayer.setOnBufferingUpdateListener(null);
     }
 
     /**

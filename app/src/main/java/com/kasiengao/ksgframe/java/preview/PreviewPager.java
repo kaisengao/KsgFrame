@@ -30,7 +30,7 @@ import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.observer.MyLifecycleObserver;
-import com.kasiengao.ksgframe.java.player.KsgIjkPlayer;
+import com.kasiengao.ksgframe.java.player.player.KsgIjkPlayer;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;

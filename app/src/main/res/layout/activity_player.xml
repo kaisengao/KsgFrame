@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -12,13 +13,58 @@
         app:layout_constraintDimensionRatio="H,16:9"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- 当前 解码器 -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/player_decoder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="5dp"
+        android:textSize="13sp"
+        app:layout_constraintTop_toBottomOf="@id/player_container"
+        tools:text="ksg" />
+
+    <!-- 可替换的解码器-->
+    <GridLayout
+        android:id="@+id/players"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:orientation="horizontal"
+        android:rowCount="3"
+        app:layout_constraintTop_toBottomOf="@id/player_decoder">
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/player_ijk"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:text="IjkPlayer" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/player_tx_vod"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:text="TxVodPlayer" />
+
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/player_tx_live"
+            style="@style/Widget.AppCompat.Button.Colored"
+            android:layout_width="0dp"
+            android:layout_columnWeight="1"
+            android:text="TxLivePlayer" />
+
+    </GridLayout>
+
     <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/player_window"
         style="@style/Widget.AppCompat.Button.Colored"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="14dp"
+        android:layout_margin="10dp"
         android:text="窗口播放"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/player_container" />
+        app:layout_constraintTop_toBottomOf="@id/players" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

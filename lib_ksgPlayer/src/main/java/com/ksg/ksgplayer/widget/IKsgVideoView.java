@@ -56,5 +56,5 @@ public interface IKsgVideoView {
      *
      * @param decoderView {@link BaseInternalPlayer}
      */
-    void setDecoderView(BaseInternalPlayer decoderView);
+    boolean setDecoderView(BaseInternalPlayer decoderView);
 }

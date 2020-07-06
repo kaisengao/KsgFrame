@@ -3,6 +3,7 @@ package com.ksg.ksgplayer.player;
 import android.os.Bundle;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.view.View;
 
 import com.ksg.ksgplayer.cache.PlayValueGetter;
 import com.ksg.ksgplayer.cache.progress.ProgressCache;
@@ -97,7 +98,8 @@ public final class KsgPlayerProxy implements IKsgPlayer {
      * @param useTimerProxy 开/关
      */
     public void setUseTimerProxy(boolean useTimerProxy) {
-        this.mTimerCounterProxy.setUseProxy(useTimerProxy);
+        // 且 非直播模式
+        this.mTimerCounterProxy.setUseProxy(useTimerProxy && !mDataSource.isLive());
     }
 
     /**
@@ -227,6 +229,19 @@ public final class KsgPlayerProxy implements IKsgPlayer {
         if (isPlayerAvailable()) {
             this.mInternalPlayer.setDisplay(holder);
         }
+    }
+
+    /**
+     * 设置 播放器自定义的视图
+     *
+     * @return View
+     */
+    @Override
+    public View getRenderView() {
+        if (isPlayerAvailable()) {
+            return this.mInternalPlayer.getRenderView();
+        }
+        return null;
     }
 
     /**

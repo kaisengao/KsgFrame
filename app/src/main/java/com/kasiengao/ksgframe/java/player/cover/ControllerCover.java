@@ -18,6 +18,7 @@ import com.kasiengao.base.util.TimeUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.util.AnimUtil;
 import com.ksg.ksgplayer.assist.DataInter;
+import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.BundlePool;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.listener.OnPlayerEventListener;
@@ -111,6 +112,11 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     public void onPlayerEvent(int eventCode, Bundle bundle) {
         switch (eventCode) {
             case OnPlayerEventListener.PLAYER_EVENT_ON_DATA_SOURCE_SET:
+                DataSource dataSource = (DataSource) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
+                if (dataSource != null) {
+                    // 配置 直播\点播 的样式
+                    this.onBottomController(dataSource.isLive());
+                }
                 // 新的播放地址 初始化数据
                 this.mTimeFormat = null;
                 this.mBufferPercentage = 0;
@@ -343,6 +349,18 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
             this.requestResume(null);
         }
         mPlayStatus.setSelected(!selected);
+    }
+
+    /**
+     * 配置 直播\点播 的样式
+     *
+     * @param isLive 直播\点播
+     */
+    private void onBottomController(boolean isLive) {
+        this.mCurrTime.setVisibility(!isLive ? View.VISIBLE : View.INVISIBLE);
+        this.mDurationTime.setVisibility(!isLive ? View.VISIBLE : View.INVISIBLE);
+        this.mSeekBar.setVisibility(!isLive ? View.VISIBLE : View.INVISIBLE);
+        this.mBottomProgress.setVisibility(!isLive ? View.VISIBLE : View.INVISIBLE);
     }
 
     /**

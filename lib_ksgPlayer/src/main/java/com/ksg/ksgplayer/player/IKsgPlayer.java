@@ -3,6 +3,7 @@ package com.ksg.ksgplayer.player;
 import android.os.Bundle;
 import android.view.Surface;
 import android.view.SurfaceHolder;
+import android.view.View;
 
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.listener.OnErrorEventListener;
@@ -93,6 +94,13 @@ public interface IKsgPlayer {
      * @param holder surfaceHolder
      */
     void setDisplay(SurfaceHolder holder);
+
+    /**
+     * 设置 播放器自定义的视图
+     *
+     * @return View
+     */
+    View getRenderView();
 
     /**
      * 设置音量
