@@ -1,9 +1,7 @@
 package com.kasiengao.ksgframe.java.player.player;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.View;
@@ -71,10 +69,9 @@ public class KsgTxLivePlayer extends BaseInternalPlayer {
      *
      * @return TXCloudVideoView
      */
-    @SuppressLint("InflateParams")
     private TXCloudVideoView getVideoView() {
         if (mVideoView == null) {
-            View inflate = LayoutInflater.from(mContext).inflate(R.layout.layout_cloud_video_view, null, false);
+            View inflate = View.inflate(mContext, R.layout.layout_cloud_video_view, null);
             this.mVideoView = inflate.findViewById(R.id.tx_video_view);
         }
         return this.mVideoView;
@@ -89,11 +86,11 @@ public class KsgTxLivePlayer extends BaseInternalPlayer {
     public void setDataSource(DataSource dataSource) {
         // 验证初始化
         if (mLivePlayer == null) {
-            initPlayer();
+            this.initPlayer();
         } else {
-            stop();
-            reset();
-            release();
+            this.stop();
+            this.reset();
+            this.release();
         }
         // dataSource
         this.mDataSource = dataSource;
@@ -104,7 +101,7 @@ public class KsgTxLivePlayer extends BaseInternalPlayer {
         bundle.putSerializable(EventKey.SERIALIZABLE_DATA, dataSource);
         submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_DATA_SOURCE_SET, bundle);
         // 播放准备
-        updateStatus(IKsgPlayer.STATE_PREPARED);
+        this.updateStatus(IKsgPlayer.STATE_PREPARED);
     }
 
     /**
@@ -134,7 +131,7 @@ public class KsgTxLivePlayer extends BaseInternalPlayer {
      */
     @Override
     public View getRenderView() {
-        return this.getVideoView().getRootView();
+        return this.getVideoView();
     }
 
     /**
@@ -250,11 +247,11 @@ public class KsgTxLivePlayer extends BaseInternalPlayer {
                 int result = mLivePlayer.startPlay(mDataSource.getUrl(), getPlayType(mDataSource.getUrl()));
                 if (result == 0) {
                     // 开始播放通知
-                    updateStatus(IKsgPlayer.STATE_STARTED);
-                    submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_START, null);
+                    this.updateStatus(IKsgPlayer.STATE_STARTED);
+                    this.submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_START, null);
                 } else {
-                    updateStatus(IKsgPlayer.STATE_ERROR);
-                    submitErrorEvent(OnErrorEventListener.ERROR_EVENT_UNKNOWN, "播放地址异常!");
+                    this.updateStatus(IKsgPlayer.STATE_ERROR);
+                    this.submitErrorEvent(OnErrorEventListener.ERROR_EVENT_UNKNOWN, "播放地址异常!");
                     Toast.makeText(mContext, "播放地址异常!", Toast.LENGTH_SHORT).show();
                 }
             } catch (Exception e) {
@@ -268,16 +265,20 @@ public class KsgTxLivePlayer extends BaseInternalPlayer {
 
         int playType;
 
-        String http = "http://", https = "https://", flv = ".flv";
+        String http = "http://", https = "https://", flv = ".flv", m3u8 = ".m3u8";
 
         boolean isHttp = playUrl.startsWith(http) || playUrl.startsWith(https);
 
         boolean isFlv = playUrl.contains(flv);
 
-        if (isHttp && isFlv) {
-            playType = TXLivePlayer.PLAY_TYPE_LIVE_FLV;
-        } else if (mDataSource.getLiveType() != -1) {
+        boolean isM3u8 = playUrl.contains(m3u8);
+
+        if (mDataSource.getLiveType() != -1) {
             playType = mDataSource.getLiveType();
+        } else if (isHttp && isFlv) {
+            playType = TXLivePlayer.PLAY_TYPE_LIVE_FLV;
+        } else if (isHttp && isM3u8) {
+            playType = TXLivePlayer.PLAY_TYPE_VOD_HLS;
         } else {
             playType = TXLivePlayer.PLAY_TYPE_LIVE_RTMP;
         }

@@ -333,7 +333,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
         this.releaseRender();
         // 设置新（播放器）解码器
         this.mKsgPlayer.setDecoderView(decoderView);
-
+        // 设置成功
         return true;
     }
 

@@ -5,9 +5,9 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.View;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kasiengao.base.util.DensityUtil;
@@ -33,7 +33,7 @@ import com.ksg.ksgplayer.receiver.ReceiverGroup;
 import com.ksg.ksgplayer.widget.KsgAssistView;
 
 import butterknife.BindView;
-import butterknife.OnClick;
+import butterknife.OnItemSelected;
 
 /**
  * @ClassName: PlayerVideo
@@ -47,12 +47,16 @@ public class PlayerActivity extends BaseToolbarActivity {
     PlayerContainerView mContainerView;
     @BindView(R.id.player_decoder)
     AppCompatTextView mPlayerDecoder;
+    @BindView(R.id.player_spinner)
+    AppCompatSpinner mCompatSpinner;
 
     private boolean mUserPause;
 
     private boolean mFullscreen;
 
     private boolean mIsLandscape;
+
+    private boolean mInitSpinner = true;
 
     private KsgAssistView mKsgAssistView;
 
@@ -92,6 +96,8 @@ public class PlayerActivity extends BaseToolbarActivity {
     }
 
     private void initAssistView() {
+
+        this.mCompatSpinner.setSelection(1, false);
 
         this.mKsgAssistView = new KsgAssistView(this);
         this.mKsgAssistView.setDecoderView(createTxVod());
@@ -254,22 +260,26 @@ public class PlayerActivity extends BaseToolbarActivity {
         super.onBackPressed();
     }
 
-    @OnClick({R.id.player_ijk, R.id.player_tx_vod, R.id.player_tx_live})
-    public void onViewClick(View view) {
-        switch (view.getId()) {
-            case R.id.player_ijk:
+    @OnItemSelected(R.id.player_spinner)
+    public void onItemSelected(int position) {
+        if (mInitSpinner) {
+            this.mInitSpinner = false;
+            return;
+        }
+        switch (position) {
+            case 0:
                 if (mKsgAssistView.setDecoderView(createIjk())) {
                     this.onPlay();
                 }
                 break;
-            case R.id.player_tx_vod:
+            case 1:
                 if (mKsgAssistView.setDecoderView(createTxVod())) {
                     this.onPlay();
                 }
                 break;
-            case R.id.player_tx_live:
+            case 2:
                 if (mKsgAssistView.setDecoderView(createTxLive())) {
-                    this.onPlay("http://img.ksbbs.com/asset/Mon_1704/15868902d399b87.flv", true);
+                    this.onPlay("http://play.lifecrystal.cn/live/ycfsy001.flv", true);
                 }
                 break;
             default:
