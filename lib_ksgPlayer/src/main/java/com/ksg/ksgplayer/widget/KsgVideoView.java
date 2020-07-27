@@ -93,7 +93,7 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
      */
     @Override
     public final void setRenderType(int renderType) {
-        IRender mRender = this.mVideoPlayer.mRender;
+        IRender mRender = this.mVideoPlayer.getRender();
         // 验证重复视图类型
         if (this.mDefaultRenderType == renderType && mRender != null && !mRender.isReleased()) {
             return;
@@ -111,11 +111,119 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
         return this.mVideoPlayer.setDecoderView(decoderView);
     }
 
+    /**
+     * 返回 （播放器）解码器
+     *
+     * @return {@link BaseInternalPlayer}
+     */
+    public BaseInternalPlayer getDecoderView() {
+        return this.mVideoPlayer.getDecoderView();
+    }
 
+    /**
+     * 获取播放状态
+     *
+     * @return 播放状态 true 播放 反之
+     */
     @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
+    public boolean isPlaying() {
+        return this.mVideoPlayer.isPlaying();
+    }
+
+    /**
+     * seekTo
+     *
+     * @param msc 在指定的位置播放
+     */
+    @Override
+    public void seekTo(long msc) {
+        this.mVideoPlayer.seekTo(msc);
+    }
+
+    /**
+     * 播放
+     */
+    @Override
+    public void start() {
+        this.mVideoPlayer.start();
+    }
+
+    /**
+     * 播放
+     *
+     * @param msc 在指定的位置开始播放
+     */
+    @Override
+    public void start(long msc) {
+        this.mVideoPlayer.start(msc);
+    }
+
+    /**
+     * 暂停
+     */
+    @Override
+    public void pause() {
+        this.mVideoPlayer.pause();
+    }
+
+    /**
+     * 继续播放
+     */
+    @Override
+    public void resume() {
+        this.mVideoPlayer.resume();
+    }
+
+    /**
+     * 停止
+     */
+    @Override
+    public void stop() {
+        this.mVideoPlayer.stop();
+    }
+
+    /**
+     * 重新播放
+     *
+     * @param msc 在指定的位置开始播放
+     */
+    @Override
+    public void replay(long msc) {
+        this.mVideoPlayer.replay(msc);
+    }
+
+    /**
+     * 重置播放器
+     */
+    @Override
+    public void reset() {
+        this.mVideoPlayer.reset();
+    }
+
+    /**
+     * 释放播放器
+     */
+    @Override
+    public void release() {
+        this.mVideoPlayer.release();
+    }
+
+    /**
+     * 销毁资源
+     */
+    @Override
+    public void destroy() {
         this.mVideoPlayer.destroy();
         this.mVideoPlayer = null;
+    }
+
+    /**
+     * 播放状态
+     *
+     * @return boolean
+     */
+    @Override
+    public boolean isInPlaybackState() {
+        return this.mVideoPlayer.isInPlaybackState();
     }
 }

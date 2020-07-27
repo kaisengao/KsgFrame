@@ -431,7 +431,7 @@ public final class KsgPlayerProxy implements IKsgPlayer {
      *
      * @param msc 在指定的位置开始播放
      */
-    public void rePlay(int msc) {
+    public void replay(long msc) {
         if (mDataSource != null && isPlayerAvailable()) {
             this.interPlayerSetDataSource(mDataSource);
             this.mInternalPlayer.start(msc);

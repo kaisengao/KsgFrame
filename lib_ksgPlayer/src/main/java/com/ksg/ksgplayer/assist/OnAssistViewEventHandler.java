@@ -6,17 +6,17 @@ import android.util.Log;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.player.IKsgPlayer;
-import com.ksg.ksgplayer.widget.KsgVideoView;
+import com.ksg.ksgplayer.widget.KsgAssistView;
 
 /**
- * @ClassName: OnVideoViewEventHandler
+ * @ClassName: OnAssistViewEventHandler
  * @Author: KaiSenGao
- * @CreateDate: 2019/3/22 15:20
+ * @CreateDate: 2020/7/22 14:39
  * @Description:
  */
-public class OnVideoViewEventHandler extends BaseEventAssistHandler<KsgVideoView> {
+public class OnAssistViewEventHandler extends BaseEventAssistHandler<KsgAssistView> {
 
-    protected OnVideoViewEventHandler(KsgVideoView assist) {
+    protected OnAssistViewEventHandler(KsgAssistView assist) {
         super(assist);
     }
 

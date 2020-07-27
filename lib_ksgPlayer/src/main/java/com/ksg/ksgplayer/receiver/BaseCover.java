@@ -135,11 +135,6 @@ public abstract class BaseCover extends BaseReceiver implements ICover, ICoverHa
     }
 
     @Override
-    public final void requestRetry(Bundle bundle) {
-        notifyReceiverEvent(InterEvent.CODE_REQUEST_RETRY, bundle);
-    }
-
-    @Override
     public final void requestReplay(Bundle bundle) {
         notifyReceiverEvent(InterEvent.CODE_REQUEST_REPLAY, bundle);
     }

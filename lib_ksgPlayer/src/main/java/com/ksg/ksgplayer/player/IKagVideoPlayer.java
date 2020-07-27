@@ -157,7 +157,7 @@ public interface IKagVideoPlayer {
      *
      * @param msc 在指定的位置开始播放
      */
-    void rePlay(int msc);
+    void replay(long msc);
 
     /**
      * 重置播放器

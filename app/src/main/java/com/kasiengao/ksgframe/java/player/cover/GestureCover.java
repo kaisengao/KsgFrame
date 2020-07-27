@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
@@ -303,13 +302,8 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      * 获取屏幕真实宽高
      */
     private void getScreenSize() {
-        // 竖屏获取当前view的宽高
-        this.getView().getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @Override
-            public void onGlobalLayout() {
-                mGestureTouchHelper.setView(getView().getWidth(), getView().getHeight());
-                getView().getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
+        this.getView().addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
+            this.mGestureTouchHelper.setView(v.getWidth(), v.getHeight());
         });
     }
 

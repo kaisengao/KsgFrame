@@ -2,6 +2,8 @@ package com.ksg.ksgplayer.assist;
 
 import android.os.Bundle;
 
+import com.kasiengao.base.util.KLog;
+
 /**
  * @author kaisengao
  * @create: 2019/3/22 15:20
@@ -9,41 +11,58 @@ import android.os.Bundle;
  */
 public abstract class BaseEventAssistHandler<T> implements OnEventAssistHandler<T> {
 
+    private final T mAssist;
+
+    BaseEventAssistHandler(T assist) {
+        this.mAssist = assist;
+    }
+
+    /**
+     * 事件
+     *
+     * @param eventCode eventCode
+     * @param bundle    bundle
+     */
     @Override
-    public void onAssistHandle(T assist, int eventCode, Bundle bundle) {
+    public void onAssistHandle(int eventCode, Bundle bundle) {
+        if (getAssist() == null) {
+            KLog.e("BaseEventAssistHandler", "getAssist == null");
+            return;
+        }
         switch (eventCode) {
             case InterEvent.CODE_REQUEST_OPTION:
-                requestOption(assist, bundle);
+                this.requestOption(bundle);
+                break;
             case InterEvent.CODE_REQUEST_START:
-                requestStart(assist, bundle);
+                this.requestStart(bundle);
                 break;
             case InterEvent.CODE_REQUEST_PAUSE:
-                requestPause(assist, bundle);
+                this.requestPause(bundle);
                 break;
             case InterEvent.CODE_REQUEST_RESUME:
-                requestResume(assist, bundle);
+                this.requestResume(bundle);
                 break;
             case InterEvent.CODE_REQUEST_SEEK:
-                requestSeek(assist, bundle);
+                this.requestSeek(bundle);
                 break;
             case InterEvent.CODE_REQUEST_STOP:
-                requestStop(assist, bundle);
+                this.requestStop(bundle);
                 break;
             case InterEvent.CODE_REQUEST_RESET:
-                requestReset(assist, bundle);
-                break;
-            case InterEvent.CODE_REQUEST_RETRY:
-                requestRetry(assist, bundle);
+                this.requestReset(bundle);
                 break;
             case InterEvent.CODE_REQUEST_REPLAY:
-                requestReplay(assist, bundle);
+                this.requestReplay(bundle);
                 break;
             case InterEvent.CODE_REQUEST_PLAY_DATA_SOURCE:
-                requestPlayDataSource(assist, bundle);
+                this.requestPlayDataSource(bundle);
                 break;
             default:
                 break;
         }
     }
 
+    public T getAssist() {
+        return mAssist;
+    }
 }

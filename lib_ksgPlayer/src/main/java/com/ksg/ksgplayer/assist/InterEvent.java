@@ -7,7 +7,6 @@ package com.ksg.ksgplayer.assist;
  */
 public interface InterEvent {
 
-
     int CODE_REQUEST_START = -66000;
 
     int CODE_REQUEST_PAUSE = -66001;
@@ -22,8 +21,6 @@ public interface InterEvent {
 
     int CODE_REQUEST_RESET = -66009;
 
-    int CODE_REQUEST_RETRY = -660011;
-
     int CODE_REQUEST_REPLAY = -66013;
 
     int CODE_REQUEST_PLAY_DATA_SOURCE = -66014;
@@ -35,5 +32,4 @@ public interface InterEvent {
     int CODE_REQUEST_NOTIFY_TIMER = -66017;
 
     int CODE_REQUEST_STOP_TIMER = -66018;
-
 }

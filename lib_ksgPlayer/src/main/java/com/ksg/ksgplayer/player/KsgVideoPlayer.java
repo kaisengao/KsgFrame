@@ -7,8 +7,8 @@ import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import com.kasiengao.base.util.KLog;
+import com.ksg.ksgplayer.assist.BaseEventAssistHandler;
 import com.ksg.ksgplayer.assist.InterEvent;
-import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
 import com.ksg.ksgplayer.config.KsgPlayerConfig;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
@@ -54,7 +54,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
 
     private KsgContainer mKsgContainer;
 
-    public IRender mRender;
+    private IRender mRender;
 
     private IRender.IRenderHolder mRenderHolder;
 
@@ -66,7 +66,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
 
     private OnReceiverEventListener mOnReceiverEventListener;
 
-    private OnVideoViewEventHandler mOnVideoViewEventHandler;
+    private BaseEventAssistHandler mBaseEventAssistHandler;
 
     public KsgVideoPlayer(Context context) {
         // Init
@@ -268,41 +268,42 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
      */
     @Override
     public void setRenderType(int renderType) {
-        // 存储类型
-        KsgPlayerConfig.getInstance().setDefaultRenderType(renderType);
         // 销毁视图资源
         this.releaseRender();
         // 先判断是否有默认的 Render
         if (mKsgPlayer.getRenderView() != null) {
+            renderType = IRender.RENDER_TYPE_CUSTOM;
             // add to container
             this.mKsgContainer.setRenderView(mKsgPlayer.getRenderView());
-            return;
+        } else {
+            // 视图类型
+            switch (renderType) {
+                case IRender.RENDER_TYPE_SURFACE_VIEW:
+                    // SurfaceView
+                    this.mRender = new RenderSurfaceView(mContext);
+                    break;
+                case IRender.RENDER_TYPE_TEXTURE_VIEW:
+                default:
+                    // 默认 TextureView
+                    this.mRender = new RenderTextureView(mContext);
+                    ((RenderTextureView) mRender).setTakeOverSurfaceTexture(true);
+                    break;
+            }
+            // 初始化 RenderHolder
+            this.mRenderHolder = null;
+            this.mKsgPlayer.setSurface(null);
+            this.mRender.updateAspectRatio(mAspectRatio);
+            this.mRender.setRenderCallback(mRenderCallback);
+            // 设置画面宽高
+            this.mRender.updateVideoSize(mVideoWidth, mVideoHeight);
+            this.mRender.setVideoSampleAspectRatio(mVideoSarNum, mVideoSarDen);
+            // 设置视频旋转角度
+            this.mRender.setVideoRotation(mVideoRotation);
+            // add to container
+            this.mKsgContainer.setRenderView(mRender.getRenderView());
         }
-        // 判断类型
-        switch (renderType) {
-            case IRender.RENDER_TYPE_SURFACE_VIEW:
-                // SurfaceView
-                this.mRender = new RenderSurfaceView(mContext);
-                break;
-            case IRender.RENDER_TYPE_TEXTURE_VIEW:
-            default:
-                // 默认 TextureView
-                this.mRender = new RenderTextureView(mContext);
-                ((RenderTextureView) mRender).setTakeOverSurfaceTexture(true);
-                break;
-        }
-        // 初始化 RenderHolder
-        this.mRenderHolder = null;
-        this.mKsgPlayer.setSurface(null);
-        this.mRender.updateAspectRatio(mAspectRatio);
-        this.mRender.setRenderCallback(mRenderCallback);
-        // 设置画面宽高
-        this.mRender.updateVideoSize(mVideoWidth, mVideoHeight);
-        this.mRender.setVideoSampleAspectRatio(mVideoSarNum, mVideoSarDen);
-        // 设置视频旋转角度
-        this.mRender.setVideoRotation(mVideoRotation);
-        // add to container
-        this.mKsgContainer.setRenderView(mRender.getRenderView());
+        // 存储类型
+        KsgPlayerConfig.getInstance().setDefaultRenderType(renderType);
     }
 
     /**
@@ -315,6 +316,13 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
             this.mRender.release();
             this.mRender = null;
         }
+    }
+
+    /**
+     * 返回 视图View
+     */
+    public IRender getRender() {
+        return mRender;
     }
 
     /**
@@ -484,8 +492,8 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
      * @param msc 在指定的位置开始播放
      */
     @Override
-    public void rePlay(int msc) {
-        this.mKsgPlayer.rePlay(msc);
+    public void replay(long msc) {
+        this.mKsgPlayer.replay(msc);
     }
 
     /**
@@ -544,8 +552,8 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
         this.mOnReceiverEventListener = onReceiverEventListener;
     }
 
-    public void setOnVideoViewEventHandler(OnVideoViewEventHandler onVideoViewEventHandler) {
-        this.mOnVideoViewEventHandler = onVideoViewEventHandler;
+    public void setBaseEventAssistHandler(BaseEventAssistHandler baseEventAssistHandler) {
+        this.mBaseEventAssistHandler = baseEventAssistHandler;
     }
 
     /**
@@ -675,8 +683,8 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
             } else if (eventCode == InterEvent.CODE_REQUEST_STOP_TIMER) {
                 mKsgPlayer.setUseTimerProxy(false);
             }
-            if (mOnVideoViewEventHandler != null) {
-                mOnVideoViewEventHandler.onAssistHandle(KsgVideoPlayer.this, eventCode, bundle);
+            if (mBaseEventAssistHandler != null) {
+                mBaseEventAssistHandler.onAssistHandle(eventCode, bundle);
             }
             if (mOnReceiverEventListener != null) {
                 mOnReceiverEventListener.onReceiverEvent(eventCode, bundle);

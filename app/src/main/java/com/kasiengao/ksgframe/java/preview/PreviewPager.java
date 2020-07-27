@@ -30,19 +30,18 @@ import com.kasiengao.base.util.DensityUtil;
 import com.kasiengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.observer.MyLifecycleObserver;
-import com.kasiengao.ksgframe.java.player.player.KsgIjkPlayer;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
+import com.kasiengao.ksgframe.java.player.player.KsgIjkPlayer;
 import com.kasiengao.ksgframe.java.util.AnimUtil;
 import com.kasiengao.ksgframe.java.util.SystemUiUtil;
 import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.InterEvent;
-import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
+import com.ksg.ksgplayer.assist.OnAssistViewEventHandler;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
-import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.receiver.ReceiverGroup;
 import com.ksg.ksgplayer.widget.KsgAssistView;
 
@@ -179,10 +178,10 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
             this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new GestureCover(getContext()));
 
             this.mKsgAssistView.getVideoPlayer().setReceiverGroup(mReceiverGroup);
-            this.mKsgAssistView.getVideoPlayer().setOnVideoViewEventHandler(new OnVideoViewEventHandler() {
+            this.mKsgAssistView.getVideoPlayer().setBaseEventAssistHandler(new OnAssistViewEventHandler(mKsgAssistView){
                 @Override
-                public void onAssistHandle(KsgVideoPlayer assist, int eventCode, Bundle bundle) {
-                    super.onAssistHandle(assist, eventCode, bundle);
+                public void onAssistHandle(int eventCode, Bundle bundle) {
+                    super.onAssistHandle(eventCode, bundle);
                     switch (eventCode) {
                         case InterEvent.CODE_REQUEST_PAUSE:
                             mUserPause = true;

@@ -13,6 +13,11 @@ import com.ksg.ksgplayer.player.IKsgPlayer;
 public interface IRender {
 
     /**
+     * 自定义
+     */
+    int RENDER_TYPE_CUSTOM = -1;
+
+    /**
      * TextureView
      */
     int RENDER_TYPE_TEXTURE_VIEW = 0;

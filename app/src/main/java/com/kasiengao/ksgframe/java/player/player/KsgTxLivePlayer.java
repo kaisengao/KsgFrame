@@ -99,7 +99,7 @@ public class KsgTxLivePlayer extends BaseInternalPlayer {
         // 发送数据源
         Bundle bundle = BundlePool.obtain();
         bundle.putSerializable(EventKey.SERIALIZABLE_DATA, dataSource);
-        submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_DATA_SOURCE_SET, bundle);
+        this.submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_DATA_SOURCE_SET, bundle);
         // 播放准备
         this.updateStatus(IKsgPlayer.STATE_PREPARED);
     }

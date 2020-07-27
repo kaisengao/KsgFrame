@@ -38,7 +38,7 @@ public final class ReceiverGroup implements IReceiverGroup {
         this(null);
     }
 
-     ReceiverGroup(GroupValue groupValue) {
+    public ReceiverGroup(GroupValue groupValue) {
         // 并发容器ConcurrentHashMap  (详细了解请指向 https://www.baidu.com)
         mReceivers = new ConcurrentHashMap<>(16);
         // 线程安全的创建集合

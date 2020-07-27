@@ -59,13 +59,6 @@ public interface ICoverHandle {
     void requestReset(Bundle bundle);
 
     /**
-     * 请求 重试
-     *
-     * @param bundle bundle
-     */
-    void requestRetry(Bundle bundle);
-
-    /**
      * 请求 重播
      *
      * @param bundle bundle

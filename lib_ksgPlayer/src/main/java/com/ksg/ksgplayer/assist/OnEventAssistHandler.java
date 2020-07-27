@@ -17,26 +17,75 @@ import android.os.Bundle;
  */
 public interface OnEventAssistHandler<T> {
 
-    void onAssistHandle(T assist, int eventCode, Bundle bundle);
+    /**
+     * 事件
+     *
+     * @param eventCode eventCode
+     * @param bundle    bundle
+     */
+    void onAssistHandle(int eventCode, Bundle bundle);
 
-    void requestOption(T assist, Bundle bundle);
+    /**
+     * 自定义 通知
+     *
+     * @param bundle bundle
+     */
+    void requestOption(Bundle bundle);
 
-    void requestStart(T assist, Bundle bundle);
+    /**
+     * 播放
+     *
+     * @param bundle bundle
+     */
+    void requestStart(Bundle bundle);
 
-    void requestPause(T assist, Bundle bundle);
+    /**
+     * 暂停
+     *
+     * @param bundle bundle
+     */
+    void requestPause(Bundle bundle);
 
-    void requestResume(T assist, Bundle bundle);
+    /**
+     * 继续播放
+     *
+     * @param bundle bundle
+     */
+    void requestResume(Bundle bundle);
 
-    void requestSeek(T assist, Bundle bundle);
+    /**
+     * Seek
+     *
+     * @param bundle bundle
+     */
+    void requestSeek(Bundle bundle);
 
-    void requestStop(T assist, Bundle bundle);
+    /**
+     * 停止
+     *
+     * @param bundle bundle
+     */
+    void requestStop(Bundle bundle);
 
-    void requestReset(T assist, Bundle bundle);
+    /**
+     * 重置播放器
+     *
+     * @param bundle bundle
+     */
+    void requestReset(Bundle bundle);
 
-    void requestRetry(T assist, Bundle bundle);
+    /**
+     * 重新播放
+     *
+     * @param bundle bundle
+     */
+    void requestReplay(Bundle bundle);
 
-    void requestReplay(T assist, Bundle bundle);
-
-    void requestPlayDataSource(T assist, Bundle bundle);
+    /**
+     * 重新播放 新的数据源
+     *
+     * @param bundle bundle
+     */
+    void requestPlayDataSource(Bundle bundle);
 
 }

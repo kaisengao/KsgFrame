@@ -25,10 +25,9 @@ import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.InterEvent;
-import com.ksg.ksgplayer.assist.OnVideoViewEventHandler;
+import com.ksg.ksgplayer.assist.OnAssistViewEventHandler;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
-import com.ksg.ksgplayer.player.KsgVideoPlayer;
 import com.ksg.ksgplayer.receiver.ReceiverGroup;
 import com.ksg.ksgplayer.widget.KsgAssistView;
 
@@ -59,8 +58,6 @@ public class PlayerActivity extends BaseToolbarActivity {
     private boolean mInitSpinner = true;
 
     private KsgAssistView mKsgAssistView;
-
-    private KsgVideoPlayer mVideoPlayer;
 
     private ReceiverGroup mReceiverGroup;
 
@@ -109,14 +106,10 @@ public class PlayerActivity extends BaseToolbarActivity {
         this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new GestureCover(this));
 
         this.mKsgAssistView.getVideoPlayer().setReceiverGroup(mReceiverGroup);
-
-        this.mVideoPlayer = mKsgAssistView.getVideoPlayer();
-
-        this.mVideoPlayer.setOnVideoViewEventHandler(new OnVideoViewEventHandler() {
-            @SuppressLint("SourceLockedOrientationActivity")
+        this.mKsgAssistView.getVideoPlayer().setBaseEventAssistHandler(new OnAssistViewEventHandler(mKsgAssistView){
             @Override
-            public void onAssistHandle(KsgVideoPlayer assist, int eventCode, Bundle bundle) {
-                super.onAssistHandle(assist, eventCode, bundle);
+            public void onAssistHandle(int eventCode, Bundle bundle) {
+                super.onAssistHandle(eventCode, bundle);
                 switch (eventCode) {
                     case InterEvent.CODE_REQUEST_PAUSE:
                         mUserPause = true;
@@ -139,7 +132,7 @@ public class PlayerActivity extends BaseToolbarActivity {
                         boolean fullscreen = bundle.getBoolean(EventKey.BOOL_DATA, false);
                         // 如果在横屏状态下退出了全屏模式需要设置回竖屏
                         if (mIsLandscape && !fullscreen) {
-                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
                         }
                         // 屏幕改变
                         onFullscreen(fullscreen);
@@ -172,7 +165,7 @@ public class PlayerActivity extends BaseToolbarActivity {
         this.mKsgAssistView.start();
         this.mKsgAssistView.getVideoPlayer().setLooping(true);
         // 当前解码器
-        this.mPlayerDecoder.setText(mVideoPlayer.getDecoderView().getClass().getSimpleName());
+        this.mPlayerDecoder.setText(mKsgAssistView.getDecoderView().getClass().getSimpleName());
     }
 
     /**
@@ -222,9 +215,9 @@ public class PlayerActivity extends BaseToolbarActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (mVideoPlayer.isInPlaybackState()) {
+        if (mKsgAssistView.isInPlaybackState()) {
             if (!mUserPause) {
-                this.mVideoPlayer.resume();
+                this.mKsgAssistView.resume();
             }
         }
         if (mIsLandscape) {
@@ -236,10 +229,10 @@ public class PlayerActivity extends BaseToolbarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (mVideoPlayer.isInPlaybackState()) {
-            this.mVideoPlayer.pause();
+        if (mKsgAssistView.isInPlaybackState()) {
+            this.mKsgAssistView.pause();
         } else {
-            this.mVideoPlayer.stop();
+            this.mKsgAssistView.stop();
         }
     }
 
@@ -279,7 +272,8 @@ public class PlayerActivity extends BaseToolbarActivity {
                 break;
             case 2:
                 if (mKsgAssistView.setDecoderView(createTxLive())) {
-                    this.onPlay("http://play.lifecrystal.cn/live/ycfsy001.flv", true);
+//                    this.onPlay("http://play.lifecrystal.cn/live/ycfsy001.flv", true);
+                    this.onPlay("rtmp://play.lifecrystal.cn/live/1400238383_IM8615612341234", true);
                 }
                 break;
             default:

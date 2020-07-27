@@ -57,4 +57,74 @@ public interface IKsgVideoView {
      * @param decoderView {@link BaseInternalPlayer}
      */
     boolean setDecoderView(BaseInternalPlayer decoderView);
+
+    /**
+     * 获取播放状态
+     *
+     * @return 播放状态 true 播放 反之
+     */
+    boolean isPlaying();
+
+    /**
+     * seekTo
+     *
+     * @param msc 在指定的位置播放
+     */
+    void seekTo(long msc);
+
+    /**
+     * 播放
+     */
+    void start();
+
+    /**
+     * start
+     *
+     * @param msc 在指定的位置开始播放
+     */
+    void start(long msc);
+
+    /**
+     * 暂停
+     */
+    void pause();
+
+    /**
+     * 继续播放
+     */
+    void resume();
+
+    /**
+     * 停止
+     */
+    void stop();
+
+    /**
+     * 重新播放
+     *
+     * @param msc 在指定的位置开始播放
+     */
+    void replay(long msc);
+
+    /**
+     * 重置播放器
+     */
+    void reset();
+
+    /**
+     * 释放播放器
+     */
+    void release();
+
+    /**
+     * 销毁资源
+     */
+    void destroy();
+
+    /**
+     * 播放状态
+     *
+     * @return boolean
+     */
+    boolean isInPlaybackState();
 }

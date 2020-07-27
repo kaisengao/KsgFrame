@@ -22,6 +22,8 @@ public interface DataInter {
 
     interface Key extends InterKey {
 
+        String KEY_IS_LANDSCAPE = "isLandscape";
+
         /**
          * 横竖屏切换
          */
@@ -41,6 +43,7 @@ public interface DataInter {
          * Controller 播放状态
          */
         String KEY_CONTROLLER_PLAY_STATUS = "controllerPlayStatus";
+
     }
 
     interface ReceiverKey {
@@ -50,6 +53,8 @@ public interface DataInter {
         String KEY_LOADING_COVER = "loading_cover";
 
         String KEY_CONTROLLER_COVER = "controller_cover";
+
+        String KEY_ERROR_COVER = "error_cover";
 
     }
 

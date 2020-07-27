@@ -186,6 +186,11 @@ public interface OnPlayerEventListener {
     int PLAYER_EVENT_ON_PROVIDER_DATA_ERROR = -99052;
 
     /**
+     * 网络环境不佳警告
+     */
+    int PLAYER_EVENT_ON_NET_BUSY = -99100;
+
+    /**
      * 发送事件
      *
      * @param eventCode eventCode

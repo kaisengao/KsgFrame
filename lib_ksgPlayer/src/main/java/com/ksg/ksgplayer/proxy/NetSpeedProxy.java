@@ -38,11 +38,11 @@ public class NetSpeedProxy {
         this.mContext = context;
         this.mCounterInterval = counterInterval;
 
-        mSpeedUtils = new NetSpeedHelper();
+        this.mSpeedUtils = new NetSpeedHelper();
     }
 
     public void setOnNetSpeedListener(OnNetSpeedListener onNetSpeedListener) {
-        mOnNetSpeedListener = onNetSpeedListener;
+        this.mOnNetSpeedListener = onNetSpeedListener;
     }
 
     /**
@@ -62,7 +62,7 @@ public class NetSpeedProxy {
      */
     public void start() {
         removeMessage();
-        mHandler.post(mRunnable);
+        this.mHandler.post(mRunnable);
     }
 
     /**
@@ -70,7 +70,7 @@ public class NetSpeedProxy {
      */
     private void loopNext() {
         removeMessage();
-        mHandler.postDelayed(mRunnable, mCounterInterval);
+        this.mHandler.postDelayed(mRunnable, mCounterInterval);
     }
 
     /**
@@ -84,7 +84,7 @@ public class NetSpeedProxy {
      * 取消发送handler
      */
     private void removeMessage() {
-        mHandler.removeCallbacks(mRunnable);
+        this.mHandler.removeCallbacks(mRunnable);
     }
 
     /**
