@@ -1,6 +1,7 @@
 package com.kasiengao.ksgframe.java.player.player;
 
 import android.content.Context;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -26,9 +27,11 @@ import tv.danmaku.ijk.media.player.IjkMediaPlayer;
  */
 public class KsgIjkPlayer extends BaseInternalPlayer {
 
-    private long mStartSeekPos;
+    private int mTargetState;
 
     private int mVideoWidth, mVideoHeight;
+
+    private long mStartSeekPos;
 
     private IjkMediaPlayer mMediaPlayer;
 
@@ -101,11 +104,15 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
             this.updateStatus(STATE_INITIALIZED);
             // dataSource
             this.mMediaPlayer.setDataSource(dataSource.getUrl());
+            this.mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+            this.mMediaPlayer.setScreenOnWhilePlaying(true);
+            this.mMediaPlayer.prepareAsync();
             // 发送数据源事件
             Bundle bundle = BundlePool.obtain();
             bundle.putSerializable(EventKey.SERIALIZABLE_DATA, dataSource);
             this.submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_DATA_SOURCE_SET, bundle);
         } catch (Exception e) {
+            this.mTargetState = STATE_ERROR;
             this.updateStatus(IKsgPlayer.STATE_ERROR);
             this.submitErrorEvent(OnErrorEventListener.ERROR_EVENT_DATA_SOURCE, e.getMessage());
         }
@@ -292,6 +299,7 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
                 this.submitErrorEvent(OnErrorEventListener.ERROR_EVENT_START, e.getMessage());
             }
         }
+        this.mTargetState = STATE_STARTED;
     }
 
     /**
@@ -330,6 +338,7 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
             this.updateStatus(IKsgPlayer.STATE_PAUSED);
             this.submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_PAUSE, null);
         }
+        this.mTargetState = STATE_PAUSED;
     }
 
     /**
@@ -348,6 +357,7 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
             this.updateStatus(IKsgPlayer.STATE_STARTED);
             this.submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_RESUME, null);
         }
+        this.mTargetState = STATE_STARTED;
     }
 
     /**
@@ -370,6 +380,7 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
             this.updateStatus(IKsgPlayer.STATE_STOPPED);
             this.submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_STOP, null);
         }
+        this.mTargetState = STATE_STOPPED;
     }
 
     /**
@@ -378,6 +389,7 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
     @Override
     public void reset() {
         this.mMediaPlayer.reset();
+        this.mTargetState = STATE_IDLE;
         this.updateStatus(IKsgPlayer.STATE_IDLE);
         this.submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_RESET, null);
     }
@@ -431,6 +443,15 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
         if (seekToPosition != 0) {
             this.mMediaPlayer.seekTo(seekToPosition);
             this.mStartSeekPos = 0;
+        }
+
+        if (mTargetState == STATE_STARTED) {
+            this.start();
+        } else if (mTargetState == STATE_PAUSED) {
+            this.pause();
+        } else if (mTargetState == STATE_STOPPED
+                || mTargetState == STATE_IDLE) {
+            this.reset();
         }
     };
 
@@ -538,6 +559,7 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
      * 播放器 结束 事件
      */
     private IMediaPlayer.OnCompletionListener mCompletionListener = iMediaPlayer -> {
+        this.mTargetState = STATE_PLAYBACK_COMPLETE;
         this.updateStatus(IKsgPlayer.STATE_PLAYBACK_COMPLETE);
         this.submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_PLAY_COMPLETE, null);
     };
@@ -546,6 +568,7 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
      * 播放器 Error 事件
      */
     private IMediaPlayer.OnErrorListener mErrorListener = (iMediaPlayer, framework_err, impl_err) -> {
+        this.mTargetState = STATE_ERROR;
         this.updateStatus(IKsgPlayer.STATE_ERROR);
         this.submitErrorEvent(OnErrorEventListener.ERROR_EVENT_UNKNOWN, null);
         return true;

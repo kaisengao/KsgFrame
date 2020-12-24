@@ -1,3 +1,4 @@
+include ':lib_version_up'
 rootProject.name='KsgFrame'
 include ':app', ':lib_ksgPlayer'
 include ':lib_mvp'

@@ -272,8 +272,8 @@ public class PlayerActivity extends BaseToolbarActivity {
                 break;
             case 2:
                 if (mKsgAssistView.setDecoderView(createTxLive())) {
-//                    this.onPlay("http://play.lifecrystal.cn/live/ycfsy001.flv", true);
-                    this.onPlay("rtmp://play.lifecrystal.cn/live/1400238383_IM8615612341234", true);
+                    this.onPlay("rtmp://play.lifecrystal.cn/live/shbxyshh01", true);
+//                    this.onPlay("rtmp://play.lifecrystal.cn/live/1400238383_IM8615612341234", true);
                 }
                 break;
             default:

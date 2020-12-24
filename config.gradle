@@ -35,8 +35,8 @@ ext {
             "glide"               : "com.github.bumptech.glide:glide:4.11.0",
             "glide-compiler"      : "com.github.bumptech.glide:compiler:4.11.0",
             // butterKnife
-            "butterknife"         : "com.jakewharton:butterknife:10.2.1",
-            "butterknife-compiler": "com.jakewharton:butterknife-compiler:10.2.1",
+            "butterknife"         : "com.jakewharton:butterknife:10.2.3",
+            "butterknife-compiler": "com.jakewharton:butterknife-compiler:10.2.3",
             // Fresco
             "fresco"              : "com.facebook.fresco:fresco:2.2.0",
             "fresco-gif"          : "com.facebook.fresco:animated-gif:2.2.0",
