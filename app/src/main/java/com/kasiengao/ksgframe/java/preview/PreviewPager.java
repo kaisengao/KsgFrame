@@ -154,7 +154,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
                     mKsgAssistView = null;
                 }
                 mViewPager.removeOnPageChangeListener(PreviewPager.this);
-                mLifecycleObserver.removeLifecycle();
+                mLifecycleObserver.removeObserver();
                 mLifecycleObserver = null;
             }
         };

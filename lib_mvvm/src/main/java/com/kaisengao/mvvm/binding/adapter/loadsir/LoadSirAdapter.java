@@ -22,7 +22,6 @@ import java.lang.reflect.Method;
  */
 public class LoadSirAdapter {
 
-
     @BindingAdapter("loadRegister")
     public static void loadRegister(final View register, @Nullable OnLoadSirReloadListener onLoadSirReloadListener) {
         LoadSirFactory loadSirFactory = LoadSirFactory.getInstance();

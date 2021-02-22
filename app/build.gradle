@@ -55,6 +55,4 @@ dependencies {
     implementation project(':lib_ksgPlayer')
     // VersionUp
     implementation project(':lib_version_up')
-    // ButterKnife
-    kapt rootProject.ext.dependencies["butterknife-compiler"]
 }

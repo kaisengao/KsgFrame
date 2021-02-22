@@ -2,12 +2,13 @@ package com.kasiengao.ksgframe.java.observer;
 
 import android.content.Context;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 
 import com.kasiengao.base.util.CommonUtil;
-import com.kasiengao.base.util.KLog;
 
 /**
  * @ClassName: MyLifecycleObserver
@@ -19,25 +20,34 @@ public abstract class MyLifecycleObserver implements LifecycleObserver {
 
     private final Lifecycle mLifecycle;
 
+    protected MyLifecycleObserver(Lifecycle lifecycle) {
+        this.mLifecycle = lifecycle;
+    }
+
+    protected MyLifecycleObserver(Fragment context) {
+        this.mLifecycle = context.getLifecycle();
+    }
+
+    protected MyLifecycleObserver(AppCompatActivity context) {
+        this.mLifecycle = context.getLifecycle();
+    }
+
     protected MyLifecycleObserver(Context context) {
         this.mLifecycle = CommonUtil.scanForActivity(context).getLifecycle();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
     public void onActivityResume() {
-        KLog.d("onActivityResume");
         this.onAcResume();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
     public void onActivityPause() {
-        KLog.d("onActivityPause");
         this.onAcPause();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     public void onActivityDestroy() {
-        KLog.d("onActivityDestroy");
         this.onAcDestroy();
     }
 
@@ -45,7 +55,7 @@ public abstract class MyLifecycleObserver implements LifecycleObserver {
         this.mLifecycle.addObserver(this);
     }
 
-    public void removeLifecycle() {
+    public void removeObserver() {
         this.mLifecycle.removeObserver(this);
     }
 

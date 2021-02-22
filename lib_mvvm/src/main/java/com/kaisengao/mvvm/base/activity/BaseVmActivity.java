@@ -1,16 +1,18 @@
 package com.kaisengao.mvvm.base.activity;
 
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.LayoutRes;
+import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.kaisengao.mvvm.R;
 import com.kaisengao.mvvm.base.viewmodel.BaseViewModel;
+import com.kaisengao.mvvm.databinding.LayoutToolbarBinding;
 import com.kaisengao.mvvm.viewmodel.ToolbarViewModel;
+import com.kasiengao.base.util.StatusBarUtil;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -25,11 +27,13 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
 
     protected VM mViewModel;
 
+    private LayoutToolbarBinding mToolbarBinding;
+
     @Override
     protected void initBefore() {
         super.initBefore();
         // 绑定 ViewModel
-        this.mViewModel = bindViewModel(mViewModel);
+        this.bindViewModel(mViewModel);
         // Init Toolbar
         this.initToolbar();
     }
@@ -45,24 +49,23 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
      * 绑定 ViewModel
      *
      * @param viewModel VM
-     * @return VM
      */
-    private VM bindViewModel(VM viewModel) {
+    private void bindViewModel(VM viewModel) {
         if (viewModel == null) {
-            Class modelClass;
+            Class<BaseViewModel> modelClass;
             Type type = getClass().getGenericSuperclass();
             if (type instanceof ParameterizedType) {
-                modelClass = (Class) ((ParameterizedType) type).getActualTypeArguments()[1];
+                // noinspection unchecked
+                modelClass = (Class<BaseViewModel>) ((ParameterizedType) type).getActualTypeArguments()[1];
             } else {
                 modelClass = BaseViewModel.class;
             }
             // noinspection unchecked
             viewModel = (VM) createViewModel(initVariableId(), modelClass);
         }
+        this.mViewModel = viewModel;
         // 绑定Lifecycle
         this.mBinding.setLifecycleOwner(this);
-        // return
-        return viewModel;
     }
 
     /**
@@ -103,7 +106,7 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
     /**
      * 将Toolbar布局添加到容器中
      */
-    private void initContentView(View root) {
+    private void initContentView() {
         // 获取Ac父容器content
         ViewGroup viewGroup = findViewById(android.R.id.content);
         viewGroup.removeAllViews();
@@ -113,31 +116,39 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
         // 将线性布局添加入父容器中，作为Ac页面布局的父容器
         viewGroup.addView(parentLayout);
         // 将Toolbar添加到父容器布局中
-        getLayoutInflater().inflate(getToolbarLayoutId(), parentLayout);
+        this.mToolbarBinding = DataBindingUtil.inflate(
+                getLayoutInflater(), getToolbarLayoutId(), parentLayout, true);
+        this.setSupportActionBar(mToolbarBinding.toolbar);
+        // 绑定ViewModel
+        this.mToolbarBinding.setVariable(initVariableId(), mViewModel);
+        // 绑定Lifecycle
+        this.mToolbarBinding.setLifecycleOwner(this);
         // 将ContentLayout添加到父容器布局中
-        parentLayout.addView(root);
+        parentLayout.addView(mBinding.getRoot());
+        // 添加状态栏高度
+        StatusBarUtil.setPaddingSmart(this, mToolbarBinding.getRoot());
     }
 
     /**
      * Init Toolbar
      */
     private void initToolbar() {
-        if (isDisplayToolbar()) {
-            this.initContentView(mBinding.getRoot());
+        // 验证 是否继承了 ToolbarViewModel
+        if (isDisplayToolbar()
+                && (mViewModel instanceof ToolbarViewModel)) {
+            // Init Toolbar VM
+            this.initToolbarVm();
+            // 将Toolbar布局添加到容器中
+            this.initContentView();
         }
-        // Init Toolbar VM
-        this.initToolbarVm();
     }
 
     /**
      * Init Toolbar VM
      */
     private void initToolbarVm() {
-        // 验证 是否继承了 ToolbarViewModel
-        if (mViewModel instanceof ToolbarViewModel) {
-            ToolbarViewModel toolbarViewModel = (ToolbarViewModel) mViewModel;
-            // Back事件
-            toolbarViewModel.getBackPressed().observe(this, aVoid -> this.onBackPressed());
-        }
+        ToolbarViewModel toolbarViewModel = (ToolbarViewModel) mViewModel;
+        // Back事件
+        toolbarViewModel.getBackPressed().observe(this, aVoid -> onBackPressed());
     }
 }

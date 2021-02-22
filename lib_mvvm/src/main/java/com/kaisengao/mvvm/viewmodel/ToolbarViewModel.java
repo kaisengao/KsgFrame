@@ -22,7 +22,7 @@ public class ToolbarViewModel extends BaseViewModel {
 
     private MutableLiveData<ColorDrawable> mBgColor;
 
-    private SingleLiveEvent<Void> mBackPressed = new SingleLiveEvent<>();
+    private final SingleLiveEvent<Void> mBackPressed = new SingleLiveEvent<>();
 
     public ToolbarViewModel(@NonNull Application application) {
         super(application);
