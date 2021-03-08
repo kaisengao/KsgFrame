@@ -45,6 +45,13 @@
             android:text="@string/btn_player"
             android:textAllCaps="false" />
 
+        <!-- UsbCamera-->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/java_usb_camera"
+            style="@style/btn_style"
+            android:text="@string/btn_usb_camera"
+            android:textAllCaps="false" />
+
         <!--        &lt;!&ndash; ShareElement&ndash;&gt;-->
         <!--        <androidx.appcompat.widget.AppCompatImageButton-->
         <!--            android:id="@+id/java_share_element"-->

@@ -44,6 +44,7 @@ dependencies {
     // Ijk
     implementation "tv.danmaku.ijk.media:ijkplayer-java:0.8.8"
     // Tencent
+    // noinspection GradleDependency
     implementation "com.tencent.liteavsdk:LiteAVSDK_Smart:6.6.7551@aar"
     // MVP
     implementation project(':lib_mvp')
@@ -55,4 +56,6 @@ dependencies {
     implementation project(':lib_ksgPlayer')
     // VersionUp
     implementation project(':lib_version_up')
+    // UVCCamera
+    implementation project(':lib_uvccamera')
 }

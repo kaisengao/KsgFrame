@@ -40,10 +40,11 @@ public abstract class BaseVmFragment<DB extends ViewDataBinding, VM extends Base
      */
     private VM bindViewModel(VM viewModel) {
         if (viewModel == null) {
-            Class modelClass;
+            Class<BaseViewModel> modelClass;
             Type type = getClass().getGenericSuperclass();
             if (type instanceof ParameterizedType) {
-                modelClass = (Class) ((ParameterizedType) type).getActualTypeArguments()[1];
+                // noinspection unchecked
+                modelClass = (Class<BaseViewModel>) ((ParameterizedType) type).getActualTypeArguments()[1];
             } else {
                 modelClass = BaseViewModel.class;
             }

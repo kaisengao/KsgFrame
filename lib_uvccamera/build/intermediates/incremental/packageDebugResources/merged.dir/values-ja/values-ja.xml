@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="camera">カメラ</string>
+    <string name="no_device">USBカメラが見つかりません</string>
+    <string name="refresh">更新</string>
+    <string name="select">USB Webカメラを選択してください</string>
+</resources>

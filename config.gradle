@@ -12,14 +12,12 @@ ext {
     ]
 
     // Androidx配置
-    androidx = [
-            "constraint-layout": "androidx.constraintlayout:constraintlayout:1.1.3",
-            "recyclerview"     : "androidx.recyclerview:recyclerview:1.1.0",
-            "appcompat"        : "androidx.appcompat:appcompat:1.1.0",
-            "ktx"              : "androidx.core:core-ktx:1.2.0",
-            "kotlin"           : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version",
-            "material"         : "com.google.android.material:material:1.1.0-alpha07",
-    ]
+    constraint = '2.0.4'
+    recycler = '1.1.0'
+    appcompat = '1.2.0'
+    lifecycle = '2.2.0'
+    material = '1.3.0-alpha03'
+    ktx = '1.2.0'
 
     dependencies = [
             // RxJava
@@ -44,4 +42,5 @@ ext {
             "recycler-adapter"    : "com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4",
     ]
 
+    commonLib= '4.1.1'
 }

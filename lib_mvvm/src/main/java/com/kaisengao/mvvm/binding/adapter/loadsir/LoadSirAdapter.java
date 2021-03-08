@@ -81,7 +81,7 @@ public class LoadSirAdapter {
             return;
         }
         // 反射查找方法 进行回调
-        Class objClass = object.getClass();
+        Class<?> objClass = object.getClass();
         // 获取该Class下的所有方法
         Method[] methods = objClass.getDeclaredMethods();
         // 遍历方法，找到注解方法

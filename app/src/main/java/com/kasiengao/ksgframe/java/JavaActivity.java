@@ -53,5 +53,11 @@ public class JavaActivity extends BaseToolbarActivity {
             // KsgVideoPlayer
             this.startActivity(new Intent(this, PlayerActivity.class));
         });
+        // UsbCamera
+        this.findViewById(R.id.java_usb_camera).setOnClickListener(v -> {
+            // UsbCamera
+            this.startActivity(new Intent(this, UsbCameraActivity2.class));
+//            this.startActivity(new Intent(this, UsbCameraActivity.class));
+        });
     }
 }

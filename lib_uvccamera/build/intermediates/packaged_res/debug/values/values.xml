@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="button_size">48dp</dimen>
+    <dimen name="horizontal_margin">16dp</dimen>
+    <dimen name="list_font_size">18sp</dimen>
+    <dimen name="list_height_min">32dp</dimen>
+    <dimen name="vertical_margin">16dp</dimen>
+    <string name="camera">Camera</string>
+    <string name="no_device">No USB camera found</string>
+    <string name="refresh">Refresh</string>
+    <string name="select">Select USB Web Camera</string>
+</resources>

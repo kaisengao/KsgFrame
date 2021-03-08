@@ -30,13 +30,14 @@ android {
 }
 
 dependencies {
-    //  Androidx配置
-    api rootProject.ext.androidx["constraint-layout"]
-    api rootProject.ext.androidx["recyclerview"]
-    api rootProject.ext.androidx["appcompat"]
-    api rootProject.ext.androidx["ktx"]
-    api rootProject.ext.androidx["kotlin"]
-    api rootProject.ext.androidx["material"]
+    //  Androidx
+    api "androidx.constraintlayout:constraintlayout:$constraint"
+    api "androidx.recyclerview:recyclerview:$recycler"
+    api "androidx.appcompat:appcompat:$appcompat"
+    api "androidx.lifecycle:lifecycle-extensions:$lifecycle"
+    api "com.google.android.material:material:$material"
+    api "androidx.core:core-ktx:$ktx"
+    api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     // Glide图片加载库
     api rootProject.ext.dependencies.glide
     annotationProcessor rootProject.ext.dependencies["glide-compiler"]
