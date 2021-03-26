@@ -11,8 +11,8 @@ import androidx.appcompat.widget.AppCompatTextView;
 import androidx.core.content.ContextCompat;
 
 import com.kaisengao.retrofit.R;
-import com.kasiengao.base.configure.ActivityManager;
-import com.kasiengao.base.util.DensityUtil;
+import com.kaisengao.base.configure.ActivityManager;
+import com.kaisengao.base.util.DensityUtil;
 import com.wang.avi.AVLoadingIndicatorView;
 
 import butterknife.ButterKnife;

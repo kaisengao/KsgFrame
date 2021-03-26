@@ -3,7 +3,7 @@ package com.kasiengao.ksgframe.java.mvvm;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.kaisengao.mvvm.base.activity.BaseVmActivity;
-import com.kasiengao.base.annotations.ReloadAnnotations;
+import com.kaisengao.base.annotations.ReloadAnnotations;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.databinding.MvvmBinding;
 

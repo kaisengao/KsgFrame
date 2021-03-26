@@ -31,5 +31,10 @@
       <option name="name" value="maven2" />
       <option name="url" value="http://raw.github.com/saki4510t/libcommon/master/repository/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven3" />
+      <option name="name" value="maven3" />
+      <option name="url" value="https://gitee.com/liuchaoya/libcommon/raw/master/repository/" />
+    </remote-repository>
   </component>
 </project>

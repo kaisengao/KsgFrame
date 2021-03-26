@@ -2,7 +2,7 @@ package com.ksg.ksgplayer.render;
 
 import android.view.View;
 
-import com.kasiengao.base.util.KLog;
+import com.kaisengao.base.util.KLog;
 
 /**
  * 视图宽高比算法

@@ -13,6 +13,7 @@
     <string name="btn_staggered_grid">StaggeredGrid</string>
     <string name="btn_player">KsgVideoPlayer</string>
     <string name="btn_usb_camera">UsbCamera</string>
+    <string name="btn_camera_preview">CameraPreview</string>
     <string name="btn_other">待定</string>
 
     <string name="mvp_title">Mvp模式</string>
@@ -35,7 +36,7 @@
     <string name="loading_mvvm">MVVM加载中~</string>
 
     <string-array name="players">
-        <item>IjkPlayer</item>
+        <item>ExoPlayer</item>
         <item>TxVodPlayer</item>
         <item>TxLivePlayer</item>
     </string-array>

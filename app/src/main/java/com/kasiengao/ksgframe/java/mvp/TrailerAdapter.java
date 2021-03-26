@@ -11,7 +11,7 @@ import androidx.appcompat.widget.AppCompatRatingBar;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.kasiengao.base.util.GlideUtil;
+import com.kaisengao.base.util.GlideUtil;
 import com.kasiengao.ksgframe.R;
 
 import java.util.List;

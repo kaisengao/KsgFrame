@@ -8,7 +8,7 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.view.View;
 
-import com.kasiengao.base.util.KLog;
+import com.kaisengao.base.util.KLog;
 import com.ksg.ksgplayer.player.IKsgPlayer;
 
 import java.lang.ref.WeakReference;

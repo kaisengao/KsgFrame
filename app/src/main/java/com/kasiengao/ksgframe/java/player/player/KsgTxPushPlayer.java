@@ -230,11 +230,6 @@ public final class KsgTxPushPlayer extends BaseInternalPlayer {
 
     }
 
-    @Override
-    public void prepareAsync() {
-
-    }
-
     /**
      * 播放
      */

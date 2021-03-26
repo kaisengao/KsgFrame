@@ -1,6 +1,6 @@
 package com.kasiengao.ksgframe.java.mvp;
 
-import com.kasiengao.base.configure.ThreadPool;
+import com.kaisengao.base.configure.ThreadPool;
 import com.kasiengao.mvp.java.BasePresenter;
 
 /**

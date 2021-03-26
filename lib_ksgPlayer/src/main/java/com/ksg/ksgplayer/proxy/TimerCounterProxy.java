@@ -2,8 +2,8 @@ package com.ksg.ksgplayer.proxy;
 
 import android.os.Bundle;
 
-import com.kasiengao.base.configure.WeakHandler;
-import com.kasiengao.base.util.KLog;
+import com.kaisengao.base.configure.WeakHandler;
+import com.kaisengao.base.util.KLog;
 import com.ksg.ksgplayer.listener.OnPlayerEventListener;
 
 /**

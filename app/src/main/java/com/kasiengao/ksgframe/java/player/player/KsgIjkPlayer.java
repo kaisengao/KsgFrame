@@ -7,7 +7,7 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.View;
 
-import com.kasiengao.base.util.KLog;
+import com.kaisengao.base.util.KLog;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.BundlePool;
 import com.ksg.ksgplayer.event.EventKey;
@@ -261,22 +261,6 @@ public class KsgIjkPlayer extends BaseInternalPlayer {
             bundle.putLong(EventKey.LONG_DATA, msc);
             this.submitPlayerEvent(OnPlayerEventListener.PLAYER_EVENT_ON_SEEK_TO, bundle);
         }
-    }
-
-    /**
-     * 准备开始播放（异步）
-     */
-    @Override
-    public void prepareAsync() {
-        // 播放器准备
-        try {
-            this.mMediaPlayer.prepareAsync();
-        } catch (IllegalStateException e) {
-            this.updateStatus(IKsgPlayer.STATE_ERROR);
-            this.submitErrorEvent(OnErrorEventListener.ERROR_EVENT_PREPARE_ASYNC, e.getMessage());
-        }
-        // 播放准备
-        this.updateStatus(IKsgPlayer.STATE_PREPARED);
     }
 
     /**

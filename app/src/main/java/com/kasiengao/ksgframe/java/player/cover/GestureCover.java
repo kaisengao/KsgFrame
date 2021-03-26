@@ -12,8 +12,8 @@ import android.widget.ProgressBar;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.kasiengao.base.configure.ThreadPool;
-import com.kasiengao.base.util.CommonUtil;
+import com.kaisengao.base.configure.ThreadPool;
+import com.kaisengao.base.util.CommonUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.widget.GestureTipsView;
 import com.ksg.ksgplayer.assist.DataInter;

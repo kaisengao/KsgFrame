@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 
-import com.kasiengao.base.util.CommonUtil;
-import com.kasiengao.base.util.StatusBarUtil;
+import com.kaisengao.base.util.CommonUtil;
+import com.kaisengao.base.util.StatusBarUtil;
 
 /**
  * @ClassName: SystemUiUtil

@@ -9,7 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 
-import com.kasiengao.base.util.StatusBarUtil;
+import com.kaisengao.base.util.StatusBarUtil;
 
 /**
  * @ClassName: BaseActivity

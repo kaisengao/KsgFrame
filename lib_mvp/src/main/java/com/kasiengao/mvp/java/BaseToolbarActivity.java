@@ -3,7 +3,6 @@ package com.kasiengao.mvp.java;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
@@ -11,7 +10,7 @@ import androidx.annotation.LayoutRes;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 
-import com.kasiengao.base.util.StatusBarUtil;
+import com.kaisengao.base.util.StatusBarUtil;
 import com.kasiengao.mvp.R;
 
 /**

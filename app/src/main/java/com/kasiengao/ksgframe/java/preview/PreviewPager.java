@@ -25,15 +25,15 @@ import androidx.viewpager.widget.ViewPager;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.kasiengao.base.util.CommonUtil;
-import com.kasiengao.base.util.DensityUtil;
-import com.kasiengao.base.util.StatusBarUtil;
+import com.kaisengao.base.util.CommonUtil;
+import com.kaisengao.base.util.DensityUtil;
+import com.kaisengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.observer.MyLifecycleObserver;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
-import com.kasiengao.ksgframe.java.player.player.KsgIjkPlayer;
+import com.kasiengao.ksgframe.java.player.player.KsgExoPlayer;
 import com.kasiengao.ksgframe.java.util.AnimUtil;
 import com.kasiengao.ksgframe.java.util.SystemUiUtil;
 import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
@@ -169,7 +169,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
     private void initAssistVideo() {
         if (this.mKsgAssistView == null) {
             this.mKsgAssistView = new KsgAssistView(getContext());
-            this.mKsgAssistView.setDecoderView(new KsgIjkPlayer(getContext()));
+            this.mKsgAssistView.setDecoderView(new KsgExoPlayer(getContext()));
             this.mKsgAssistView.getVideoPlayer().getKsgContainer().setBackgroundColor(Color.BLACK);
 
             this.mReceiverGroup = new ReceiverGroup();

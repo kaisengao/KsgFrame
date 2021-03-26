@@ -2,7 +2,7 @@ package com.ksg.ksgplayer.assist;
 
 import android.os.Bundle;
 
-import com.kasiengao.base.util.KLog;
+import com.kaisengao.base.util.KLog;
 
 /**
  * @author kaisengao
@@ -13,7 +13,7 @@ public abstract class BaseEventAssistHandler<T> implements OnEventAssistHandler<
 
     private final T mAssist;
 
-    BaseEventAssistHandler(T assist) {
+    public BaseEventAssistHandler(T assist) {
         this.mAssist = assist;
     }
 

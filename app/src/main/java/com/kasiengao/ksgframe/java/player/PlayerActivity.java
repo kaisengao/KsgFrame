@@ -10,13 +10,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.kasiengao.base.util.DensityUtil;
-import com.kasiengao.base.util.StatusBarUtil;
+import com.kaisengao.base.util.DensityUtil;
+import com.kaisengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
-import com.kasiengao.ksgframe.java.player.player.KsgIjkPlayer;
+import com.kasiengao.ksgframe.java.player.player.KsgExoPlayer;
 import com.kasiengao.ksgframe.java.player.player.KsgTxLivePlayer;
 import com.kasiengao.ksgframe.java.player.player.KsgTxVodPlayer;
 import com.kasiengao.ksgframe.java.util.AnimUtil;
@@ -61,7 +61,7 @@ public class PlayerActivity extends BaseToolbarActivity {
 
     private ReceiverGroup mReceiverGroup;
 
-    private KsgIjkPlayer mKsgIjkPlayer;
+    private KsgExoPlayer mKsgExoPlayer;
 
     private KsgTxVodPlayer mKsgTxVodPlayer;
 
@@ -261,7 +261,7 @@ public class PlayerActivity extends BaseToolbarActivity {
         }
         switch (position) {
             case 0:
-                if (mKsgAssistView.setDecoderView(createIjk())) {
+                if (mKsgAssistView.setDecoderView(createExo())) {
                     this.onPlay();
                 }
                 break;
@@ -281,11 +281,11 @@ public class PlayerActivity extends BaseToolbarActivity {
         }
     }
 
-    private KsgIjkPlayer createIjk() {
-        if (mKsgIjkPlayer == null) {
-            this.mKsgIjkPlayer = new KsgIjkPlayer(this);
+    private KsgExoPlayer createExo() {
+        if (mKsgExoPlayer == null) {
+            this.mKsgExoPlayer = new KsgExoPlayer(this);
         }
-        return this.mKsgIjkPlayer;
+        return this.mKsgExoPlayer;
     }
 
     private KsgTxVodPlayer createTxVod() {

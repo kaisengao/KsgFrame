@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.kaisengao.retrofit.observer.BaseRxObserver;
 import com.kaisengao.retrofit.widget.LoadingDialog;
-import com.kasiengao.base.util.ToastUtil;
+import com.kaisengao.base.util.ToastUtil;
 
 import io.reactivex.disposables.Disposable;
 

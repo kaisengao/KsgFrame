@@ -17,7 +17,7 @@ import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.kasiengao.base.util.DensityUtil;
+import com.kaisengao.base.util.DensityUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.preview.PreviewBean;
 import com.kasiengao.ksgframe.java.element.ShareElementActivity;

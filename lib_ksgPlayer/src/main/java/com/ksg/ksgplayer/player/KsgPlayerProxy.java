@@ -384,16 +384,6 @@ public final class KsgPlayerProxy implements IKsgPlayer {
     }
 
     /**
-     * 准备开始播放（异步）
-     */
-    @Override
-    public void prepareAsync() {
-        if (isPlayerAvailable()) {
-            this.mInternalPlayer.prepareAsync();
-        }
-    }
-
-    /**
      * start
      *
      * @param msc 在指定的位置开始播放
@@ -401,7 +391,6 @@ public final class KsgPlayerProxy implements IKsgPlayer {
     @Override
     public void start(long msc) {
         if (isPlayerAvailable()) {
-            this.prepareAsync();
             this.mInternalPlayer.start(msc);
         }
     }
@@ -557,10 +546,9 @@ public final class KsgPlayerProxy implements IKsgPlayer {
             } else if (eventCode == OnPlayerEventListener.PLAYER_EVENT_ON_PLAY_COMPLETE) {
                 long duration = getDuration();
                 long bufferPercentage = getBufferPercentage();
-                if (duration <= 0) {
-                    return;
+                if (duration > 0) {
+                    onTimerUpdateEvent(duration, duration, bufferPercentage);
                 }
-                onTimerUpdateEvent(duration, duration, bufferPercentage);
             }
             // 验证 播放进度缓存
             if (isProgressCacheOpen()) {

@@ -10,8 +10,8 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.facebook.drawee.view.SimpleDraweeView;
-import com.kasiengao.base.configure.ThreadPool;
-import com.kasiengao.base.util.FileUtil;
+import com.kaisengao.base.configure.ThreadPool;
+import com.kaisengao.base.util.FileUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 
@@ -99,16 +99,16 @@ public class StaggeredGridActivity extends BaseToolbarActivity {
         recyclerView.addItemDecoration(new StaggeredItemDecoration(20));
         recyclerView.setAdapter(mAdapter);
         // 滑动优化 滑动过程中停止加载图片
-//        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-//            @Override
-//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-//                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-//                    Fresco.getImagePipeline().resume();
-//                } else {
-//                    Fresco.getImagePipeline().pause();
-//                }
-//            }
-//        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
+                    Fresco.getImagePipeline().resume();
+                } else {
+                    Fresco.getImagePipeline().pause();
+                }
+            }
+        });
     }
 
     @Override

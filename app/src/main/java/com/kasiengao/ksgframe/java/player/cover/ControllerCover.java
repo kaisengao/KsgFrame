@@ -13,8 +13,8 @@ import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatSeekBar;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.kasiengao.base.configure.ThreadPool;
-import com.kasiengao.base.util.TimeUtil;
+import com.kaisengao.base.configure.ThreadPool;
+import com.kaisengao.base.util.TimeUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.util.AnimUtil;
 import com.ksg.ksgplayer.assist.DataInter;

@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import com.kasiengao.base.util.KLog;
+import com.kaisengao.base.util.KLog;
 import com.ksg.ksgplayer.assist.BaseEventAssistHandler;
 import com.ksg.ksgplayer.assist.InterEvent;
 import com.ksg.ksgplayer.config.KsgPlayerConfig;
@@ -238,7 +238,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
      * 请求获取音频焦点
      */
     private void requestAudioFocus() {
-        KLog.d("zzz", ">>requestAudioFocus<<");
+        KLog.d(">>requestAudioFocus<<");
         AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         if (audioManager != null) {
             // 请求焦点的参数说明：
@@ -254,7 +254,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
      * 释放音频焦点
      */
     private void releaseAudioFocus() {
-        KLog.d("zzz", "<<releaseAudioFocus>>");
+        KLog.d("<<releaseAudioFocus>>");
         AudioManager audioManager = (AudioManager) mContext.getSystemService(Context.AUDIO_SERVICE);
         if (audioManager != null) {
             audioManager.abandonAudioFocus(null);
@@ -576,7 +576,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
                             // 设置视频采样率
                             mRender.setVideoSampleAspectRatio(mVideoSarNum, mVideoSarDen);
                         }
-                        KLog.d("zzz", "onVideoSizeChange : videoWidth = " + mVideoWidth
+                        KLog.d("onVideoSizeChange : videoWidth = " + mVideoWidth
                                 + ", videoHeight = " + mVideoHeight
                                 + ", videoSarNum = " + mVideoSarNum
                                 + ", videoSarDen = " + mVideoSarDen);
@@ -587,7 +587,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
                     if (bundle != null) {
                         // 判断如果需要旋转在更新渲染
                         mVideoRotation = bundle.getInt(EventKey.INT_DATA);
-                        KLog.d("zzz", "onVideoRotationChange : videoRotation = " + mVideoRotation);
+                        KLog.d("onVideoRotationChange : videoRotation = " + mVideoRotation);
                         if (mRender != null) {
                             mRender.setVideoRotation(mVideoRotation);
                         }
@@ -709,7 +709,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
     private IRender.IRenderCallback mRenderCallback = new IRender.IRenderCallback() {
         @Override
         public void onSurfaceCreated(IRender.IRenderHolder renderHolder, int width, int height) {
-            KLog.d("zzz", "onSurfaceCreated : width = " + width + ", height = " + height);
+            KLog.d("onSurfaceCreated : width = " + width + ", height = " + height);
             //on surface create ,try to attach player.
             mRenderHolder = renderHolder;
             bindRenderHolder(mRenderHolder);
@@ -723,7 +723,7 @@ public class KsgVideoPlayer implements IKagVideoPlayer {
 
         @Override
         public void onSurfaceDestroy(IRender.IRenderHolder renderHolder) {
-            KLog.d("zzz", "onSurfaceDestroy...");
+            KLog.d("onSurfaceDestroy...");
             //on surface destroy detach player
             mRenderHolder = null;
         }

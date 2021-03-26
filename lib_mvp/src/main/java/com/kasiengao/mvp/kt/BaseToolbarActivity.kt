@@ -8,7 +8,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.ActionBar
 import androidx.appcompat.widget.Toolbar
-import com.kasiengao.base.util.StatusBarUtil
+import com.kaisengao.base.util.StatusBarUtil
 import com.kasiengao.mvp.R
 
 /**

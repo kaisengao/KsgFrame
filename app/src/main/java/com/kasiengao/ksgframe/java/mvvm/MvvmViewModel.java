@@ -9,7 +9,7 @@ import com.kaisengao.mvvm.base.viewmodel.BaseViewModel;
 import com.kaisengao.retrofit.observer.BaseRxObserver;
 import com.kaisengao.retrofit.observer.dialog.BaseDialogObserver;
 import com.kaisengao.retrofit.observer.mvvm.BaseLoadSirObserver;
-import com.kasiengao.base.loading.LoadingState;
+import com.kaisengao.base.loading.LoadingState;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.retrofit.NewsTopBean;
 

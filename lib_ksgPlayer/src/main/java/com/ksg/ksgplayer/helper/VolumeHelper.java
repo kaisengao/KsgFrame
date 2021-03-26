@@ -3,10 +3,10 @@ package com.ksg.ksgplayer.helper;
 import android.content.Context;
 import android.media.AudioManager;
 
-import androidx.annotation.IntDef;
-
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+
+import androidx.annotation.IntDef;
 
 /**
  * @author kaisengao
@@ -70,7 +70,7 @@ public class VolumeHelper {
      */
     private int mVoiceStep100 = 1;
 
-    private AudioManager mAudioManager;
+    private final AudioManager mAudioManager;
 
     /**
      * 初始化，获取音量管理者

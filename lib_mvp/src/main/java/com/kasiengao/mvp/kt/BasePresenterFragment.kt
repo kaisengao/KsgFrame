@@ -3,7 +3,7 @@ package com.kasiengao.mvp.kt
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
-import com.kasiengao.base.util.ToastUtil
+import com.kaisengao.base.util.ToastUtil
 
 /**
  * @ClassName: BasePresenterFragment

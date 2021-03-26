@@ -37,11 +37,7 @@ android {
 
 dependencies {
     // Base
-    api project(':lib_base')
-
-    api 'androidx.lifecycle:lifecycle-extensions:2.2.0'
-    kapt 'com.android.databinding:compiler:3.1.4'
-
+    implementation project(':lib_base')
     // Rx + Retrofit
     implementation project(':lib_rx_retrofit')
 }

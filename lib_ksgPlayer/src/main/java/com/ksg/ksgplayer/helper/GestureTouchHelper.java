@@ -4,8 +4,8 @@ import android.app.Activity;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 
-import com.kasiengao.base.util.TimeUtil;
 import com.ksg.ksgplayer.listener.OnTouchGestureListener;
+import com.ksg.ksgplayer.utils.TimeUtil;
 
 /**
  * @author kaisengao

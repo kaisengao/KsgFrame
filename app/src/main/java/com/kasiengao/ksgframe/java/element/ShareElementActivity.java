@@ -9,15 +9,13 @@ import androidx.core.view.ViewCompat;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
-import com.kasiengao.base.util.StatusBarUtil;
+import com.kaisengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.preview.PreviewBean;
 import com.kasiengao.ksgframe.java.preview.PreviewPager;
 import com.kasiengao.ksgframe.java.staggered.StaggeredGridBean;
 import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
-
-import butterknife.BindView;
 
 /**
  * @ClassName: ShareElement
@@ -31,9 +29,8 @@ public class ShareElementActivity extends BaseToolbarActivity {
 
     public static final String POSITION = "POSITION";
 
-    @BindView(R.id.share_player_container)
     PlayerContainerView mPlayerContainer;
-    @BindView(R.id.share_element_pager)
+
     PreviewPager<PreviewBean> mPreviewPager;
 
     private int mPosition;
@@ -81,6 +78,9 @@ public class ShareElementActivity extends BaseToolbarActivity {
         super.initWidget();
         // Toolbar Title
         this.setTitle(R.string.share_element_title);
+        // Views
+        this.mPlayerContainer = findViewById(R.id.share_player_container);
+        this.mPreviewPager = findViewById(R.id.share_element_pager);
         // Init Preview
         this.initPreview();
         // LoadContent

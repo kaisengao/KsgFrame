@@ -5,8 +5,8 @@ import android.view.ViewGroup;
 
 import androidx.databinding.BindingAdapter;
 
-import com.kasiengao.base.BaseApplication;
-import com.kasiengao.base.util.StatusBarUtil;
+import com.kaisengao.base.BaseApplication;
+import com.kaisengao.base.util.StatusBarUtil;
 
 /**
  * @ClassName: ViewAdapter

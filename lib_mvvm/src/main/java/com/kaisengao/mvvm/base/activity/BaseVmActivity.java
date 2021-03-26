@@ -12,7 +12,7 @@ import com.kaisengao.mvvm.R;
 import com.kaisengao.mvvm.base.viewmodel.BaseViewModel;
 import com.kaisengao.mvvm.databinding.LayoutToolbarBinding;
 import com.kaisengao.mvvm.viewmodel.ToolbarViewModel;
-import com.kasiengao.base.util.StatusBarUtil;
+import com.kaisengao.base.util.StatusBarUtil;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

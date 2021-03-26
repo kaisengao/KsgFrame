@@ -256,15 +256,6 @@ public class KsgTxVodPlayer extends BaseInternalPlayer {
     }
 
     /**
-     * 准备开始播放（异步）
-     */
-    @Override
-    public void prepareAsync() {
-        // 播放器准备
-        this.updateStatus(IKsgPlayer.STATE_PREPARED);
-    }
-
-    /**
      * 播放
      */
     @Override

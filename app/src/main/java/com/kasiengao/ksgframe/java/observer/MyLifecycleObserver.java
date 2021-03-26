@@ -8,7 +8,7 @@ import androidx.lifecycle.Lifecycle;
 import androidx.lifecycle.LifecycleObserver;
 import androidx.lifecycle.OnLifecycleEvent;
 
-import com.kasiengao.base.util.CommonUtil;
+import com.kaisengao.base.util.CommonUtil;
 
 /**
  * @ClassName: MyLifecycleObserver

@@ -32,7 +32,7 @@ android {
 
 dependencies {
     // Base
-    api project(':lib_base')
+    implementation project(':lib_base')
     // RxJava
     api rootProject.ext.dependencies.rxjava
     api rootProject.ext.dependencies.rxandroid

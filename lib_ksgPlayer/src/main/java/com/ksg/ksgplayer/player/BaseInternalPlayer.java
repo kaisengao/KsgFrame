@@ -23,7 +23,7 @@ public abstract class BaseInternalPlayer implements IKsgPlayer {
     /**
      * 当前播放器状态
      */
-    private int mCurrentState = STATE_IDLE;
+    protected int mCurrentState = STATE_IDLE;
 
     /**
      * 播放器状态事件

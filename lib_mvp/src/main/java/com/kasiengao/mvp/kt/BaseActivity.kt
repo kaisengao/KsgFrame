@@ -6,8 +6,8 @@ import android.view.Window
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import butterknife.ButterKnife
-import com.kasiengao.base.util.StatusBarUtil
-import com.kasiengao.base.util.ToastUtil
+import com.kaisengao.base.util.StatusBarUtil
+import com.kaisengao.base.util.ToastUtil
 
 /**
  * @ClassName: BaseActivity

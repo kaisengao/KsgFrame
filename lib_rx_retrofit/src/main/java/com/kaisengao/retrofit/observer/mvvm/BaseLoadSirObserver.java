@@ -5,8 +5,8 @@ import android.content.Context;
 import androidx.lifecycle.MutableLiveData;
 
 import com.kaisengao.retrofit.observer.BaseRxObserver;
-import com.kasiengao.base.loading.LoadState;
-import com.kasiengao.base.loading.LoadingState;
+import com.kaisengao.base.loading.LoadState;
+import com.kaisengao.base.loading.LoadingState;
 
 import io.reactivex.disposables.Disposable;
 

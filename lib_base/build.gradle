@@ -38,6 +38,7 @@ dependencies {
     api "com.google.android.material:material:$material"
     api "androidx.core:core-ktx:$ktx"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    api 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     // Glide图片加载库
     api rootProject.ext.dependencies.glide
     annotationProcessor rootProject.ext.dependencies["glide-compiler"]

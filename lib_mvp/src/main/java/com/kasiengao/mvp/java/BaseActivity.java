@@ -2,15 +2,13 @@ package com.kasiengao.mvp.java;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.ViewGroup;
-import android.view.Window;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.kasiengao.base.util.StatusBarUtil;
-import com.kasiengao.base.util.ToastUtil;
+import com.kaisengao.base.util.StatusBarUtil;
+import com.kaisengao.base.util.ToastUtil;
 
 import butterknife.ButterKnife;
 

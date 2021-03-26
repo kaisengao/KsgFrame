@@ -163,11 +163,6 @@ public interface IKsgPlayer {
     void seekTo(long msc);
 
     /**
-     * 准备开始播放（异步）
-     */
-    void prepareAsync();
-
-    /**
      * 播放
      */
     void start();

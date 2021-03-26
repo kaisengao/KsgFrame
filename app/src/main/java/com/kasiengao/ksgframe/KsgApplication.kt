@@ -1,6 +1,6 @@
 package com.kasiengao.ksgframe
 
-import com.kasiengao.base.BaseApplication
+import com.kaisengao.base.BaseApplication
 import com.ksg.ksgplayer.config.KsgPlayerConfig
 
 /**
@@ -16,6 +16,4 @@ class KsgApplication : BaseApplication() {
         KsgPlayerConfig.getInstance().isPlayProgressCache = true
         KsgPlayerConfig.getInstance().isNetworkEventProducer = false
     }
-
-
 }

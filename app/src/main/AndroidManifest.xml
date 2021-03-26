@@ -3,11 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.kasiengao.ksgframe">
 
-    <uses-feature android:name="android.hardware.usb.host"/>
-    USB摄像头源码
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
-    <uses-permission android:name="android.permission.USB_PERMISSION" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
     <application
         android:name=".KsgApplication"
@@ -18,8 +25,8 @@
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:allowBackup"
         tools:ignore="LockedOrientationActivity"
+        tools:replace="android:allowBackup"
         tools:targetApi="n">
         <activity
             android:name=".MainActivity"
@@ -58,10 +65,8 @@
             android:name=".java.player.PlayerActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".java.camera.UsbCameraActivity"
-            android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait" />
+
+
     </application>
 
 </manifest>
