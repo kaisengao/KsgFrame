@@ -2,6 +2,7 @@
   <dictionary name="Administrator">
     <words>
       <w>flyme</w>
+      <w>kaisengao</w>
       <w>kasiengao</w>
       <w>ksgframe</w>
       <w>ksgplayer</w>
@@ -11,6 +12,7 @@
       <w>tencent</w>
       <w>timeval</w>
       <w>usec</w>
+      <w>uvccamera</w>
     </words>
   </dictionary>
 </component>

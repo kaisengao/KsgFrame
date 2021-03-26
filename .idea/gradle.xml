@@ -16,6 +16,7 @@
             <option value="$PROJECT_DIR$/lib_mvp" />
             <option value="$PROJECT_DIR$/lib_mvvm" />
             <option value="$PROJECT_DIR$/lib_rx_retrofit" />
+            <option value="$PROJECT_DIR$/lib_uvccamera" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
