@@ -1,18 +1,21 @@
 package com.kaisengao.mvvm.base.activity;
 
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
+import androidx.appcompat.app.ActionBar;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.kaisengao.base.util.StatusBarUtil;
 import com.kaisengao.mvvm.R;
 import com.kaisengao.mvvm.base.viewmodel.BaseViewModel;
-import com.kaisengao.mvvm.databinding.LayoutToolbarBinding;
+import com.kaisengao.mvvm.databinding.ToolbarBinding;
 import com.kaisengao.mvvm.viewmodel.ToolbarViewModel;
-import com.kaisengao.base.util.StatusBarUtil;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -27,7 +30,9 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
 
     protected VM mViewModel;
 
-    private LayoutToolbarBinding mToolbarBinding;
+    private ActionBar mActionBar;
+
+    private ToolbarBinding mToolbarBinding;
 
     @Override
     protected void initBefore() {
@@ -100,7 +105,7 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
      */
     @LayoutRes
     protected int getToolbarLayoutId() {
-        return R.layout.layout_toolbar;
+        return R.layout.toolbar;
     }
 
     /**
@@ -115,18 +120,21 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
         parentLayout.setOrientation(LinearLayout.VERTICAL);
         // 将线性布局添加入父容器中，作为Ac页面布局的父容器
         viewGroup.addView(parentLayout);
+        // 添加状态栏高度
+        StatusBarUtil.setPaddingSmart(this, parentLayout);
         // 将Toolbar添加到父容器布局中
         this.mToolbarBinding = DataBindingUtil.inflate(
                 getLayoutInflater(), getToolbarLayoutId(), parentLayout, true);
-        this.setSupportActionBar(mToolbarBinding.toolbar);
         // 绑定ViewModel
         this.mToolbarBinding.setVariable(initVariableId(), mViewModel);
         // 绑定Lifecycle
         this.mToolbarBinding.setLifecycleOwner(this);
         // 将ContentLayout添加到父容器布局中
         parentLayout.addView(mBinding.getRoot());
-        // 添加状态栏高度
-        StatusBarUtil.setPaddingSmart(this, mToolbarBinding.getRoot());
+        // ActionBar
+        this.setSupportActionBar(mToolbarBinding.toolbar);
+        this.mActionBar = getSupportActionBar();
+        this.setDisplayHomeAsUpEnabled(true);
     }
 
     /**
@@ -148,7 +156,43 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
      */
     private void initToolbarVm() {
         ToolbarViewModel toolbarViewModel = (ToolbarViewModel) mViewModel;
-        // Back事件
-        toolbarViewModel.getBackPressed().observe(this, aVoid -> onBackPressed());
+    }
+
+    /**
+     * 修改左侧返回箭头图标
+     *
+     * @param resId 资源
+     */
+    protected void setNavigationIcon(@DrawableRes int resId) {
+        if (mToolbarBinding != null) {
+            this.mToolbarBinding.toolbar.setNavigationIcon(resId);
+        }
+    }
+
+    /**
+     * 给左上角图标的左边加上一个返回的图标 。对应ActionBar.DISPLAY_HOME_AS_UP
+     *
+     * @param showHomeAsUp true/false
+     */
+    protected void setDisplayHomeAsUpEnabled(boolean showHomeAsUp) {
+        if (this.mActionBar != null) {
+            this.mActionBar.setDisplayHomeAsUpEnabled(showHomeAsUp);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.onClickBack();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    /**
+     * 返回键
+     */
+    protected void onClickBack() {
+        this.onBackPressed();
     }
 }

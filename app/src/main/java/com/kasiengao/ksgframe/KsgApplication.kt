@@ -10,6 +10,7 @@ import com.ksg.ksgplayer.config.KsgPlayerConfig
  * @Description:
  */
 class KsgApplication : BaseApplication() {
+
     override fun onCreate() {
         super.onCreate()
         // 播放器 全局配置

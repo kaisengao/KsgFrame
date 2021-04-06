@@ -39,7 +39,7 @@ abstract class BaseActivity : AppCompatActivity() {
      * 初始化窗口
      */
     protected open fun initWindow() {
-        //设置noTitle
+        // 设置noTitle
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
     }
 

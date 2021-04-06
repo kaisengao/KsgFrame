@@ -53,7 +53,6 @@ abstract class BaseToolbarActivity : BaseActivity() {
         // 将线性布局添加入父容器中，作为Ac页面布局的父容器
         viewGroup.addView(this.mParentLinearLayout)
         // Padding一下状态栏高度
-        // Padding一下状态栏高度
         StatusBarUtil.setPaddingSmart(this, mParentLinearLayout)
         // 将Toolbar添加到父容器布局中
         this.layoutInflater.inflate(getToolbarLayoutId(), this.mParentLinearLayout)

@@ -12,9 +12,15 @@
     <string name="btn_rx_retrofit">RxRetrofit</string>
     <string name="btn_staggered_grid">StaggeredGrid</string>
     <string name="btn_player">KsgVideoPlayer</string>
-    <string name="btn_usb_camera">UsbCamera</string>
-    <string name="btn_camera_preview">CameraPreview</string>
     <string name="btn_other">待定</string>
+    <string name="btn_camera">USBCamera</string>
+
+    <string name="camera_title">UVC摄像头</string>
+    <string name="camera_open">打开摄像头</string>
+    <string name="camera_close">关闭摄像头</string>
+    <string name="camera_photograph">拍照</string>
+    <string name="camera_start_recording">开始录制</string>
+    <string name="camera_stop_recording">停止录制</string>
 
     <string name="mvp_title">Mvp模式</string>
 

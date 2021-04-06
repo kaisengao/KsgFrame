@@ -5,37 +5,11 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">45dp</item>
         <item name="android:minHeight">45dp</item>
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:background">#FFFFFF</item>
         <item name="contentInsetStart">0dp</item>
-        <item name="contentInsetStartWithNavigation">0dp</item>
-        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Light</item>
+        <item name="colorControlNormal">#000000</item>
+        <item name="android:actionBarSize">45dp</item>
     </style>
 
-    <!--toolbar 返回键样式-->
-    <style name="ToolbarBack">
-        <item name="android:layout_width">50dp</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:button">@null</item>
-        <item name="android:drawableStart">@drawable/icon_back</item>
-        <item name="android:drawableLeft">@drawable/icon_back</item>
-        <item name="android:gravity">center</item>
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:background">@color/transparent</item>
-        <item name="android:paddingStart">15dp</item>
-    </style>
-
-    <!--toolbar 标题样式-->
-    <style name="ToolbarTitle">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">match_parent</item>
-        <item name="android:ellipsize">marquee</item>
-        <item name="android:focusable">true</item>
-        <item name="android:focusableInTouchMode">true</item>
-        <item name="android:gravity">center</item>
-        <item name="android:marqueeRepeatLimit">marquee_forever</item>
-        <item name="android:scrollHorizontally">true</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="android:textSize">18sp</item>
-    </style>
 </resources>

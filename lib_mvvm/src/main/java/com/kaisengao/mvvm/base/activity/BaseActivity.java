@@ -2,6 +2,7 @@ package com.kaisengao.mvvm.base.activity;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Window;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
@@ -52,7 +53,8 @@ public abstract class BaseActivity<DB extends ViewDataBinding> extends AppCompat
      * 初始化窗口
      */
     protected void initWindow() {
-
+        // 设置noTitle
+        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
     }
 
     /**

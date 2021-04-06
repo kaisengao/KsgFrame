@@ -3,14 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.kasiengao.ksgframe">
 
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.FLASHLIGHT" />
-
-    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <uses-feature
         android:glEsVersion="0x00020000"
@@ -65,7 +66,11 @@
             android:name=".java.player.PlayerActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
-
+        <activity
+            android:name=".kt.camera.CameraActivity"
+            android:hardwareAccelerated="true"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
 
     </application>
 
