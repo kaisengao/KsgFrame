@@ -16,8 +16,6 @@
     <string name="btn_camera">USBCamera</string>
 
     <string name="camera_title">UVC摄像头</string>
-    <string name="camera_open">打开摄像头</string>
-    <string name="camera_close">关闭摄像头</string>
     <string name="camera_photograph">拍照</string>
     <string name="camera_start_recording">开始录制</string>
     <string name="camera_stop_recording">停止录制</string>

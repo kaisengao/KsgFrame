@@ -103,7 +103,7 @@ class VideotapeEncoder(
             MediaFormat.KEY_BITRATE_MODE,
             MediaCodecInfo.EncoderCapabilities.BITRATE_MODE_CBR
         )
-        mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, widthFix * heightFix * 5)
+        mediaFormat.setInteger(MediaFormat.KEY_BIT_RATE, widthFix * heightFix * 7)
         mediaFormat.setInteger(MediaFormat.KEY_FRAME_RATE, mFrameRate)
         mediaFormat.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, 10)
 
@@ -145,7 +145,7 @@ class VideotapeEncoder(
         }
     }
 
-    private fun finish() {
+    fun finish() {
         isRunning = false
         if (mediaCodec != null) {
             mediaCodec!!.stop()

@@ -1,4 +1,4 @@
-package com.kaisengao.uvccamera.usbcamera
+package com.kaisengao.uvccamera.camera
 
 import android.content.Context
 import android.content.Intent
@@ -29,6 +29,8 @@ class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
         private const val PREVIEW_HEIGHT = 480
     }
 
+    var mDuration: Int = 60
+
     private val mRecordingPath: String by lazy { "${galleryPath}${System.currentTimeMillis()}.mp4" }
 
     private val mBitmap: Bitmap by lazy {
@@ -41,15 +43,21 @@ class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
 
     private var mJob: Job? = null
 
+    private val mVideotape: VideotapeEncoder by lazy {
+        VideotapeEncoder(
+            this, File(mRecordingPath)
+        )
+    }
+
     constructor(context: Context) : super(context)
 
     constructor(context: Context, attributeSet: AttributeSet? = null) : super(context, attributeSet)
 
     init {
         Log.i(TAG, "init")
-        //设置背景透明，记住这里是[是否不透明]
+        // 设置背景透明，记住这里是[是否不透明]
         this.isOpaque = false
-        //设置监听
+        // 设置监听
         this.surfaceTextureListener = this
     }
 
@@ -137,11 +145,18 @@ class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
      * 开启录制
      */
     fun startRecording() {
-        VideotapeEncoder(this, File(mRecordingPath)).start()
+        this.mVideotape.start()
+    }
+
+    /**
+     * 停止录制
+     */
+    fun stopRecording() {
+        this.mVideotape.finish()
     }
 
     // （（秒*60）*每秒帧数）
-    override fun size(): Int = ((60 * 60) * 30)
+    override fun size(): Int = ((mDuration * 60) * 30)
 
     override fun next(): Bitmap = mBitmap
 
@@ -166,6 +181,4 @@ class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
             }
             return result + File.separator
         }
-
-
 }

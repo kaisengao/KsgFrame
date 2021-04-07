@@ -10,38 +10,36 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.kaisengao.uvccamera.usbcamera.CameraTextureView
+        <com.kaisengao.uvccamera.camera.KsgCameraView
             android:id="@+id/camera_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="@color/black"
             app:layout_constraintDimensionRatio="4:3"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+<!--        <androidx.appcompat.widget.AppCompatTextView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="摄像头未连接"-->
+<!--            android:textSize="30sp"-->
+<!--            android:textColor="@color/white"/>-->
+
         <androidx.constraintlayout.helper.widget.Flow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            app:constraint_referenced_ids="camera_open,camera_close,camera_photograph,camera_start_recording,camera_stop_recording"
+            app:constraint_referenced_ids="camera_photograph,camera_start_recording,camera_stop_recording"
             app:flow_horizontalGap="10dp"
             app:flow_maxElementsWrap="3"
             app:flow_verticalGap="10dp"
             app:flow_wrapMode="chain"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/camera_view" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/camera_open"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/camera_open" />
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/camera_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/camera_close" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/camera_photograph"
@@ -60,6 +58,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/camera_stop_recording" />
+
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
