@@ -148,6 +148,9 @@ bool V4LAchieve::SetCameraVideoFormat() {
     stV4l2Format.fmt.pix.pixelformat = V4L2_PIX_FMT_YUYV;
 //    stV4l2Format.fmt.pix.pixelformat = V4L2_PIX_FMT_MJPEG;
     stV4l2Format.fmt.pix.field = V4L2_FIELD_INTERLACED;
+    V4L_LOGI("set camera capture format resolution: %dx%d",
+             stV4l2Format.fmt.pix.width,
+             stV4l2Format.fmt.pix.height);
     //设置视频帧格式,包括宽度高度,帧的点阵格式(YUYV/MJPEG)
     if (ioctl(miOpenedCameraFd, VIDIOC_S_FMT, &stV4l2Format) < 0) {
         V4L_LOGE("set camera Capture format error! ");

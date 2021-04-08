@@ -1,18 +1,23 @@
 package com.kaisengao.uvccamera.camera
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
 import android.graphics.*
-import android.net.Uri
-import android.os.Environment
 import android.util.AttributeSet
 import android.util.Log
 import android.view.TextureView
+import androidx.core.content.ContextCompat
 import com.kaisengao.uvccamera.CameraProcessLib
+import com.kaisengao.uvccamera.utils.FileUtil
+import com.kaisengao.uvccamera.utils.RuntimeUtil
+import com.kaisengao.uvccamera.utils.TimeUtil
 import com.kaisengao.uvccamera.videotape.IVideotapeProvider
 import com.kaisengao.uvccamera.videotape.VideotapeEncoder
 import kotlinx.coroutines.*
 import java.io.File
+import java.text.SimpleDateFormat
+import java.util.*
+import kotlin.concurrent.thread
 
 /**
  * @ClassName: UsbCameraTextureView
@@ -27,11 +32,14 @@ class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
         private val TAG = CameraTextureView::class.java.simpleName
         private const val PREVIEW_WIDTH = 640
         private const val PREVIEW_HEIGHT = 480
+
+        const val FAILED_PERMISSION = -1
+        const val FAILED_PROCESS_CAMERA = -2
     }
 
-    var mDuration: Int = 60
+    private var mDuration: Int = 60
 
-    private val mRecordingPath: String by lazy { "${galleryPath}${System.currentTimeMillis()}.mp4" }
+    private var mProcessFailedCount: Int = 0
 
     private val mBitmap: Bitmap by lazy {
         Bitmap.createBitmap(PREVIEW_WIDTH, PREVIEW_HEIGHT, Bitmap.Config.RGB_565)
@@ -41,13 +49,22 @@ class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
 
     private val mDstRect: Rect by lazy { Rect(0, 0, width, height) }
 
+    private val mTimePaint: Paint by lazy {
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.DEV_KERN_TEXT_FLAG)
+        paint.textSize = 25.0f
+        paint.color = Color.WHITE
+        paint.setShadowLayer(
+            3f, 0f, 0f,
+            ContextCompat.getColor(context, android.R.color.background_dark)
+        )
+        paint
+    }
+
     private var mJob: Job? = null
 
-    private val mVideotape: VideotapeEncoder by lazy {
-        VideotapeEncoder(
-            this, File(mRecordingPath)
-        )
-    }
+    private var mVideotapeEncoder: VideotapeEncoder? = null
+
+    private var mCameraListener: OnCameraListener? = null
 
     constructor(context: Context) : super(context)
 
@@ -55,23 +72,41 @@ class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
 
     init {
         Log.i(TAG, "init")
+        // 执行节点权限命令
+        thread(start = true) {
+            RuntimeUtil.runCommand("chmod 777 /dev/video0")
+        }
+        // 初始值
+        this.mProcessFailedCount = 0
         // 设置背景透明，记住这里是[是否不透明]
         this.isOpaque = false
         // 设置监听
         this.surfaceTextureListener = this
     }
 
+    /**
+     * 设置 摄像头状态事件监听
+     */
+    fun setCameraListener(cameraListener: OnCameraListener) {
+        this.mCameraListener = cameraListener
+    }
+
     override fun onSurfaceTextureAvailable(surface: SurfaceTexture, width: Int, height: Int) {
         Log.i(TAG, "onSurfaceTextureAvailable")
         // 准备UsbCamera摄像头画面
-        val ret = CameraProcessLib.prepareUsbCamera(PREVIEW_WIDTH, PREVIEW_HEIGHT)
+        val prepare = CameraProcessLib.prepareUsbCamera(PREVIEW_WIDTH, PREVIEW_HEIGHT)
         // 验证
-        if (ret == -1) {
-            Log.i(TAG, "prepareUsbCamera error ret:$ret")
+        if (prepare == FAILED_PERMISSION) {
+            Log.i(TAG, "prepareUsbCamera error $prepare")
+            // 摄像头异常事件
+            this.mCameraListener?.onCameraError(FAILED_PERMISSION, "打开摄像头失败!")
+
             return
         }
         // 开启协程
         this.processUsbCameraJob().also { this.mJob = it }
+        // 摄像头可用事件
+        this.mCameraListener?.onCameraAvailable()
     }
 
     override fun onSurfaceTextureSizeChanged(surface: SurfaceTexture, width: Int, height: Int) {
@@ -90,6 +125,8 @@ class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
         this.releaseBitmap()
         // 释放UsbCamera
         CameraProcessLib.releaseUsbCamera()
+        // 摄像头销毁事件
+        this.mCameraListener?.onCameraDestroyed()
 
         return true
     }
@@ -104,81 +141,112 @@ class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
     }
 
     /**
-     * 协程
+     * 预览协程
      */
     private fun processUsbCameraJob(): Job = GlobalScope.launch {
         // 启动一个新协程并保持对这个作业的引用
         while (isActive) {
+            // 验证预览失败次数如果大于了最大值
+            // 就代表出现了花屏等情况（属于C文件问题 目前还没有能力修改）
+            if (mProcessFailedCount >= 3) {
+                Log.i(TAG, "processUsbCamera error $mProcessFailedCount")
+                // 协程中切换线程
+                withContext(Dispatchers.Main) {
+                    // 摄像头异常事件
+                    mCameraListener?.onCameraError(FAILED_PROCESS_CAMERA, "摄像头预览失败!")
+                }
+                // 停止预览协程
+                this@CameraTextureView.stopUsbCameraJob()
+            }
             // 处理UsbCamera画面
-            CameraProcessLib.processUsbCamera()
+            val cameraProcess = CameraProcessLib.processUsbCamera()
             // 将UsbCamera画面转换Bitmap
             CameraProcessLib.pixelToBmp(mBitmap)
             // 绘制到画布上
-            drawBitmap(mBitmap)
+            this@CameraTextureView.drawBitmap(mBitmap)
+            // 预览失败计数
+            if (!cameraProcess) {
+                this@CameraTextureView.mProcessFailedCount++
+            }
         }
     }
 
     /**
-     * 停止协程
+     * 停止预览协程
      */
     private fun stopUsbCameraJob() = runBlocking {
-        mJob?.cancelAndJoin()
+        this@CameraTextureView.mJob?.cancelAndJoin()
     }
 
     /**
      * 绘制Bitmap到画布
      */
     private fun drawBitmap(bitmap: Bitmap) {
-        //锁定画布
+        // 锁定画布
         val canvas = lockCanvas()
         if (canvas != null) {
-            //清空画布
+            // 清空画布
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
-            //将bitmap画到画布上
+            // 将bitmap画到画布上
             canvas.drawBitmap(bitmap, mSrcRect, mDstRect, null)
-            //解锁画布同时提交
-            unlockCanvasAndPost(canvas)
+            // 将日期时间画到画布上
+            val dateTime = TimeUtil.millis2String(System.currentTimeMillis())
+            val measureText = mTimePaint.measureText(dateTime)
+            canvas.drawText(dateTime, (width - measureText) - 10f, 25f, mTimePaint)
+            // 解锁画布同时提交
+            this.unlockCanvasAndPost(canvas)
         }
+    }
+
+    /**
+     * 时间戳转换成字符窜
+     *
+     * @param milSecond 时间戳
+     * @param pattern   时间格式
+     * @return 时间字符串
+     */
+    @SuppressLint("SimpleDateFormat")
+    fun getDateToString(milSecond: Long, pattern: String): String {
+        val date = Date(milSecond)
+        val dateFormat = SimpleDateFormat(pattern)
+        return dateFormat.format(date)
+    }
+
+    /**
+     * 设置 录制时长 (单位 秒)
+     */
+    fun setDuration(duration: Int) {
+        this.mDuration = duration
     }
 
     /**
      * 开启录制
      */
     fun startRecording() {
-        this.mVideotape.start()
+        if (mVideotapeEncoder == null) {
+            this.mVideotapeEncoder = VideotapeEncoder(
+                this, File(
+                    FileUtil.getFileDir(context, "/videotape/", "${System.currentTimeMillis()}.mp4")
+                )
+            )
+        }
+        this.mVideotapeEncoder?.start()
     }
 
     /**
      * 停止录制
      */
     fun stopRecording() {
-        this.mVideotape.finish()
+        this.mVideotapeEncoder?.stop()
+        this.mVideotapeEncoder = null
     }
 
-    // （（秒*60）*每秒帧数）
+    //（（秒*60）*每秒帧数）
     override fun size(): Int = ((mDuration * 60) * 30)
 
     override fun next(): Bitmap = mBitmap
 
     override fun progress(progress: Float) {
-        if (progress >= 1f) {
-            val intent = Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE)
-            val uri: Uri = Uri.fromFile(File(mRecordingPath))
-            intent.data = uri
-            context?.sendBroadcast(intent)
-        }
         Log.i(TAG, "progress = ${progress * 100}%")
     }
-
-    private val galleryPath: String
-        get() {
-            val result = (Environment.getExternalStorageDirectory().toString()
-                    + File.separator + Environment.DIRECTORY_DCIM
-                    + File.separator + "Camera" + File.separator)
-            val file = File(result)
-            if (!file.exists()) {
-                file.mkdir()
-            }
-            return result + File.separator
-        }
 }

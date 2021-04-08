@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="reboot">重启中.... 请稍等</string>
+
+    <string name="camera_disconnect">请插入摄像头</string>
+    <string name="camera_connecting">正在连接摄像头…</string>
+    <string name="camera_connect">摄像头运行中…</string>
+</resources>

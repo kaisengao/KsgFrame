@@ -1,7 +1,6 @@
 package com.kasiengao.ksgframe.kt.camera
 
 import com.kaisengao.mvvm.base.activity.BaseVmActivity
-import com.kaisengao.uvccamera.camera.CameraTextureView
 import com.kasiengao.ksgframe.BR
 import com.kasiengao.ksgframe.R
 import com.kasiengao.ksgframe.databinding.ActivityCameraBinding
@@ -36,11 +35,11 @@ class CameraActivity : BaseVmActivity<ActivityCameraBinding, CameraViewModel>() 
         }
         // 开始录制
         this.mBinding.cameraStartRecording.setOnClickListener {
-
+            this.mBinding.cameraView.startRecording()
         }
         // 停止录制
         this.mBinding.cameraStopRecording.setOnClickListener {
-
+            this.mBinding.cameraView.stopRecording()
         }
     }
 }

@@ -7,10 +7,10 @@ Java_com_kaisengao_uvccamera_CameraProcessLib_prepareUsbCamera(
     return prepareUsbCamera(width, height);
 }
 
-extern "C" JNIEXPORT void JNICALL
+extern "C" JNIEXPORT jboolean JNICALL
 Java_com_kaisengao_uvccamera_CameraProcessLib_processUsbCamera
         (JNIEnv *env, jclass type) {
-    processUsbCamera();
+    return processUsbCamera();
 }
 
 extern "C" JNIEXPORT void JNICALL

@@ -46,12 +46,13 @@ object RuntimeUtil {
             outputStream.flush()
             status = process.waitFor()
 
+            errorMsg = StringBuilder()
             var lineStr: String?
             while (successReader.readLine().also { lineStr = it } != null) {
                 debug(" command line item : $lineStr")
             }
             while (errorReader.readLine().also { lineStr = it } != null) {
-                errorMsg?.append(lineStr)
+                errorMsg.append(lineStr)
             }
         } catch (e: IOException) {
             e.printStackTrace()

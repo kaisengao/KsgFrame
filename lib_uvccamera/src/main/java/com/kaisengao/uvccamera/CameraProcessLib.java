@@ -18,7 +18,7 @@ public class CameraProcessLib {
 
     public static native int prepareUsbCamera(int width, int height);
 
-    public static native void processUsbCamera();
+    public static native boolean processUsbCamera();
 
     public static native void releaseUsbCamera();
 

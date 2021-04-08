@@ -9,24 +9,24 @@ import com.kaisengao.base.util.KLog
 import com.kaisengao.uvccamera.R
 
 /**
- * @ClassName: UsbBroadcast
+ * @ClassName: USBBroadcast
  * @Author: KaiSenGao
  * @CreateDate: 2021/4/7 14:37
  * @Description: 检测USB设备热插拔广播
  */
-class UsbBroadcast(private val mUsbDeviceListener: OnUsbDeviceListener) : BroadcastReceiver() {
+class USBBroadcast(private val mDeviceListener: OnDeviceListener) : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {
         when (intent.action) {
             // 检测USB设备插入
-            USBMonitor.ACTION_USB_PERMISSION,
+            USBMonitor.ACTION_KSG_USB_DEVICE,
             UsbManager.ACTION_USB_DEVICE_ATTACHED -> {
                 // 获取USB设备信息
                 val usbDevice = intent.getParcelableExtra<UsbDevice>(UsbManager.EXTRA_DEVICE)
                 // 设备过滤匹配
                 this.deviceFilter(context, usbDevice)?.let {
                     // 通知设备已插入
-                    this.mUsbDeviceListener.onAttached(it)
+                    this.mDeviceListener.onAttached(it)
                 }
             }
             // 检测USB设备拔出
@@ -36,7 +36,7 @@ class UsbBroadcast(private val mUsbDeviceListener: OnUsbDeviceListener) : Broadc
                 // 设备过滤匹配
                 this.deviceFilter(context, usbDevice)?.let {
                     // 通知设备已拔出
-                    this.mUsbDeviceListener.onDetached(it)
+                    this.mDeviceListener.onDetached(it)
                 }
             }
         }

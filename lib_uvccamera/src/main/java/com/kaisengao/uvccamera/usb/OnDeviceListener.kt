@@ -3,12 +3,12 @@ package com.kaisengao.uvccamera.usb
 import android.hardware.usb.UsbDevice
 
 /**
- * @ClassName: OnUsbDeviceListener
+ * @ClassName: OnDeviceListener
  * @Author: KaiSenGao
  * @CreateDate: 2021/4/7 10:21
  * @Description: 设备连接事件
  */
-interface OnUsbDeviceListener {
+interface OnDeviceListener {
 
     /**
      * 设备已接入

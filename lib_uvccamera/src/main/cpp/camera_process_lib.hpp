@@ -36,12 +36,13 @@ int prepareUsbCamera(int width, int height) {
     return JNI_OK;
 }
 
-void processUsbCamera() {
-    oV4LAchieve->CameraVideoGetLoop();
+bool processUsbCamera() {
+    bool process = oV4LAchieve->CameraVideoGetLoop();
     cv::Mat yuvimg(IMG_HEIGHT, IMG_WIDTH, CV_8UC2, oV4LAchieve->GetpYUYV422());
     cv::cvtColor(yuvimg, yuvimg, cv::COLOR_YUV2BGR_YUYV);
     row_frame = yuvimg;
     preview_frame = row_frame.clone();
+    return process;
 }
 
 void pixelToBmp(JNIEnv *env, jobject &bitmap) {

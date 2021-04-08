@@ -24,6 +24,7 @@ class VideotapeEncoder(
     private var mediaCodec: MediaCodec? = null
     private var mediaMuxer: MediaMuxer? = null
     private var mMuxerStarted = false
+    private var isStop = false
     private var isRunning = false
     private var mTrackIndex = 0
     private var colorFormat = 0
@@ -145,8 +146,13 @@ class VideotapeEncoder(
         }
     }
 
-    fun finish() {
-        isRunning = false
+    fun stop() {
+        this.isStop = true
+    }
+
+   private fun finish() {
+       this.isStop = false
+        this.isRunning = false
         if (mediaCodec != null) {
             mediaCodec!!.stop()
             mediaCodec!!.release()
@@ -165,8 +171,9 @@ class VideotapeEncoder(
     }
 
     private fun run(bitmapFirst: Bitmap?) {
+        this.isStop = false
+        this.isRunning = true
         var bitmap = bitmapFirst
-        isRunning = true
         var generateIndex: Long = 0
         val info = MediaCodec.BufferInfo()
         var buffers: Array<ByteBuffer?>? = null
@@ -180,7 +187,7 @@ class VideotapeEncoder(
                 IProvider.progress(
                     generateIndex / IProvider.size().toFloat()
                 )
-                if (generateIndex >= IProvider.size()) {
+                if (generateIndex >= IProvider.size() || isStop) {
                     mediaCodec!!.queueInputBuffer(
                         inputBufferIndex,
                         0,
@@ -259,7 +266,7 @@ class VideotapeEncoder(
                 mMuxerStarted = true
             } else if (encoderStatus < 0) {
                 Log.d(
-                    "YapVideoEncoder",
+                    "VideotapeEncoder",
                     "unexpected result from encoder.dequeueOutputBuffer: $encoderStatus"
                 )
             } else {
@@ -273,7 +280,7 @@ class VideotapeEncoder(
                 }
                 if (bufferInfo.size != 0) {
                     if (!mMuxerStarted) {
-                        Log.d("YapVideoEncoder", "error:muxer hasn't started")
+                        Log.d("VideotapeEncoder", "error:muxer hasn't started")
                     }
                     outputBuffer.position(bufferInfo.offset)
                     outputBuffer.limit(bufferInfo.offset + bufferInfo.size)
@@ -286,10 +293,10 @@ class VideotapeEncoder(
                 mediaCodec!!.releaseOutputBuffer(encoderStatus, false)
                 if (bufferInfo.flags and MediaCodec.BUFFER_FLAG_END_OF_STREAM != 0) {
                     if (!endOfStream) {
-                        Log.d("YapVideoEncoder", "reached end of stream unexpectedly")
+                        Log.d("VideotapeEncoder", "reached end of stream unexpectedly")
                         IProvider.progress(-1f)
                     } else {
-                        Log.d("YapVideoEncoder", "end of stream reached")
+                        Log.d("VideotapeEncoder", "end of stream reached")
                     }
                     break
                 }
