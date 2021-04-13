@@ -15,6 +15,7 @@ import com.kaisengao.base.util.KLog
 import com.kaisengao.uvccamera.R
 import com.kaisengao.uvccamera.camera.CameraTextureView
 import com.kaisengao.uvccamera.camera.OnCameraListener
+import com.kaisengao.uvccamera.exe.ExeCommand
 import com.kaisengao.uvccamera.usb.OnDeviceListener
 import com.kaisengao.uvccamera.usb.USBMonitor
 import com.kaisengao.uvccamera.utils.DialogUtil
@@ -38,6 +39,8 @@ class KsgCameraView : FrameLayout, View.OnAttachStateChangeListener {
     private var mStatusRoot: View? = null
 
     private var mStatusView: AppCompatTextView? = null
+
+    private val mExeCommand: ExeCommand by lazy { ExeCommand() }
 
     constructor(context: Context) : super(context)
 
@@ -101,14 +104,16 @@ class KsgCameraView : FrameLayout, View.OnAttachStateChangeListener {
              */
             override fun onAttached(device: UsbDevice) {
                 if (!isAttach) {
+                    // 执行节点权限命令
+                    mExeCommand.run("chmod 777 /dev/video0", 1000)
                     // 设置连接状态 连接中
                     setStatusView(STATUS_CONNECTING)
                     // 创建摄像头组件
                     mCameraView = CameraTextureView(context)
                     // 设置 摄像头状态事件
                     mCameraView?.setCameraListener(mCameraListener)
-                    // 设置 录制时长（单位 秒）
-                    mCameraView?.setDuration(1)
+                    // 设置 录制时长（单位 分）
+                    mCameraView?.setDuration(60)
                     // 添加摄像头组件
                     this@KsgCameraView.addView(
                         mCameraView, 0, ViewGroup.LayoutParams(
@@ -192,14 +197,14 @@ class KsgCameraView : FrameLayout, View.OnAttachStateChangeListener {
      * 开启录制
      */
     fun startRecording() {
-        this.mCameraView?.startRecording()
+        this.mCameraView?.startRecord()
     }
 
     /**
      * 停止录制
      */
     fun stopRecording() {
-        this.mCameraView?.stopRecording()
+        this.mCameraView?.stopRecord()
     }
 
     /**

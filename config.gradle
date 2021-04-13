@@ -3,7 +3,7 @@ ext {
     // Android开发版本配置
     android = [
             compileSdkVersion: 29,
-            buildToolsVersion: "29.0.2",
+            buildToolsVersion: "29.0.0",
             applicationId    : "com.kasiengao.ksgframe",
             minSdkVersion    : 21,
             targetSdkVersion : 29,

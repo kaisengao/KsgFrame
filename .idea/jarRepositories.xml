@@ -36,5 +36,20 @@
       <option name="name" value="maven3" />
       <option name="url" value="https://gitee.com/liuchaoya/libcommon/raw/master/repository/" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="H:\SDK\extras\m2repository" />
+      <option name="name" value="H:\SDK\extras\m2repository" />
+      <option name="url" value="file:/$PROJECT_DIR$/../../../SDK/extras/m2repository" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="H:\SDK\extras\google\m2repository" />
+      <option name="name" value="H:\SDK\extras\google\m2repository" />
+      <option name="url" value="file:/$PROJECT_DIR$/../../../SDK/extras/google/m2repository" />
+    </remote-repository>
+    <remote-repository>
+      <option name="id" value="H:\SDK\extras\android\m2repository" />
+      <option name="name" value="H:\SDK\extras\android\m2repository" />
+      <option name="url" value="file:/$PROJECT_DIR$/../../../SDK/extras/android/m2repository" />
+    </remote-repository>
   </component>
 </project>

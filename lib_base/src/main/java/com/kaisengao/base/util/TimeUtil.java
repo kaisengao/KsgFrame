@@ -58,4 +58,39 @@ public class TimeUtil {
         return String.format(format, hours, minutes, seconds);
     }
 
+    /**
+     * 转换时间
+     *
+     * @param time time
+     * @return String
+     */
+    public static String getTimeFormatText(long time) {
+        // 天
+        long days = time / (1000 * 60 * 60 * 24);
+        // 时
+        long hours = (time - days * (1000 * 60 * 60 * 24)) / (1000 * 60 * 60);
+        // 分
+        long minutes = (time - days * (1000 * 60 * 60 * 24) - hours * (1000 * 60 * 60)) / (1000 * 60);
+        // 秒
+        long second = (time / 1000 - days * 24 * 60 * 60 - hours * 60 * 60 - minutes * 60);
+        // 拼接
+        String timeStr = "";
+        if (days > 0) {
+            timeStr += days + "天";
+        }
+        if (hours > 0) {
+            timeStr += hours + "小时";
+        }
+        if (minutes > 0) {
+            timeStr += minutes + (second > 0 ? "分" : "分钟");
+        }
+        if (second > 0) {
+            if (second < 10) {
+                timeStr += 0;
+            }
+            timeStr += second + "秒";
+        }
+        return timeStr;
+    }
+
 }

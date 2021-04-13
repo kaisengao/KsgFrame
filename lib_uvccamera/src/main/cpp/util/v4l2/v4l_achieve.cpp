@@ -172,8 +172,8 @@ bool V4LAchieve::SetCameraVideoFormat() {
     if (stV4l2RequestBuffers.count < 2) {
         V4L_LOGE("Insufficient buffer memory");
     }
-    V4L_LOGI("The Camera Apply Cache Success");;
-    V4L_LOGI("Cache Num = %d", stV4l2RequestBuffers.count);;
+    V4L_LOGI("The Camera Apply Cache Success");
+    V4L_LOGI("Cache Num = %d", stV4l2RequestBuffers.count);
     V4L_LOGI("Cache  Size = %d", stV4l2RequestBuffers.memory);
     V4L_LOGI("Cache  Type = %d", stV4l2RequestBuffers.type);
     //保存缓存的帧数

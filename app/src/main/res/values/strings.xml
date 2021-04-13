@@ -39,10 +39,4 @@
 
     <string name="loading_mvvm">MVVM加载中~</string>
 
-    <string-array name="players">
-        <item>ExoPlayer</item>
-        <item>TxVodPlayer</item>
-        <item>TxLivePlayer</item>
-    </string-array>
-
 </resources>

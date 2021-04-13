@@ -4,10 +4,11 @@
     <color name="colorPrimaryDark">#1E88E5</color>
     <color name="colorAccent">#448AFF</color>
 
-    <color name="color_FF5252">#FF5252</color>
-    <color name="color_F49B3C">#F49B3C</color>
-
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
 
+    <color name="color_FF5252">#FF5252</color>
+    <color name="color_F49B3C">#F49B3C</color>
+    <color name="color_E76135">#E76135</color>
+    <color name="color_999999">#999999</color>
 </resources>

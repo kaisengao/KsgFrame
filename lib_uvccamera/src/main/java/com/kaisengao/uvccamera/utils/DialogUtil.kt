@@ -18,7 +18,6 @@ object DialogUtil {
     fun getRebootDialog(context: Context): AlertDialog {
         return AlertDialog.Builder(context)
             .setTitle("提示")
-            .setCancelable(false)
             .setMessage("系统出现错误，请重启手机！")
             .setPositiveButton("重启", null)
             .create().also {

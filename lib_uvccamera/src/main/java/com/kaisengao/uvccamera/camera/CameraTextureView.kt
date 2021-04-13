@@ -1,6 +1,5 @@
 package com.kaisengao.uvccamera.camera
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.*
 import android.util.AttributeSet
@@ -9,15 +8,13 @@ import android.view.TextureView
 import androidx.core.content.ContextCompat
 import com.kaisengao.uvccamera.CameraProcessLib
 import com.kaisengao.uvccamera.utils.FileUtil
-import com.kaisengao.uvccamera.utils.RuntimeUtil
 import com.kaisengao.uvccamera.utils.TimeUtil
-import com.kaisengao.uvccamera.videotape.IVideotapeProvider
-import com.kaisengao.uvccamera.videotape.VideotapeEncoder
+import com.kaisengao.uvccamera.videotape.IRecordProvider
+import com.kaisengao.uvccamera.videotape.RecordEncoder
 import kotlinx.coroutines.*
 import java.io.File
-import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.concurrent.thread
+
 
 /**
  * @ClassName: UsbCameraTextureView
@@ -26,7 +23,7 @@ import kotlin.concurrent.thread
  * @Description: UsbCamera TextureView
  */
 class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
-    IVideotapeProvider<Bitmap> {
+    IRecordProvider<Bitmap> {
 
     companion object {
         private val TAG = CameraTextureView::class.java.simpleName
@@ -59,10 +56,11 @@ class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
         )
         paint
     }
+    private val mTimeCanvas: Canvas by lazy { Canvas(mBitmap) }
 
     private var mJob: Job? = null
 
-    private var mVideotapeEncoder: VideotapeEncoder? = null
+    private var mRecordEncoder: RecordEncoder? = null
 
     private var mCameraListener: OnCameraListener? = null
 
@@ -72,10 +70,6 @@ class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
 
     init {
         Log.i(TAG, "init")
-        // 执行节点权限命令
-        thread(start = true) {
-            RuntimeUtil.runCommand("chmod 777 /dev/video0")
-        }
         // 初始值
         this.mProcessFailedCount = 0
         // 设置背景透明，记住这里是[是否不透明]
@@ -185,35 +179,21 @@ class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
         // 锁定画布
         val canvas = lockCanvas()
         if (canvas != null) {
+            // 将日期时间画到画布上
+            val dateTime = TimeUtil.millis2String(System.currentTimeMillis())
+            val measureText = mTimePaint.measureText(dateTime)
+            this.mTimeCanvas.drawText(dateTime, (bitmap.width - measureText) - 10f, 25f, mTimePaint)
             // 清空画布
             canvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR)
             // 将bitmap画到画布上
             canvas.drawBitmap(bitmap, mSrcRect, mDstRect, null)
-            // 将日期时间画到画布上
-            val dateTime = TimeUtil.millis2String(System.currentTimeMillis())
-            val measureText = mTimePaint.measureText(dateTime)
-            canvas.drawText(dateTime, (width - measureText) - 10f, 25f, mTimePaint)
             // 解锁画布同时提交
             this.unlockCanvasAndPost(canvas)
         }
     }
 
     /**
-     * 时间戳转换成字符窜
-     *
-     * @param milSecond 时间戳
-     * @param pattern   时间格式
-     * @return 时间字符串
-     */
-    @SuppressLint("SimpleDateFormat")
-    fun getDateToString(milSecond: Long, pattern: String): String {
-        val date = Date(milSecond)
-        val dateFormat = SimpleDateFormat(pattern)
-        return dateFormat.format(date)
-    }
-
-    /**
-     * 设置 录制时长 (单位 秒)
+     * 设置 录制时长 (单位 分)
      */
     fun setDuration(duration: Int) {
         this.mDuration = duration
@@ -222,26 +202,26 @@ class CameraTextureView : TextureView, TextureView.SurfaceTextureListener,
     /**
      * 开启录制
      */
-    fun startRecording() {
-        if (mVideotapeEncoder == null) {
-            this.mVideotapeEncoder = VideotapeEncoder(
+    fun startRecord() {
+        if (mRecordEncoder == null) {
+            this.mRecordEncoder = RecordEncoder(
                 this, File(
-                    FileUtil.getFileDir(context, "/videotape/", "${System.currentTimeMillis()}.mp4")
+                    FileUtil.getFileDir(context, "/Record/", "${System.currentTimeMillis()}.mp4")
                 )
             )
         }
-        this.mVideotapeEncoder?.start()
+        this.mRecordEncoder?.start()
     }
 
     /**
      * 停止录制
      */
-    fun stopRecording() {
-        this.mVideotapeEncoder?.stop()
-        this.mVideotapeEncoder = null
+    fun stopRecord() {
+        this.mRecordEncoder?.stop()
+        this.mRecordEncoder = null
     }
 
-    //（（秒*60）*每秒帧数）
+    //（（分*60）*每秒帧数）
     override fun size(): Int = ((mDuration * 60) * 30)
 
     override fun next(): Bitmap = mBitmap

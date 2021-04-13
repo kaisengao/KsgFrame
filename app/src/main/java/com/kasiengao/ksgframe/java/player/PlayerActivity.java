@@ -1,13 +1,13 @@
 package com.kasiengao.ksgframe.java.player;
 
-import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.AppCompatSpinner;
 import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kaisengao.base.util.DensityUtil;
@@ -32,7 +32,6 @@ import com.ksg.ksgplayer.receiver.ReceiverGroup;
 import com.ksg.ksgplayer.widget.KsgAssistView;
 
 import butterknife.BindView;
-import butterknife.OnItemSelected;
 
 /**
  * @ClassName: PlayerVideo
@@ -46,8 +45,8 @@ public class PlayerActivity extends BaseToolbarActivity {
     PlayerContainerView mContainerView;
     @BindView(R.id.player_decoder)
     AppCompatTextView mPlayerDecoder;
-    @BindView(R.id.player_spinner)
-    AppCompatSpinner mCompatSpinner;
+
+    private String mPath;
 
     private boolean mUserPause;
 
@@ -67,6 +66,12 @@ public class PlayerActivity extends BaseToolbarActivity {
 
     private KsgTxLivePlayer mKsgTxLivePlayer;
 
+    public static void startActivity(Context context, String path) {
+        Intent intent = new Intent(context, PlayerActivity.class);
+        intent.putExtra("path", path);
+        context.startActivity(intent);
+    }
+
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_player;
@@ -75,6 +80,13 @@ public class PlayerActivity extends BaseToolbarActivity {
     @Override
     protected boolean isDisplayToolbar() {
         return false;
+    }
+
+    @Override
+    protected void initArgs(Bundle bundle) {
+        super.initArgs(bundle);
+        if (bundle != null)
+            this.mPath = bundle.getString("path", "");
     }
 
     @Override
@@ -93,9 +105,6 @@ public class PlayerActivity extends BaseToolbarActivity {
     }
 
     private void initAssistView() {
-
-        this.mCompatSpinner.setSelection(1, false);
-
         this.mKsgAssistView = new KsgAssistView(this);
         this.mKsgAssistView.setDecoderView(createTxVod());
         this.mKsgAssistView.getVideoPlayer().getKsgContainer().setBackgroundColor(Color.BLACK);
@@ -106,7 +115,7 @@ public class PlayerActivity extends BaseToolbarActivity {
         this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new GestureCover(this));
 
         this.mKsgAssistView.getVideoPlayer().setReceiverGroup(mReceiverGroup);
-        this.mKsgAssistView.getVideoPlayer().setBaseEventAssistHandler(new OnAssistViewEventHandler(mKsgAssistView){
+        this.mKsgAssistView.getVideoPlayer().setBaseEventAssistHandler(new OnAssistViewEventHandler(mKsgAssistView) {
             @Override
             public void onAssistHandle(int eventCode, Bundle bundle) {
                 super.onAssistHandle(eventCode, bundle);
@@ -150,7 +159,8 @@ public class PlayerActivity extends BaseToolbarActivity {
      * 播放
      */
     private void onPlay() {
-        this.onPlay("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4", false);
+//        this.onPlay("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4", false);
+        this.onPlay(mPath, false);
     }
 
     /**
@@ -236,7 +246,6 @@ public class PlayerActivity extends BaseToolbarActivity {
         }
     }
 
-    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onBackPressed() {
         // 1、验证横竖屏
@@ -253,7 +262,6 @@ public class PlayerActivity extends BaseToolbarActivity {
         super.onBackPressed();
     }
 
-    @OnItemSelected(R.id.player_spinner)
     public void onItemSelected(int position) {
         if (mInitSpinner) {
             this.mInitSpinner = false;

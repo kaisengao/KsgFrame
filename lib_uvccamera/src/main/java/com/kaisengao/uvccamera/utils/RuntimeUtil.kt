@@ -18,7 +18,7 @@ object RuntimeUtil {
 
     private val TAG: String = RuntimeUtil::class.java.simpleName
 
-    fun runCommand(command: String) {
+    fun runCommand(command: String): Int {
         debug("execute command start : $command")
         var status = -1
         var process: Process? = null
@@ -88,7 +88,8 @@ object RuntimeUtil {
                 "execute command end,errorMsg:%s,and status %d: ", errorMsg,
                 status
             )
-        );
+        )
+        return status
     }
 
     /**

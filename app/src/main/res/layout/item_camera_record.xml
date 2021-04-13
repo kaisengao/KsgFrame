@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/record_cover"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        tools:src="@color/black" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/record_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/black"
+        android:textSize="15sp"
+        tools:text="21312312312312.mp4" />
+
+</LinearLayout>

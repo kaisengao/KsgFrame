@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
+        <import type="android.view.View" />
+
+        <import type="com.kasiengao.ksgframe.kt.camera.CameraViewModel" />
+
+        <variable
+            name="viewModel"
+            type="CameraViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -19,6 +27,22 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/camera_recording_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="@{viewModel.recordTime}"
+            android:textColor="@color/color_E76135"
+            android:textSize="20sp"
+            android:visibility="@{viewModel.recording ? View.VISIBLE : View.GONE}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/camera_view"
+            tools:text="已录制%s" />
+
         <androidx.constraintlayout.helper.widget.Flow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,13 +53,14 @@
             app:flow_verticalGap="10dp"
             app:flow_wrapMode="chain"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/camera_view" />
+            app:layout_constraintTop_toBottomOf="@id/camera_recording_time" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/camera_photograph"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/camera_photograph" />
+            android:text="@string/camera_photograph"
+            android:visibility="gone" />
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/camera_start_recording"
@@ -49,6 +74,12 @@
             android:layout_height="wrap_content"
             android:text="@string/camera_stop_recording" />
 
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/camera_record"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/camera_stop_recording" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
