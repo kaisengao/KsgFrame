@@ -3,6 +3,7 @@ package com.kasiengao.ksgframe.java;
 import android.content.Intent;
 
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.java.grid.TouchGridActivity;
 import com.kasiengao.ksgframe.java.mvp.MvpActivity;
 import com.kasiengao.ksgframe.java.mvvm.MvvmActivity;
 import com.kasiengao.ksgframe.java.player.PlayerActivity;
@@ -52,6 +53,11 @@ public class JavaActivity extends BaseToolbarActivity {
         this.findViewById(R.id.java_player).setOnClickListener(v -> {
             // KsgVideoPlayer
             this.startActivity(new Intent(this, PlayerActivity.class));
+        });
+        // TouchGrid
+        this.findViewById(R.id.btn_grid).setOnClickListener(v -> {
+            // TouchGrid
+            this.startActivity(new Intent(this, TouchGridActivity.class));
         });
     }
 }

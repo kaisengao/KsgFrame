@@ -45,6 +45,13 @@
             android:text="@string/btn_player"
             android:textAllCaps="false" />
 
+        <!-- TouchGrid-->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_grid"
+            style="@style/btn_style"
+            android:text="@string/btn_grid"
+            android:textAllCaps="false" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

@@ -12,6 +12,7 @@
     <string name="btn_rx_retrofit">RxRetrofit</string>
     <string name="btn_staggered_grid">StaggeredGrid</string>
     <string name="btn_player">KsgVideoPlayer</string>
+    <string name="btn_grid">TouchGrid</string>
     <string name="btn_other">待定</string>
     <string name="btn_camera">USBCamera</string>
 
@@ -38,5 +39,7 @@
     <string name="preview_count">%d/%d</string>
 
     <string name="loading_mvvm">MVVM加载中~</string>
+
+    <string name="drap_title">拖拽</string>
 
 </resources>

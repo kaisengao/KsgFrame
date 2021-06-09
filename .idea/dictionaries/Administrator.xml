@@ -15,6 +15,7 @@
       <w>timeval</w>
       <w>usec</w>
       <w>uvccamera</w>
+      <w>viewmodel</w>
     </words>
   </dictionary>
 </component>
