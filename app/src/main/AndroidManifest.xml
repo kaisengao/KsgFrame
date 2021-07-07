@@ -88,5 +88,9 @@
             android:name=".java.grid.TouchGridActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".java.gesture.GestureActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

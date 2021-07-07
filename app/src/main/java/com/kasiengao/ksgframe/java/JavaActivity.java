@@ -3,6 +3,7 @@ package com.kasiengao.ksgframe.java;
 import android.content.Intent;
 
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.java.gesture.GestureActivity;
 import com.kasiengao.ksgframe.java.grid.TouchGridActivity;
 import com.kasiengao.ksgframe.java.mvp.MvpActivity;
 import com.kasiengao.ksgframe.java.mvvm.MvvmActivity;
@@ -58,6 +59,11 @@ public class JavaActivity extends BaseToolbarActivity {
         this.findViewById(R.id.btn_grid).setOnClickListener(v -> {
             // TouchGrid
             this.startActivity(new Intent(this, TouchGridActivity.class));
+        });
+        // GestureView
+        this.findViewById(R.id.btn_gesture).setOnClickListener(v -> {
+            // GestureView
+            this.startActivity(new Intent(this, GestureActivity.class));
         });
     }
 }

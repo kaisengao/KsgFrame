@@ -58,13 +58,12 @@ public class TouchGridActivity extends BaseVmActivity<ActivityTouchGridBinding, 
         ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
             public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                final int swipeFlags = ItemTouchHelper.ACTION_STATE_IDLE;
                 if (recyclerView.getLayoutManager() instanceof GridLayoutManager) {
                     final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN | ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-                    final int swipeFlags = ItemTouchHelper.ACTION_STATE_IDLE;
                     return makeMovementFlags(dragFlags, swipeFlags);
                 } else {
                     final int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-                    final int swipeFlags = 0;
                     return makeMovementFlags(dragFlags, swipeFlags);
                 }
             }

@@ -13,6 +13,7 @@
     <string name="btn_staggered_grid">StaggeredGrid</string>
     <string name="btn_player">KsgVideoPlayer</string>
     <string name="btn_grid">TouchGrid</string>
+    <string name="btn_gesture">GestureView</string>
     <string name="btn_other">待定</string>
     <string name="btn_camera">USBCamera</string>
 
