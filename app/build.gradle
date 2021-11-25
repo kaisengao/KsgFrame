@@ -59,14 +59,12 @@ dependencies {
     implementation project(':lib_mvp')
     // MVVM
     implementation project(':lib_mvvm')
+    // PhotoEditor
+    implementation project(':lib_photoeditor')
     // Rx + Retrofit
     implementation project(':lib_rx_retrofit')
     // KsgPlayer
     implementation project(':lib_ksgPlayer')
     // UVCCamera
     implementation project(':lib_uvccamera')
-
-    implementation 'com.jiajunhui.xapp.medialoader:medialoader:1.2.1'
-    implementation 'androidx.appcompat:appcompat:1.2.0'
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
 }

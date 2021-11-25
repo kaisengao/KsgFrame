@@ -14,8 +14,10 @@
     <string name="btn_player">KsgVideoPlayer</string>
     <string name="btn_grid">TouchGrid</string>
     <string name="btn_gesture">GestureView</string>
-    <string name="btn_other">待定</string>
     <string name="btn_camera">USBCamera</string>
+    <string name="btn_edit_image">PhotoEditor</string>
+
+    <string name="btn_other">待定</string>
 
     <string name="camera_title">UVC摄像头</string>
     <string name="camera_photograph">拍照</string>

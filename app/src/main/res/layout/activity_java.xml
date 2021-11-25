@@ -59,6 +59,13 @@
             android:text="@string/btn_gesture"
             android:textAllCaps="false" />
 
+        <!-- PhotoEditor-->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_edit_image"
+            style="@style/btn_style"
+            android:text="@string/btn_edit_image"
+            android:textAllCaps="false" />
+
     </LinearLayout>
 
 </androidx.core.widget.NestedScrollView>

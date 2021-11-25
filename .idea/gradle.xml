@@ -15,12 +15,12 @@
             <option value="$PROJECT_DIR$/lib_ksgPlayer" />
             <option value="$PROJECT_DIR$/lib_mvp" />
             <option value="$PROJECT_DIR$/lib_mvvm" />
+            <option value="$PROJECT_DIR$/lib_photoeditor" />
             <option value="$PROJECT_DIR$/lib_rx_retrofit" />
             <option value="$PROJECT_DIR$/lib_uvccamera" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />
-        <option name="useQualifiedModuleNames" value="true" />
       </GradleProjectSettings>
     </option>
   </component>

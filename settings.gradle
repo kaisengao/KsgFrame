@@ -4,5 +4,7 @@ include ':lib_base'
 include ':lib_ksgPlayer'
 include ':lib_mvp'
 include ':lib_mvvm'
+include ':lib_photoeditor'
 include ':lib_rx_retrofit'
 include ':lib_uvccamera'
+

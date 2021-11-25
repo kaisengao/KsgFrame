@@ -36,7 +36,7 @@
         android:roundIcon="@mipmap/logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning"
+        tools:ignore="GoogleAppIndexingWarning,LockedOrientationActivity"
         tools:replace="android:allowBackup"
         tools:targetApi="n">
         <activity
@@ -90,6 +90,14 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".java.gesture.GestureActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".java.photo.EditImageActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".java.canvas.CanvasActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
     </application>
