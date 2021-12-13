@@ -1,13 +1,9 @@
 package com.kasiengao.mvp.kt
 
-import android.graphics.Color
 import android.os.Bundle
 import android.view.Window
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
-import butterknife.ButterKnife
-import com.kaisengao.base.util.StatusBarUtil
-import com.kaisengao.base.util.ToastUtil
 
 /**
  * @ClassName: BaseActivity
@@ -39,7 +35,6 @@ abstract class BaseActivity : AppCompatActivity() {
      * 初始化窗口
      */
     protected open fun initWindow() {
-        // 设置noTitle
         this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE)
     }
 
@@ -54,30 +49,18 @@ abstract class BaseActivity : AppCompatActivity() {
      * 初始化控件调用之前
      */
     protected open fun initBefore() {
-        StatusBarUtil.StatusBarDarkMode(this)
-        StatusBarUtil.transparencyBar(this, Color.WHITE)
     }
 
     /**
      * 初始化控件
      */
     protected open fun initWidget() {
-        ButterKnife.bind(this)
     }
 
     /**
      * 初始化数据
      */
     protected open fun initData() {}
-
-    /**
-     * Toast
-     *
-     * @param message message
-     */
-    protected open fun showLongSafe(message: String?) {
-        ToastUtil.showLongSafe(message)
-    }
 
     /**
      * 返回LoadSir需要覆盖的布局

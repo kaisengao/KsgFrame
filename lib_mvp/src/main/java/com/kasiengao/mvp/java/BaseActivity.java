@@ -1,16 +1,11 @@
 package com.kasiengao.mvp.java;
 
-import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Window;
 
 import androidx.annotation.LayoutRes;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-
-import com.kaisengao.base.util.StatusBarUtil;
-import com.kaisengao.base.util.ToastUtil;
-
-import butterknife.ButterKnife;
 
 /**
  * @ClassName: BaseActivity
@@ -43,7 +38,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 初始化窗口
      */
     protected void initWindow() {
-
+        this.supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
     }
 
     /**
@@ -59,16 +54,13 @@ public abstract class BaseActivity extends AppCompatActivity {
      * 初始化控件调用之前
      */
     protected void initBefore() {
-        StatusBarUtil.StatusBarDarkMode(this);
-        StatusBarUtil.transparencyBar(this, Color.WHITE);
+
     }
 
     /**
      * 初始化控件
      */
     protected void initWidget() {
-        ButterKnife.bind(this);
-
     }
 
     /**
@@ -85,14 +77,5 @@ public abstract class BaseActivity extends AppCompatActivity {
      */
     protected Object getInflate() {
         return this;
-    }
-
-    /**
-     * Toast
-     *
-     * @param message message
-     */
-    protected void showLongSafe(String message) {
-        ToastUtil.showLongSafe(message);
     }
 }

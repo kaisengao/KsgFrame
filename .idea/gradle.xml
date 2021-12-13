@@ -12,12 +12,10 @@
             <option value="$PROJECT_DIR$" />
             <option value="$PROJECT_DIR$/app" />
             <option value="$PROJECT_DIR$/lib_base" />
-            <option value="$PROJECT_DIR$/lib_ksgPlayer" />
+            <option value="$PROJECT_DIR$/lib_http" />
             <option value="$PROJECT_DIR$/lib_mvp" />
             <option value="$PROJECT_DIR$/lib_mvvm" />
-            <option value="$PROJECT_DIR$/lib_photoeditor" />
-            <option value="$PROJECT_DIR$/lib_rx_retrofit" />
-            <option value="$PROJECT_DIR$/lib_uvccamera" />
+            <option value="$PROJECT_DIR$/lib_player" />
           </set>
         </option>
         <option name="resolveModulePerSourceSet" value="false" />

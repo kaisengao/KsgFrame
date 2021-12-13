@@ -2,7 +2,6 @@ package com.kasiengao.ksgframe.java.mvp;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.mvp.java.BasePresenterActivity;
@@ -13,9 +12,9 @@ import com.kasiengao.mvp.java.BasePresenterActivity;
  * @CreateDate: 2020/3/27 23:55
  * @Description: Mvp
  */
-public class MvpActivity extends BasePresenterActivity<MvpContract.IPresenter> implements MvpContract.IView, SwipeRefreshLayout.OnRefreshListener {
+public class MvpActivity extends BasePresenterActivity<MvpContract.IPresenter> implements MvpContract.IView{
 
-    private SwipeRefreshLayout mMvpRefresh;
+//    private SwipeRefreshLayout mMvpRefresh;
 
     private TrailerAdapter mTrailerAdapter;
 
@@ -50,20 +49,20 @@ public class MvpActivity extends BasePresenterActivity<MvpContract.IPresenter> i
         mvpRecycler.setLayoutManager(new LinearLayoutManager(this));
         mvpRecycler.setAdapter(this.mTrailerAdapter);
         // Refresh
-        this.mMvpRefresh = findViewById(R.id.mvp_refresh);
-        this.mMvpRefresh.setOnRefreshListener(this);
-        this.mMvpRefresh.setRefreshing(true);
-        this.onRefresh();
+//        this.mMvpRefresh = findViewById(R.id.mvp_refresh);
+//        this.mMvpRefresh.setOnRefreshListener(this);
+//        this.mMvpRefresh.setRefreshing(true);
+//        this.onRefresh();
     }
 
-    /**
-     * 下拉刷新
-     */
-    @Override
-    public void onRefresh() {
-        // 请求 预告视频列表
-        this.mPresenter.requestTrailerList();
-    }
+//    /**
+//     * 下拉刷新
+//     */
+//    @Override
+//    public void onRefresh() {
+//        // 请求 预告视频列表
+//        this.mPresenter.requestTrailerList();
+//    }
 
     /**
      * 返回 预告视频列表
@@ -74,7 +73,7 @@ public class MvpActivity extends BasePresenterActivity<MvpContract.IPresenter> i
     public void resultTrailerList(TrailerBean trailerBean) {
         // 赋值数据
         this.mTrailerAdapter.setTrailerBeans(trailerBean.getTrailers());
-        // 关闭刷新动画
-        this.mMvpRefresh.setRefreshing(false);
+//        // 关闭刷新动画
+//        this.mMvpRefresh.setRefreshing(false);
     }
 }

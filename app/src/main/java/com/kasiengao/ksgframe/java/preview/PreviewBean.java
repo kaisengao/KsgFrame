@@ -22,22 +22,22 @@ public class PreviewBean implements IPreviewParams, Serializable {
 
     @Override
     public int getWidth() {
-        return this.mWidth;
+        return mWidth;
     }
 
     @Override
     public int getHeight() {
-        return this.mHeight;
+        return mHeight;
     }
 
     @Override
     public String getMediaType() {
-        return this.mMediaType;
+        return mMediaType;
     }
 
     @Override
     public String getPictureUrl() {
-        return this.mPictureUrl;
+        return mPictureUrl;
     }
 
     @Override

@@ -32,16 +32,6 @@ public abstract class BasePresenterActivity<Presenter extends BaseContract.BaseP
      */
     public abstract Presenter initPresenter();
 
-    /**
-     * 显示一个Toast
-     *
-     * @param message Toast信息
-     */
-    @Override
-    public void showToast(String message) {
-        super.showLongSafe(message);
-    }
-
     @Override
     public Context getContext() {
         return this;

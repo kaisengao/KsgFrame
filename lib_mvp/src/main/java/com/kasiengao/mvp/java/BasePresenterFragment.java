@@ -6,8 +6,6 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.LifecycleOwner;
 
-import com.kaisengao.base.util.ToastUtil;
-
 /**
  * @ClassName: BasePresenterFragment
  * @Author: KaiSenGao
@@ -54,11 +52,6 @@ public abstract class BasePresenterFragment<Presenter extends BaseContract.BaseP
      * @return Presenter
      */
     public abstract Presenter initPresenter();
-
-    @Override
-    public void showToast(String message) {
-        ToastUtil.showLongSafe(message);
-    }
 
     @Nullable
     @Override

@@ -7,15 +7,13 @@
     <string name="java_title">Java版本</string>
     <string name="kotlin_title">Kotlin版本</string>
 
-    <string name="btn_mvp">MVP模式</string>
-    <string name="btn_mvvm">MVVM模式</string>
+    <string name="btn_mvp">MVP</string>
+    <string name="btn_mvvm">MVVM</string>
     <string name="btn_rx_retrofit">RxRetrofit</string>
     <string name="btn_staggered_grid">StaggeredGrid</string>
-    <string name="btn_player">KsgVideoPlayer</string>
+    <string name="btn_player">KsgPlayer</string>
     <string name="btn_grid">TouchGrid</string>
     <string name="btn_gesture">GestureView</string>
-    <string name="btn_camera">USBCamera</string>
-    <string name="btn_edit_image">PhotoEditor</string>
 
     <string name="btn_other">待定</string>
 

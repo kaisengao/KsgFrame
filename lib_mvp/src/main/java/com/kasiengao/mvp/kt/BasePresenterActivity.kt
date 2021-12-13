@@ -30,13 +30,6 @@ abstract class BasePresenterActivity<Presenter : BaseContract.BasePresenter<*>> 
      */
     abstract fun initPresenter(): Presenter
 
-    /**
-     * 显示一个Toast
-     *
-     * @param message Toast信息
-     */
-    override fun showToast(message: String?) = super.showLongSafe(message)
-
     override val context: Context?
         get() = this
 

@@ -13,12 +13,6 @@ android {
         targetSdkVersion rootProject.ext.android.targetSdkVersion
         versionCode rootProject.ext.android.versionCode
         versionName rootProject.ext.android.versionName
-        lintOptions {
-            disable 'NonConstantResourceId'
-        }
-        ndk {
-            abiFilters 'armeabi-v7a' // arm64-v8a
-        }
     }
 
     buildTypes {
@@ -27,15 +21,11 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     dataBinding {
         enabled true
     }
-    packagingOptions {
-        // fix problem `More than one file was found with OS independent path '*.so'`
-        pickFirst "**/libopencv_core.so"
-        pickFirst "**/libopencv_imgcodecs.so"
-        pickFirst "**/libopencv_imgproc.so"
-    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -59,12 +49,8 @@ dependencies {
     implementation project(':lib_mvp')
     // MVVM
     implementation project(':lib_mvvm')
-    // PhotoEditor
-    implementation project(':lib_photoeditor')
-    // Rx + Retrofit
-    implementation project(':lib_rx_retrofit')
-    // KsgPlayer
-    implementation project(':lib_ksgPlayer')
-    // UVCCamera
-    implementation project(':lib_uvccamera')
+    // Http
+    implementation project(':lib_http')
+    // player
+    implementation project(':lib_player')
 }

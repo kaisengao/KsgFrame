@@ -16,7 +16,7 @@
         android:layout_weight="1"
         android:background="?attr/selectableItemBackground"
         android:padding="50dp"
-        android:src="@mipmap/main_kt" />
+        android:src="@mipmap/ic_kt" />
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/main_java"
@@ -25,6 +25,6 @@
         android:layout_weight="1"
         android:background="?attr/selectableItemBackground"
         android:padding="50dp"
-        android:src="@mipmap/main_java" />
+        android:src="@mipmap/ic_java" />
 
 </LinearLayout>

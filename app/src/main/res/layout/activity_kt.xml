@@ -12,11 +12,5 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- Camera-->
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/kt_camera"
-            style="@style/btn_style"
-            android:text="@string/btn_camera" />
-
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>

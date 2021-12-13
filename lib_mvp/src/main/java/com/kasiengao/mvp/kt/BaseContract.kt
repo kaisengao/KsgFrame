@@ -20,13 +20,6 @@ interface BaseContract {
         val context: Context?
 
         /**
-         * 显示一个Toast
-         *
-         * @param message Toast信息
-         */
-        fun showToast(message: String?)
-
-        /**
          * LifecycleOwner
          *
          * @return LifecycleOwner

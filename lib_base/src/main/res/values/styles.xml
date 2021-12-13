@@ -1,0 +1,13 @@
+<resources>
+
+    <style name="Toolbar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">45dp</item>
+        <item name="android:minHeight">45dp</item>
+        <item name="android:actionBarSize">45dp</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="contentInsetStart">0dp</item>
+        <item name="contentInsetStartWithNavigation">0dp</item>
+    </style>
+
+</resources>

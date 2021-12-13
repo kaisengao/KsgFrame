@@ -22,13 +22,6 @@ public interface BaseContract {
         Context getContext();
 
         /**
-         * 显示一个Toast
-         *
-         * @param message Toast信息
-         */
-        void showToast(String message);
-
-        /**
          * LifecycleOwner
          *
          * @return LifecycleOwner

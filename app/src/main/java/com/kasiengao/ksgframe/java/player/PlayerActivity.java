@@ -13,15 +13,16 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.kaisengao.base.util.DensityUtil;
 import com.kaisengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.common.util.AnimUtil;
+import com.kasiengao.ksgframe.common.util.SystemUiUtil;
+import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
 import com.kasiengao.ksgframe.java.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.java.player.cover.GestureCover;
 import com.kasiengao.ksgframe.java.player.cover.LoadingCover;
 import com.kasiengao.ksgframe.java.player.player.KsgExoPlayer;
+import com.kasiengao.ksgframe.java.player.player.KsgIjkPlayer;
 import com.kasiengao.ksgframe.java.player.player.KsgTxLivePlayer;
 import com.kasiengao.ksgframe.java.player.player.KsgTxVodPlayer;
-import com.kasiengao.ksgframe.java.util.AnimUtil;
-import com.kasiengao.ksgframe.java.util.SystemUiUtil;
-import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.assist.InterEvent;
@@ -31,8 +32,6 @@ import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.receiver.ReceiverGroup;
 import com.ksg.ksgplayer.widget.KsgAssistView;
 
-import butterknife.BindView;
-
 /**
  * @ClassName: PlayerVideo
  * @Author: KaiSenGao
@@ -41,10 +40,9 @@ import butterknife.BindView;
  */
 public class PlayerActivity extends BaseToolbarActivity {
 
-    @BindView(R.id.player_container)
-    PlayerContainerView mContainerView;
-    @BindView(R.id.player_decoder)
-    AppCompatTextView mPlayerDecoder;
+    private PlayerContainerView mContainerView;
+
+    private AppCompatTextView mPlayerDecoder;
 
     private String mPath;
 
@@ -59,6 +57,8 @@ public class PlayerActivity extends BaseToolbarActivity {
     private KsgAssistView mKsgAssistView;
 
     private ReceiverGroup mReceiverGroup;
+
+    private KsgIjkPlayer mKsgIjkPlayer;
 
     private KsgExoPlayer mKsgExoPlayer;
 
@@ -100,13 +100,16 @@ public class PlayerActivity extends BaseToolbarActivity {
         super.initWidget();
         // Toolbar Title
         this.setTitle(R.string.player_title);
+
+        this.mContainerView = findViewById(R.id.player_container);
+        this.mPlayerDecoder = findViewById(R.id.player_decoder);
         // Init Video
         this.initAssistView();
     }
 
     private void initAssistView() {
         this.mKsgAssistView = new KsgAssistView(this);
-        this.mKsgAssistView.setDecoderView(createTxVod());
+        this.mKsgAssistView.setDecoderView(createIjk());
         this.mKsgAssistView.getVideoPlayer().getKsgContainer().setBackgroundColor(Color.BLACK);
 
         this.mReceiverGroup = new ReceiverGroup();
@@ -159,8 +162,8 @@ public class PlayerActivity extends BaseToolbarActivity {
      * 播放
      */
     private void onPlay() {
-//        this.onPlay("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4", false);
-        this.onPlay(mPath, false);
+        this.onPlay("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4", false);
+//        this.onPlay(mPath, false);
     }
 
     /**
@@ -287,6 +290,13 @@ public class PlayerActivity extends BaseToolbarActivity {
             default:
                 break;
         }
+    }
+
+    private KsgIjkPlayer createIjk() {
+        if (mKsgIjkPlayer == null) {
+            this.mKsgIjkPlayer = new KsgIjkPlayer(this);
+        }
+        return this.mKsgIjkPlayer;
     }
 
     private KsgExoPlayer createExo() {

@@ -1,9 +1,6 @@
 package com.kasiengao.ksgframe.kt
 
-import android.content.Intent
-import androidx.appcompat.widget.AppCompatButton
 import com.kasiengao.ksgframe.R
-import com.kasiengao.ksgframe.kt.camera.CameraActivity
 import com.kasiengao.mvp.kt.BaseToolbarActivity
 
 /**
@@ -20,11 +17,5 @@ class KtActivity : BaseToolbarActivity() {
         super.initWidget()
         // Toolbar Title
         this.setTitle(R.string.kotlin_title)
-        // USBCamera
-        this.findViewById<AppCompatButton>(R.id.kt_camera).setOnClickListener {
-            // USBCamera 模式
-            this.startActivity(Intent(this, CameraActivity::class.java))
-        }
     }
-
 }

@@ -14,7 +14,7 @@ import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.java.preview.PreviewBean;
 import com.kasiengao.ksgframe.java.preview.PreviewPager;
 import com.kasiengao.ksgframe.java.staggered.StaggeredGridBean;
-import com.kasiengao.ksgframe.java.widget.PlayerContainerView;
+import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 
 /**
@@ -29,11 +29,11 @@ public class ShareElementActivity extends BaseToolbarActivity {
 
     public static final String POSITION = "POSITION";
 
-    PlayerContainerView mPlayerContainer;
-
-    PreviewPager<PreviewBean> mPreviewPager;
-
     private int mPosition;
+
+    private PlayerContainerView mPlayerContainer;
+
+    private PreviewPager<PreviewBean> mPreviewPager;
 
     private StaggeredGridBean mGridBean;
 

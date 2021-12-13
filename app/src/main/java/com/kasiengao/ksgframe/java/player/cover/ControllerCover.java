@@ -16,7 +16,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.kaisengao.base.configure.ThreadPool;
 import com.kaisengao.base.util.TimeUtil;
 import com.kasiengao.ksgframe.R;
-import com.kasiengao.ksgframe.java.util.AnimUtil;
+import com.kasiengao.ksgframe.common.util.AnimUtil;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.BundlePool;
@@ -27,39 +27,31 @@ import com.ksg.ksgplayer.player.IKsgPlayer;
 import com.ksg.ksgplayer.receiver.BaseCover;
 import com.ksg.ksgplayer.receiver.IReceiverGroup;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.OnClick;
-import butterknife.Unbinder;
-
 /**
  * @ClassName: ControllerCover
  * @Author: KaiSenGao
  * @CreateDate: 2020/5/26 17:10
  * @Description: 控制器 Cover
  */
-public class ControllerCover extends BaseCover implements OnTimerUpdateListener {
+public class ControllerCover extends BaseCover implements OnTimerUpdateListener, View.OnClickListener {
 
-    private Unbinder mBind;
+    private LinearLayout mControllerTop;
 
-    @BindView(R.id.cover_controller_top)
-    LinearLayout mControllerTop;
-    @BindView(R.id.cover_controller_bottom)
-    LinearLayout mControllerBottom;
-    @BindView(R.id.cover_controller_seek)
-    AppCompatSeekBar mSeekBar;
-    @BindView(R.id.cover_controller_bottom_seek)
-    ProgressBar mBottomProgress;
-    @BindView(R.id.cover_controller_play_status)
-    AppCompatImageView mPlayStatus;
-    @BindView(R.id.cover_controller_screen_orientation)
-    AppCompatImageView mScreenOrientation;
-    @BindView(R.id.cover_controller_fullscreen_status)
-    AppCompatImageView mFullscreenStatus;
-    @BindView(R.id.cover_controller_curr_time)
-    AppCompatTextView mCurrTime;
-    @BindView(R.id.cover_controller_duration_time)
-    AppCompatTextView mDurationTime;
+    private LinearLayout mControllerBottom;
+
+    private AppCompatSeekBar mProgress;
+
+    private ProgressBar mBottomProgress;
+
+    private AppCompatImageView mPlayStatus;
+
+    private AppCompatImageView mScreenOrientation;
+
+    private AppCompatImageView mFullscreenStatus;
+
+    private AppCompatTextView mCurrTime;
+
+    private AppCompatTextView mDurationTime;
 
     private long mBufferPercentage;
 
@@ -83,11 +75,25 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     @Override
     public void onReceiverBind() {
         super.onReceiverBind();
-        this.mBind = ButterKnife.bind(this, getView());
+        // Views
+        this.mControllerTop = findViewById(R.id.cover_controller_top);
+        this.mControllerBottom = findViewById(R.id.cover_controller_bottom);
+        this.mProgress = findViewById(R.id.cover_controller_seek);
+        this.mBottomProgress = findViewById(R.id.cover_controller_bottom_seek);
+        this.mPlayStatus = findViewById(R.id.cover_controller_play_status);
+        this.mScreenOrientation = findViewById(R.id.cover_controller_screen_orientation);
+        this.mFullscreenStatus = findViewById(R.id.cover_controller_fullscreen_status);
+        this.mCurrTime = findViewById(R.id.cover_controller_curr_time);
+        this.mDurationTime = findViewById(R.id.cover_controller_duration_time);
+        // OnClick
+        this.mPlayStatus.setOnClickListener(this);
+        this.mScreenOrientation.setOnClickListener(this);
+        this.mFullscreenStatus.setOnClickListener(this);
+        this.findViewById(R.id.cover_controller_back).setOnClickListener(this);
         // Handler
         this.mHandler = ThreadPool.MainThreadHandler.getInstance();
         // SeekBar
-        this.mSeekBar.setOnSeekBarChangeListener(mSeekBarChangeListener);
+        this.mProgress.setOnSeekBarChangeListener(mSeekBarChangeListener);
         // 组件间通信
         this.getGroupValue().registerOnGroupValueUpdateListener(mGroupValueUpdateListener);
     }
@@ -95,7 +101,6 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     @Override
     public void onReceiverUnBind() {
         super.onReceiverUnBind();
-        this.mBind.unbind();
         // 计时 菜单状态 停止
         this.onRemoveDelayedControllerStatus();
         // 组件间通信
@@ -179,7 +184,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
         // 缓冲进度
         this.mBufferPercentage = bufferPercentage;
         // 时长格式 00：00 or 00:00:00
-        if (TextUtils.isEmpty(mTimeFormat) || duration != mSeekBar.getMax()) {
+        if (TextUtils.isEmpty(mTimeFormat) || duration != mProgress.getMax()) {
             this.mTimeFormat = TimeUtil.getFormat(duration);
         }
         // 更新Ui
@@ -189,7 +194,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     /**
      * 组件间通信
      */
-    private IReceiverGroup.OnGroupValueUpdateListener mGroupValueUpdateListener = new IReceiverGroup.OnGroupValueUpdateListener() {
+    private final IReceiverGroup.OnGroupValueUpdateListener mGroupValueUpdateListener = new IReceiverGroup.OnGroupValueUpdateListener() {
         @Override
         public String[] filterKeys() {
             return new String[]{
@@ -230,11 +235,9 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
         }
     };
 
-    @OnClick({
-            R.id.cover_controller_back, R.id.cover_controller_play_status,
-            R.id.cover_controller_screen_orientation, R.id.cover_controller_fullscreen_status,
-    })
-    void onViewClick(View view) {
+
+    @Override
+    public void onClick(View view) {
         switch (view.getId()) {
             case R.id.cover_controller_back:
                 // 回退
@@ -307,7 +310,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
             // 区分一下状态
             int visibility = status ? View.VISIBLE : View.GONE;
             // 过滤一下重复动画
-            if (this.mControllerTop.getVisibility() == visibility) {
+            if (mControllerTop.getVisibility() == visibility) {
                 return;
             }
             // 赋值并执行动画
@@ -348,7 +351,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
         } else {
             this.requestResume(null);
         }
-        mPlayStatus.setSelected(!selected);
+        this.mPlayStatus.setSelected(!selected);
     }
 
     /**
@@ -359,7 +362,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     private void onBottomController(boolean isLive) {
         this.mCurrTime.setVisibility(!isLive ? View.VISIBLE : View.INVISIBLE);
         this.mDurationTime.setVisibility(!isLive ? View.VISIBLE : View.INVISIBLE);
-        this.mSeekBar.setVisibility(!isLive ? View.VISIBLE : View.INVISIBLE);
+        this.mProgress.setVisibility(!isLive ? View.VISIBLE : View.INVISIBLE);
         this.mBottomProgress.setVisibility(!isLive ? View.VISIBLE : View.INVISIBLE);
     }
 
@@ -383,11 +386,11 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
      * @param duration 总进度
      */
     private void setSeekProgress(long curr, long duration) {
-        this.mSeekBar.setMax((int) duration);
-        this.mSeekBar.setProgress((int) curr);
+        this.mProgress.setMax((int) duration);
+        this.mProgress.setProgress((int) curr);
         float secondProgress = mBufferPercentage * 1.0f / 100 * duration;
         // 缓冲进度
-        this.mSeekBar.setSecondaryProgress((int) secondProgress);
+        this.mProgress.setSecondaryProgress((int) secondProgress);
     }
 
     /**
@@ -418,7 +421,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     /**
      * Seek
      */
-    private SeekBar.OnSeekBarChangeListener mSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+    private final SeekBar.OnSeekBarChangeListener mSeekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
 
         @Override
         public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -445,7 +448,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     /**
      * 控制器状态
      */
-    private Runnable mControllerStatusRunnable = () -> {
+    private final Runnable mControllerStatusRunnable = () -> {
         this.mControllerStatus = false;
         // Top/Bottom 菜单
         this.setControllerTopStatus(false);
@@ -457,9 +460,9 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
     /**
      * 进度跳转
      */
-    private Runnable mSeekEventRunnable = () -> {
+    private final Runnable mSeekEventRunnable = () -> {
         Bundle bundle = BundlePool.obtain();
-        bundle.putLong(EventKey.LONG_DATA, mSeekBar.getProgress());
+        bundle.putLong(EventKey.LONG_DATA, mProgress.getProgress());
         this.requestSeek(bundle);
         // 开放进度更新
         this.mTimerUpdatePause = false;
@@ -467,6 +470,6 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener 
 
     @Override
     public int getCoverLevel() {
-        return super.levelHigh(10);
+        return levelHigh(10);
     }
 }

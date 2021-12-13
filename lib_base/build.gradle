@@ -34,16 +34,12 @@ dependencies {
     api "androidx.recyclerview:recyclerview:$recycler"
     api "androidx.appcompat:appcompat:$appcompat"
     api "androidx.lifecycle:lifecycle-extensions:$lifecycle"
-    api "com.google.android.material:material:$material"
     api "androidx.core:core-ktx:$ktx"
+    api "com.google.android.material:material:$material"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    api 'androidx.swiperefreshlayout:swiperefreshlayout:1.0.0'
     // Glide图片加载库
     api rootProject.ext.dependencies.glide
     annotationProcessor rootProject.ext.dependencies["glide-compiler"]
-    // ButterKnife
-    api rootProject.ext.dependencies.butterknife
-    annotationProcessor rootProject.ext.dependencies["butterknife-compiler"]
     // Fresco
     api rootProject.ext.dependencies.fresco
     api rootProject.ext.dependencies["fresco-gif"]

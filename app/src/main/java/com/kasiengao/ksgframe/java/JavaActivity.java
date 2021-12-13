@@ -7,7 +7,6 @@ import com.kasiengao.ksgframe.java.gesture.GestureActivity;
 import com.kasiengao.ksgframe.java.grid.TouchGridActivity;
 import com.kasiengao.ksgframe.java.mvp.MvpActivity;
 import com.kasiengao.ksgframe.java.mvvm.MvvmActivity;
-import com.kasiengao.ksgframe.java.photo.EditImageActivity;
 import com.kasiengao.ksgframe.java.player.PlayerActivity;
 import com.kasiengao.ksgframe.java.retrofit.RxRetrofitActivity;
 import com.kasiengao.ksgframe.java.staggered.StaggeredGridActivity;
@@ -65,11 +64,6 @@ public class JavaActivity extends BaseToolbarActivity {
         this.findViewById(R.id.btn_gesture).setOnClickListener(v -> {
             // GestureView
             this.startActivity(new Intent(this, GestureActivity.class));
-        });
-        // EditImage
-        this.findViewById(R.id.btn_edit_image).setOnClickListener(v -> {
-            // EditImage
-            this.startActivity(new Intent(this, EditImageActivity.class));
         });
     }
 }

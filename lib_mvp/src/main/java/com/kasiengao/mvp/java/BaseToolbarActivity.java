@@ -55,14 +55,14 @@ public abstract class BaseToolbarActivity extends BaseActivity {
         this.mParentLinearLayout.setOrientation(LinearLayout.VERTICAL);
         // 将线性布局添加入父容器中，作为Ac页面布局的父容器
         viewGroup.addView(mParentLinearLayout);
-        // Padding一下状态栏高度
-        StatusBarUtil.setPaddingSmart(this, mParentLinearLayout);
         // 将Toolbar添加到父容器布局中
         this.getLayoutInflater().inflate(getToolbarLayoutId(), mParentLinearLayout);
         // 将ContentLayout添加到父容器布局中
         this.getLayoutInflater().inflate(layoutResId, mParentLinearLayout);
         // 获取ContentLayout的View 以作为LoadSir的注册布局
         this.mContentLayout = mParentLinearLayout.getChildAt(1);
+        // Padding一下状态栏高度
+        StatusBarUtil.setPaddingSmart(this, mParentLinearLayout.getChildAt(0));
     }
 
     /**
@@ -91,8 +91,8 @@ public abstract class BaseToolbarActivity extends BaseActivity {
      */
     @Override
     protected Object getInflate() {
-        if (this.mParentLinearLayout != null && this.mParentLinearLayout.getChildCount() > 0) {
-            return this.isDisplayToolbar() ? this.mContentLayout : super.getInflate();
+        if (mParentLinearLayout != null && mParentLinearLayout.getChildCount() > 0) {
+            return isDisplayToolbar() ? mContentLayout : super.getInflate();
         } else {
             return super.getInflate();
         }
@@ -104,7 +104,7 @@ public abstract class BaseToolbarActivity extends BaseActivity {
      * @return ViewGroup
      */
     protected ViewGroup getContentView() {
-        return this.mParentLinearLayout;
+        return mParentLinearLayout;
     }
 
     /**
@@ -121,10 +121,10 @@ public abstract class BaseToolbarActivity extends BaseActivity {
      * 初始化Toolbar
      */
     private void initToolbar() {
-        this.mToolbar = this.findViewById(R.id.toolbar);
-        if (this.mToolbar != null) {
-            this.setSupportActionBar(this.mToolbar);
-            this.mActionBar = this.getSupportActionBar();
+        this.mToolbar = findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            this.setSupportActionBar(mToolbar);
+            this.mActionBar = getSupportActionBar();
             this.setDisplayHomeAsUpEnabled(true);
         }
     }
@@ -135,7 +135,7 @@ public abstract class BaseToolbarActivity extends BaseActivity {
      * @param resId 资源
      */
     protected void setNavigationIcon(@DrawableRes int resId) {
-        if (this.mToolbar != null) {
+        if (mToolbar != null) {
             this.mToolbar.setNavigationIcon(resId);
         }
     }
@@ -146,7 +146,7 @@ public abstract class BaseToolbarActivity extends BaseActivity {
      * @param showHomeAsUp true/false
      */
     protected void setDisplayHomeAsUpEnabled(boolean showHomeAsUp) {
-        if (this.mActionBar != null) {
+        if (mActionBar != null) {
             this.mActionBar.setDisplayHomeAsUpEnabled(showHomeAsUp);
         }
     }
@@ -157,13 +157,13 @@ public abstract class BaseToolbarActivity extends BaseActivity {
             this.onClickBack();
             return true;
         }
-        return super.onOptionsItemSelected(item);
+        return onOptionsItemSelected(item);
     }
 
     /**
      * 返回键
      */
     protected void onClickBack() {
-        this.finish();
+        finish();
     }
 }

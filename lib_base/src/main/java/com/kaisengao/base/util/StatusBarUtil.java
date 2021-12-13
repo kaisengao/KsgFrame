@@ -189,11 +189,11 @@ public final class StatusBarUtil {
      */
     private static void MIUISetStatusBarLightMode(Window window, boolean dark) {
         if (window != null) {
-            Class clazz = window.getClass();
+            Class<?> clazz = window.getClass();
             try {
                 int darkModeFlag;
                 @SuppressLint("PrivateApi")
-                Class layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
+                Class<?> layoutParams = Class.forName("android.view.MiuiWindowManager$LayoutParams");
                 Field field = layoutParams.getField("EXTRA_FLAG_STATUS_BAR_DARK_MODE");
                 darkModeFlag = field.getInt(layoutParams);
                 Method extraFlagField = clazz.getMethod("setExtraFlags", int.class, int.class);
@@ -215,7 +215,6 @@ public final class StatusBarUtil {
     public static void setPaddingSmart(Context context, View view) {
         ViewGroup.LayoutParams lp = view.getLayoutParams();
         if (lp != null && lp.height > 0) {
-            // 增高
             lp.height += getStatusBarHeight(context);
         }
         view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + getStatusBarHeight(context),
@@ -227,7 +226,6 @@ public final class StatusBarUtil {
      */
     public static void setHeightAndPadding(Context context, View view) {
         ViewGroup.LayoutParams lp = view.getLayoutParams();
-        //增高
         lp.height += getStatusBarHeight(context);
         view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + getStatusBarHeight(context),
                 view.getPaddingRight(), view.getPaddingBottom());

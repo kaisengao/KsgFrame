@@ -11,7 +11,7 @@
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_gravity="top"
-        android:background="@drawable/icon_cover_bg_top"
+        android:background="@drawable/ic_cover_bg_top"
         android:visibility="gone"
         tools:visibility="visible">
 
@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:paddingStart="12dp"
             android:paddingEnd="0dp"
-            android:src="@drawable/icon_cover_arrow_back" />
+            android:src="@drawable/ic_cover_arrow_back" />
 
     </LinearLayout>
 
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:layout_gravity="bottom"
-        android:background="@drawable/icon_cover_bg_bottom"
+        android:background="@drawable/ic_cover_bg_bottom"
         android:orientation="horizontal"
         android:paddingStart="12dp"
         android:paddingEnd="12dp">
@@ -88,7 +88,7 @@
             android:layout_height="match_parent"
             android:paddingStart="2dp"
             android:paddingEnd="2dp"
-            android:src="@mipmap/icon_cover_rotate" />
+            android:src="@mipmap/ic_cover_rotate" />
 
         <!-- Fullscreen/FullscreenExit-->
         <androidx.appcompat.widget.AppCompatImageView

@@ -19,7 +19,7 @@ class MainActivity : BaseToolbarActivity() {
     override fun initWidget() {
         super.initWidget()
         // Toolbar Back
-        this.setNavigationIcon(R.drawable.icon_main_smiling_face)
+        this.setNavigationIcon(R.drawable.ic_main_smiling_face)
         // Kt 语言版本
         this.findViewById<AppCompatImageView>(R.id.main_kt).setOnClickListener {
             startActivity(Intent(this, KtActivity::class.java))

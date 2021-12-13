@@ -1,15 +1,5 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <!-- Customize your theme here. -->
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryDark">@color/white</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:textAllCaps">false</item>
-        <item name="android:windowTranslucentStatus">true</item>
-    </style>
-
     <style name="ShareElementAppTheme" parent="AppTheme">
         <!--允许启用窗口内容转换效果 （共享元素）-->
         <item name="android:windowContentTransitions">true</item>

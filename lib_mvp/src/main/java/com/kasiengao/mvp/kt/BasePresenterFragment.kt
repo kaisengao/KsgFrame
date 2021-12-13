@@ -3,7 +3,6 @@ package com.kasiengao.mvp.kt
 import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LifecycleOwner
-import com.kaisengao.base.util.ToastUtil
 
 /**
  * @ClassName: BasePresenterFragment
@@ -48,15 +47,6 @@ abstract class BasePresenterFragment<Presenter : BaseContract.BasePresenter<*>> 
      * @return Presenter
      */
     abstract fun initPresenter(): Presenter
-
-    /**
-     * 显示一个Toast
-     *
-     * @param message Toast信息
-     */
-    override fun showToast(message: String?) {
-        ToastUtil.showLongSafe(message)
-    }
 
     override val context: FragmentActivity?
         get() = super.getActivity()

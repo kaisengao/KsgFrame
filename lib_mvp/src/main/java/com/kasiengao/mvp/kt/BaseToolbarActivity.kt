@@ -31,7 +31,7 @@ abstract class BaseToolbarActivity : BaseActivity() {
         if (layoutResId == 0) {
             return
         }
-        if (this.isDisplayToolbar()) {
+        if (isDisplayToolbar()) {
             this.initContentView(layoutResId)
         } else {
             super.setContentView(layoutResId)
@@ -51,15 +51,15 @@ abstract class BaseToolbarActivity : BaseActivity() {
         this.mParentLinearLayout = LinearLayout(this)
         this.mParentLinearLayout!!.orientation = LinearLayout.VERTICAL
         // 将线性布局添加入父容器中，作为Ac页面布局的父容器
-        viewGroup.addView(this.mParentLinearLayout)
-        // Padding一下状态栏高度
-        StatusBarUtil.setPaddingSmart(this, mParentLinearLayout)
+        viewGroup.addView(mParentLinearLayout)
         // 将Toolbar添加到父容器布局中
-        this.layoutInflater.inflate(getToolbarLayoutId(), this.mParentLinearLayout)
+        this.layoutInflater.inflate(getToolbarLayoutId(), mParentLinearLayout)
         // 将ContentLayout添加到父容器布局中
-        this.layoutInflater.inflate(layoutResId, this.mParentLinearLayout)
+        this.layoutInflater.inflate(layoutResId, mParentLinearLayout)
         // 获取ContentLayout的View 以作为LoadSir的注册布局
-        this.mContentLayout = this.mParentLinearLayout!!.getChildAt(1)
+        this.mContentLayout = mParentLinearLayout!!.getChildAt(1)
+        // Padding一下状态栏高度
+        StatusBarUtil.setPaddingSmart(this, mParentLinearLayout!!.getChildAt(0))
     }
 
     /**
@@ -83,8 +83,8 @@ abstract class BaseToolbarActivity : BaseActivity() {
      * @return 默认返回true表示显示覆盖 toolbar以下的布局
      */
     override fun getInflate(): Any? =
-        if (this.mParentLinearLayout != null && this.mParentLinearLayout!!.childCount > 0) {
-            if (this.isDisplayToolbar()) this.mContentLayout else super.getInflate()
+        if (mParentLinearLayout != null && mParentLinearLayout!!.childCount > 0) {
+            if (isDisplayToolbar()) mContentLayout else super.getInflate()
         } else {
             super.getInflate()
         }
@@ -94,7 +94,7 @@ abstract class BaseToolbarActivity : BaseActivity() {
      *
      * @return ViewGroup
      */
-    protected open fun getContentView(): ViewGroup? = this.mParentLinearLayout
+    protected open fun getContentView(): ViewGroup? = mParentLinearLayout
 
     /**
      * 初始化控件
@@ -110,8 +110,8 @@ abstract class BaseToolbarActivity : BaseActivity() {
      */
     private fun initToolbar() {
         this.mToolbar = findViewById(R.id.toolbar)
-        if (this.mToolbar != null) {
-            this.setSupportActionBar(this.mToolbar)
+        if (mToolbar != null) {
+            this.setSupportActionBar(mToolbar)
             this.mActionBar = this.supportActionBar
             this.setDisplayHomeAsUpEnabled(true)
         }
@@ -123,7 +123,7 @@ abstract class BaseToolbarActivity : BaseActivity() {
      * @param resId 资源
      */
     protected open fun setNavigationIcon(@DrawableRes resId: Int) {
-        if (this.mToolbar != null) {
+        if (mToolbar != null) {
             this.mToolbar!!.setNavigationIcon(resId)
         }
     }
@@ -134,7 +134,7 @@ abstract class BaseToolbarActivity : BaseActivity() {
      * @param showHomeAsUp true/false
      */
     protected open fun setDisplayHomeAsUpEnabled(showHomeAsUp: Boolean) {
-        if (this.mActionBar != null) {
+        if (mActionBar != null) {
             this.mActionBar!!.setDisplayHomeAsUpEnabled(showHomeAsUp)
         }
     }

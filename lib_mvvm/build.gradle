@@ -37,6 +37,6 @@ android {
 dependencies {
     // Base
     implementation project(':lib_base')
-    // Rx + Retrofit
-    implementation project(':lib_rx_retrofit')
+    // Http
+    implementation project(':lib_http')
 }

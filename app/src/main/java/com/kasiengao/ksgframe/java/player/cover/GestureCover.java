@@ -15,7 +15,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.kaisengao.base.configure.ThreadPool;
 import com.kaisengao.base.util.CommonUtil;
 import com.kasiengao.ksgframe.R;
-import com.kasiengao.ksgframe.java.widget.GestureTipsView;
+import com.kasiengao.ksgframe.common.widget.GestureTipsView;
 import com.ksg.ksgplayer.assist.DataInter;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.BundlePool;
@@ -27,10 +27,6 @@ import com.ksg.ksgplayer.receiver.BaseCover;
 import com.ksg.ksgplayer.receiver.IReceiverGroup;
 import com.ksg.ksgplayer.receiver.PlayerStateGetter;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
-
 /**
  * @ClassName: GestureCover
  * @Author: KaiSenGao
@@ -39,20 +35,17 @@ import butterknife.Unbinder;
  */
 public class GestureCover extends BaseCover implements View.OnTouchListener, OnTouchGestureListener {
 
-    private Unbinder mBind;
+    private LinearLayout mGestureTipsRoot;
 
-    @BindView(R.id.cover_gesture)
-    LinearLayout mGestureTipsRoot;
-    @BindView(R.id.cover_gesture_sliding)
-    LinearLayout mGestureTipsSlidingRoot;
-    @BindView(R.id.cover_gesture_icon)
-    AppCompatImageView mGestureIcon;
-    @BindView(R.id.cover_gesture_progress)
-    ProgressBar mGestureProgress;
-    @BindView(R.id.cover_gesture_sliding_status)
-    AppCompatImageView mGestureSlidingStatus;
-    @BindView(R.id.cover_gesture_sliding_time)
-    AppCompatTextView mGestureSlidingTime;
+    private LinearLayout mGestureTipsSlidingRoot;
+
+    private AppCompatImageView mGestureIcon;
+
+    private ProgressBar mGestureProgress;
+
+    private AppCompatImageView mGestureSlidingStatus;
+
+    private AppCompatTextView mGestureSlidingTime;
 
     private long mSlidProgress;
 
@@ -81,7 +74,12 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     @Override
     public void onReceiverBind() {
         super.onReceiverBind();
-        this.mBind = ButterKnife.bind(this, getView());
+        this.mGestureTipsRoot = findViewById(R.id.cover_gesture);
+        this.mGestureTipsSlidingRoot = findViewById(R.id.cover_gesture_sliding);
+        this.mGestureIcon = findViewById(R.id.cover_gesture_icon);
+        this.mGestureProgress = findViewById(R.id.cover_gesture_progress);
+        this.mGestureSlidingStatus = findViewById(R.id.cover_gesture_sliding_status);
+        this.mGestureSlidingTime = findViewById(R.id.cover_gesture_sliding_time);
         // 获取视图宽高
         this.getScreenSize();
         // OnTouch事件
@@ -95,7 +93,6 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     @Override
     public void onReceiverUnBind() {
         super.onReceiverUnBind();
-        this.mBind.unbind();
         // 组件间通信
         this.getGroupValue().unregisterOnGroupValueUpdateListener(mGroupValueUpdateListener);
     }
@@ -147,7 +144,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     /**
      * 组件间通信
      */
-    private IReceiverGroup.OnGroupValueUpdateListener mGroupValueUpdateListener = new IReceiverGroup.OnGroupValueUpdateListener() {
+    private final IReceiverGroup.OnGroupValueUpdateListener mGroupValueUpdateListener = new IReceiverGroup.OnGroupValueUpdateListener() {
         @Override
         public String[] filterKeys() {
             return new String[]{
@@ -229,7 +226,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     @Override
     public void onSingleTapGesture() {
         // 组件间通信 通知 ControllerCover
-        getGroupValue().putString(DataInter.Key.KEY_CONTROLLER_STATUS, "");
+        this.getGroupValue().putString(DataInter.Key.KEY_CONTROLLER_STATUS, "");
     }
 
     /**
@@ -238,7 +235,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     @Override
     public void onDoubleTapGesture() {
         // 组件间通信 通知 ControllerCover
-        getGroupValue().putString(DataInter.Key.KEY_CONTROLLER_PLAY_STATUS, "");
+        this.getGroupValue().putString(DataInter.Key.KEY_CONTROLLER_PLAY_STATUS, "");
     }
 
     /**
@@ -247,7 +244,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     @Override
     public void onDown() {
         // 初始化基参
-        mGestureTouchHelper.setParams(getProgress(), getDuration());
+        this.mGestureTouchHelper.setParams(getProgress(), getDuration());
     }
 
     /**
@@ -255,7 +252,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      */
     @Override
     public void onSeekEndGesture() {
-        mGestureTipsView.dismiss();
+        this.mGestureTipsView.dismiss();
         // 更新进度
         if (mGestureTouchHelper.getSlideProgress() >= 0) {
             mHandler.removeCallbacks(mSeekEventRunnable);
@@ -279,7 +276,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      * @param timerUpdatePause 暂停
      */
     private void notifyReceiverControllerSeek(boolean timerUpdatePause) {
-        mSlidProgress = mGestureTouchHelper.getSlideProgress();
+        this.mSlidProgress = mGestureTouchHelper.getSlideProgress();
         seekBundle.putLong(EventKey.LONG_ARG1, mSlidProgress);
         seekBundle.putLong(EventKey.LONG_ARG2, mGestureTouchHelper.getDuration());
         seekBundle.putBoolean(EventKey.BOOL_DATA, timerUpdatePause);
@@ -292,7 +289,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     /**
      * 进度跳转
      */
-    private Runnable mSeekEventRunnable = () -> {
+    private final Runnable mSeekEventRunnable = () -> {
         Bundle bundle = BundlePool.obtain();
         bundle.putLong(EventKey.LONG_DATA, mSlidProgress);
         this.requestSeek(bundle);
@@ -309,6 +306,6 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
 
     @Override
     public int getCoverLevel() {
-        return super.levelHigh(1);
+        return levelHigh(1);
     }
 }

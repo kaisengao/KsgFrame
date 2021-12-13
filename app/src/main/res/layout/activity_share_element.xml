@@ -37,7 +37,7 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.kasiengao.ksgframe.java.widget.PlayerContainerView
+    <com.kasiengao.ksgframe.common.widget.PlayerContainerView
         android:id="@+id/share_player_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
