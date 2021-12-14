@@ -38,7 +38,7 @@ public final class ToastUtil {
     private static int bgResource = -1;
     private static int messageColor = DEFAULT_COLOR;
     private static WeakReference<View> sViewWeakReference;
-    private static WeakHandler sHandler = new WeakHandler(Looper.getMainLooper());
+    private static final WeakHandler sHandler = new WeakHandler(Looper.getMainLooper());
 
     private ToastUtil() {
         throw new UnsupportedOperationException("u can't instantiate me...");

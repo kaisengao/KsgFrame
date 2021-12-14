@@ -34,7 +34,7 @@ public abstract class BaseFragment<DB extends ViewDataBinding> extends Fragment 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         this.mBinding = DataBindingUtil.inflate(inflater, getContentLayoutId(), container, false);
-        return this.mBinding.getRoot();
+        return mBinding.getRoot();
     }
 
     @Override

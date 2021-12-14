@@ -59,7 +59,7 @@ abstract class BaseToolbarActivity : BaseActivity() {
         // 获取ContentLayout的View 以作为LoadSir的注册布局
         this.mContentLayout = mParentLinearLayout!!.getChildAt(1)
         // Padding一下状态栏高度
-        StatusBarUtil.setPaddingSmart(this, mParentLinearLayout!!.getChildAt(0))
+        StatusBarUtil.setStatusBarPadding(this, mParentLinearLayout!!.getChildAt(0))
     }
 
     /**
@@ -75,7 +75,7 @@ abstract class BaseToolbarActivity : BaseActivity() {
      * @return 资源文件Id
      */
     @LayoutRes
-    protected open fun getToolbarLayoutId(): Int = R.layout.toolbar
+    protected open fun getToolbarLayoutId(): Int = R.layout.layout_toolbar
 
     /**
      * 返回LoadSir需要覆盖的布局

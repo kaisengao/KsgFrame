@@ -1,21 +1,20 @@
 <resources>
-    <string name="app_name">KsgFrame</string>
+    <string name="app_name">学习资料</string>
 
     <string name="main_kt">KT</string>
     <string name="main_java">JAVA</string>
 
-    <string name="java_title">Java版本</string>
-    <string name="kotlin_title">Kotlin版本</string>
+    <string name="bar_trainee">练习生</string>
 
-    <string name="btn_mvp">MVP</string>
-    <string name="btn_mvvm">MVVM</string>
-    <string name="btn_rx_retrofit">RxRetrofit</string>
-    <string name="btn_staggered_grid">StaggeredGrid</string>
-    <string name="btn_player">KsgPlayer</string>
-    <string name="btn_grid">TouchGrid</string>
-    <string name="btn_gesture">GestureView</string>
+    <string name="trainee_mvp">MVP</string>
+    <string name="trainee_mvvm">MVVM</string>
+    <string name="trainee_rx_retrofit">RxRetrofit</string>
+    <string name="trainee_staggered">Staggered</string>
+    <string name="trainee_player">KsgPlayer</string>
+    <string name="trainee_grid">TouchGrid</string>
+    <string name="trainee_gesture">GestureView</string>
 
-    <string name="btn_other">待定</string>
+    <string name="trainee_other">待定</string>
 
     <string name="camera_title">UVC摄像头</string>
     <string name="camera_photograph">拍照</string>
@@ -26,8 +25,8 @@
 
     <string name="rx_retrofit_title">RxRetrofit</string>
     <string name="rx_retrofit_menu_normal">normal 请求</string>
-    <string name="rx_retrofit_menu_dialog">Dialog 请求</string>
-    <string name="rx_retrofit_menu_loadsir">LoadSir 请求</string>
+    <string name="rx_retrofit_menu_dialog">Dialog</string>
+    <string name="rx_retrofit_menu_loadsir">LoadSir</string>
 
     <string name="staggered_grid_title">图片缓存（%s）</string>
 
@@ -42,5 +41,6 @@
     <string name="loading_mvvm">MVVM加载中~</string>
 
     <string name="drap_title">拖拽</string>
+    <string name="main_bottom_bar_target">Fighting Forty</string>
 
 </resources>

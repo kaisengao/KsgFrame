@@ -1,30 +1,165 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/white"
-    android:gravity="center"
-    android:orientation="horizontal"
-    android:padding="12dp"
-    tools:context=".MainActivity">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/main_kt"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="?attr/selectableItemBackground"
-        android:padding="50dp"
-        android:src="@mipmap/ic_kt" />
+    <data>
 
-    <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/main_java"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="?attr/selectableItemBackground"
-        android:padding="50dp"
-        android:src="@mipmap/ic_java" />
+    </data>
 
-</LinearLayout>
+    <androidx.drawerlayout.widget.DrawerLayout
+        android:id="@+id/drawerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        tools:context=".ui.main.MainActivity">
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"
+            android:orientation="horizontal"
+            tools:context=".ui.main.MainActivity">
+
+            <com.google.android.material.appbar.AppBarLayout
+                android:id="@+id/main_appbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <com.google.android.material.tabs.TabLayout
+                    style="@style/Widget.MaterialComponents.TabLayout.Colored"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:layout_scrollFlags="scroll|enterAlways"
+                    app:tabIndicatorAnimationMode="linear"
+                    app:tabIndicatorFullWidth="false"
+                    app:tabMode="scrollable"
+                    app:tabTextAppearance="@style/TabTextStyle">
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="视频" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="图片" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:icon="@drawable/ic_main_smiling_face" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="资源" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="资源" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="资源" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="资源" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="资源" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="资源" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="资源" />
+                </com.google.android.material.tabs.TabLayout>
+
+            </com.google.android.material.appbar.AppBarLayout>
+
+            <!-- ViewPager -->
+            <com.kasiengao.ksgframe.common.widget.ViewPagerEx
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@color/color_212121"
+                android:textSize="30sp"
+                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+            <!-- 底部AppBar -->
+            <com.google.android.material.bottomappbar.BottomAppBar
+                android:id="@+id/main_bottom_bar"
+                style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:paddingStart="12dp"
+                android:paddingEnd="12dp"
+                app:fabAlignmentMode="end"
+                app:fabAnimationMode="slide"
+                app:fabCradleMargin="6dp"
+                app:fabCradleRoundedCornerRadius="30dp"
+                app:hideOnScroll="true"
+                app:navigationIcon="@drawable/ic_bottom_bar_menu">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/main_bottom_bar_target"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp" />
+
+            </com.google.android.material.bottomappbar.BottomAppBar>
+
+            <!-- 悬浮按钮 -->
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/main_trainee"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:contentDescription="@string/bar_trainee"
+                android:src="@mipmap/ic_trainee"
+                app:layout_anchor="@id/main_bottom_bar"
+                app:layout_anchorGravity="center_horizontal" />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <!-- 侧滑抽屉 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="start"
+            android:background="@color/colorSecondaryVariant"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20dp"
+                android:text="菜单"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/btn_close_right"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="关闭" />
+
+        </LinearLayout>
+
+    </androidx.drawerlayout.widget.DrawerLayout>
+</layout>

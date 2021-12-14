@@ -8,8 +8,8 @@ import androidx.databinding.BindingAdapter;
 import com.kaisengao.retrofit.factory.LoadSirFactory;
 import com.kaisengao.retrofit.listener.OnLoadSirReloadListener;
 import com.kaisengao.base.annotations.ReloadAnnotations;
-import com.kaisengao.base.loading.LoadState;
-import com.kaisengao.base.loading.LoadingState;
+import com.kaisengao.base.state.LoadState;
+import com.kaisengao.base.state.LoadingState;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;

@@ -19,13 +19,9 @@ public class ToolbarViewModel extends BaseViewModel {
 
     private MutableLiveData<String> mTitle;
 
-    private MutableLiveData<Boolean> mBackVisibility;
+    private MutableLiveData<Integer> mNavigationIcon;
 
-    private MutableLiveData<Integer> mBackDrawable;
-
-    private MutableLiveData<Boolean> mMenuVisibility;
-
-    private MutableLiveData<Integer> mMenuDrawable;
+    private MutableLiveData<Integer> mMenuRes;
 
     private SingleLiveEvent<Void> mBackPressed;
 
@@ -63,41 +59,23 @@ public class ToolbarViewModel extends BaseViewModel {
     }
 
     /**
-     * 设置返回键
+     * 设置导航资源
      *
-     * @param isVisibility 显示/隐藏
+     * @param resId 资源
      */
-    protected void setBackVisibility(boolean isVisibility) {
-        this.getBackVisibility().setValue(isVisibility);
-    }
-
-
-    /**
-     * 设置返回键图标
-     *
-     * @param resId 资源图标
-     */
-    protected void setBackDrawable(@DrawableRes int resId) {
-        this.getBackDrawable().setValue(resId);
+    protected void setNavigationIcon(int resId) {
+        this.getNavigationIcon().setValue(resId);
     }
 
     /**
-     * 设置功能键
+     * 设置菜单资源
      *
-     * @param isVisibility 显示/隐藏
+     * @param resId 资源
      */
-    protected void setMenuVisibility(boolean isVisibility) {
-        this.getMenuVisibility().setValue(isVisibility);
+    protected void setMenuRes(@DrawableRes int resId) {
+        this.getMenuRes().setValue(resId);
     }
 
-    /**
-     * 设置功能键图标
-     *
-     * @param resId 资源图标
-     */
-    protected void setMenuDrawable(@DrawableRes int resId) {
-        this.getMenuDrawable().setValue(resId);
-    }
 
     /**
      * 返回事件
@@ -117,20 +95,12 @@ public class ToolbarViewModel extends BaseViewModel {
         return mTitle = createLiveData(mTitle, "PDA");
     }
 
-    public final MutableLiveData<Boolean> getBackVisibility() {
-        return mBackVisibility = createLiveData(mBackVisibility, true);
+    public final MutableLiveData<Integer> getNavigationIcon() {
+        return mNavigationIcon = createLiveData(mNavigationIcon, 0);
     }
 
-    public final MutableLiveData<Integer> getBackDrawable() {
-        return mBackDrawable = createLiveData(mBackDrawable, 0);
-    }
-
-    public final MutableLiveData<Boolean> getMenuVisibility() {
-        return mMenuVisibility = createLiveData(mMenuVisibility, false);
-    }
-
-    public final MutableLiveData<Integer> getMenuDrawable() {
-        return mMenuDrawable = createLiveData(mMenuDrawable, 0);
+    public final MutableLiveData<Integer> getMenuRes() {
+        return mMenuRes = createLiveData(mMenuRes, 0);
     }
 
     public final SingleLiveEvent<Void> getBackPressed() {

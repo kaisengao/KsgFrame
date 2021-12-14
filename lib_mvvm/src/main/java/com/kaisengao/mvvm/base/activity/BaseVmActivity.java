@@ -4,14 +4,13 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import androidx.annotation.LayoutRes;
-import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
 import androidx.lifecycle.ViewModelProvider;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.kaisengao.base.util.StatusBarUtil;
 import com.kaisengao.mvvm.R;
 import com.kaisengao.mvvm.base.viewmodel.BaseViewModel;
-import com.kaisengao.mvvm.databinding.LayoutToolbarBinding;
 import com.kaisengao.mvvm.viewmodel.ToolbarViewModel;
 
 import java.lang.reflect.ParameterizedType;
@@ -27,7 +26,7 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
 
     protected VM mViewModel;
 
-    private LayoutToolbarBinding mToolbarBinding;
+    private MaterialToolbar mToolbar;
 
     @Override
     protected void initBefore() {
@@ -110,10 +109,10 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
         // 验证 是否继承了 ToolbarViewModel
         if (isDisplayToolbar()
                 && (mViewModel instanceof ToolbarViewModel)) {
-            // Init Toolbar VM
-            this.initToolbarVm();
             // 将Toolbar布局添加到容器中
             this.initContentView();
+            // Init Toolbar VM
+            this.initToolbarVm();
         }
     }
 
@@ -130,40 +129,37 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
         // 将线性布局添加入父容器中，作为Ac页面布局的父容器
         viewGroup.addView(parentLayout);
         // 将Toolbar添加到父容器布局中
-        this.mToolbarBinding = DataBindingUtil.inflate(
-                getLayoutInflater(), getToolbarLayoutId(), parentLayout, true);
-        this.setSupportActionBar(mToolbarBinding.toolbar);
-        // 绑定ViewModel
-        this.mToolbarBinding.setVariable(initVariableId(), mViewModel);
-        // 绑定Lifecycle
-        this.mToolbarBinding.setLifecycleOwner(this);
+        this.getLayoutInflater().inflate(getToolbarLayoutId(), parentLayout);
         // 将ContentLayout添加到父容器布局中
         parentLayout.addView(mBinding.getRoot());
         // 添加状态栏高度
-        StatusBarUtil.setPaddingSmart(this, mToolbarBinding.getRoot());
+        StatusBarUtil.setStatusBarPadding(this, parentLayout.getChildAt(0));
     }
 
     /**
      * Init Toolbar VM
      */
     private void initToolbarVm() {
+        this.mToolbar = findViewById(R.id.toolbar);
+        if (mToolbar != null) {
+            this.setSupportActionBar(mToolbar);
+        }
+        // ViewModel
         ToolbarViewModel toolbarViewModel = (ToolbarViewModel) mViewModel;
-        // Back事件
-        toolbarViewModel.getBackPressed().observe(this, aVoid -> this.onClickBack());
-        // 返回键图标
-        toolbarViewModel.getBackDrawable().observe(this, resId -> {
-            if (resId > 0) {
-                // 图标
-                this.mToolbarBinding.toolbarBack
-                        .setCompoundDrawablesRelativeWithIntrinsicBounds(resId, 0, 0, 0);
+        // 设置导航资源
+        toolbarViewModel.getNavigationIcon().observe(this, resId -> {
+            if ((resId == null || resId <= 0) && mToolbar != null) {
+                this.mToolbar.setNavigationIcon(0);
             }
         });
-        // 功能键图标
-        toolbarViewModel.getMenuDrawable().observe(this, resId -> {
-            // 图标
-            this.mToolbarBinding.toolbarMenu
-                    .setCompoundDrawablesRelativeWithIntrinsicBounds(resId, 0, 0, 0);
+        // 设置菜单资源
+        toolbarViewModel.getMenuRes().observe(this, resId -> {
+            if ((resId != null && resId > 0) && mToolbar != null) {
+                this.mToolbar.inflateMenu(resId);
+            }
         });
+        // Back事件
+        toolbarViewModel.getBackPressed().observe(this, aVoid -> this.onClickBack());
     }
 
     /**

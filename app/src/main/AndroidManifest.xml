@@ -16,14 +16,14 @@
     <application
         android:name=".app.KsgApplication"
         android:allowBackup="false"
-        android:icon="@mipmap/logo"
+        android:icon="@mipmap/ic_logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/logo"
+        android:roundIcon="@mipmap/ic_logo"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme"
+        android:theme="@style/Theme.Ksg"
         tools:ignore="LockedOrientationActivity">
         <activity
-            android:name=".MainActivity"
+            android:name=".ui.main.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,43 +32,40 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".java.JavaActivity"
+            android:name=".ui.trainee.TraineeActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".kt.KtActivity"
+            android:name=".ui.trainee.mvp.MvpActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".java.mvp.MvpActivity"
+            android:name=".ui.trainee.mvvm.MvvmActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".java.mvvm.MvvmActivity"
+            android:name=".ui.trainee.retrofit.RxRetrofitActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".java.retrofit.RxRetrofitActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".java.staggered.StaggeredGridActivity"
+            android:name=".ui.trainee.staggered.StaggeredGridActivity"
             android:screenOrientation="portrait"
             android:theme="@style/ShareElementAppTheme" />
         <activity
-            android:name=".java.element.ShareElementActivity"
+            android:name=".ui.trainee.element.ShareElementActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/ShareElementAppTheme" />
         <activity
-            android:name=".java.player.PlayerActivity"
+            android:name=".ui.trainee.player.PlayerActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".java.grid.TouchGridActivity"
+            android:name=".ui.trainee.grid.TouchGridActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".java.gesture.GestureActivity"
+            android:name=".ui.trainee.gesture.GestureActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".java.canvas.CanvasActivity"
+            android:name=".ui.trainee.canvas.CanvasActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
     </application>

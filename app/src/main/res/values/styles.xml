@@ -1,14 +1,20 @@
 <resources>
 
-    <style name="ShareElementAppTheme" parent="AppTheme">
+    <style name="ShareElementAppTheme" parent="Theme.Ksg">
         <!--允许启用窗口内容转换效果 （共享元素）-->
         <item name="android:windowContentTransitions">true</item>
     </style>
 
-    <style name="btn_style">
+    <style name="TabTextStyle">
+        <item name="android:textSize">17sp</item>
+    </style>
+
+    <style name="TraineeBtn" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:backgroundTint">@color/colorAccent</item>
         <item name="android:textSize">15sp</item>
     </style>
 

@@ -7,9 +7,8 @@ import android.widget.LinearLayout;
 
 import androidx.annotation.DrawableRes;
 import androidx.annotation.LayoutRes;
-import androidx.appcompat.app.ActionBar;
-import androidx.appcompat.widget.Toolbar;
 
+import com.google.android.material.appbar.MaterialToolbar;
 import com.kaisengao.base.util.StatusBarUtil;
 import com.kasiengao.mvp.R;
 
@@ -21,9 +20,7 @@ import com.kasiengao.mvp.R;
  */
 public abstract class BaseToolbarActivity extends BaseActivity {
 
-    private Toolbar mToolbar;
-
-    private ActionBar mActionBar;
+    private MaterialToolbar mToolbar;
 
     private View mContentLayout;
 
@@ -34,7 +31,7 @@ public abstract class BaseToolbarActivity extends BaseActivity {
         if (layoutResId == 0) {
             return;
         }
-        if (this.isDisplayToolbar()) {
+        if (isDisplayToolbar()) {
             this.initContentView(layoutResId);
         } else {
             super.setContentView(layoutResId);
@@ -62,7 +59,7 @@ public abstract class BaseToolbarActivity extends BaseActivity {
         // 获取ContentLayout的View 以作为LoadSir的注册布局
         this.mContentLayout = mParentLinearLayout.getChildAt(1);
         // Padding一下状态栏高度
-        StatusBarUtil.setPaddingSmart(this, mParentLinearLayout.getChildAt(0));
+        StatusBarUtil.setStatusBarPadding(this, mParentLinearLayout.getChildAt(0));
     }
 
     /**
@@ -81,7 +78,7 @@ public abstract class BaseToolbarActivity extends BaseActivity {
      */
     @LayoutRes
     protected int getToolbarLayoutId() {
-        return R.layout.toolbar;
+        return R.layout.layout_toolbar;
     }
 
     /**
@@ -124,8 +121,6 @@ public abstract class BaseToolbarActivity extends BaseActivity {
         this.mToolbar = findViewById(R.id.toolbar);
         if (mToolbar != null) {
             this.setSupportActionBar(mToolbar);
-            this.mActionBar = getSupportActionBar();
-            this.setDisplayHomeAsUpEnabled(true);
         }
     }
 
@@ -137,17 +132,6 @@ public abstract class BaseToolbarActivity extends BaseActivity {
     protected void setNavigationIcon(@DrawableRes int resId) {
         if (mToolbar != null) {
             this.mToolbar.setNavigationIcon(resId);
-        }
-    }
-
-    /**
-     * 给左上角图标的左边加上一个返回的图标 。对应ActionBar.DISPLAY_HOME_AS_UP
-     *
-     * @param showHomeAsUp true/false
-     */
-    protected void setDisplayHomeAsUpEnabled(boolean showHomeAsUp) {
-        if (mActionBar != null) {
-            this.mActionBar.setDisplayHomeAsUpEnabled(showHomeAsUp);
         }
     }
 
@@ -164,6 +148,6 @@ public abstract class BaseToolbarActivity extends BaseActivity {
      * 返回键
      */
     protected void onClickBack() {
-        finish();
+        this.onBackPressed();
     }
 }

@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".java.staggered.StaggeredGridActivity">
+    tools:context=".ui.trainee.staggered.StaggeredGridActivity">
 
     <!-- 瀑布流-->
     <androidx.recyclerview.widget.RecyclerView

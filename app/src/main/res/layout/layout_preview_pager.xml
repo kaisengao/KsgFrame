@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <!-- 视图-->
-    <com.kasiengao.ksgframe.java.preview.ViewPagerEx
+    <com.kasiengao.ksgframe.common.widget.ViewPagerEx
         android:id="@+id/layout_preview_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

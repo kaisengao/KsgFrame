@@ -212,22 +212,14 @@ public final class StatusBarUtil {
     /**
      * 增加View的paddingTop,增加的值为状态栏高度 (智能判断，并设置高度)
      */
-    public static void setPaddingSmart(Context context, View view) {
-        ViewGroup.LayoutParams lp = view.getLayoutParams();
-        if (lp != null && lp.height > 0) {
-            lp.height += getStatusBarHeight(context);
+    public static void setStatusBarPadding(Context context, View view) {
+        int statusBarHeight = getStatusBarHeight(context);
+        ViewGroup.LayoutParams params = view.getLayoutParams();
+        if (params != null && params.height > 0) {
+            params.height += statusBarHeight;
         }
-        view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + getStatusBarHeight(context),
-                view.getPaddingRight(), view.getPaddingBottom());
-    }
-
-    /**
-     * 增加View的高度以及paddingTop,增加的值为状态栏高度.一般是在沉浸式全屏给ToolBar用的
-     */
-    public static void setHeightAndPadding(Context context, View view) {
-        ViewGroup.LayoutParams lp = view.getLayoutParams();
-        lp.height += getStatusBarHeight(context);
-        view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + getStatusBarHeight(context),
+        view.setLayoutParams(params);
+        view.setPadding(view.getPaddingLeft(), view.getPaddingTop() + statusBarHeight,
                 view.getPaddingRight(), view.getPaddingBottom());
     }
 

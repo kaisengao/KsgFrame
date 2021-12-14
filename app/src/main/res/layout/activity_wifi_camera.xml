@@ -9,7 +9,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".java.camera.WifiCameraActivity">
+        tools:context=".ui.trainee.camera.WifiCameraActivity">
 
         <SurfaceView
             android:id="@+id/camera_view"

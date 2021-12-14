@@ -25,6 +25,6 @@ public class ViewAdapter {
 
     @BindingAdapter("setPaddingSmart")
     public static void setPaddingSmart(View view, int padding) {
-        StatusBarUtil.setPaddingSmart(BaseApplication.getInstance(), view);
+        StatusBarUtil.setStatusBarPadding(BaseApplication.getInstance(), view);
     }
 }

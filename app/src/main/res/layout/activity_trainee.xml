@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:padding="10dp"
+    tools:context=".ui.trainee.TraineeActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- MVP-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/trainee_mvp"
+            style="@style/TraineeBtn"
+            android:text="@string/trainee_mvp" />
+
+        <!-- MVVM-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/trainee_mvvm"
+            style="@style/TraineeBtn"
+            android:text="@string/trainee_mvvm" />
+
+        <!-- RxRetrofit-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/trainee_rx_retrofit"
+            style="@style/TraineeBtn"
+            android:text="@string/trainee_rx_retrofit"
+            android:textAllCaps="false" />
+
+        <!-- Staggered-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/trainee_staggered"
+            style="@style/TraineeBtn"
+            android:text="@string/trainee_staggered"
+            android:textAllCaps="false" />
+
+        <!-- KsgVideoPlayer-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/trainee_player"
+            style="@style/TraineeBtn"
+            android:text="@string/trainee_player"
+            android:textAllCaps="false" />
+
+        <!-- TouchGrid-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/trainee_touch_grid"
+            style="@style/TraineeBtn"
+            android:text="@string/trainee_grid"
+            android:textAllCaps="false" />
+
+        <!-- TouchGrid-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/trainee_gesture"
+            style="@style/TraineeBtn"
+            android:text="@string/trainee_gesture"
+            android:textAllCaps="false" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -1,6 +1,5 @@
 package com.kaisengao.mvvm.base.activity;
 
-import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Window;
 
@@ -9,8 +8,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.databinding.ViewDataBinding;
-
-import com.kaisengao.base.util.StatusBarUtil;
 
 /**
  * @ClassName: BaseActivity
@@ -70,8 +67,7 @@ public abstract class BaseActivity<DB extends ViewDataBinding> extends AppCompat
      * 初始化控件调用之前
      */
     protected void initBefore() {
-        StatusBarUtil.StatusBarDarkMode(this);
-        StatusBarUtil.transparencyBar(this, Color.WHITE);
+
     }
 
     /**
