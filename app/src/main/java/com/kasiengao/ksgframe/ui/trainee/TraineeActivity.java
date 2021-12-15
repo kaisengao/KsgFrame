@@ -4,6 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
+import com.kaisengao.base.loadpage.KsgLoadFrame;
+import com.kaisengao.base.loadpage.load.EmptyViewLoad;
+import com.kaisengao.base.loadpage.load.ErrorViewLoad;
+import com.kaisengao.base.loadpage.load.LoadingViewLoad;
+import com.kaisengao.base.loadpage.widget.LoadContainer;
+import com.kaisengao.base.util.ToastUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.ui.trainee.gesture.GestureActivity;
 import com.kasiengao.ksgframe.ui.trainee.grid.TouchGridActivity;
@@ -51,6 +57,14 @@ public class TraineeActivity extends BaseToolbarActivity {
         this.findViewById(R.id.trainee_touch_grid).setOnClickListener(this::onClick);
         // GestureView
         this.findViewById(R.id.trainee_gesture).setOnClickListener(this::onClick);
+
+        LoadContainer container = KsgLoadFrame.getInstance().bindLoadContainer(this, view -> {
+            ToastUtil.showShort("响应点击事件咯！");
+        });
+
+        container.showLoad(EmptyViewLoad.class);
+        container.showLoad(ErrorViewLoad.class);
+        container.showLoad(LoadingViewLoad.class);
     }
 
     /**

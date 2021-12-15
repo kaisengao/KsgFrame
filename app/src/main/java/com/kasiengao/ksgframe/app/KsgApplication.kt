@@ -17,4 +17,6 @@ class KsgApplication : BaseApplication() {
         KsgPlayerConfig.getInstance().isPlayProgressCache = true
         KsgPlayerConfig.getInstance().isNetworkEventProducer = false
     }
+
+
 }

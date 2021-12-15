@@ -9,9 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.kaisengao.base.configure.ActivityManager;
-import com.kaisengao.base.loadsir.callback.ErrorCallback;
-import com.kaisengao.base.loadsir.callback.LoadingCallback;
-import com.kaisengao.base.loadsir.core.LoadSir;
+
 
 /**
  * @ClassName: BaseApplication
@@ -48,10 +46,10 @@ public class BaseApplication extends Application implements Application.Activity
      * 初始化 LoadSir
      */
     private void initLoadSir() {
-        LoadSir.beginBuilder()
-                .addCallback(new ErrorCallback())
-                .addCallback(new LoadingCallback())
-                .commit();
+//        LoadSir.beginBuilder()
+//                .addCallback(new ErrorCallback())
+//                .addCallback(new LoadingCallback())
+//                .commit();
     }
 
     @Override
