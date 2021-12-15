@@ -41,7 +41,7 @@ public class TargetHelper {
         // 获取绑定目标的View
         View targetView = parentView.getChildAt(childIndex);
         // 创建LoadContainer
-        return createLoadContainer(parentView, targetView, childIndex);
+        return createLoadContainer(target, parentView, targetView, childIndex);
     }
 
     /**
@@ -65,7 +65,7 @@ public class TargetHelper {
             }
         }
         // 创建LoadContainer
-        return createLoadContainer(parentView, targetView, childIndex);
+        return createLoadContainer(target, parentView, targetView, childIndex);
     }
 
     /**
@@ -76,11 +76,11 @@ public class TargetHelper {
      * @param childIndex 在父View中的坐标
      * @return Load容器视图
      */
-    private static LoadContainer createLoadContainer(ViewGroup parentView, View targetView, int childIndex) {
+    private static LoadContainer createLoadContainer(Object target, ViewGroup parentView, View targetView, int childIndex) {
         // 将目标从父View中移除
         parentView.removeView(targetView);
         // 创建Load容器视图
-        LoadContainer container = new LoadContainer(targetView.getContext(), targetView);
+        LoadContainer container = new LoadContainer(targetView.getContext(), target, targetView);
         // 将容器添加到父View中（相当于替换原View）
         parentView.addView(container, childIndex, targetView.getLayoutParams());
         // Return

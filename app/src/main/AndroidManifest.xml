@@ -68,5 +68,9 @@
             android:name=".ui.trainee.canvas.CanvasActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.trainee.loadpage.LoadPageActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait" />
     </application>
 </manifest>

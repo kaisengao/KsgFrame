@@ -13,38 +13,65 @@ import com.kaisengao.base.loadpage.listener.OnLoadViewClickListener;
  * @CreateDate: 2021/12/14 17:12
  * @Description: Load状态父类
  */
-public abstract class BaseLoad implements View.OnAttachStateChangeListener {
+public abstract class BaseLoad implements ILoad, View.OnAttachStateChangeListener {
 
     private Context mContext;
 
-    private View rootView;
+    private View mRootView;
+
+    private Object mTarget;
 
     private OnLoadViewClickListener mLoadViewClickListener;
 
     public BaseLoad() {
     }
 
-    public BaseLoad(View rootView, OnLoadViewClickListener loadViewClickListener) {
-        this.rootView = rootView;
-        this.mLoadViewClickListener = loadViewClickListener;
+    public BaseLoad(View rootView, Object target) {
+        this.mRootView = rootView;
+        this.mTarget = target;
     }
 
-    public View getRootView(Context context, OnLoadViewClickListener loadViewClickListener) {
+    /**
+     * 获取Load的RootView
+     *
+     * @param context               context
+     * @param target                绑定的目标
+     * @param loadViewClickListener loadViewClickListener
+     * @return RootView
+     */
+    @Override
+    public View getRootView(Context context, Object target, OnLoadViewClickListener loadViewClickListener) {
         this.mContext = context;
+        this.mTarget = target;
         this.mLoadViewClickListener = loadViewClickListener;
-        if (rootView == null) {
-            this.rootView = View.inflate(mContext, getContentLayoutId(), null);
-            this.rootView.addOnAttachStateChangeListener(this);
-        }
-        if (rootView != null && mLoadViewClickListener != null) {
-            rootView.setOnClickListener(view -> {
+        if (mRootView == null) {
+            this.mRootView = View.inflate(mContext, getContentLayoutId(), null);
+            this.mRootView.addOnAttachStateChangeListener(this);
+            this.mRootView.setOnClickListener(view -> {
                 if (onClickEvent()) {
                     return;
                 }
-                this.mLoadViewClickListener.onLoadClick(view);
+                this.onLoadClick();
             });
         }
-        return rootView;
+        return mRootView;
+    }
+
+    public View getRootView() {
+        return mRootView;
+    }
+
+    protected final <T extends View> T findViewById(int id) {
+        return mRootView.findViewById(id);
+    }
+
+    /**
+     * 点击事件
+     */
+    protected void onLoadClick() {
+        if (mLoadViewClickListener != null) {
+            this.mLoadViewClickListener.onLoadClick(mTarget, this);
+        }
     }
 
     /**
@@ -84,7 +111,7 @@ public abstract class BaseLoad implements View.OnAttachStateChangeListener {
      */
     @Override
     public void onViewDetachedFromWindow(View v) {
-        this.rootView.removeOnAttachStateChangeListener(this);
+        this.mRootView.removeOnAttachStateChangeListener(this);
         // View 与页面视图解绑
         this.onModeViewUnBind();
         // 释放资源 避免长时间引用

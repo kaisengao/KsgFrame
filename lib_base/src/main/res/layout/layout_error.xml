@@ -6,16 +6,19 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:paddingStart="24dp"
+    android:paddingEnd="24dp">
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/error_icon"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/icon_error" />
+        android:src="@drawable/ic_error"
+        android:tint="@color/black" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/error_msg"
+        android:id="@+id/error_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -24,16 +27,15 @@
         android:textColor="@color/black"
         android:textSize="15sp" />
 
-    <androidx.appcompat.widget.AppCompatTextView
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/error_retry"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:padding="10dp"
+        android:layout_marginTop="30dp"
+        android:paddingStart="30dp"
+        android:paddingEnd="30dp"
         android:text="@string/retry"
-        android:textColor="@android:color/holo_blue_dark"
-        android:textSize="15sp"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:textSize="15sp" />
 
 </LinearLayout>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/loadRoot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- normal -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/load1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/colorAccent"
+            android:gravity="center"
+            android:text="Normal"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            app:layout_constraintHeight_percent="0.3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

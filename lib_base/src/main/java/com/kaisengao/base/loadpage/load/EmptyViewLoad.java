@@ -12,4 +12,10 @@ public class EmptyViewLoad extends BaseLoad {
     protected int getContentLayoutId() {
         return 0;
     }
+
+    @Override
+    protected boolean onClickEvent() {
+        return true;
+    }
+
 }

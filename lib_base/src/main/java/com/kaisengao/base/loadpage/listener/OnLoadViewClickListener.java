@@ -1,6 +1,6 @@
 package com.kaisengao.base.loadpage.listener;
 
-import android.view.View;
+import com.kaisengao.base.loadpage.load.ILoad;
 
 /**
  * @ClassName: OnLoadViewClickListener
@@ -13,7 +13,8 @@ public interface OnLoadViewClickListener {
     /**
      * 点击事件
      *
-     * @param view view
+     * @param target 绑定的目标
+     * @param load   LoadView
      */
-    void onLoadClick(View view);
+    void onLoadClick(Object target, ILoad load);
 }

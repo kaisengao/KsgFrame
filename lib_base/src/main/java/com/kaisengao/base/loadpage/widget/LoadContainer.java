@@ -9,7 +9,7 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 
 import com.kaisengao.base.loadpage.listener.OnLoadViewClickListener;
-import com.kaisengao.base.loadpage.load.BaseLoad;
+import com.kaisengao.base.loadpage.load.ILoad;
 import com.kaisengao.base.loadpage.load.OriginalViewLoad;
 
 import java.util.HashMap;
@@ -24,9 +24,13 @@ public class LoadContainer extends FrameLayout implements View.OnAttachStateChan
 
     private final String TAG = getClass().getSimpleName();
 
-    private HashMap<String, BaseLoad> mLoadMaps;
+    private Object mTarget;
 
-    private Class<? extends BaseLoad> mDefaultLoad = OriginalViewLoad.class;
+    private HashMap<String, ILoad> mLoadMaps;
+
+    private ILoad mCurLoadView;
+
+    private Class<? extends ILoad> mDefaultLoad = OriginalViewLoad.class;
 
     private OnLoadViewClickListener mLoadViewClickListener;
 
@@ -34,8 +38,9 @@ public class LoadContainer extends FrameLayout implements View.OnAttachStateChan
         super(context);
     }
 
-    public LoadContainer(@NonNull Context context, View originalView) {
+    public LoadContainer(@NonNull Context context, Object target, View originalView) {
         super(context);
+        this.mTarget = target;
         // Init
         this.init(originalView);
     }
@@ -50,7 +55,7 @@ public class LoadContainer extends FrameLayout implements View.OnAttachStateChan
         this.addOnAttachStateChangeListener(this);
         // 原视图
         this.mLoadMaps.put(OriginalViewLoad.class.getSimpleName(),
-                new OriginalViewLoad(originalView, mLoadViewClickListener));
+                new OriginalViewLoad(originalView, mTarget));
         // 默认显示默认视图
         this.showLoad(mDefaultLoad);
     }
@@ -69,7 +74,7 @@ public class LoadContainer extends FrameLayout implements View.OnAttachStateChan
      *
      * @param defaultLoad Class
      */
-    public void setDefaultLoad(final Class<? extends BaseLoad> defaultLoad) {
+    public void setDefaultLoad(final Class<? extends ILoad> defaultLoad) {
         if (defaultLoad == null) {
             return;
         }
@@ -79,26 +84,33 @@ public class LoadContainer extends FrameLayout implements View.OnAttachStateChan
     }
 
     /**
+     * 显示原视图
+     */
+    public void showOriginalView() {
+        this.showLoad(OriginalViewLoad.class);
+    }
+
+    /**
      * 显示Load
      *
-     * @param baseLoad {@link BaseLoad} 状态类型
+     * @param loadView {@link ILoad} 状态类型
      */
-    public void showLoad(final Class<? extends BaseLoad> baseLoad) {
+    public void showLoad(final Class<? extends ILoad> loadView) {
         try {
-            BaseLoad load;
-            String simpleName = baseLoad.getSimpleName();
+            ILoad load;
+            String simpleName = loadView.getSimpleName();
             if (mLoadMaps.containsKey(simpleName)) {
                 load = mLoadMaps.get(simpleName);
             } else {
-                load = baseLoad.newInstance();
+                load = loadView.newInstance();
                 this.mLoadMaps.put(simpleName, load);
             }
             if (load != null) {
                 if (isMainThread()) {
-                    // 显示 BaseLoad View
+                    // 显示 ILoad View
                     this.showLoadView(load);
                 } else {
-                    // 主线程 显示 BaseLoad View
+                    // 主线程 显示 ILoad View
                     this.post(() -> showLoadView(load));
                 }
             } else {
@@ -111,15 +123,28 @@ public class LoadContainer extends FrameLayout implements View.OnAttachStateChan
     }
 
     /**
-     * 显示 BaseLoad View
+     * 显示 LoadView
      *
-     * @param load {@link BaseLoad} 状态类型
+     * @param load {@link ILoad} 状态类型
      */
-    private void showLoadView(BaseLoad load) {
+    private void showLoadView(ILoad load) {
+        if (mCurLoadView != null && mCurLoadView == load) {
+            return;
+        }
+        this.mCurLoadView = load;
         // 移除全部View
         this.removeAllViews();
         // 添加LoadView
-        this.addView(load.getRootView(getContext(), mLoadViewClickListener));
+        this.addView(load.getRootView(getContext(), mTarget, mLoadViewClickListener));
+    }
+
+    /**
+     * 获取当前显示 LoadView
+     *
+     * @return {@link ILoad} 状态类型
+     */
+    public ILoad getCurLoadView() {
+        return mCurLoadView;
     }
 
     /**
@@ -139,6 +164,7 @@ public class LoadContainer extends FrameLayout implements View.OnAttachStateChan
      */
     @Override
     public void onViewDetachedFromWindow(View v) {
+        this.mTarget = null;
         // 释放资源
         this.mLoadMaps.clear();
         this.mLoadMaps = null;

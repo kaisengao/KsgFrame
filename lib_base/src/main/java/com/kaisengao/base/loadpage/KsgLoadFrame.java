@@ -13,19 +13,6 @@ import com.kaisengao.base.loadpage.widget.LoadContainer;
  */
 public class KsgLoadFrame {
 
-    private static volatile KsgLoadFrame sInstance;
-
-    public static KsgLoadFrame getInstance() {
-        if (sInstance == null) {
-            synchronized (KsgLoadFrame.class) {
-                if (sInstance == null) {
-                    sInstance = new KsgLoadFrame();
-                }
-            }
-        }
-        return sInstance;
-    }
-
     private KsgLoadFrame() {
     }
 
@@ -35,7 +22,7 @@ public class KsgLoadFrame {
      * @param target 绑定的目标
      * @return {@link LoadContainer}
      */
-    public LoadContainer bindLoadContainer(Object target) {
+    public static LoadContainer bindLoadContainer(Object target) {
         // Return
         return bindLoadContainer(target, null, null);
     }
@@ -47,7 +34,7 @@ public class KsgLoadFrame {
      * @param loadViewClickListener loadView点击事件
      * @return {@link LoadContainer}
      */
-    public LoadContainer bindLoadContainer(Object target, OnLoadViewClickListener loadViewClickListener) {
+    public static LoadContainer bindLoadContainer(Object target, OnLoadViewClickListener loadViewClickListener) {
         // Return
         return bindLoadContainer(target, null, loadViewClickListener);
     }
@@ -60,9 +47,9 @@ public class KsgLoadFrame {
      * @param defaultLoad           默认Load
      * @return {@link LoadContainer}
      */
-    public LoadContainer bindLoadContainer(final Object target,
-                                           final Class<? extends BaseLoad> defaultLoad,
-                                           final OnLoadViewClickListener loadViewClickListener) {
+    public static LoadContainer bindLoadContainer(final Object target,
+                                                  final Class<? extends BaseLoad> defaultLoad,
+                                                  final OnLoadViewClickListener loadViewClickListener) {
         // 获取Load容器视图
         LoadContainer loadContainer = TargetHelper.getLoadContainer(target);
         // 默认Load
