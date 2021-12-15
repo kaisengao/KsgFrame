@@ -4,15 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
-import com.kaisengao.base.loadpage.KsgLoadFrame;
-import com.kaisengao.base.loadpage.load.EmptyViewLoad;
-import com.kaisengao.base.loadpage.load.ErrorViewLoad;
-import com.kaisengao.base.loadpage.load.LoadingViewLoad;
 import com.kaisengao.base.loadpage.widget.LoadContainer;
-import com.kaisengao.base.util.ToastUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.ui.trainee.gesture.GestureActivity;
 import com.kasiengao.ksgframe.ui.trainee.grid.TouchGridActivity;
+import com.kasiengao.ksgframe.ui.trainee.loadpage.LoadPageActivity;
 import com.kasiengao.ksgframe.ui.trainee.mvp.MvpActivity;
 import com.kasiengao.ksgframe.ui.trainee.mvvm.MvvmActivity;
 import com.kasiengao.ksgframe.ui.trainee.player.PlayerActivity;
@@ -27,6 +23,8 @@ import com.kasiengao.mvp.java.BaseToolbarActivity;
  * @Description: 长达好几年的练习生页面
  */
 public class TraineeActivity extends BaseToolbarActivity {
+
+    private LoadContainer mContainer;
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, TraineeActivity.class);
@@ -57,14 +55,8 @@ public class TraineeActivity extends BaseToolbarActivity {
         this.findViewById(R.id.trainee_touch_grid).setOnClickListener(this::onClick);
         // GestureView
         this.findViewById(R.id.trainee_gesture).setOnClickListener(this::onClick);
-
-        LoadContainer container = KsgLoadFrame.getInstance().bindLoadContainer(this, view -> {
-            ToastUtil.showShort("响应点击事件咯！");
-        });
-
-        container.showLoad(EmptyViewLoad.class);
-        container.showLoad(ErrorViewLoad.class);
-        container.showLoad(LoadingViewLoad.class);
+        // loadpage
+        this.findViewById(R.id.trainee_loadpage).setOnClickListener(this::onClick);
     }
 
     /**
@@ -88,6 +80,8 @@ public class TraineeActivity extends BaseToolbarActivity {
             this.startActivity(new Intent(this, TouchGridActivity.class));
         } else if (id == R.id.trainee_gesture) {
             this.startActivity(new Intent(this, GestureActivity.class));
+        } else if (id == R.id.trainee_loadpage) {
+            this.startActivity(new Intent(this, LoadPageActivity.class));
         }
     }
 }

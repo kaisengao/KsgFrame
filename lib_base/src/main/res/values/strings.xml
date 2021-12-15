@@ -1,7 +1,8 @@
 <resources>
 
-    <string name="loading">正在加载</string>
+    <string name="loading">Loading…</string>
     <string name="error">暂无数据</string>
-    <string name="retry">点击重试</string>
+    <string name="retry">重试</string>
+    <string name="empty">空空的，什么都没有哦！</string>
 
 </resources>

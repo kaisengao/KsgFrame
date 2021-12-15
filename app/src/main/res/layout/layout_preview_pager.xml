@@ -41,6 +41,6 @@
         android:background="@color/white"
         android:scaleType="center"
         android:visibility="gone"
-        android:src="@drawable/icon_empty" />
+        android:src="@drawable/ic_empty" />
 
 </FrameLayout>

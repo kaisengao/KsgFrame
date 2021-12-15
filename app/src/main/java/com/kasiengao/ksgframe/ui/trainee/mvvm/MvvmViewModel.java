@@ -44,7 +44,7 @@ public class MvvmViewModel extends BaseViewModel {
         }.setLoadMessage(R.string.loading_mvvm)
                 .setLoadColor(R.color.white)
                 .setLoadBgColor(R.color.color_F49B3C)
-                .setLoadErrorIcon(R.drawable.icon_empty);
+                .setLoadErrorIcon(R.drawable.ic_empty);
 
         this.requestTest(loadSirObserver);
     }

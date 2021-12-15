@@ -1,8 +1,9 @@
 package com.kaisengao.base.loadpage;
 
+import android.view.ViewGroup;
+
 import com.kaisengao.base.loadpage.helper.TargetHelper;
 import com.kaisengao.base.loadpage.listener.OnLoadViewClickListener;
-import com.kaisengao.base.loadpage.load.BaseLoad;
 import com.kaisengao.base.loadpage.widget.LoadContainer;
 
 /**
@@ -13,19 +14,6 @@ import com.kaisengao.base.loadpage.widget.LoadContainer;
  */
 public class KsgLoadFrame {
 
-    private static volatile KsgLoadFrame sInstance;
-
-    public static KsgLoadFrame getInstance() {
-        if (sInstance == null) {
-            synchronized (KsgLoadFrame.class) {
-                if (sInstance == null) {
-                    sInstance = new KsgLoadFrame();
-                }
-            }
-        }
-        return sInstance;
-    }
-
     private KsgLoadFrame() {
     }
 
@@ -35,9 +23,9 @@ public class KsgLoadFrame {
      * @param target 绑定的目标
      * @return {@link LoadContainer}
      */
-    public LoadContainer bindLoadContainer(Object target) {
+    public static LoadContainer bindLoadContainer(final Object target) {
         // Return
-        return bindLoadContainer(target, null, null);
+        return bindLoadContainer(target, null);
     }
 
     /**
@@ -47,29 +35,15 @@ public class KsgLoadFrame {
      * @param loadViewClickListener loadView点击事件
      * @return {@link LoadContainer}
      */
-    public LoadContainer bindLoadContainer(Object target, OnLoadViewClickListener loadViewClickListener) {
-        // Return
-        return bindLoadContainer(target, null, loadViewClickListener);
-    }
-
-    /**
-     * 绑定Load容器
-     *
-     * @param target                绑定的目标
-     * @param loadViewClickListener loadView点击事件
-     * @param defaultLoad           默认Load
-     * @return {@link LoadContainer}
-     */
-    public LoadContainer bindLoadContainer(final Object target,
-                                           final Class<? extends BaseLoad> defaultLoad,
-                                           final OnLoadViewClickListener loadViewClickListener) {
-        // 获取Load容器视图
-        LoadContainer loadContainer = TargetHelper.getLoadContainer(target);
-        // 默认Load
-        loadContainer.setDefaultLoad(defaultLoad);
+    public static LoadContainer bindLoadContainer(final Object target,
+                                                  final OnLoadViewClickListener loadViewClickListener) {
+        // 获取Target的父亲
+        ViewGroup targetParent = TargetHelper.getTargetParent(target);
+        // 创建Load容器视图
+        LoadContainer container = new LoadContainer(target, targetParent);
         // Bind点击事件
-        loadContainer.setLoadViewClickListener(loadViewClickListener);
+        container.setLoadViewClickListener(loadViewClickListener);
         // Return
-        return loadContainer;
+        return container;
     }
 }

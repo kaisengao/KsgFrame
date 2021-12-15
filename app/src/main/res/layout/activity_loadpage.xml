@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/load0"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/colorSecondary"
+            android:gravity="center"
+            android:text="Normal"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toTopOf="@id/load1"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_weight="1" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/load1"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/color_F49B3C"
+            android:gravity="center"
+            android:text="Loading"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toTopOf="@id/load2"
+            app:layout_constraintTop_toBottomOf="@id/load0"
+            app:layout_constraintVertical_weight="1" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/load2"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/color_FF5252"
+            android:gravity="center"
+            android:text="Empty"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toTopOf="@id/load3"
+            app:layout_constraintTop_toBottomOf="@id/load1"
+            app:layout_constraintVertical_weight="1" />
+
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/load3"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/color_E76135"
+            android:gravity="center"
+            android:text="Error"
+            android:textColor="@color/white"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/load2"
+            app:layout_constraintVertical_weight="1" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

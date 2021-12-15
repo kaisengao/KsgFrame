@@ -38,7 +38,7 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
         this.setLoadMessage(R.string.loading);
         this.setLoadColor(R.color.black);
         this.setLoadBgColor(R.color.white);
-        this.setLoadErrorIcon(R.drawable.icon_error);
+        this.setLoadErrorIcon(R.drawable.ic_error);
     }
 
     /**

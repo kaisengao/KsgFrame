@@ -1,5 +1,8 @@
 package com.kaisengao.base.loadpage.load;
 
+import com.kaisengao.base.loadpage.load.base.BaseLoad;
+import com.kasiengao.base.R;
+
 /**
  * @ClassName: EmptyViewLoad
  * @Author: KaiSenGao
@@ -10,6 +13,12 @@ public class EmptyViewLoad extends BaseLoad {
 
     @Override
     protected int getContentLayoutId() {
-        return 0;
+        return R.layout.layout_empty;
     }
+
+    @Override
+    protected boolean onClickEvent() {
+        return false;
+    }
+
 }

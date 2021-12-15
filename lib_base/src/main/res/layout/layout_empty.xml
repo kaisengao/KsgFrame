@@ -10,31 +10,20 @@
     android:paddingEnd="24dp">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/error_icon"
+        android:id="@+id/empty_icon"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/ic_error"
+        android:src="@drawable/ic_empty"
         android:tint="@color/black" />
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/error_text"
+        android:id="@+id/empty_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="@string/error"
+        android:text="@string/empty"
         android:textColor="@color/black"
-        android:textSize="15sp" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/error_retry"
-        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:paddingStart="30dp"
-        android:paddingEnd="30dp"
-        android:text="@string/retry"
         android:textSize="15sp" />
 
 </LinearLayout>

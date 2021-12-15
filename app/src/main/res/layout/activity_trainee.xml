@@ -59,6 +59,12 @@
             android:text="@string/trainee_gesture"
             android:textAllCaps="false" />
 
+        <!-- LoadPage-->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/trainee_loadpage"
+            style="@style/TraineeBtn"
+            android:text="@string/trainee_loadpage"
+            android:textAllCaps="false" />
 
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
