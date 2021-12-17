@@ -95,7 +95,13 @@
                 android:gravity="center"
                 android:textColor="@color/color_212121"
                 android:textSize="30sp"
+                android:visibility="gone"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+            <com.kasiengao.ksgframe.common.widget.DualScaleView
+                android:layout_width="200dp"
+                android:layout_height="500dp"
+                android:layout_gravity="center" />
 
             <!-- 底部AppBar -->
             <com.google.android.material.bottomappbar.BottomAppBar
