@@ -23,8 +23,7 @@
         android:theme="@style/Theme.Ksg"
         tools:ignore="LockedOrientationActivity">
         <activity
-            android:name=".ui.main.MainActivity"
-            android:screenOrientation="portrait">
+            android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

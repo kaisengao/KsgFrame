@@ -103,6 +103,7 @@
                 android:layout_height="500dp"
                 android:layout_gravity="center" />
 
+
             <!-- 底部AppBar -->
             <com.google.android.material.bottomappbar.BottomAppBar
                 android:id="@+id/main_bottom_bar"
