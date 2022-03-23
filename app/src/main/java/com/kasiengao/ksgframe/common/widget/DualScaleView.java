@@ -64,14 +64,12 @@ public class DualScaleView extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         this.mViewWidth = w;
         this.mViewHeight = h;
-
-        mSplitRatio = mViewHeight * 0.7f;
+        this.mSplitRatio = mViewHeight * 0.7f;
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-
         this.mPaint.setColor(Color.GRAY);
         canvas.drawRect(0, 0, mViewWidth, mSplitRatio, mPaint);
 
@@ -100,22 +98,28 @@ public class DualScaleView extends View {
             case MotionEvent.ACTION_MOVE:
                 float moveY = event.getY();
                 // 计算偏移量
-                this.mSplitRatio = mSplitRatio + (moveY - mStartY);
-                // 高度围栏
-                if (mSplitRatio >= mViewHeight) {
-                    this.mSplitRatio = mViewHeight;
-                } else if (mSplitRatio <= 0) {
-                    this.mSplitRatio = 0;
+                int onePercent = mViewHeight / 100;
+                if (Math.abs(moveY - mStartY) >= onePercent) {
+                    if (moveY > mStartY) {
+                        this.mSplitRatio += onePercent;
+                    } else {
+                        this.mSplitRatio -= onePercent;
+                    }
+                    // 高度围栏
+                    if (mSplitRatio >= mViewHeight) {
+                        this.mSplitRatio = mViewHeight;
+                    } else if (mSplitRatio <= 0) {
+                        this.mSplitRatio = 0;
+                    }
+                    // 百分比文字
+                    float percent = ((mSplitRatio / getHeight()) * 100);
+                    this.mUpText = String.format("%.0f%%", percent);
+                    this.mDownText = String.format("%.0f%%", 100 - percent);
+                    // 更新初始坐标
+                    this.mStartY = moveY;
+                    // 重绘
+                    this.invalidate();
                 }
-                // 百分比文字
-                float percent = (((float) mSplitRatio / getHeight()) * 100);
-                this.mUpText = String.format("%.0f%%", percent);
-                float percent2 = 100 - percent;
-                this.mDownText = String.format("%.0f%%", percent2);
-                // 更新初始坐标
-                this.mStartY = moveY;
-                // 重绘
-                this.invalidate();
                 break;
             default:
                 break;
