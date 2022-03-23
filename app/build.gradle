@@ -43,8 +43,10 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-dash:$exoplayer"
     implementation "com.google.android.exoplayer:exoplayer-hls:$exoplayer"
     implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:$exoplayer"
-    // Base依赖库
+    // Base
     implementation project(':lib_base')
+    // Danmaku
+    implementation project(':lib_danmaku')
     // MVP
     implementation project(':lib_mvp')
     // MVVM

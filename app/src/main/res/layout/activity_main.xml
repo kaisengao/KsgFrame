@@ -5,6 +5,9 @@
 
     <data>
 
+        <variable
+            name="viewModel"
+            type="com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -98,9 +101,9 @@
                 android:visibility="gone"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
-            <com.kasiengao.ksgframe.common.widget.DualScaleView
-                android:layout_width="200dp"
-                android:layout_height="500dp"
+            <com.kaisengao.danmaku.BlessingView
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
                 android:layout_gravity="center" />
 
             <!-- 底部AppBar -->

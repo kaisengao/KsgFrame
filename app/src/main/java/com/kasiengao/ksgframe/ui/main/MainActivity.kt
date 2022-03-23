@@ -9,6 +9,7 @@ import com.kasiengao.ksgframe.databinding.ActivityMainBinding
 import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel
 import com.kasiengao.ksgframe.ui.trainee.TraineeActivity
 
+
 /**
  * @ClassName: MainActivity
  * @Author: KaiSenGao

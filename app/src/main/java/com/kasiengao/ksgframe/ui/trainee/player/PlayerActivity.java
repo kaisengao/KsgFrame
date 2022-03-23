@@ -6,6 +6,7 @@ import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -109,7 +110,7 @@ public class PlayerActivity extends BaseToolbarActivity {
 
     private void initAssistView() {
         this.mKsgAssistView = new KsgAssistView(this);
-        this.mKsgAssistView.setDecoderView(createIjk());
+        this.mKsgAssistView.setDecoderView(createTxVod());
         this.mKsgAssistView.getVideoPlayer().getKsgContainer().setBackgroundColor(Color.BLACK);
 
         this.mReceiverGroup = new ReceiverGroup();
@@ -162,7 +163,8 @@ public class PlayerActivity extends BaseToolbarActivity {
      * 播放
      */
     private void onPlay() {
-        this.onPlay("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4", false);
+//        this.onPlay("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4", false);
+        this.onPlay(Environment.getExternalStorageDirectory().getAbsolutePath() + "/10022.mov", false);
 //        this.onPlay(mPath, false);
     }
 
