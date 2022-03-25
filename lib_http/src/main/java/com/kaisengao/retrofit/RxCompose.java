@@ -1,12 +1,6 @@
 package com.kaisengao.retrofit;
 
-import androidx.lifecycle.Lifecycle;
-import androidx.lifecycle.LifecycleOwner;
-
 import com.kaisengao.retrofit.factory.GsonBuilderFactory;
-import com.uber.autodispose.AutoDispose;
-import com.uber.autodispose.AutoDisposeConverter;
-import com.uber.autodispose.android.lifecycle.AndroidLifecycleScopeProvider;
 
 import io.reactivex.Observable;
 import io.reactivex.ObservableSource;
@@ -75,19 +69,5 @@ public class RxCompose {
         return upstream -> upstream.subscribeOn(Schedulers.io())
                 .unsubscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread());
-    }
-
-    /**
-     * 绑定生命周期
-     */
-    public static <T> AutoDisposeConverter<T> bindLifecycle(LifecycleOwner owner) {
-        return bindLifecycle(owner, Lifecycle.Event.ON_DESTROY);
-    }
-
-    /**
-     * 绑定生命周期
-     */
-    public static <T> AutoDisposeConverter<T> bindLifecycle(LifecycleOwner owner, Lifecycle.Event untilEvent) {
-        return AutoDispose.autoDisposable(AndroidLifecycleScopeProvider.from(owner, untilEvent));
     }
 }

@@ -37,14 +37,15 @@ dependencies {
     api "androidx.core:core-ktx:$ktx"
     api "com.google.android.material:material:$material"
     api "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
-    // Glide图片加载库
-    api rootProject.ext.dependencies.glide
-    annotationProcessor rootProject.ext.dependencies["glide-compiler"]
+    // Glide
+    api "com.github.bumptech.glide:glide:$glide"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide"
     // Fresco
-    api rootProject.ext.dependencies.fresco
-    api rootProject.ext.dependencies["fresco-gif"]
-    // BaseRecyclerViewAdapterHelper
-    api rootProject.ext.dependencies["recycler-adapter"]
+    api "com.facebook.fresco:fresco:$fresco"
+    api "com.facebook.fresco:animated-gif:$fresco"
+    annotationProcessor "com.github.bumptech.glide:compiler:$glide"
+    // BaseAdapter
+    api "com.github.CymChad:BaseRecyclerViewAdapterHelper:$baseRecyclerAdapter"
     // AVLoadingIndicatorView
     api 'com.wang.avi:library:2.1.3'
 }

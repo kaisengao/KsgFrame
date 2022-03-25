@@ -1,12 +1,7 @@
 package com.kasiengao.ksgframe.ui.trainee.player;
 
-import android.content.Context;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Color;
-import android.os.Bundle;
-import android.os.Environment;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.widget.AppCompatTextView;
@@ -16,22 +11,16 @@ import com.kaisengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.common.util.AnimUtil;
 import com.kasiengao.ksgframe.common.util.SystemUiUtil;
-import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
-import com.kasiengao.ksgframe.ui.trainee.player.cover.ControllerCover;
-import com.kasiengao.ksgframe.ui.trainee.player.cover.GestureCover;
-import com.kasiengao.ksgframe.ui.trainee.player.cover.LoadingCover;
-import com.kasiengao.ksgframe.ui.trainee.player.player.KsgExoPlayer;
-import com.kasiengao.ksgframe.ui.trainee.player.player.KsgIjkPlayer;
-import com.kasiengao.ksgframe.ui.trainee.player.player.KsgTxLivePlayer;
-import com.kasiengao.ksgframe.ui.trainee.player.player.KsgTxVodPlayer;
+import com.kasiengao.ksgframe.constant.CoverConstant;
+import com.kasiengao.ksgframe.player.cover.ControllerCover;
+import com.kasiengao.ksgframe.player.cover.GestureCover;
+import com.kasiengao.ksgframe.player.cover.LoadingCover;
+import com.kasiengao.ksgframe.player.KsgExoPlayer;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
-import com.ksg.ksgplayer.assist.DataInter;
-import com.ksg.ksgplayer.assist.InterEvent;
-import com.ksg.ksgplayer.assist.OnAssistViewEventHandler;
+import com.ksg.ksgplayer.cover.CoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
-import com.ksg.ksgplayer.receiver.ReceiverGroup;
-import com.ksg.ksgplayer.widget.KsgAssistView;
+import com.ksg.ksgplayer.widget.KsgVideoView;
 
 /**
  * @ClassName: PlayerVideo
@@ -41,11 +30,9 @@ import com.ksg.ksgplayer.widget.KsgAssistView;
  */
 public class PlayerActivity extends BaseToolbarActivity {
 
-    private PlayerContainerView mContainerView;
+    private KsgVideoView mPlayer;
 
     private AppCompatTextView mPlayerDecoder;
-
-    private String mPath;
 
     private boolean mUserPause;
 
@@ -53,25 +40,7 @@ public class PlayerActivity extends BaseToolbarActivity {
 
     private boolean mIsLandscape;
 
-    private boolean mInitSpinner = true;
-
-    private KsgAssistView mKsgAssistView;
-
-    private ReceiverGroup mReceiverGroup;
-
-    private KsgIjkPlayer mKsgIjkPlayer;
-
-    private KsgExoPlayer mKsgExoPlayer;
-
-    private KsgTxVodPlayer mKsgTxVodPlayer;
-
-    private KsgTxLivePlayer mKsgTxLivePlayer;
-
-    public static void startActivity(Context context, String path) {
-        Intent intent = new Intent(context, PlayerActivity.class);
-        intent.putExtra("path", path);
-        context.startActivity(intent);
-    }
+    private CoverManager mCoverManager;
 
     @Override
     protected int getContentLayoutId() {
@@ -81,13 +50,6 @@ public class PlayerActivity extends BaseToolbarActivity {
     @Override
     protected boolean isDisplayToolbar() {
         return false;
-    }
-
-    @Override
-    protected void initArgs(Bundle bundle) {
-        super.initArgs(bundle);
-        if (bundle != null)
-            this.mPath = bundle.getString("path", "");
     }
 
     @Override
@@ -101,58 +63,57 @@ public class PlayerActivity extends BaseToolbarActivity {
         super.initWidget();
         // Toolbar Title
         this.setTitle(R.string.player_title);
-
-        this.mContainerView = findViewById(R.id.player_container);
+        // FindView
+        this.mPlayer = findViewById(R.id.player);
         this.mPlayerDecoder = findViewById(R.id.player_decoder);
-        // Init Video
-        this.initAssistView();
+        // InitPlayer
+        this.initPlayer();
     }
 
-    private void initAssistView() {
-        this.mKsgAssistView = new KsgAssistView(this);
-        this.mKsgAssistView.setDecoderView(createTxVod());
-        this.mKsgAssistView.getVideoPlayer().getKsgContainer().setBackgroundColor(Color.BLACK);
-
-        this.mReceiverGroup = new ReceiverGroup();
-        this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_CONTROLLER_COVER, new ControllerCover(this));
-        this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_LOADING_COVER, new LoadingCover(this));
-        this.mReceiverGroup.addReceiver(DataInter.ReceiverKey.KEY_GESTURE_COVER, new GestureCover(this));
-
-        this.mKsgAssistView.getVideoPlayer().setReceiverGroup(mReceiverGroup);
-        this.mKsgAssistView.getVideoPlayer().setBaseEventAssistHandler(new OnAssistViewEventHandler(mKsgAssistView) {
-            @Override
-            public void onAssistHandle(int eventCode, Bundle bundle) {
-                super.onAssistHandle(eventCode, bundle);
-                switch (eventCode) {
-                    case InterEvent.CODE_REQUEST_PAUSE:
-                        mUserPause = true;
-                        break;
-                    case DataInter.Event.EVENT_CODE_REQUEST_BACK:
-                        // 回退
-                        onBackPressed();
-                        break;
-                    case DataInter.Event.EVENT_CODE_REQUEST_SCREEN_ORIENTATION:
-                        // 横竖屏切换
-                        boolean screenOrientation = bundle.getBoolean(EventKey.BOOL_DATA, false);
-                        // 改变横竖屏
-                        setRequestedOrientation(screenOrientation
-                                ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                                // 横屏自动旋转 180°
-                                : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-                        break;
-                    case DataInter.Event.EVENT_CODE_REQUEST_TOGGLE_SCREEN:
-                        // 全屏切换事件
-                        boolean fullscreen = bundle.getBoolean(EventKey.BOOL_DATA, false);
-                        // 如果在横屏状态下退出了全屏模式需要设置回竖屏
-                        if (mIsLandscape && !fullscreen) {
-                            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-                        }
-                        // 屏幕改变
-                        onFullscreen(fullscreen);
-                        break;
-                    default:
-                        break;
-                }
+    /**
+     * InitPlayer
+     */
+    private void initPlayer() {
+        this.mPlayer.setDecoderView(new KsgExoPlayer(this));
+        // 创建 覆盖组件管理器
+        this.mCoverManager = new CoverManager();
+        this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_LOADING, new LoadingCover(this));
+        this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_GESTURE, new GestureCover(this));
+        this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_CONTROLLER, new ControllerCover(this));
+        // 设置 覆盖组件管理器
+        this.mPlayer.getPlayer().setCoverManager(mCoverManager);
+        // Cover组件回调事件
+        this.mPlayer.getPlayer().setCoverEventListener((eventCode, bundle) -> {
+            switch (eventCode) {
+                case CoverConstant.CoverEvent.CODE_REQUEST_PAUSE:
+                    // 标记是手动暂停
+                    this.mUserPause = true;
+                    break;
+                case CoverConstant.CoverEvent.CODE_REQUEST_BACK:
+                    // 回退
+                    this.onBackPressed();
+                    break;
+                case CoverConstant.CoverEvent.CODE_REQUEST_HL_SCREEN_TOGGLE:
+                    // 横竖屏切换
+                    boolean screenOrientation = bundle.getBoolean(EventKey.BOOL_DATA, false);
+                    // 改变横竖屏
+                    this.setRequestedOrientation(screenOrientation
+                            ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                            // 横屏自动旋转 180°
+                            : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                    break;
+                case CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_TOGGLE:
+                    // 全屏切换事件
+                    boolean fullscreen = bundle.getBoolean(EventKey.BOOL_DATA, false);
+                    // 如果在横屏状态下退出了全屏模式需要设置回竖屏
+                    if (mIsLandscape && !fullscreen) {
+                        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+                    }
+                    // 屏幕改变
+                    this.onFullscreen(fullscreen);
+                    break;
+                default:
+                    break;
             }
         });
         // 播放
@@ -163,24 +124,20 @@ public class PlayerActivity extends BaseToolbarActivity {
      * 播放
      */
     private void onPlay() {
-//        this.onPlay("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4", false);
-        this.onPlay(Environment.getExternalStorageDirectory().getAbsolutePath() + "/10022.mov", false);
-//        this.onPlay(mPath, false);
+        this.onPlay("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4");
     }
 
     /**
      * 播放
      */
-    private void onPlay(String url, boolean isLive) {
+    private void onPlay(String url) {
         DataSource dataSource = new DataSource(url);
-        dataSource.setLive(isLive);
         // 添加容器 播放
-        this.mKsgAssistView.attachContainer(mContainerView, true);
-        this.mKsgAssistView.setDataSource(dataSource);
-        this.mKsgAssistView.start();
-        this.mKsgAssistView.getVideoPlayer().setLooping(true);
+        this.mPlayer.setDataSource(dataSource);
+        this.mPlayer.start();
+        this.mPlayer.setLooping(true);
         // 当前解码器
-        this.mPlayerDecoder.setText(mKsgAssistView.getDecoderView().getClass().getSimpleName());
+        this.mPlayerDecoder.setText(mPlayer.getDecoderView().getClass().getSimpleName());
     }
 
     /**
@@ -194,13 +151,13 @@ public class PlayerActivity extends BaseToolbarActivity {
         int viewHeight = (int) (DensityUtil.getWidthInPx(this) * 9 / 16);
         int screenHeight = (int) DensityUtil.getHeightInPx(this);
         // 全屏动画
-        AnimUtil.fullScreenAnim(mContainerView, fullscreen, viewHeight, screenHeight, animation -> {
+        AnimUtil.fullScreenAnim(mPlayer, fullscreen, viewHeight, screenHeight, animation -> {
             // 更新高度
-            this.mContainerView.getLayoutParams().height = (int) animation.getAnimatedValue();
-            this.mContainerView.requestLayout();
+            this.mPlayer.getLayoutParams().height = (int) animation.getAnimatedValue();
+            this.mPlayer.requestLayout();
         }, null);
         // 通知组件横屏幕改变
-        this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_FULLSCREEN, fullscreen);
+        this.mCoverManager.getValuePool().putBoolean(CoverConstant.ValueKey.KEY_FULLSCREEN_TOGGLE, fullscreen);
     }
 
     @Override
@@ -224,15 +181,15 @@ public class PlayerActivity extends BaseToolbarActivity {
             SystemUiUtil.recoverySystemUI(this);
         }
         // 通知组件横竖屏切换
-        this.mReceiverGroup.getGroupValue().putBoolean(DataInter.Key.KEY_SCREEN_ORIENTATION, mIsLandscape);
+        this.mCoverManager.getValuePool().putBoolean(CoverConstant.ValueKey.KEY_HL_SCREEN_TOGGLE, mIsLandscape);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (mKsgAssistView.isInPlaybackState()) {
+        if (mPlayer.isItPlaying()) {
             if (!mUserPause) {
-                this.mKsgAssistView.resume();
+                this.mPlayer.resume();
             }
         }
         if (mIsLandscape) {
@@ -244,10 +201,10 @@ public class PlayerActivity extends BaseToolbarActivity {
     @Override
     protected void onPause() {
         super.onPause();
-        if (mKsgAssistView.isInPlaybackState()) {
-            this.mKsgAssistView.pause();
+        if (mPlayer.isItPlaying()) {
+            this.mPlayer.pause();
         } else {
-            this.mKsgAssistView.stop();
+            this.mPlayer.stop();
         }
     }
 
@@ -266,59 +223,31 @@ public class PlayerActivity extends BaseToolbarActivity {
         // 剩下的基操给系统
         super.onBackPressed();
     }
-
-    public void onItemSelected(int position) {
-        if (mInitSpinner) {
-            this.mInitSpinner = false;
-            return;
-        }
-        switch (position) {
-            case 0:
-                if (mKsgAssistView.setDecoderView(createExo())) {
-                    this.onPlay();
-                }
-                break;
-            case 1:
-                if (mKsgAssistView.setDecoderView(createTxVod())) {
-                    this.onPlay();
-                }
-                break;
-            case 2:
-                if (mKsgAssistView.setDecoderView(createTxLive())) {
-                    this.onPlay("rtmp://play.lifecrystal.cn/live/shbxyshh01", true);
-//                    this.onPlay("rtmp://play.lifecrystal.cn/live/1400238383_IM8615612341234", true);
-                }
-                break;
-            default:
-                break;
-        }
-    }
-
-    private KsgIjkPlayer createIjk() {
-        if (mKsgIjkPlayer == null) {
-            this.mKsgIjkPlayer = new KsgIjkPlayer(this);
-        }
-        return this.mKsgIjkPlayer;
-    }
-
-    private KsgExoPlayer createExo() {
-        if (mKsgExoPlayer == null) {
-            this.mKsgExoPlayer = new KsgExoPlayer(this);
-        }
-        return this.mKsgExoPlayer;
-    }
-
-    private KsgTxVodPlayer createTxVod() {
-        if (mKsgTxVodPlayer == null) {
-            this.mKsgTxVodPlayer = new KsgTxVodPlayer(this);
-        }
-        return this.mKsgTxVodPlayer;
-    }
-
-    private KsgTxLivePlayer createTxLive() {
-        if (mKsgTxLivePlayer == null) {
-            this.mKsgTxLivePlayer = new KsgTxLivePlayer(this);
-        }
-        return this.mKsgTxLivePlayer;
-    }
+//
+//    public void onItemSelected(int position) {
+//        if (mInitSpinner) {
+//            this.mInitSpinner = false;
+//            return;
+//        }
+//        switch (position) {
+//            case 0:
+//                if (mKsgAssistView.setDecoderView(createExo())) {
+//                    this.onPlay();
+//                }
+//                break;
+//            case 1:
+//                if (mKsgAssistView.setDecoderView(createTxVod())) {
+//                    this.onPlay();
+//                }
+//                break;
+//            case 2:
+//                if (mKsgAssistView.setDecoderView(createTxLive())) {
+////                    this.onPlay("rtmp://play.lifecrystal.cn/live/shbxyshh01", true);
+////                    this.onPlay("rtmp://play.lifecrystal.cn/live/1400238383_IM8615612341234", true);
+//                }
+//                break;
+//            default:
+//                break;
+//        }
+//    }
 }

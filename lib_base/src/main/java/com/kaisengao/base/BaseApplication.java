@@ -21,11 +21,6 @@ public class BaseApplication extends Application implements Application.Activity
 
     private static BaseApplication sApplication;
 
-    /**
-     * 外部获取单例
-     *
-     * @return BaseApplication
-     */
     public static BaseApplication getInstance() {
         return sApplication;
     }
@@ -33,28 +28,17 @@ public class BaseApplication extends Application implements Application.Activity
     @Override
     public void onCreate() {
         super.onCreate();
+
         sApplication = this;
         // Fresco
         Fresco.initialize(this);
-        // 管理Activity
+        // 监控Activity的生命周期
         this.registerActivityLifecycleCallbacks(this);
-        // 初始化 LoadSir
-        this.initLoadSir();
-    }
-
-    /**
-     * 初始化 LoadSir
-     */
-    private void initLoadSir() {
-//        LoadSir.beginBuilder()
-//                .addCallback(new ErrorCallback())
-//                .addCallback(new LoadingCallback())
-//                .commit();
     }
 
     @Override
     public void onActivityCreated(@NonNull Activity activity, @Nullable Bundle bundle) {
-        ActivityManager.getAppManager().addActivity(activity);
+        ActivityManager.getInstance().addActivity(activity);
     }
 
     @Override
@@ -64,7 +48,7 @@ public class BaseApplication extends Application implements Application.Activity
 
     @Override
     public void onActivityResumed(@NonNull Activity activity) {
-
+        ActivityManager.getInstance().setCurrActivity(activity);
     }
 
     @Override
@@ -84,6 +68,6 @@ public class BaseApplication extends Application implements Application.Activity
 
     @Override
     public void onActivityDestroyed(@NonNull Activity activity) {
-        ActivityManager.getAppManager().removeActivity(activity);
+        ActivityManager.getInstance().removeActivity(activity);
     }
 }

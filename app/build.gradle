@@ -45,8 +45,6 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:$exoplayer"
     // Base
     implementation project(':lib_base')
-    // Danmaku
-    implementation project(':lib_danmaku')
     // MVP
     implementation project(':lib_mvp')
     // MVVM

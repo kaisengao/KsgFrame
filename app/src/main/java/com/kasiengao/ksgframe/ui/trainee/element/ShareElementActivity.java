@@ -1,20 +1,18 @@
 package com.kasiengao.ksgframe.ui.trainee.element;
 
 import android.annotation.SuppressLint;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatTextView;
-import androidx.core.view.ViewCompat;
 
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.DraweeTransition;
 import com.kaisengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
 import com.kasiengao.ksgframe.ui.trainee.preview.PreviewBean;
 import com.kasiengao.ksgframe.ui.trainee.preview.PreviewPager;
 import com.kasiengao.ksgframe.ui.trainee.staggered.StaggeredGridBean;
-import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 
 /**
@@ -92,28 +90,28 @@ public class ShareElementActivity extends BaseToolbarActivity {
      * Init Preview
      */
     private void initPreview() {
-        this.mPreviewPager.setPlayerContainer(mPlayerContainer);
-        // Data
-        this.mPreviewPager.setMediaList(mGridBean.mPreviewBeans);
-        // ShareElement
-        ViewCompat.setTransitionName(mPreviewPager, getString(R.string.share_element_picture) + mPosition);
+//        this.mPreviewPager.setPlayerContainer(mPlayerContainer);
+//        // Data
+//        this.mPreviewPager.setMediaList(mGridBean.mPreviewBeans);
+//        // ShareElement
+//        ViewCompat.setTransitionName(mPreviewPager, getString(R.string.share_element_picture) + mPosition);
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
     public void onBackPressed() {
-        // 1、验证横竖屏
-        if (mPreviewPager.isLandscape()) {
-            this.mPreviewPager.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-            return;
-        }
-        // 2、验证全屏
-        if (mPreviewPager.isFullscreen()) {
-            this.mPreviewPager.setFullscreen(false);
-            this.mPreviewPager.onFullscreen(false);
-            return;
-        }
-        // 剩下的基操给系统
-        super.onBackPressed();
+//        // 1、验证横竖屏
+//        if (mPreviewPager.isLandscape()) {
+//            this.mPreviewPager.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+//            return;
+//        }
+//        // 2、验证全屏
+//        if (mPreviewPager.isFullscreen()) {
+//            this.mPreviewPager.setFullscreen(false);
+//            this.mPreviewPager.onFullscreen(false);
+//            return;
+//        }
+//        // 剩下的基操给系统
+//        super.onBackPressed();
     }
 }

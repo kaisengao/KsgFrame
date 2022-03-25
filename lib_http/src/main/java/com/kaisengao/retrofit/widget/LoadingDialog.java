@@ -96,7 +96,7 @@ public class LoadingDialog extends Dialog {
         private boolean mCancelable = false;
 
         public Builder() {
-            this.mContext = ActivityManager.getAppManager().currentActivity();
+            this.mContext = ActivityManager.getInstance().currentActivity();
         }
 
         public Builder setLoadMessage(String loadMessage) {

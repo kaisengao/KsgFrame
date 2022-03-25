@@ -1,5 +1,9 @@
 package com.kaisengao.base.util;
 
+import android.content.Context;
+import android.os.Environment;
+
+import java.io.File;
 import java.text.DecimalFormat;
 
 /**
@@ -9,6 +13,18 @@ import java.text.DecimalFormat;
  * @Description:
  */
 public class FileUtil {
+
+    /**
+     * 获取app私有的目录 /storage/emulated/0/Android/data/.......
+     */
+    public static String getFileDir(Context context, String path) {
+        File externalFilesDir = context.getExternalFilesDir(path);
+        if (externalFilesDir != null) {
+            return externalFilesDir.getAbsolutePath() + "/";
+        } else {
+            return Environment.getExternalStorageDirectory().getAbsolutePath();
+        }
+    }
 
     /**
      * 将字节 byte 转为对应的合适的单位

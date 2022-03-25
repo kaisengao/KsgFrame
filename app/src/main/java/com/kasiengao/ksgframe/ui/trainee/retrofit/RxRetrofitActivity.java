@@ -5,10 +5,9 @@ import android.view.MenuItem;
 
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.kaisengao.retrofit.RxCompose;
+import com.kaisengao.retrofit.observer.BaseRxObserver;
 import com.kaisengao.retrofit.observer.dialog.BaseDialogObserver;
 import com.kaisengao.retrofit.observer.mvp.BaseLoadSirObserver;
-import com.kaisengao.retrofit.observer.BaseRxObserver;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
 
@@ -85,7 +84,6 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
         mMessage.setText("");
 
         this.requestNewsTop()
-                .as(RxCompose.bindLifecycle(this))
                 .subscribe(new BaseRxObserver<NewsTopBean>(this) {
                     @Override
                     protected void onResult(NewsTopBean topBean) {
@@ -105,7 +103,6 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
         mMessage.setText("");
 
         this.requestNewsTop()
-                .as(RxCompose.bindLifecycle(this))
                 .subscribe(new BaseDialogObserver<NewsTopBean>(this) {
                     @Override
                     protected void onResult(NewsTopBean topBean) {
@@ -125,7 +122,6 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
         mMessage.setText("");
 
         this.requestNewsTop()
-                .as(RxCompose.bindLifecycle(this))
                 .subscribe(new BaseLoadSirObserver<NewsTopBean>(this, getInflate()) {
                     @Override
                     protected void onResult(NewsTopBean topBean) {

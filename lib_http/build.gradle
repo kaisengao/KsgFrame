@@ -32,13 +32,14 @@ android {
 dependencies {
     // Base
     implementation project(':lib_base')
-    // RxJava
-    api rootProject.ext.dependencies.rxjava
-    api rootProject.ext.dependencies.rxandroid
-    api rootProject.ext.dependencies.autodispose
+    // Rxjava
+    api "io.reactivex.rxjava2:rxjava:$rxjava"
+    api "io.reactivex.rxjava2:rxandroid:$rxandroid"
     // Retrofit
-    api rootProject.ext.dependencies.retrofit
-    api rootProject.ext.dependencies["converter-gson"]
-    api rootProject.ext.dependencies["converter-scalars"]
-    api rootProject.ext.dependencies["adapter-rxjava"]
+    api "com.squareup.retrofit2:retrofit:$retrofit"
+    api "com.squareup.retrofit2:converter-gson:$retrofitGson"
+    api "com.squareup.retrofit2:converter-scalars:$retrofitScalars"
+    api "com.squareup.retrofit2:adapter-rxjava2:$retrofitAdapterRx"
+    // HttpLoggingInterceptor
+    api "com.squareup.okhttp3:logging-interceptor:$loggingInterceptor"
 }

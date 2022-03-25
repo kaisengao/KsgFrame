@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
-import com.kaisengao.base.loadpage.widget.LoadContainer;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.ui.trainee.gesture.GestureActivity;
 import com.kasiengao.ksgframe.ui.trainee.grid.TouchGridActivity;
@@ -23,8 +22,6 @@ import com.kasiengao.mvp.java.BaseToolbarActivity;
  * @Description: 长达好几年的练习生页面
  */
 public class TraineeActivity extends BaseToolbarActivity {
-
-    private LoadContainer mContainer;
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, TraineeActivity.class);
@@ -49,7 +46,7 @@ public class TraineeActivity extends BaseToolbarActivity {
         this.findViewById(R.id.trainee_rx_retrofit).setOnClickListener(this::onClick);
         // Staggered
         this.findViewById(R.id.trainee_staggered).setOnClickListener(this::onClick);
-        // KsgVideoPlayer
+        // Player
         this.findViewById(R.id.trainee_player).setOnClickListener(this::onClick);
         // TouchGrid
         this.findViewById(R.id.trainee_touch_grid).setOnClickListener(this::onClick);

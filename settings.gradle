@@ -1,7 +1,6 @@
 rootProject.name='KsgFrame'
 include ':app'
 include ':lib_base'
-include ':lib_danmaku'
 include ':lib_http'
 include ':lib_mvp'
 include ':lib_mvvm'

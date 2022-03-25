@@ -2,33 +2,24 @@ package com.kaisengao.base.configure;
 
 import android.app.Activity;
 
-import androidx.fragment.app.Fragment;
-
+import java.lang.ref.SoftReference;
 import java.util.Stack;
 
 /**
  * @ClassName: ActivityManager
  * @Author: KaiSenGao
  * @CreateDate: 2020/3/26 14:29
- * @Description: Activity管理
+ * @Description:
  */
 public class ActivityManager {
 
-    private Stack<Activity> mActivityStack = new Stack<>();
-
-    private Stack<Fragment> mFragmentStack = new Stack<>();
-
     private static ActivityManager sInstance;
 
-    private ActivityManager() {
-    }
+    private Stack<Activity> mActivityStack = new Stack<>();
 
-    /**
-     * 单例模式
-     *
-     * @return ActivityManager
-     */
-    public static ActivityManager getAppManager() {
+    private SoftReference<Activity> mCurrActivity;
+
+    public static ActivityManager getInstance() {
         if (sInstance == null) {
             synchronized (ActivityManager.class) {
                 if (sInstance == null) {
@@ -39,12 +30,7 @@ public class ActivityManager {
         return sInstance;
     }
 
-    public Stack<Activity> getActivityStack() {
-        return mActivityStack;
-    }
-
-    public Stack<Fragment> getFragmentStack() {
-        return mFragmentStack;
+    private ActivityManager() {
     }
 
     /**
@@ -52,9 +38,9 @@ public class ActivityManager {
      */
     public void addActivity(Activity activity) {
         if (mActivityStack == null) {
-            mActivityStack = new Stack<>();
+            this.mActivityStack = new Stack<>();
         }
-        mActivityStack.add(activity);
+        this.mActivityStack.add(activity);
     }
 
     /**
@@ -62,10 +48,9 @@ public class ActivityManager {
      */
     public void removeActivity(Activity activity) {
         if (activity != null) {
-            mActivityStack.remove(activity);
+            this.mActivityStack.remove(activity);
         }
     }
-
 
     /**
      * 是否有activity
@@ -78,10 +63,39 @@ public class ActivityManager {
     }
 
     /**
-     * 获取当前Activity（堆栈中最后一个压入的）
+     * 获取指定的Activity
+     *
+     * @param cls cls
+     */
+    public Activity getActivity(Class<?> cls) {
+        if (mActivityStack != null) {
+            for (Activity activity : mActivityStack) {
+                if (activity.getClass().equals(cls)) {
+                    return activity;
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 设置当前Activity
+     *
+     * @param currActivity currActivity
+     */
+    public void setCurrActivity(Activity currActivity) {
+        if (mCurrActivity != null) {
+            this.mCurrActivity.clear();
+            this.mCurrActivity = null;
+        }
+        this.mCurrActivity = new SoftReference<>(currActivity);
+    }
+
+    /**
+     * 获取当前Activity
      */
     public Activity currentActivity() {
-        return mActivityStack.lastElement();
+        return mCurrActivity.get();
     }
 
     /**
@@ -125,75 +139,5 @@ public class ActivityManager {
             }
         }
         mActivityStack.clear();
-    }
-
-    /**
-     * 获取指定的Activity
-     *
-     * @author kymjs
-     */
-    public Activity getActivity(Class<?> cls) {
-        if (mActivityStack != null) {
-            for (Activity activity : mActivityStack) {
-                if (activity.getClass().equals(cls)) {
-                    return activity;
-                }
-            }
-        }
-        return null;
-    }
-
-
-    /**
-     * 添加Fragment到堆栈
-     */
-    public void addFragment(Fragment fragment) {
-        if (mFragmentStack == null) {
-            mFragmentStack = new Stack<Fragment>();
-        }
-        mFragmentStack.add(fragment);
-    }
-
-    /**
-     * 移除指定的Fragment
-     */
-    public void removeFragment(Fragment fragment) {
-        if (fragment != null) {
-            mFragmentStack.remove(fragment);
-        }
-    }
-
-
-    /**
-     * 是否有Fragment
-     */
-    public boolean isFragment() {
-        if (mFragmentStack != null) {
-            return !mFragmentStack.isEmpty();
-        }
-        return false;
-    }
-
-    /**
-     * 获取当前Activity（堆栈中最后一个压入的）
-     */
-    public Fragment currentFragment() {
-        if (mFragmentStack != null) {
-            return mFragmentStack.lastElement();
-        }
-        return null;
-    }
-
-
-    /**
-     * 退出应用程序
-     */
-    public void appExit() {
-        try {
-            finishAllActivity();
-        } catch (Exception e) {
-            mActivityStack.clear();
-            e.printStackTrace();
-        }
     }
 }

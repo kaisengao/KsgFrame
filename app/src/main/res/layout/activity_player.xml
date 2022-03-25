@@ -5,8 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.kasiengao.ksgframe.common.widget.PlayerContainerView
-        android:id="@+id/player_container"
+    <com.ksg.ksgplayer.widget.KsgVideoView
+        android:id="@+id/player"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/black"
@@ -21,7 +21,7 @@
         android:gravity="center"
         android:padding="5dp"
         android:textSize="13sp"
-        app:layout_constraintTop_toBottomOf="@id/player_container"
+        app:layout_constraintTop_toBottomOf="@id/player"
         tools:text="ksg" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

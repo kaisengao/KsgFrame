@@ -29,6 +29,7 @@
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/main_tab"
                     style="@style/Widget.MaterialComponents.TabLayout.Colored"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -36,76 +37,16 @@
                     app:tabIndicatorAnimationMode="linear"
                     app:tabIndicatorFullWidth="false"
                     app:tabMode="scrollable"
-                    app:tabTextAppearance="@style/TabTextStyle">
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="视频" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="图片" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:icon="@drawable/ic_main_smiling_face" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="资源" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="资源" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="资源" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="资源" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="资源" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="资源" />
-
-                    <com.google.android.material.tabs.TabItem
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="资源" />
-                </com.google.android.material.tabs.TabLayout>
+                    app:tabTextAppearance="@style/TabTextStyle" />
 
             </com.google.android.material.appbar.AppBarLayout>
 
             <!-- ViewPager -->
-            <com.kasiengao.ksgframe.common.widget.ViewPagerEx
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/main_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:textColor="@color/color_212121"
-                android:textSize="30sp"
-                android:visibility="gone"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-            <com.kaisengao.danmaku.BlessingView
-                android:layout_width="match_parent"
-                android:layout_height="150dp"
-                android:layout_gravity="center" />
-
 
             <!-- 底部AppBar -->
             <com.google.android.material.bottomappbar.BottomAppBar

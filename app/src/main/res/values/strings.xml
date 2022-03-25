@@ -10,7 +10,7 @@
     <string name="trainee_mvvm">MVVM</string>
     <string name="trainee_rx_retrofit">RxRetrofit</string>
     <string name="trainee_staggered">Staggered</string>
-    <string name="trainee_player">KsgPlayer</string>
+    <string name="trainee_player">Player</string>
     <string name="trainee_grid">TouchGrid</string>
     <string name="trainee_gesture">GestureView</string>
     <string name="trainee_loadpage">LoadPage</string>

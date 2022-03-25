@@ -47,7 +47,6 @@ public class LoadPageActivity extends BaseActivity<ActivityLoadpageBinding> {
         LoadContainer container = KsgLoadFrame.bindLoadContainer(this, this::onLoadClick);
         // LoadData
         this.requestData()
-                .as(RxCompose.bindLifecycle(this))
                 .subscribe(new Observer<Long>() {
                     @Override
                     public void onSubscribe(@NotNull Disposable disposable) {
@@ -87,7 +86,6 @@ public class LoadPageActivity extends BaseActivity<ActivityLoadpageBinding> {
     private void loadData0(LoadContainer container) {
         // LoadData
         this.requestData()
-                .as(RxCompose.bindLifecycle(this))
                 .subscribe(new Observer<Long>() {
                     @Override
                     public void onSubscribe(@NotNull Disposable disposable) {
@@ -121,7 +119,6 @@ public class LoadPageActivity extends BaseActivity<ActivityLoadpageBinding> {
     private void loadData1(LoadContainer container) {
         // LoadData
         this.requestData()
-                .as(RxCompose.bindLifecycle(this))
                 .subscribe(new Observer<Long>() {
                     @Override
                     public void onSubscribe(@NotNull Disposable disposable) {
@@ -151,7 +148,6 @@ public class LoadPageActivity extends BaseActivity<ActivityLoadpageBinding> {
     private void loadData2(LoadContainer container) {
         // LoadData
         this.requestData()
-                .as(RxCompose.bindLifecycle(this))
                 .subscribe(new Observer<Long>() {
                     @Override
                     public void onSubscribe(@NotNull Disposable disposable) {
@@ -185,7 +181,6 @@ public class LoadPageActivity extends BaseActivity<ActivityLoadpageBinding> {
     private void loadData3(LoadContainer container) {
         // LoadData
         this.requestData()
-                .as(RxCompose.bindLifecycle(this))
                 .subscribe(new Observer<Long>() {
                     @Override
                     public void onSubscribe(@NotNull Disposable disposable) {
