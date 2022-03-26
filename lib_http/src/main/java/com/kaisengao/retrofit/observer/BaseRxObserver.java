@@ -10,6 +10,8 @@ import com.kaisengao.retrofit.R;
 import com.kaisengao.retrofit.exception.ExceptionHandle;
 import com.kaisengao.retrofit.util.NetworkUtil;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.reactivex.Observer;
 import io.reactivex.disposables.Disposable;
 
@@ -82,7 +84,7 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
     }
 
     @Override
-    public void onSubscribe(Disposable d) {
+    public void onSubscribe(@NotNull Disposable d) {
 
     }
 
@@ -92,8 +94,7 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
      * @param result <T>
      */
     @Override
-    public void onNext(T result) {
-
+    public void onNext(@NotNull T result) {
         this.onResult(result);
     }
 
@@ -103,16 +104,13 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
      * @param e Throwable
      */
     @Override
-    public void onError(Throwable e) {
-
+    public void onError(@NotNull Throwable e) {
         String exception;
-
         if (!NetworkUtil.isNetConnected(mContext)) {
             exception = mContext.getString(R.string.net_not);
         } else {
             exception = ExceptionHandle.handleException(mContext, e);
         }
-
         this.onError(exception);
     }
 
@@ -126,7 +124,7 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
      *
      * @param t Result
      */
-    protected abstract void onResult(T t);
+    protected abstract void onResult(@NotNull T t);
 
     /**
      * Error

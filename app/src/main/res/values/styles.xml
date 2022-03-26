@@ -1,12 +1,13 @@
 <resources>
 
+    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="android:textSize">20sp</item>
+        <item name="android:fontFamily">@font/android</item>
+    </style>
+
     <style name="ShareElementAppTheme" parent="Theme.Ksg">
         <!--允许启用窗口内容转换效果 （共享元素）-->
         <item name="android:windowContentTransitions">true</item>
-    </style>
-
-    <style name="TabTextStyle">
-        <item name="android:textSize">17sp</item>
     </style>
 
     <style name="TraineeBtn" parent="Widget.MaterialComponents.Button.UnelevatedButton">

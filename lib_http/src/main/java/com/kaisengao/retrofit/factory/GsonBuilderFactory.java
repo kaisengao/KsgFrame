@@ -45,7 +45,7 @@ public class GsonBuilderFactory {
         return this.mGson.fromJson(string, tClass);
     }
 
-    public <T> T formJson(String json, Type type) {
+    public <T> T fromJson(String json, Type type) {
         return this.mGson.fromJson(json, type);
     }
 }

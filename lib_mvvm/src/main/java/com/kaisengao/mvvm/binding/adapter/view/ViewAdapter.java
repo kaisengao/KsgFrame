@@ -5,7 +5,7 @@ import android.view.ViewGroup;
 
 import androidx.databinding.BindingAdapter;
 
-import com.kaisengao.base.BaseApplication;
+import com.kaisengao.base.factory.AppFactory;
 import com.kaisengao.base.util.StatusBarUtil;
 
 /**
@@ -25,6 +25,6 @@ public class ViewAdapter {
 
     @BindingAdapter("setPaddingSmart")
     public static void setPaddingSmart(View view, int padding) {
-        StatusBarUtil.setStatusBarPadding(BaseApplication.getInstance(), view);
+        StatusBarUtil.setStatusBarPadding(AppFactory.application(), view);
     }
 }

@@ -76,7 +76,6 @@ public class ToolbarViewModel extends BaseViewModel {
         this.getMenuRes().setValue(resId);
     }
 
-
     /**
      * 返回事件
      */
@@ -92,7 +91,7 @@ public class ToolbarViewModel extends BaseViewModel {
     }
 
     public final MutableLiveData<String> getTitle() {
-        return mTitle = createLiveData(mTitle, "PDA");
+        return mTitle = createLiveData(mTitle);
     }
 
     public final MutableLiveData<Integer> getNavigationIcon() {

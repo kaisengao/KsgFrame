@@ -32,6 +32,7 @@ dependencies {
     //  Androidx
     api "androidx.constraintlayout:constraintlayout:$constraint"
     api "androidx.recyclerview:recyclerview:$recycler"
+    api "androidx.swiperefreshlayout:swiperefreshlayout:$swipeRefresh"
     api "androidx.appcompat:appcompat:$appcompat"
     api "androidx.lifecycle:lifecycle-extensions:$lifecycle"
     api "androidx.core:core-ktx:$ktx"

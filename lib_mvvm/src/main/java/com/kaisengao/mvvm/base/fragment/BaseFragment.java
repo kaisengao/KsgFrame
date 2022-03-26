@@ -21,6 +21,8 @@ import androidx.fragment.app.Fragment;
  */
 public abstract class BaseFragment<DB extends ViewDataBinding> extends Fragment {
 
+    protected boolean isLazyLoad;
+
     protected DB mBinding;
 
     @Override
@@ -45,14 +47,6 @@ public abstract class BaseFragment<DB extends ViewDataBinding> extends Fragment 
     }
 
     /**
-     * 得到当前界面的资源文件Id
-     *
-     * @return 资源文件Id
-     */
-    @LayoutRes
-    protected abstract int getContentLayoutId();
-
-    /**
      * 初始化相关参数
      *
      * @param bundle 参数Bundle
@@ -74,5 +68,31 @@ public abstract class BaseFragment<DB extends ViewDataBinding> extends Fragment 
     protected void initData() {
 
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        // 懒加载
+        if (!isLazyLoad) {
+            this.lazyLoad();
+            this.isLazyLoad = true;
+        }
+    }
+
+    /**
+     * LayoutId
+     */
+    @LayoutRes
+    protected abstract int getContentLayoutId();
+
+    /**
+     * 标题
+     */
+    public abstract String getTitle();
+
+    /**
+     * 懒加载
+     */
+    protected abstract void lazyLoad();
 
 }

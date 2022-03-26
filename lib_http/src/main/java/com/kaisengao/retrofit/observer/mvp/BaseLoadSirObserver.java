@@ -6,6 +6,8 @@ import com.kaisengao.retrofit.factory.LoadSirFactory;
 import com.kaisengao.retrofit.listener.OnLoadSirReloadListener;
 import com.kaisengao.retrofit.observer.BaseRxObserver;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -33,13 +35,13 @@ public abstract class BaseLoadSirObserver<T> extends BaseRxObserver<T> implement
     }
 
     @Override
-    public void onSubscribe(Disposable d) {
+    public void onSubscribe(@NotNull Disposable d) {
         super.onSubscribe(d);
         this.mLoadSirFactory.showLoading(mContext, mTarget, mContext.getString(mLoadMessage), mLoadColor, mLoadBgColor);
     }
 
     @Override
-    public void onNext(T t) {
+    public void onNext(@NotNull T t) {
         // Success 恢复页面
         this.mLoadSirFactory.showSuccess(this.mContext, this.mTarget);
         // 回调

@@ -32,7 +32,7 @@ public class RxCompose {
                     @Override
                     public ObservableSource<T> apply(String json) throws Exception {
                         // 返回result
-                        return Observable.just(GsonBuilderFactory.getInstance().formJson(json, tClass));
+                        return Observable.just(GsonBuilderFactory.getInstance().fromJson(json, tClass));
                     }
                 }).subscribeOn(Schedulers.io())
                         .unsubscribeOn(Schedulers.io())

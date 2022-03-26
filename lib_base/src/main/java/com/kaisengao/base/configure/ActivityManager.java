@@ -95,6 +95,9 @@ public class ActivityManager {
      * 获取当前Activity
      */
     public Activity currentActivity() {
+        if (mCurrActivity == null) {
+            return mActivityStack.lastElement();
+        }
         return mCurrActivity.get();
     }
 
@@ -102,8 +105,7 @@ public class ActivityManager {
      * 结束当前Activity（堆栈中最后一个压入的）
      */
     public void finishActivity() {
-        Activity activity = mActivityStack.lastElement();
-        finishActivity(activity);
+        this.finishActivity(mActivityStack.lastElement());
     }
 
     /**

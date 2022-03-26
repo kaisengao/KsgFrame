@@ -1,0 +1,99 @@
+Index: .idea/runConfigurations.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"RunConfigurationProducerService\">\n    <option name=\"ignoredProducers\">\n      <set>\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.AllInPackageGradleConfigurationProducer\" />\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.TestClassGradleConfigurationProducer\" />\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.TestMethodGradleConfigurationProducer\" />\n      </set>\n    </option>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- .idea/runConfigurations.xml	(revision 796c107c02e8bfa2c901e1c5102d63fb84f7422c)
++++ .idea/runConfigurations.xml	(date 1642410107588)
+@@ -3,6 +3,7 @@
+   <component name="RunConfigurationProducerService">
+     <option name="ignoredProducers">
+       <set>
++        <option value="com.android.tools.idea.compose.preview.runconfiguration.ComposePreviewRunConfigurationProducer" />
+         <option value="org.jetbrains.plugins.gradle.execution.test.runner.AllInPackageGradleConfigurationProducer" />
+         <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestClassGradleConfigurationProducer" />
+         <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestMethodGradleConfigurationProducer" />
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_12_24_21_10_26_PM_[Default_Changelist]/shelved.patch
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Update_at_12_24_21_10_26_PM_[Default_Changelist]/shelved.patch	(revision 796c107c02e8bfa2c901e1c5102d63fb84f7422c)
++++ .idea/shelf/Uncommitted_changes_before_Update_at_12_24_21_10_26_PM_[Default_Changelist]/shelved.patch	(revision 796c107c02e8bfa2c901e1c5102d63fb84f7422c)
+@@ -1,67 +0,0 @@
+-Index: .idea/shelf/Uncommitted_changes_before_Update_at_12_15_21_8_40_PM_[Default_Changelist]/shelved.patch
+-===================================================================
+---- .idea/shelf/Uncommitted_changes_before_Update_at_12_15_21_8_40_PM_[Default_Changelist]/shelved.patch	(revision 93002c5ef41ff063e1c546fe45fc4c484f20ae67)
+-+++ .idea/shelf/Uncommitted_changes_before_Update_at_12_15_21_8_40_PM_[Default_Changelist]/shelved.patch	(revision 93002c5ef41ff063e1c546fe45fc4c484f20ae67)
+-@@ -1,52 +0,0 @@
+--Index: .idea/gradle.xml
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\n  <component name=\"GradleSettings\">\n    <option name=\"linkedExternalProjectsSettings\">\n      <GradleProjectSettings>\n        <option name=\"testRunner\" value=\"PLATFORM\" />\n        <option name=\"distributionType\" value=\"DEFAULT_WRAPPED\" />\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\n        <option name=\"modules\">\n          <set>\n            <option value=\"$PROJECT_DIR$\" />\n            <option value=\"$PROJECT_DIR$/app\" />\n            <option value=\"$PROJECT_DIR$/lib_base\" />\n            <option value=\"$PROJECT_DIR$/lib_http\" />\n            <option value=\"$PROJECT_DIR$/lib_mvp\" />\n            <option value=\"$PROJECT_DIR$/lib_mvvm\" />\n            <option value=\"$PROJECT_DIR$/lib_player\" />\n          </set>\n        </option>\n        <option name=\"resolveModulePerSourceSet\" value=\"false\" />\n      </GradleProjectSettings>\n    </option>\n  </component>\n</project>
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+----- .idea/gradle.xml	(revision ef9e7e426780ea7a1ba6d8867117a84a5438425b)
+--+++ .idea/gradle.xml	(date 1639484949000)
+--@@ -19,6 +19,7 @@
+--           </set>
+--         </option>
+--         <option name="resolveModulePerSourceSet" value="false" />
+--+        <option name="useQualifiedModuleNames" value="true" />
+--       </GradleProjectSettings>
+--     </option>
+--   </component>
+--Index: lib_base/src/main/java/com/kaisengao/base/loadpager/widget/PageContainer.java
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+>package com.kaisengao.base.loadpager.widget;\n\nimport android.content.Context;\nimport android.widget.FrameLayout;\n\nimport androidx.annotation.NonNull;\n\n/**\n * @ClassName: PageContainer\n * @Author: KaiSenGao\n * @CreateDate: 2021/12/14 17:23\n * @Description: page视图容器\n */\npublic class PageContainer extends FrameLayout {\n\n    public PageContainer(@NonNull Context context) {\n        super(context);\n    }\n\n\n\n\n}
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+----- lib_base/src/main/java/com/kaisengao/base/loadpager/widget/PageContainer.java	(revision ef9e7e426780ea7a1ba6d8867117a84a5438425b)
+--+++ lib_base/src/main/java/com/kaisengao/base/loadpager/widget/PageContainer.java	(date 1639485825000)
+--@@ -17,7 +17,4 @@
+--         super(context);
+--     }
+-- 
+---
+---
+---
+-- }
+--\ No newline at end of file
+--Index: .idea/runConfigurations.xml
+--IDEA additional info:
+--Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+--<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"RunConfigurationProducerService\">\n    <option name=\"ignoredProducers\">\n      <set>\n        <option value=\"com.android.tools.idea.compose.preview.runconfiguration.ComposePreviewRunConfigurationProducer\" />\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.AllInPackageGradleConfigurationProducer\" />\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.TestClassGradleConfigurationProducer\" />\n        <option value=\"org.jetbrains.plugins.gradle.execution.test.runner.TestMethodGradleConfigurationProducer\" />\n      </set>\n    </option>\n  </component>\n</project>
+--Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+--<+>UTF-8
+--===================================================================
+----- .idea/runConfigurations.xml	(revision ef9e7e426780ea7a1ba6d8867117a84a5438425b)
+--+++ .idea/runConfigurations.xml	(date 1639484949000)
+--@@ -3,7 +3,6 @@
+--   <component name="RunConfigurationProducerService">
+--     <option name="ignoredProducers">
+--       <set>
+---        <option value="com.android.tools.idea.compose.preview.runconfiguration.ComposePreviewRunConfigurationProducer" />
+--         <option value="org.jetbrains.plugins.gradle.execution.test.runner.AllInPackageGradleConfigurationProducer" />
+--         <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestClassGradleConfigurationProducer" />
+--         <option value="org.jetbrains.plugins.gradle.execution.test.runner.TestMethodGradleConfigurationProducer" />
+-Index: .idea/shelf/Uncommitted_changes_before_Update_at_12_15_21_8_40_PM__Default_Changelist_.xml
+-===================================================================
+---- .idea/shelf/Uncommitted_changes_before_Update_at_12_15_21_8_40_PM__Default_Changelist_.xml	(revision 93002c5ef41ff063e1c546fe45fc4c484f20ae67)
+-+++ .idea/shelf/Uncommitted_changes_before_Update_at_12_15_21_8_40_PM__Default_Changelist_.xml	(revision 93002c5ef41ff063e1c546fe45fc4c484f20ae67)
+-@@ -1,4 +0,0 @@
+--<changelist name="Uncommitted_changes_before_Update_at_12_15_21_8_40_PM_[Default_Changelist]" date="1639572019180" recycled="true" deleted="true">
+--  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_15_21_8_40_PM_[Default_Changelist]/shelved.patch" />
+--  <option name="DESCRIPTION" value="Uncommitted changes before Update at 12/15/21 8:40 PM [Default Changelist]" />
+--</changelist>
+-\ No newline at end of file
+Index: .idea/shelf/Uncommitted_changes_before_Update_at_12_24_21_10_26_PM__Default_Changelist_.xml
+===================================================================
+--- .idea/shelf/Uncommitted_changes_before_Update_at_12_24_21_10_26_PM__Default_Changelist_.xml	(revision 796c107c02e8bfa2c901e1c5102d63fb84f7422c)
++++ .idea/shelf/Uncommitted_changes_before_Update_at_12_24_21_10_26_PM__Default_Changelist_.xml	(revision 796c107c02e8bfa2c901e1c5102d63fb84f7422c)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Update_at_12_24_21_10_26_PM_[Default_Changelist]" date="1640355968160" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Update_at_12_24_21_10_26_PM_[Default_Changelist]/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Update at 12/24/21 10:26 PM [Default Changelist]" />
+-</changelist>
+\ No newline at end of file

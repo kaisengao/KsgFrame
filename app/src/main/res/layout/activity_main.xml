@@ -28,25 +28,30 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/main_tab"
-                    style="@style/Widget.MaterialComponents.TabLayout.Colored"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:layout_scrollFlags="scroll|enterAlways"
-                    app:tabIndicatorAnimationMode="linear"
-                    app:tabIndicatorFullWidth="false"
-                    app:tabMode="scrollable"
-                    app:tabTextAppearance="@style/TabTextStyle" />
+                <com.google.android.material.appbar.MaterialToolbar
+                    android:id="@+id/toolbar"
+                    style="@style/Toolbar"
+                    app:contentInsetStart="14dp"
+                    app:titleTextAppearance="@style/Toolbar.TitleText" />
 
             </com.google.android.material.appbar.AppBarLayout>
 
-            <!-- ViewPager -->
-            <androidx.viewpager.widget.ViewPager
-                android:id="@+id/main_pager"
+            <!-- Videos -->
+            <com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout
+                android:id="@+id/main_refresh"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+                app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/main_videos"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:overScrollMode="never"
+                    tools:itemCount="20"
+                    tools:listitem="@layout/item_main_video" />
+
+            </com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout>
 
             <!-- 底部AppBar -->
             <com.google.android.material.bottomappbar.BottomAppBar
@@ -67,6 +72,7 @@
                 <androidx.appcompat.widget.AppCompatTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/android"
                     android:text="@string/main_bottom_bar_target"
                     android:textColor="@android:color/white"
                     android:textSize="15sp" />

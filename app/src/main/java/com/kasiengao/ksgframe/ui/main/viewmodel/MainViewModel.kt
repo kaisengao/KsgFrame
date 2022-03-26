@@ -3,10 +3,13 @@ package com.kasiengao.ksgframe.ui.main.viewmodel
 import android.app.Application
 import android.widget.SeekBar
 import androidx.databinding.BindingAdapter
-import com.kaisengao.base.util.KLog
-import com.kaisengao.mvvm.base.viewmodel.BaseViewModel
-import com.kaisengao.mvvm.binding.command.BindingParam
+import androidx.lifecycle.MutableLiveData
 import com.kaisengao.mvvm.binding.command.BindingParamImp
+import com.kaisengao.mvvm.viewmodel.ToolbarViewModel
+import com.kaisengao.retrofit.observer.dialog.BaseDialogObserver
+import com.kasiengao.ksgframe.R
+import com.kasiengao.ksgframe.ui.main.bean.VideoBean
+import com.kasiengao.ksgframe.ui.main.model.MainModel
 
 /**
  * @ClassName: MainViewModel
@@ -14,40 +17,34 @@ import com.kaisengao.mvvm.binding.command.BindingParamImp
  * @CreateDate: 2021/12/14 11:46
  * @Description:
  */
-public class MainViewModel(application: Application) : BaseViewModel(application) {
+class MainViewModel(application: Application) : ToolbarViewModel(application) {
 
-    public val progress1 = BindingParamImp(BindingParam<Int> { progress ->
-        KLog.d("zzz", "progress1 = $progress")
-    })
+    val mVideos: MutableLiveData<List<VideoBean.TrailersBean>> by lazy { MutableLiveData() }
 
-    public val progress2 = BindingParamImp(BindingParam<Int> { progress ->
-        KLog.d("zzz", "progress2 = $progress")
-    })
+    private val mModel: MainModel by lazy { MainModel() }
+
+    /**
+     * Init Toolbar
+     */
+    override fun initToolbar() {
+        this.setToolbarTitle(getApplication<Application>().getString(R.string.title))
+    }
+
+    /**
+     * 请求 视频列表
+     */
+    fun requestVideos() {
+        this.mModel
+            .requestVideos()
+            .doOnSubscribe(this)
+            .subscribe(object : BaseDialogObserver<VideoBean>(getApplication()) {
+                override fun onResult(videoBean: VideoBean) {
+                    mVideos.value  = videoBean.trailers
+                }
+            })
+    }
 
     companion object {
 
-        @BindingAdapter("setTest")
-        @JvmStatic
-        fun setTest(porgress: SeekBar, paramImp: BindingParamImp<Int>? ) {
-            porgress.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
-                override fun onProgressChanged(
-                    seekBar: SeekBar?,
-                    progress: Int,
-                    fromUser: Boolean
-                ) {
-                    if (paramImp != null) {
-                        paramImp.execute(progress)
-                    }
-                }
-
-                override fun onStartTrackingTouch(seekBar: SeekBar?) {
-
-                }
-
-                override fun onStopTrackingTouch(seekBar: SeekBar?) {
-
-                }
-            })
-        }
     }
 }

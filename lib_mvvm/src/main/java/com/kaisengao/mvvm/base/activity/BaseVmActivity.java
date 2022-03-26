@@ -1,5 +1,6 @@
 package com.kaisengao.mvvm.base.activity;
 
+import android.text.TextUtils;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -109,8 +110,13 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
         // 验证 是否继承了 ToolbarViewModel
         if (isDisplayToolbar()
                 && (mViewModel instanceof ToolbarViewModel)) {
-            // 将Toolbar布局添加到容器中
-            this.initContentView();
+            // Toolbar
+            this.mToolbar = findViewById(R.id.toolbar);
+            // 非空验证
+            if (mToolbar == null) {
+                // 将Toolbar布局添加到容器中
+                this.initContentView();
+            }
             // Init Toolbar VM
             this.initToolbarVm();
         }
@@ -134,32 +140,43 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
         parentLayout.addView(mBinding.getRoot());
         // 添加状态栏高度
         StatusBarUtil.setStatusBarPadding(this, parentLayout.getChildAt(0));
+        // Toolbar
+        this.mToolbar = findViewById(R.id.toolbar);
     }
 
     /**
      * Init Toolbar VM
      */
     private void initToolbarVm() {
-        this.mToolbar = findViewById(R.id.toolbar);
         if (mToolbar != null) {
             this.setSupportActionBar(mToolbar);
         }
         // ViewModel
-        ToolbarViewModel toolbarViewModel = (ToolbarViewModel) mViewModel;
+        ToolbarViewModel viewModel = (ToolbarViewModel) mViewModel;
+        // Title
+        viewModel.getTitle().observe(this, title -> {
+            if (!TextUtils.isEmpty(title) && mToolbar != null) {
+                this.setTitle(title);
+            }
+        });
         // 设置导航资源
-        toolbarViewModel.getNavigationIcon().observe(this, resId -> {
-            if ((resId == null || resId <= 0) && mToolbar != null) {
-                this.mToolbar.setNavigationIcon(0);
+        viewModel.getNavigationIcon().observe(this, resId -> {
+            if (resId != null && mToolbar != null) {
+                if (resId <= 0) {
+                    this.mToolbar.setNavigationIcon(null);
+                } else {
+                    this.mToolbar.setNavigationIcon(resId);
+                }
             }
         });
         // 设置菜单资源
-        toolbarViewModel.getMenuRes().observe(this, resId -> {
+        viewModel.getMenuRes().observe(this, resId -> {
             if ((resId != null && resId > 0) && mToolbar != null) {
                 this.mToolbar.inflateMenu(resId);
             }
         });
         // Back事件
-        toolbarViewModel.getBackPressed().observe(this, aVoid -> this.onClickBack());
+        viewModel.getBackPressed().observe(this, aVoid -> this.onClickBack());
     }
 
     /**

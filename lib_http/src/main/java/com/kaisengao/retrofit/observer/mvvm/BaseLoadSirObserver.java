@@ -8,6 +8,8 @@ import com.kaisengao.retrofit.observer.BaseRxObserver;
 import com.kaisengao.base.state.LoadState;
 import com.kaisengao.base.state.LoadingState;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -31,13 +33,13 @@ public abstract class BaseLoadSirObserver<T> extends BaseRxObserver<T> {
     }
 
     @Override
-    public void onSubscribe(Disposable d) {
+    public void onSubscribe(@NotNull Disposable d) {
         super.onSubscribe(d);
         this.notify(LoadState.LOADING, mLoadColor, mLoadBgColor, mContext.getString(mLoadMessage));
     }
 
     @Override
-    public void onNext(T t) {
+    public void onNext(@NotNull T t) {
         // Success 恢复页面
         this.notify(LoadState.SUCCESS, mLoadColor, mLoadBgColor, "Success");
         // 回调

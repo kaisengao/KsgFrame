@@ -6,6 +6,8 @@ import com.kaisengao.retrofit.observer.BaseRxObserver;
 import com.kaisengao.retrofit.widget.LoadingDialog;
 import com.kaisengao.base.util.ToastUtil;
 
+import org.jetbrains.annotations.NotNull;
+
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -51,7 +53,7 @@ public abstract class BaseDialogObserver<T> extends BaseRxObserver<T> {
     }
 
     @Override
-    public void onSubscribe(Disposable d) {
+    public void onSubscribe(@NotNull Disposable d) {
         super.onSubscribe(d);
         // show
         this.initDialog();

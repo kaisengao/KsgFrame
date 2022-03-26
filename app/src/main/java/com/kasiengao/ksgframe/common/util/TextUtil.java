@@ -2,7 +2,7 @@ package com.kasiengao.ksgframe.common.util;
 
 import androidx.annotation.StringRes;
 
-import com.kaisengao.base.BaseApplication;
+import com.kasiengao.ksgframe.factory.AppFactory;
 
 
 /**
@@ -14,6 +14,6 @@ import com.kaisengao.base.BaseApplication;
 public class TextUtil {
 
     public static String getString(@StringRes int resId) {
-        return BaseApplication.getInstance().getString(resId);
+        return AppFactory.application().getString(resId);
     }
 }
