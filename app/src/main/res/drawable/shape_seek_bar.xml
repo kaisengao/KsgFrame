@@ -6,12 +6,12 @@
         <shape>
             <corners android:radius="5dp" />
 
-            <solid android:color="#33ffffff" />
+            <solid android:color="#33FFFFFF" />
         </shape>
     </item>
 
-    <!-- 拖动后的颜色 -->
-    <item android:id="@android:id/progress">
+    <!-- 缓冲进度的颜色 -->
+    <item android:id="@android:id/secondaryProgress">
         <clip>
             <shape>
                 <corners android:radius="5dp" />
@@ -21,13 +21,13 @@
         </clip>
     </item>
 
-    <!-- 缓冲进度的颜色 -->
-    <item android:id="@android:id/secondaryProgress">
+    <!-- 拖动后的颜色 -->
+    <item android:id="@android:id/progress">
         <clip>
             <shape>
                 <corners android:radius="5dp" />
 
-                <solid android:color="#33ffffff" />
+                <solid android:color="@color/color_FF9800" />
             </shape>
         </clip>
     </item>

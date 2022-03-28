@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#48000000"
+    android:background="@color/color_48000000"
     android:visibility="gone"
-    tools:background="@color/black"
     tools:visibility="visible">
 
     <com.wang.avi.AVLoadingIndicatorView

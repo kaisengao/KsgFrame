@@ -12,13 +12,19 @@ import android.widget.FrameLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.ksg.ksgplayer.IKsgVideoPlayer;
 import com.ksg.ksgplayer.KsgVideoPlayer;
+import com.ksg.ksgplayer.cover.ICoverManager;
 import com.ksg.ksgplayer.data.DataSource;
+import com.ksg.ksgplayer.listener.OnCoverEventListener;
 import com.ksg.ksgplayer.listener.OnErrorListener;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
 import com.ksg.ksgplayer.player.BasePlayer;
 import com.ksg.ksgplayer.player.IPlayer;
+import com.ksg.ksgplayer.producer.BaseEventProducer;
 import com.ksg.ksgplayer.renderer.IRenderer;
+
+import java.util.List;
 
 /**
  * @ClassName: KsgVideoView
@@ -46,9 +52,50 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
      * @return {@link KsgVideoPlayer}
      */
     @Override
-    public final KsgVideoPlayer getPlayer() {
+    public final IKsgVideoPlayer getPlayer() {
         return mPlayer;
     }
+
+    /**
+     * 设置 覆盖组件管理器
+     *
+     * @param coverManager coverManager
+     */
+    @Override
+    public void setCoverManager(ICoverManager coverManager) {
+        this.mPlayer.setCoverManager(coverManager);
+    }
+
+    /**
+     * 添加自定义事件生产者
+     *
+     * @param eventProducer 自定义事件生产者
+     */
+    @Override
+    public void addEventProducer(BaseEventProducer eventProducer) {
+        this.mPlayer.addEventProducer(eventProducer);
+    }
+
+    /**
+     * 移除一个事件生产者
+     *
+     * @param eventProducer 自定义事件生产者
+     */
+    @Override
+    public void removeEventProducer(BaseEventProducer eventProducer) {
+        this.mPlayer.removeEventProducer(eventProducer);
+    }
+
+    /**
+     * 返回事件生产者集合 便于控制
+     *
+     * @return List
+     */
+    @Override
+    public List<BaseEventProducer> getEventProducers() {
+        return mPlayer.getEventProducers();
+    }
+
 
     /**
      * 绑定 视图容器
@@ -69,6 +116,14 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
     @Override
     public void bindContainer(ViewGroup container, boolean updateRenderer) {
         this.mPlayer.bindContainer(this, updateRenderer);
+    }
+
+    /**
+     * 解绑 视图容器
+     */
+    @Override
+    public void unbindContainer() {
+        this.mPlayer.unbindContainer();
     }
 
     /**
@@ -357,6 +412,16 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
     @Override
     public void setErrorListener(OnErrorListener errorListener) {
         this.mPlayer.setErrorListener(errorListener);
+    }
+
+    /**
+     * 设置 Cover组件回调事件
+     *
+     * @param coverEventListener coverEventListener
+     */
+    @Override
+    public void setCoverEventListener(OnCoverEventListener coverEventListener) {
+        this.mPlayer.setCoverEventListener(coverEventListener);
     }
 
     /**

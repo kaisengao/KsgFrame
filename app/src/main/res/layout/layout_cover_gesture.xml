@@ -36,7 +36,7 @@
             android:minHeight="4dp"
             android:paddingStart="10dp"
             android:paddingEnd="0dp"
-            android:progressDrawable="@drawable/shape_cover_seek_bar"
+            android:progressDrawable="@drawable/shape_seek_bar"
             tools:progress="30" />
 
     </LinearLayout>

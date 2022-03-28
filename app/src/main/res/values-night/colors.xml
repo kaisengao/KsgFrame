@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#FF9800</color>
-    <color name="colorPrimaryDark">#F57C00</color>
-    <color name="colorAccent">#795548</color>
+    <!-- 主要颜色 -->
+    <color name="colorPrimary">#121212</color>
+    <color name="colorPrimaryDark">#000000</color>
+    <color name="colorAccent">#90CAF9</color>
 
-    <color name="colorSecondary">#795548</color>
-    <color name="colorSecondaryVariant">#FF9800</color>
+    <!-- 第二颜色 -->
+    <color name="colorSecondary">#121212</color>
+    <color name="colorSecondaryVariant">#121212</color>
+    <color name="colorOnSecondary">#90CAF9</color>
 
-    <color name="color_FF5252">#FF5252</color>
-    <color name="color_F49B3C">#F49B3C</color>
-    <color name="color_E76135">#E76135</color>
-    <color name="color_999999">#999999</color>
-    <color name="color_333333">#333333</color>
-    <color name="color_99000000">#99000000</color>
+    <!-- 主要的文字颜色 -->
+    <color name="textColorPrimary">#FFFFFF</color>
+    <!-- 辅助的文字颜色 -->
+    <color name="textColorSecondary">#A9A9A9</color>
+    <!-- Window的背景色 -->
+    <color name="windowBackground">#121212</color>
+
 </resources>

@@ -1,10 +1,17 @@
 <resources>
-    <string name="title">Xinzzhu</string>
-
     <string name="app_name">学习资料</string>
 
-    <string name="main_kt">KT</string>
-    <string name="main_java">JAVA</string>
+    <string name="title">Xinzzhu</string>
+    <string name="follow">关注</string>
+    <string name="replay">重播</string>
+    <string name="share">分享</string>
+
+    <string name="main_video_item_interact_praise">赞</string>
+    <string name="main_video_item_interact_stepped">踩</string>
+    <string name="main_video_item_interact_comment">评论</string>
+    <string name="main_video_item_interact_share">分享</string>
+
+    <string name="goto_top">回到顶部</string>
 
     <string name="bar_trainee">练习生</string>
 
@@ -44,6 +51,5 @@
     <string name="loading_mvvm">MVVM加载中~</string>
 
     <string name="drap_title">拖拽</string>
-    <string name="main_bottom_bar_target">Android</string>
 
 </resources>

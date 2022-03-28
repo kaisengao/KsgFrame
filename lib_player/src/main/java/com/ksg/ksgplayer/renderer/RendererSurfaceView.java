@@ -24,6 +24,8 @@ public class RendererSurfaceView extends SurfaceView implements IRenderer, Surfa
 
     private final RendererMeasure mRenderMeasure;
 
+    private final InternalRenderHolder mInternalRenderHolder;
+
     public RendererSurfaceView(Context context) {
         this(context, null);
     }
@@ -34,6 +36,8 @@ public class RendererSurfaceView extends SurfaceView implements IRenderer, Surfa
         this.mRenderMeasure = new RendererMeasure();
         // SurfaceHolder
         this.getHolder().addCallback(this);
+
+        this.mInternalRenderHolder = new InternalRenderHolder(getHolder());
     }
 
     @Override
@@ -137,7 +141,7 @@ public class RendererSurfaceView extends SurfaceView implements IRenderer, Surfa
      */
     @Override
     public void release() {
-        isReleased = true;
+        this.isReleased = true;
     }
 
     /**
@@ -177,21 +181,21 @@ public class RendererSurfaceView extends SurfaceView implements IRenderer, Surfa
     @Override
     public void surfaceCreated(SurfaceHolder holder) {
         if (mCallback != null) {
-            this.mCallback.onSurfaceCreated(new InternalRenderHolder(holder), 0, 0);
+            this.mCallback.onSurfaceCreated(mInternalRenderHolder, 0, 0);
         }
     }
 
     @Override
     public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
         if (mCallback != null) {
-            mCallback.onSurfaceChanged(new InternalRenderHolder(holder), format, width, height);
+            this.mCallback.onSurfaceChanged(mInternalRenderHolder, format, width, height);
         }
     }
 
     @Override
     public void surfaceDestroyed(SurfaceHolder holder) {
         if (mCallback != null) {
-            mCallback.onSurfaceDestroy(new InternalRenderHolder(holder));
+            this.mCallback.onSurfaceDestroy(mInternalRenderHolder);
         }
     }
 }

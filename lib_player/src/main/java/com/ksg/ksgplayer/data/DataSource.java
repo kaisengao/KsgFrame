@@ -16,7 +16,7 @@ public class DataSource implements Serializable {
 
     //------------------- 渲染器 --------------------------//
 
-    private int mRendererType = IRenderer.RENDER_TYPE_TEXTURE_VIEW;
+    private int mRendererType = IRenderer.RENDER_TYPE_SURFACE_VIEW;
 
     //------------------- 缓存 --------------------------//
 

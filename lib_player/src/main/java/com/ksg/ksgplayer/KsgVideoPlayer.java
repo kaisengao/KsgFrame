@@ -102,6 +102,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      *
      * @param coverManager coverManager
      */
+    @Override
     public void setCoverManager(ICoverManager coverManager) {
         this.mVideoContainer.setCoverManager(coverManager);
     }
@@ -111,6 +112,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      *
      * @param eventProducer 自定义事件生产者
      */
+    @Override
     public void addEventProducer(BaseEventProducer eventProducer) {
         this.mVideoContainer.addEventProducer(eventProducer);
     }
@@ -120,6 +122,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      *
      * @param eventProducer 自定义事件生产者
      */
+    @Override
     public void removeEventProducer(BaseEventProducer eventProducer) {
         this.mVideoContainer.removeEventProducer(eventProducer);
     }
@@ -129,6 +132,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      *
      * @return List
      */
+    @Override
     public List<BaseEventProducer> getEventProducers() {
         return mVideoContainer.getEventProducers();
     }
@@ -160,7 +164,8 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     /**
      * 解绑 视图容器
      */
-    private void unbindContainer() {
+    @Override
+    public void unbindContainer() {
         ViewParent parent = mVideoContainer.getParent();
         if (parent instanceof ViewGroup) {
             ((ViewGroup) parent).removeView(mVideoContainer);
@@ -535,6 +540,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      *
      * @param coverEventListener coverEventListener
      */
+    @Override
     public void setCoverEventListener(OnCoverEventListener coverEventListener) {
         this.mCoverEventListener = coverEventListener;
     }

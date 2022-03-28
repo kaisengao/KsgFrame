@@ -1,6 +1,7 @@
 package com.kaisengao.mvvm.base.activity;
 
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
@@ -177,6 +178,18 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
         });
         // Back事件
         viewModel.getBackPressed().observe(this, aVoid -> this.onClickBack());
+    }
+
+    /**
+     * 菜单的响应事件
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            this.onClickBack();
+            return true;
+        }
+        return onOptionsItemSelected(item);
     }
 
     /**

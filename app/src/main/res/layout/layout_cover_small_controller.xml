@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cover_controller"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:background="@color/color_48000000">
+
+    <!-- Start/Pause-->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/cover_controller_play_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/selector_play_state" />
+
+    <!-- Curr Time-->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/cover_controller_curr_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/cover_controller_fullscreen"
+        android:layout_alignBottom="@id/cover_controller_fullscreen"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="center"
+        android:layout_marginStart="@dimen/view_space"
+        android:gravity="center"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        tools:text="00:00" />
+
+    <!-- SeekBar -->
+    <androidx.appcompat.widget.AppCompatSeekBar
+        android:id="@+id/cover_controller_seek"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/cover_controller_fullscreen"
+        android:layout_alignBottom="@id/cover_controller_fullscreen"
+        android:layout_gravity="center"
+        android:layout_toStartOf="@id/cover_controller_duration_time"
+        android:layout_toEndOf="@id/cover_controller_curr_time"
+        android:maxHeight="2.5dp"
+        android:minHeight="2.5dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:progressDrawable="@drawable/shape_seek_bar"
+        android:splitTrack="false"
+        android:thumb="@drawable/selector_cover_seek_bar_thumb"
+        tools:progress="20"
+        tools:secondaryProgress="40" />
+
+    <!-- DurationTime -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/cover_controller_duration_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/cover_controller_fullscreen"
+        android:layout_alignBottom="@id/cover_controller_fullscreen"
+        android:layout_gravity="center"
+        android:layout_toStartOf="@id/cover_controller_fullscreen"
+        android:gravity="center"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:splitTrack="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14"
+        tools:text="00:00" />
+
+    <!-- Fullscreen -->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/cover_controller_fullscreen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="@dimen/view_space"
+        android:layout_marginBottom="10dp"
+        android:src="@drawable/ic_fullscreen" />
+
+    <!-- BottomSeekBar -->
+    <ProgressBar
+        android:id="@+id/cover_controller_bottom_seek"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:maxHeight="1.5dp"
+        android:minHeight="1.5dp"
+        android:progressDrawable="@drawable/shape_seek_bar"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
+</RelativeLayout>

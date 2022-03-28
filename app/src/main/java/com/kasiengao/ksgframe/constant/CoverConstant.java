@@ -18,9 +18,10 @@ public interface CoverConstant {
 
         String KEY_CONTROLLER = "controller";
 
+        String KEY_SMALL_CONTROLLER = "smallController";
+
         String KEY_ERROR = "error";
     }
-
 
     interface ValueKey {
 

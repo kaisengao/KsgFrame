@@ -1,7 +1,6 @@
 <resources>
 
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">20sp</item>
         <item name="android:fontFamily">@font/android</item>
     </style>
 
@@ -10,6 +9,7 @@
         <item name="android:windowContentTransitions">true</item>
     </style>
 
+    <!-- 练习生页面 button -->
     <style name="TraineeBtn" parent="Widget.MaterialComponents.Button.UnelevatedButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
@@ -19,13 +19,10 @@
         <item name="android:textSize">15sp</item>
     </style>
 
-    <style name="item_tab_group_bottom">
-        <item name="android:layout_gravity">bottom</item>
-        <item name="android:background">@color/white</item>
-        <item name="android:gravity">center</item>
-        <item name="android:layout_width">70dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">1</item>
+    <!-- 圆形图片 -->
+    <style name="CircleImageStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
     </style>
 
 </resources>

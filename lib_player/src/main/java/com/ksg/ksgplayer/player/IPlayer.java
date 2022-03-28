@@ -82,7 +82,7 @@ public interface IPlayer {
     void option(int code, Bundle bundle);
 
     /**
-     * 设置视频播放地址
+     * 设置数据源
      *
      * @param dataSource 播放地址
      */

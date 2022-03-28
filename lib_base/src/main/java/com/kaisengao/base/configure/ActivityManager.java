@@ -95,7 +95,7 @@ public class ActivityManager {
      * 获取当前Activity
      */
     public Activity currentActivity() {
-        if (mCurrActivity == null) {
+        if (mCurrActivity == null || mCurrActivity.get() == null) {
             return mActivityStack.lastElement();
         }
         return mCurrActivity.get();
@@ -125,7 +125,7 @@ public class ActivityManager {
     public void finishActivity(Class<?> cls) {
         for (Activity activity : mActivityStack) {
             if (activity.getClass().equals(cls)) {
-                finishActivity(activity);
+                this.finishActivity(activity);
                 break;
             }
         }
@@ -137,9 +137,10 @@ public class ActivityManager {
     public void finishAllActivity() {
         for (int i = 0, size = mActivityStack.size(); i < size; i++) {
             if (null != mActivityStack.get(i)) {
-                finishActivity(mActivityStack.get(i));
+                this.finishActivity(mActivityStack.get(i));
             }
         }
-        mActivityStack.clear();
+        this.mActivityStack.clear();
+        this.mCurrActivity.clear();
     }
 }

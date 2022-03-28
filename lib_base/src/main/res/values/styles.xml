@@ -2,9 +2,7 @@
 
     <style name="Toolbar" parent="Widget.MaterialComponents.Toolbar.Primary">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">45dp</item>
-        <item name="android:minHeight">45dp</item>
-        <item name="android:actionBarSize">45dp</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetStartWithNavigation">0dp</item>
     </style>

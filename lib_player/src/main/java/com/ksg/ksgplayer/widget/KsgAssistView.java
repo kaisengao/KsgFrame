@@ -7,13 +7,19 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.ksg.ksgplayer.IKsgVideoPlayer;
 import com.ksg.ksgplayer.KsgVideoPlayer;
+import com.ksg.ksgplayer.cover.ICoverManager;
 import com.ksg.ksgplayer.data.DataSource;
+import com.ksg.ksgplayer.listener.OnCoverEventListener;
 import com.ksg.ksgplayer.listener.OnErrorListener;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
 import com.ksg.ksgplayer.player.BasePlayer;
 import com.ksg.ksgplayer.player.IPlayer;
+import com.ksg.ksgplayer.producer.BaseEventProducer;
 import com.ksg.ksgplayer.renderer.IRenderer;
+
+import java.util.List;
 
 /**
  * @ClassName: KsgAssistView
@@ -45,8 +51,48 @@ public class KsgAssistView implements IKsgVideoView {
      * @return {@link KsgVideoPlayer}
      */
     @Override
-    public final KsgVideoPlayer getPlayer() {
+    public final IKsgVideoPlayer getPlayer() {
         return mPlayer;
+    }
+
+    /**
+     * 设置 覆盖组件管理器
+     *
+     * @param coverManager coverManager
+     */
+    @Override
+    public void setCoverManager(ICoverManager coverManager) {
+        this.mPlayer.setCoverManager(coverManager);
+    }
+
+    /**
+     * 添加自定义事件生产者
+     *
+     * @param eventProducer 自定义事件生产者
+     */
+    @Override
+    public void addEventProducer(BaseEventProducer eventProducer) {
+        this.mPlayer.addEventProducer(eventProducer);
+    }
+
+    /**
+     * 移除一个事件生产者
+     *
+     * @param eventProducer 自定义事件生产者
+     */
+    @Override
+    public void removeEventProducer(BaseEventProducer eventProducer) {
+        this.mPlayer.removeEventProducer(eventProducer);
+    }
+
+    /**
+     * 返回事件生产者集合 便于控制
+     *
+     * @return List
+     */
+    @Override
+    public List<BaseEventProducer> getEventProducers() {
+        return mPlayer.getEventProducers();
     }
 
     /**
@@ -76,6 +122,14 @@ public class KsgAssistView implements IKsgVideoView {
         }
         // 添加容器
         this.mPlayer.bindContainer(container, updateRenderer);
+    }
+
+    /**
+     * 解绑 视图容器
+     */
+    @Override
+    public void unbindContainer() {
+        this.mPlayer.unbindContainer();
     }
 
     /**
@@ -184,13 +238,12 @@ public class KsgAssistView implements IKsgVideoView {
     }
 
     /**
-     * 设置视频播放地址
+     * 设置数据源
      *
      * @param dataSource 播放地址
      */
     @Override
     public void setDataSource(DataSource dataSource) {
-        // 设置数据源
         this.mDataSource = dataSource;
     }
 
@@ -411,6 +464,16 @@ public class KsgAssistView implements IKsgVideoView {
     @Override
     public void setErrorListener(OnErrorListener errorListener) {
         this.mPlayer.setErrorListener(errorListener);
+    }
+
+    /**
+     * 设置 Cover组件回调事件
+     *
+     * @param coverEventListener coverEventListener
+     */
+    @Override
+    public void setCoverEventListener(OnCoverEventListener coverEventListener) {
+        this.mPlayer.setCoverEventListener(coverEventListener);
     }
 
     /**

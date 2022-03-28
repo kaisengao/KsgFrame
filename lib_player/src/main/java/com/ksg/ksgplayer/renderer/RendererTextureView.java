@@ -34,6 +34,8 @@ public class RendererTextureView extends TextureView implements IRenderer {
 
     private final RendererMeasure mRenderMeasure;
 
+    private final InternalRenderHolder mInternalRenderHolder;
+
     public RendererTextureView(Context context) {
         this(context, null);
     }
@@ -41,6 +43,7 @@ public class RendererTextureView extends TextureView implements IRenderer {
     public RendererTextureView(Context context, AttributeSet attrs) {
         super(context, attrs);
         this.mRenderMeasure = new RendererMeasure();
+        this.mInternalRenderHolder = new InternalRenderHolder(this);
         this.setSurfaceTextureListener(new InternalSurfaceTextureListener());
     }
 
@@ -196,12 +199,20 @@ public class RendererTextureView extends TextureView implements IRenderer {
 
     private static final class InternalRenderHolder implements Holder {
 
-        private final WeakReference<Surface> mSurfaceRefer;
+        private WeakReference<Surface> mSurfaceRefer;
+
         private final WeakReference<RendererTextureView> mTextureRefer;
 
-        public InternalRenderHolder(RendererTextureView textureView, SurfaceTexture surfaceTexture) {
+        public InternalRenderHolder(RendererTextureView textureView) {
             this.mTextureRefer = new WeakReference<>(textureView);
-            mSurfaceRefer = new WeakReference<>(new Surface(surfaceTexture));
+        }
+
+        public void setSurfaceTexture(SurfaceTexture surfaceTexture) {
+            if (mSurfaceRefer != null) {
+                this.mSurfaceRefer.clear();
+                this.mSurfaceRefer = null;
+            }
+            this.mSurfaceRefer = new WeakReference<>(new Surface(surfaceTexture));
         }
 
         private RendererTextureView getTextureView() {
@@ -258,24 +269,24 @@ public class RendererTextureView extends TextureView implements IRenderer {
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
             if (mRenderCallback != null) {
-                mRenderCallback.onSurfaceCreated(
-                        new InternalRenderHolder(RendererTextureView.this, surface), width, height);
+                mInternalRenderHolder.setSurfaceTexture(surface);
+                mRenderCallback.onSurfaceCreated(mInternalRenderHolder, width, height);
             }
         }
 
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
             if (mRenderCallback != null) {
-                mRenderCallback.onSurfaceChanged(
-                        new InternalRenderHolder(RendererTextureView.this, surface), 0, width, height);
+                mInternalRenderHolder.setSurfaceTexture(surface);
+                mRenderCallback.onSurfaceChanged(mInternalRenderHolder, 0, width, height);
             }
         }
 
         @Override
         public boolean onSurfaceTextureDestroyed(SurfaceTexture surface) {
             if (mRenderCallback != null) {
-                mRenderCallback.onSurfaceDestroy(
-                        new InternalRenderHolder(RendererTextureView.this, surface));
+                mInternalRenderHolder.setSurfaceTexture(surface);
+                mRenderCallback.onSurfaceDestroy(mInternalRenderHolder);
             }
             if (mTakeOverSurfaceTexture)
                 mSurfaceTexture = surface;

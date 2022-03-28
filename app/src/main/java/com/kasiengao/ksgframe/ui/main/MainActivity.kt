@@ -1,19 +1,16 @@
 package com.kasiengao.ksgframe.ui.main
 
 import androidx.core.view.GravityCompat
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.kaisengao.base.configure.ActivityManager
 import com.kaisengao.base.util.StatusBarUtil
-
 import com.kaisengao.mvvm.base.activity.BaseVmActivity
 import com.kasiengao.ksgframe.BR
 import com.kasiengao.ksgframe.R
 import com.kasiengao.ksgframe.databinding.ActivityMainBinding
+import com.kasiengao.ksgframe.player.ListPlayer
 import com.kasiengao.ksgframe.ui.main.adapter.VideosAdapter
-import com.kasiengao.ksgframe.ui.main.bean.VideoBean
-
 import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel
-import com.kasiengao.ksgframe.ui.trainee.TraineeActivity
 
 
 /**
@@ -28,24 +25,10 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun initVariableId(): Int = BR.viewModel
 
-    override fun initBefore() {
-        super.initBefore()
-        // AppBar 添加状态栏高度
-        StatusBarUtil.setStatusBarPadding(this, mBinding.mainAppbar)
-    }
-
     override fun initWidget() {
         super.initWidget()
         // Init VideoAdapter
         this.initVideoAdapter()
-        // 侧滑抽屉
-        this.mBinding.mainBottomBar.setNavigationOnClickListener {
-            this.mBinding.drawerLayout.openDrawer(GravityCompat.START)
-        }
-        // 练习生页面
-        this.mBinding.mainTrainee.setOnClickListener {
-            TraineeActivity.startActivity(this)
-        }
     }
 
     override fun initData() {
@@ -62,14 +45,52 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         val adapter = VideosAdapter()
         // RecyclerView
         val recyclerView = mBinding.mainVideos
-        recyclerView.layoutManager = LinearLayoutManager(this)
+        val layoutManager = LinearLayoutManager(this)
+        recyclerView.layoutManager = layoutManager
         recyclerView.adapter = adapter
         // Data
         this.mViewModel.mVideos.observe(this,
             { videos ->
-                if (videos != null) {
-                    adapter.setList(videos)
+                videos?.let {
+                    // Player
+                    ListPlayer.getInstance().setVideoUrls(it)
+                    // Adapter
+                    adapter.setList(it)
+                    // 自动播放
+                    recyclerView.smoothScrollBy(0, 1)
                 }
             })
+    }
+
+    /**
+     * 菜单的响应事件
+     */
+    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            // 侧滑抽屉
+            this.mBinding.drawerLayout.openDrawer(GravityCompat.START)
+        }
+        return true
+    }
+
+
+    override fun onResume() {
+        super.onResume()
+        // 继续播放
+        ListPlayer.getInstance().onResume()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // 暂停播放
+        ListPlayer.getInstance().onPause()
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        // 释放播放器
+        ListPlayer.getInstance().release()
+        // 结束所有Activity
+        ActivityManager.getInstance().finishAllActivity()
     }
 }

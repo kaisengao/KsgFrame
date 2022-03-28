@@ -6,6 +6,7 @@ import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
+import com.kaisengao.mvvm.R;
 import com.kaisengao.mvvm.base.viewmodel.BaseViewModel;
 import com.kaisengao.mvvm.event.SingleLiveEvent;
 
@@ -95,7 +96,7 @@ public class ToolbarViewModel extends BaseViewModel {
     }
 
     public final MutableLiveData<Integer> getNavigationIcon() {
-        return mNavigationIcon = createLiveData(mNavigationIcon, 0);
+        return mNavigationIcon = createLiveData(mNavigationIcon, R.drawable.ic_back);
     }
 
     public final MutableLiveData<Integer> getMenuRes() {

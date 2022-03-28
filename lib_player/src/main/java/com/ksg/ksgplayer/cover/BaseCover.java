@@ -38,6 +38,8 @@ public abstract class BaseCover implements ICover, ICoverHandle, StateGetter, Vi
         this.mContext = context;
         this.mCoverView = onCreateCoverView(context);
         this.mCoverView.addOnAttachStateChangeListener(this);
+        // View 与页面视图绑定
+        this.onCoverViewBind();
     }
 
     /**
@@ -162,7 +164,7 @@ public abstract class BaseCover implements ICover, ICoverHandle, StateGetter, Vi
      */
     @Override
     public final void onViewAttachedToWindow(View v) {
-        this.onCoverViewBind();
+
     }
 
     /**

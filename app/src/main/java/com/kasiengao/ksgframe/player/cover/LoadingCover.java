@@ -2,14 +2,10 @@ package com.kasiengao.ksgframe.player.cover;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 
 import com.kasiengao.ksgframe.R;
-import com.kasiengao.ksgframe.player.producer.NetworkEventProducer;
 import com.ksg.ksgplayer.cover.BaseCover;
-import com.ksg.ksgplayer.event.BundlePool;
-import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
 import com.ksg.ksgplayer.player.IPlayer;
 import com.ksg.ksgplayer.state.PlayerStateGetter;
@@ -49,12 +45,6 @@ public class LoadingCover extends BaseCover {
         if (playerStateGetter != null && isItPlaying(playerStateGetter)) {
             this.setLoadingState(playerStateGetter.isBuffering());
         }
-
-        NetworkEventProducer producer = new NetworkEventProducer(mContext);
-
-        Bundle obtain = BundlePool.obtain();
-        obtain.putSerializable(EventKey.SERIALIZABLE_DATA,producer);
-        requestAddEventProducer(obtain);
     }
 
     /**
@@ -179,7 +169,7 @@ public class LoadingCover extends BaseCover {
      */
     @Override
     public void onProducerData(String key, Object data) {
-        Log.d("zzz", "onProducerData() called with: key = [" + key + "], data = [" + data + "]");
+
     }
 
     /**

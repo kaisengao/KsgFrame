@@ -324,13 +324,13 @@ public class VideoContainer extends FrameLayout {
                 default:
                     break;
             }
-            // 回调给组件
-            if (mEventDispatcher != null) {
-                mEventDispatcher.dispatchCoverEvent(eventCode, bundle);
-            }
             // 回调上一级
             if (mCoverEventListener != null) {
                 mCoverEventListener.onCoverEvent(eventCode, bundle);
+            }
+            // 回调给组件（内部含有清空Bundle操作 所以必须放在最后一行执行）
+            if (mEventDispatcher != null) {
+                mEventDispatcher.dispatchCoverEvent(eventCode, bundle);
             }
         }
     };

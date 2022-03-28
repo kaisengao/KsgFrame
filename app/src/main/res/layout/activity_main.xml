@@ -18,7 +18,7 @@
         tools:context=".ui.main.MainActivity">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:orientation="horizontal"
             tools:context=".ui.main.MainActivity">
@@ -26,13 +26,14 @@
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/main_appbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:fitsSystemWindows="true">
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/toolbar"
                     style="@style/Toolbar"
-                    app:contentInsetStart="14dp"
-                    app:titleTextAppearance="@style/Toolbar.TitleText" />
+                    app:titleTextAppearance="@style/Toolbar.TitleText"
+                    tools:navigationIcon="@drawable/ic_toolbar_menu" />
 
             </com.google.android.material.appbar.AppBarLayout>
 
@@ -43,7 +44,7 @@
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-                <androidx.recyclerview.widget.RecyclerView
+                <com.kasiengao.ksgframe.ui.main.widget.VideoListView
                     android:id="@+id/main_videos"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -53,41 +54,19 @@
 
             </com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout>
 
-            <!-- 底部AppBar -->
-            <com.google.android.material.bottomappbar.BottomAppBar
-                android:id="@+id/main_bottom_bar"
-                style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="bottom"
-                android:paddingStart="12dp"
-                android:paddingEnd="12dp"
-                app:fabAlignmentMode="end"
-                app:fabAnimationMode="slide"
-                app:fabCradleMargin="6dp"
-                app:fabCradleRoundedCornerRadius="30dp"
-                app:hideOnScroll="true"
-                app:navigationIcon="@drawable/ic_bottom_bar_menu">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/android"
-                    android:text="@string/main_bottom_bar_target"
-                    android:textColor="@android:color/white"
-                    android:textSize="15sp" />
-
-            </com.google.android.material.bottomappbar.BottomAppBar>
-
             <!-- 悬浮按钮 -->
             <com.google.android.material.floatingactionbutton.FloatingActionButton
                 android:id="@+id/main_trainee"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:contentDescription="@string/bar_trainee"
-                android:src="@mipmap/ic_trainee"
-                app:layout_anchor="@id/main_bottom_bar"
-                app:layout_anchorGravity="center_horizontal" />
+                android:layout_margin="@dimen/view_space"
+                android:contentDescription="@string/goto_top"
+                android:rotation="90"
+                android:src="@drawable/ic_back"
+                app:borderWidth="0dp"
+                android:visibility="gone"
+                app:layout_anchor="@id/main_videos"
+                app:layout_anchorGravity="bottom|end" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 

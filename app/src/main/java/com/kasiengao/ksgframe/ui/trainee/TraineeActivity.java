@@ -4,7 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 
+import com.kaisengao.mvvm.base.activity.BaseVmActivity;
+import com.kaisengao.mvvm.viewmodel.ToolbarViewModel;
+import com.kasiengao.ksgframe.BR;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.databinding.ActivityTraineeBinding;
 import com.kasiengao.ksgframe.ui.trainee.gesture.GestureActivity;
 import com.kasiengao.ksgframe.ui.trainee.grid.TouchGridActivity;
 import com.kasiengao.ksgframe.ui.trainee.loadpage.LoadPageActivity;
@@ -13,7 +17,6 @@ import com.kasiengao.ksgframe.ui.trainee.mvvm.MvvmActivity;
 import com.kasiengao.ksgframe.ui.trainee.player.PlayerActivity;
 import com.kasiengao.ksgframe.ui.trainee.retrofit.RxRetrofitActivity;
 import com.kasiengao.ksgframe.ui.trainee.staggered.StaggeredGridActivity;
-import com.kasiengao.mvp.java.BaseToolbarActivity;
 
 /**
  * @ClassName: TraineeActivity
@@ -21,7 +24,7 @@ import com.kasiengao.mvp.java.BaseToolbarActivity;
  * @CreateDate: 2021/12/14 15:30
  * @Description: 长达好几年的练习生页面
  */
-public class TraineeActivity extends BaseToolbarActivity {
+public class TraineeActivity extends BaseVmActivity<ActivityTraineeBinding, ToolbarViewModel> {
 
     public static void startActivity(Context context) {
         Intent intent = new Intent(context, TraineeActivity.class);
@@ -31,6 +34,11 @@ public class TraineeActivity extends BaseToolbarActivity {
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_trainee;
+    }
+
+    @Override
+    public int initVariableId() {
+        return BR.viewModel;
     }
 
     @Override
@@ -81,4 +89,6 @@ public class TraineeActivity extends BaseToolbarActivity {
             this.startActivity(new Intent(this, LoadPageActivity.class));
         }
     }
+
+
 }

@@ -1,10 +1,7 @@
 package com.kasiengao.ksgframe.ui.main.viewmodel
 
 import android.app.Application
-import android.widget.SeekBar
-import androidx.databinding.BindingAdapter
 import androidx.lifecycle.MutableLiveData
-import com.kaisengao.mvvm.binding.command.BindingParamImp
 import com.kaisengao.mvvm.viewmodel.ToolbarViewModel
 import com.kaisengao.retrofit.observer.dialog.BaseDialogObserver
 import com.kasiengao.ksgframe.R
@@ -19,7 +16,7 @@ import com.kasiengao.ksgframe.ui.main.model.MainModel
  */
 class MainViewModel(application: Application) : ToolbarViewModel(application) {
 
-    val mVideos: MutableLiveData<List<VideoBean.TrailersBean>> by lazy { MutableLiveData() }
+    val mVideos: MutableLiveData<ArrayList<VideoBean>> by lazy { MutableLiveData() }
 
     private val mModel: MainModel by lazy { MainModel() }
 
@@ -28,6 +25,7 @@ class MainViewModel(application: Application) : ToolbarViewModel(application) {
      */
     override fun initToolbar() {
         this.setToolbarTitle(getApplication<Application>().getString(R.string.title))
+        this.setNavigationIcon(R.drawable.ic_toolbar_menu)
     }
 
     /**
@@ -37,9 +35,9 @@ class MainViewModel(application: Application) : ToolbarViewModel(application) {
         this.mModel
             .requestVideos()
             .doOnSubscribe(this)
-            .subscribe(object : BaseDialogObserver<VideoBean>(getApplication()) {
-                override fun onResult(videoBean: VideoBean) {
-                    mVideos.value  = videoBean.trailers
+            .subscribe(object : BaseDialogObserver<ArrayList<VideoBean>>(getApplication()) {
+                override fun onResult(videos: ArrayList<VideoBean>) {
+                    mVideos.value = videos
                 }
             })
     }

@@ -75,7 +75,7 @@ public class PlayerActivity extends BaseToolbarActivity {
      */
     private void initPlayer() {
         this.mPlayer.setDecoderView(new KsgExoPlayer(this));
-        // 创建 覆盖组件管理器
+        // 创建 Cover管理器
         this.mCoverManager = new CoverManager();
         this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_LOADING, new LoadingCover(this));
         this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_GESTURE, new GestureCover(this));
