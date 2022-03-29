@@ -103,7 +103,9 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/item_player_container"
             android:baselineAligned="false"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp">
 
             <!-- 赞 -->
             <com.google.android.material.button.MaterialButton
@@ -117,8 +119,9 @@
                 android:textSize="14sp"
                 app:icon="@drawable/selector_item_video_praise"
                 app:iconGravity="textStart"
+                app:iconPadding="5dp"
                 app:iconTint="@color/color_FF9800"
-                app:iconTintMode="src_in"
+                app:rippleColor="@color/color_FF9800"
                 tools:text="728" />
 
             <!-- 踩 -->
@@ -134,7 +137,9 @@
                 android:textSize="14sp"
                 app:icon="@drawable/selector_item_video_stepped"
                 app:iconGravity="textStart"
-                app:iconTint="@color/color_D81E06" />
+                app:iconPadding="5dp"
+                app:iconTint="@color/color_D81E06"
+                app:rippleColor="@color/color_D81E06" />
 
             <!-- 评论 -->
             <com.google.android.material.button.MaterialButton
@@ -148,7 +153,9 @@
                 android:textSize="14sp"
                 app:icon="@mipmap/ic_comment"
                 app:iconGravity="textStart"
+                app:iconPadding="5dp"
                 app:iconTint="@color/textColorPrimary"
+                app:rippleColor="@color/color_FF9800"
                 tools:text="728" />
 
             <!-- 分享 -->
@@ -163,7 +170,9 @@
                 android:textSize="14sp"
                 app:icon="@mipmap/ic_share"
                 app:iconGravity="textStart"
+                app:iconPadding="5dp"
                 app:iconTint="@color/textColorPrimary"
+                app:rippleColor="@color/color_FF9800"
                 tools:text="728" />
         </LinearLayout>
     </RelativeLayout>

@@ -1,15 +1,15 @@
-package com.kaisengao.mvvm.binding.adapter.loadsir;
+package com.kaisengao.mvvm.binding.adapter.loadpage;
 
 import android.view.View;
 
 import androidx.annotation.Nullable;
 import androidx.databinding.BindingAdapter;
 
-import com.kaisengao.retrofit.factory.LoadSirFactory;
-import com.kaisengao.retrofit.listener.OnLoadSirReloadListener;
 import com.kaisengao.base.annotations.ReloadAnnotations;
+import com.kaisengao.base.factory.LoadPageFactory;
 import com.kaisengao.base.state.LoadState;
 import com.kaisengao.base.state.LoadingState;
+import com.kaisengao.mvvm.binding.command.BindingParamImp;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -18,19 +18,20 @@ import java.lang.reflect.Method;
  * @ClassName: ViewAdapter
  * @Author: KaiSenGao
  * @CreateDate: 2020/6/18 14:36
- * @Description: 绑定 LoadSir
+ * @Description: 绑定 LoadPage
  */
-public class LoadSirAdapter {
+public class LoadPageAdapter {
 
     @BindingAdapter("loadRegister")
-    public static void loadRegister(final View register, @Nullable OnLoadSirReloadListener onLoadSirReloadListener) {
-        LoadSirFactory loadSirFactory = LoadSirFactory.getInstance();
-        // 注册LoadSir
-        loadSirFactory.register(register.getContext(), register);
-        // Retry事件
-        loadSirFactory.listener(register.getContext(), target -> {
-            if (onLoadSirReloadListener != null) {
-                onLoadSirReloadListener.onLoadSirReload(target);
+    public static void loadRegister(final View register,
+                                    @Nullable final BindingParamImp<Object> onReloadImp) {
+        // 存储TAG
+        LoadPageFactory loadSirFactory = LoadPageFactory.getInstance();
+        // 注册LoadPage
+        loadSirFactory.register(register.getContext(), register, target -> {
+            // Retry事件
+            if (onReloadImp != null) {
+                onReloadImp.execute(target);
             } else {
                 // 反射回调方法
                 injectReload(register.getContext(), target);
@@ -44,25 +45,25 @@ public class LoadSirAdapter {
         if (loadState == null) {
             return;
         }
-
-        LoadSirFactory loadSirFactory = LoadSirFactory.getInstance();
+        LoadPageFactory loadSirFactory = LoadPageFactory.getInstance();
         // 区分状态
         switch (loadState.getLoadState()) {
             case LoadState.LOADING:
                 loadSirFactory.showLoading(target.getContext(), target,
-                        loadState.getLoadMessage(),
+                        loadState.getLoadBgColor(),
                         loadState.getLoadColor(),
-                        loadState.getLoadBgColor());
+                        loadState.getLoadMessage(),
+                        loadState.getLoadingView());
                 break;
             case LoadState.SUCCESS:
                 loadSirFactory.showSuccess(target.getContext(), target);
                 break;
             case LoadState.ERROR:
                 loadSirFactory.showError(target.getContext(), target,
-                        loadState.getLoadMessage(),
-                        loadState.getLoadColor(),
+                        loadState.getLoadErrorIcon(),
                         loadState.getLoadBgColor(),
-                        loadState.getLoadErrorIcon());
+                        loadState.getLoadColor(),
+                        loadState.getLoadMessage());
                 break;
             default:
                 break;

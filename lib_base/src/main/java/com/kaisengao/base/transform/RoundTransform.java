@@ -1,4 +1,4 @@
-package com.kaisengao.base.transformer;
+package com.kaisengao.base.transform;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
@@ -11,6 +11,8 @@ import com.bumptech.glide.load.engine.bitmap_recycle.BitmapPool;
 import com.bumptech.glide.load.resource.bitmap.BitmapTransformation;
 import com.bumptech.glide.load.resource.bitmap.TransformationUtils;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.security.MessageDigest;
 
 /**
@@ -19,20 +21,21 @@ import java.security.MessageDigest;
  * @CreateDate: 2020/5/19 10:02
  * @Description: 圆角Glide
  */
-public class GlideRoundTransform extends BitmapTransformation {
-    private float mRadius;
+public class RoundTransform extends BitmapTransformation {
 
-    public GlideRoundTransform() {
+    private final float mRadius;
+
+    public RoundTransform() {
         this(4);
     }
 
-    public GlideRoundTransform(int dp) {
+    public RoundTransform(int dp) {
         super();
         this.mRadius = Resources.getSystem().getDisplayMetrics().density * dp;
     }
 
     @Override
-    protected Bitmap transform(@androidx.annotation.NonNull BitmapPool pool, @androidx.annotation.NonNull Bitmap toTransform, int outWidth, int outHeight) {
+    protected Bitmap transform(@NotNull BitmapPool pool, @NotNull Bitmap toTransform, int outWidth, int outHeight) {
         Bitmap bitmap = TransformationUtils.centerCrop(pool, toTransform, outWidth, outHeight);
         return roundCrop(pool, bitmap);
     }

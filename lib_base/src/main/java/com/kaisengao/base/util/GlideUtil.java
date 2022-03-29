@@ -9,7 +9,8 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
 import com.bumptech.glide.request.target.ImageViewTarget;
-import com.kaisengao.base.transformer.GlideRoundTransform;
+import com.kaisengao.base.transform.BlurTransform;
+import com.kaisengao.base.transform.RoundTransform;
 
 /**
  * @ClassName: GlideUtil
@@ -126,7 +127,24 @@ public final class GlideUtil {
         Glide.with(context)
                 .load(url)
                 .priority(Priority.HIGH)
-                .transform(new GlideRoundTransform(radius))
+                .transform(new RoundTransform(radius))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
+    }
+
+    /**
+     * Load 加载图片毛玻璃
+     *
+     * @param context   context
+     * @param url       url
+     * @param imageView imageView
+     * @param radius    radius
+     */
+    public static void loadImageBlur(Context context, Object url, ImageView imageView, int radius) {
+        Glide.with(context)
+                .load(url)
+                .priority(Priority.HIGH)
+                .transform(new BlurTransform(context, radius))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }

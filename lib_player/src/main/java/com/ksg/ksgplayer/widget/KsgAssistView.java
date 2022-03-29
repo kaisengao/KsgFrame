@@ -7,6 +7,8 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 
+import androidx.annotation.ColorRes;
+
 import com.ksg.ksgplayer.IKsgVideoPlayer;
 import com.ksg.ksgplayer.KsgVideoPlayer;
 import com.ksg.ksgplayer.cover.ICoverManager;
@@ -53,6 +55,16 @@ public class KsgAssistView implements IKsgVideoView {
     @Override
     public final IKsgVideoPlayer getPlayer() {
         return mPlayer;
+    }
+
+    /**
+     * 设置 背景颜色
+     *
+     * @param res res
+     */
+    @Override
+    public void setBackgroundColor(@ColorRes int res) {
+        this.mPlayer.setBackgroundColor(res);
     }
 
     /**

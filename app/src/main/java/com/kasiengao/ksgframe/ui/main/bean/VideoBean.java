@@ -1,9 +1,9 @@
 package com.kasiengao.ksgframe.ui.main.bean;
 
 import com.google.gson.annotations.SerializedName;
+import com.kaisengao.base.util.NumberUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.common.util.TextUtil;
-import com.kasiengao.ksgframe.player.entity.VideoEntity;
 
 /**
  * @ClassName: VideoBean
@@ -11,7 +11,7 @@ import com.kasiengao.ksgframe.player.entity.VideoEntity;
  * @CreateDate: 2022/3/26 17:22
  * @Description:
  */
-public class VideoBean extends VideoEntity {
+public class VideoBean {
 
     @SerializedName("movieName")
     private String mMovieName;
@@ -27,6 +27,8 @@ public class VideoBean extends VideoEntity {
     private String mNickname;
 
     private String mProfile;
+
+    private int mFans;
 
     private int mPraise;
 
@@ -48,7 +50,6 @@ public class VideoBean extends VideoEntity {
         return mMovieName;
     }
 
-    @Override
     public String getVideoUrl() {
         return mVideoUrl;
     }
@@ -85,11 +86,22 @@ public class VideoBean extends VideoEntity {
         return mProfile;
     }
 
+    public void setFans(int fans) {
+        this.mFans = fans;
+    }
+
+    public String getFans() {
+        if (mFans <= 0) {
+            return "";
+        }
+        return NumberUtil.formatBigNum(mFans) + TextUtil.getString(R.string.fans);
+    }
+
     public String getPraise() {
         if (mPraise <= 0) {
             return TextUtil.getString(R.string.main_video_item_interact_praise);
         }
-        return String.valueOf(mPraise);
+        return NumberUtil.formatBigNum(mPraise);
     }
 
     public void setPraise(int praise) {
@@ -108,7 +120,7 @@ public class VideoBean extends VideoEntity {
         if (mComment <= 0) {
             return TextUtil.getString(R.string.main_video_item_interact_comment);
         }
-        return String.valueOf(mComment);
+        return NumberUtil.formatBigNum(mComment);
     }
 
     public void setComment(int comment) {
@@ -119,7 +131,7 @@ public class VideoBean extends VideoEntity {
         if (mShare <= 0) {
             return TextUtil.getString(R.string.main_video_item_interact_share);
         }
-        return String.valueOf(mShare);
+        return NumberUtil.formatBigNum(mShare);
     }
 
     public void setShare(int share) {

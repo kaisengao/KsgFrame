@@ -111,7 +111,7 @@ public abstract class BaseLoad implements ILoad, View.OnAttachStateChangeListene
         // 初始Context
         this.mContext = v.getContext();
         // View 与页面视图绑定
-        this.onModeViewBind();
+        this.onViewBind();
     }
 
     /**
@@ -124,18 +124,18 @@ public abstract class BaseLoad implements ILoad, View.OnAttachStateChangeListene
         // 释放资源
         this.mContext = null;
         // View 与页面视图解绑
-        this.onModeViewUnBind();
+        this.onViewUnBind();
     }
 
     /**
      * View与页面绑定
      */
-    protected void onModeViewBind() {
+    protected void onViewBind() {
     }
 
     /**
      * View与页面解绑
      */
-    protected void onModeViewUnBind() {
+    protected void onViewUnBind() {
     }
 }

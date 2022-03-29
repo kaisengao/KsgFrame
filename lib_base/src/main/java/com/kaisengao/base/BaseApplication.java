@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.facebook.drawee.backends.pipeline.Fresco;
 import com.kaisengao.base.configure.ActivityManager;
+import com.kaisengao.base.factory.LoadPageFactory;
 
 
 /**
@@ -68,6 +69,7 @@ public class BaseApplication extends Application implements Application.Activity
 
     @Override
     public void onActivityDestroyed(@NonNull Activity activity) {
+        LoadPageFactory.getInstance().onDetachView(activity);
         ActivityManager.getInstance().removeActivity(activity);
     }
 }

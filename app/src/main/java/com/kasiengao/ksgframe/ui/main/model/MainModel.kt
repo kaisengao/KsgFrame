@@ -106,7 +106,10 @@ class MainModel : BaseModel<DataRepository>(Injection.provideDataRepository()) {
                         video.avatar = infoBean.avatar
                         video.nickname = infoBean.nickname
                         video.profile = infoBean.profile
-                        mRandom.nextInt(10000).also {
+                        mRandom.nextInt(1000000).also {
+                            video.setFans(if (it < 1000) 0 else it)
+                        }
+                        mRandom.nextInt(300000).also {
                             video.setPraise(if (it < 100) 0 else it)
                         }
                         mRandom.nextInt(500).also {
@@ -124,7 +127,7 @@ class MainModel : BaseModel<DataRepository>(Injection.provideDataRepository()) {
                     emitter.onError(Exception("出现错误啦!!!"))
                 }
             })
-            .delay(1000, TimeUnit.MILLISECONDS)
+            .delay(3000, TimeUnit.MILLISECONDS)
             .compose(RxCompose.applySchedulers())
     }
 }

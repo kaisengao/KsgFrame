@@ -1,11 +1,18 @@
 package com.kasiengao.ksgframe.player.cover;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.MotionEvent;
+import android.text.TextUtils;
 import android.view.View;
 
+import androidx.appcompat.widget.AppCompatTextView;
+
+import com.google.android.material.imageview.ShapeableImageView;
+import com.kaisengao.base.util.GlideUtil;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.constant.CoverConstant;
+import com.kasiengao.ksgframe.ui.main.bean.VideoBean;
 import com.ksg.ksgplayer.cover.BaseCover;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
 
@@ -13,9 +20,15 @@ import com.ksg.ksgplayer.listener.OnPlayerListener;
  * @ClassName: UploaderCover
  * @Author: KaiSenGao
  * @CreateDate: 2022/3/28 19:07
- * @Description: Up主信息（视频结束出现）
+ * @Description: UP主信息（视频结束出现）
  */
-public class UploaderCover extends BaseCover {
+public class UploaderCover extends BaseCover implements View.OnClickListener {
+
+    private ShapeableImageView mUploaderAvatar;
+
+    private AppCompatTextView mUploaderNickname;
+
+    private AppCompatTextView mUploaderFans;
 
     public UploaderCover(Context context) {
         super(context);
@@ -29,21 +42,16 @@ public class UploaderCover extends BaseCover {
     /**
      * View 与页面视图绑定
      */
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onCoverViewBind() {
-        findViewById(R.id.cover_uploader_replay).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                requestReplay(null);
-            }
-        });
-
-        getCoverView().setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
+        this.mUploaderAvatar = findViewById(R.id.cover_uploader_avatar);
+        this.mUploaderNickname = findViewById(R.id.cover_uploader_nickname);
+        this.mUploaderFans = findViewById(R.id.cover_uploader_fans);
+        // OnClick
+        this.findViewById(R.id.cover_uploader_replay).setOnClickListener(this);
+        // 拦截所有底层事件
+        this.getCoverView().setOnTouchListener((v, event) -> true);
     }
 
     /**
@@ -61,7 +69,9 @@ public class UploaderCover extends BaseCover {
      */
     @Override
     public String[] getValueFilters() {
-        return new String[]{};
+        return new String[]{
+                CoverConstant.ValueKey.KEY_UPLOADER_DATA
+        };
     }
 
     /**
@@ -72,6 +82,24 @@ public class UploaderCover extends BaseCover {
      */
     @Override
     public void onValueEvent(String key, Object value) {
+        // UP主信息
+        if (key.equals(CoverConstant.ValueKey.KEY_UPLOADER_DATA)) {
+            if (value instanceof VideoBean) {
+                VideoBean info = (VideoBean) value;
+                // 头像
+                GlideUtil.loadImage(mContext, info.getAvatar(), mUploaderAvatar);
+                // 昵称
+                this.mUploaderNickname.setText(info.getNickname());
+                // 粉丝
+                String fans = info.getFans();
+                if (!TextUtils.isEmpty(fans)) {
+                    this.mUploaderFans.setText(fans);
+                    this.mUploaderFans.setVisibility(View.VISIBLE);
+                } else {
+                    this.mUploaderFans.setVisibility(View.GONE);
+                }
+            }
+        }
     }
 
     /**
@@ -82,14 +110,11 @@ public class UploaderCover extends BaseCover {
      */
     @Override
     public void onPlayerEvent(int eventCode, Bundle bundle) {
-        switch (eventCode) {
-            case OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE:
-                // 播放结束 Show
-                this.setCoverVisibility(View.VISIBLE);
-                break;
-            default:
-                this.setCoverVisibility(View.GONE);
-                break;
+        if (eventCode == OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE) {
+            // 播放结束 Show
+            this.setCoverVisibility(View.VISIBLE);
+        } else {
+            this.setCoverVisibility(View.GONE);
         }
     }
 
@@ -144,6 +169,18 @@ public class UploaderCover extends BaseCover {
      */
     @Override
     public void onProducerData(String key, Object data) {
+
+    }
+
+    /**
+     * onClick
+     */
+    @Override
+    public void onClick(View view) {
+        if (view.getId() == R.id.cover_uploader_replay) {
+            // 重播
+            this.requestReplay(null);
+        }
 
     }
 

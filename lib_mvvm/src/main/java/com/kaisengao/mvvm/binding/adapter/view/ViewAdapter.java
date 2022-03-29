@@ -1,5 +1,6 @@
 package com.kaisengao.mvvm.binding.adapter.view;
 
+import android.annotation.SuppressLint;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,5 +27,11 @@ public class ViewAdapter {
     @BindingAdapter("setPaddingSmart")
     public static void setPaddingSmart(View view, int padding) {
         StatusBarUtil.setStatusBarPadding(AppFactory.application(), view);
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    @BindingAdapter("setInterceptTouch")
+    public static void setInterceptTouch(View view, boolean intercept) {
+        view.setOnTouchListener((v, event) -> intercept);
     }
 }

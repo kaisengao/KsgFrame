@@ -7,11 +7,11 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.google.android.material.button.MaterialButton;
 import com.kaisengao.base.util.GlideUtil;
-import com.kaisengao.base.util.ToastUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
 import com.kasiengao.ksgframe.player.ListPlayer;
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean;
+import com.ksg.ksgplayer.player.IPlayer;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -76,6 +76,8 @@ public class VideosAdapter extends BaseQuickAdapter<VideoBean, VideosAdapter.Vie
             ViewGroup.LayoutParams layoutParams = mPlayContainer.getLayoutParams();
             layoutParams.height = mParentWidth * 9 / 16;
             this.mPlayContainer.requestLayout();
+            // 初始状态位
+            this.mPlayContainer.setPlayerState(IPlayer.STATE_IDLE);
             // 赞
             this.getView(R.id.item_video_interact_praise).setOnClickListener(v -> {
                 VideoBean videoBean = getData().get(getLayoutPosition());
@@ -96,16 +98,19 @@ public class VideosAdapter extends BaseQuickAdapter<VideoBean, VideosAdapter.Vie
             });
             // 评论
             this.getView(R.id.item_video_interact_comment).setOnClickListener(v -> {
-                ToastUtil.showShort("假的！假的！假的！假的！");
+
             });
             // 分享
             this.getView(R.id.item_video_interact_share).setOnClickListener(v -> {
-                ToastUtil.showShort("假的！假的！假的！假的！");
+
             });
             // Play
             this.mPlayContainer.setOnClickListener(v -> {
                 int layoutPosition = getLayoutPosition();
-                ListPlayer.getInstance().onPlay(layoutPosition, mPlayContainer);
+                // VideoUrl
+                VideoBean videoBean = getData().get(layoutPosition);
+                // 播放视频
+                ListPlayer.getInstance().onPlay(layoutPosition, videoBean.getVideoUrl(), mPlayContainer);
             });
         }
     }

@@ -13,8 +13,8 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kaisengao.base.configure.ThreadPool;
 import com.kaisengao.base.util.TimeUtil;
-import com.kaisengao.base.util.ToastUtil;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.ksg.ksgplayer.cover.BaseCover;
 import com.ksg.ksgplayer.event.BundlePool;
 import com.ksg.ksgplayer.event.EventKey;
@@ -46,7 +46,7 @@ public class SmallControllerCover extends BaseCover implements View.OnClickListe
 
     private long mBufferPercentage;
 
-    private boolean mControlleShow = true;
+    private boolean mControllerShow = true;
 
     private boolean mTimerUpdatePause = false;
 
@@ -129,7 +129,10 @@ public class SmallControllerCover extends BaseCover implements View.OnClickListe
                 this.onRenewUi(0, 0);
                 break;
             case OnPlayerListener.PLAYER_EVENT_ON_PREPARED:
-                // 视频准备完毕
+                // 视频准备
+            case OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE:
+                // 播放结束
+                // 隐藏控制器
                 this.onHideController();
                 break;
             case OnPlayerListener.PLAYER_EVENT_ON_STATUS_CHANGE:
@@ -212,10 +215,12 @@ public class SmallControllerCover extends BaseCover implements View.OnClickListe
             this.onSwitchPlayState();
         } else if (id == R.id.cover_controller_fullscreen) {
             // 全屏切换
-            ToastUtil.showShort("FullScreen");
+            this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_TOGGLE, null);
+            // 隐藏控制器
+            this.onHideController();
         } else if (id == R.id.cover_controller) {
             // 控制器 显示/隐藏
-            if (mControlleShow) {
+            if (mControllerShow) {
                 this.onHideController();
             } else {
                 this.onShowController();
@@ -325,7 +330,7 @@ public class SmallControllerCover extends BaseCover implements View.OnClickListe
         // 暂停进度更新
         this.mTimerUpdatePause = true;
         // 暂停控制器的计时器
-        if (mControlleShow){
+        if (mControllerShow) {
             onStopTimerController();
         }
     }
@@ -336,7 +341,7 @@ public class SmallControllerCover extends BaseCover implements View.OnClickListe
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
         // 恢复控制器的计时器
-        if (mControlleShow){
+        if (mControllerShow) {
             onStartTimerController();
         }
         // 跳转进度
@@ -396,7 +401,7 @@ public class SmallControllerCover extends BaseCover implements View.OnClickListe
      * 控制器
      */
     private void onController(boolean isShow) {
-        this.mControlleShow = isShow;
+        this.mControllerShow = isShow;
         this.mPlayState.setVisibility(isShow ? View.VISIBLE : View.GONE);
         this.mCurrTime.setVisibility(isShow ? View.VISIBLE : View.GONE);
         this.mDurationTime.setVisibility(isShow ? View.VISIBLE : View.GONE);

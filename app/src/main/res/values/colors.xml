@@ -3,20 +3,25 @@
     <!-- 主要颜色 -->
     <color name="colorPrimary">#FF9800</color>
     <color name="colorPrimaryDark">#C66900</color>
-    <color name="colorAccent">#000000</color>
+    <color name="colorAccent">#212121</color>
 
     <!-- 第二颜色 -->
-    <color name="colorSecondary">#FF9800</color>
-    <color name="colorSecondaryVariant">#FF9800</color>
-    <color name="colorOnSecondary">#000000</color>
+    <color name="colorSecondary">#90CAF9</color>
+    <color name="colorSecondaryVariant">#90CAF9</color>
+    <color name="colorOnSecondary">#212121</color>
 
     <!-- 主要的文字颜色 -->
     <color name="textColorPrimary">#212121</color>
     <!-- 辅助的文字颜色 -->
     <color name="textColorSecondary">#A9A9A9</color>
-    <!-- Window的背景色 -->
-    <color name="windowBackground">#FFFFFF</color>
+    <!-- 背景色 -->
+    <color name="background">#FFFFFF</color>
 
+
+    <color name="mainVideoLoadColor">#F1F1F1</color>
+    <color name="color_load_light_center">#4DFFFFFF</color>
+
+    <color name="color_B3000000">#B3000000</color>
     <color name="color_48000000">#48000000</color>
     <color name="color_66000000">#66000000</color>
 

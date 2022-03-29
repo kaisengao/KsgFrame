@@ -20,19 +20,19 @@
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:orientation="horizontal"
             tools:context=".ui.main.MainActivity">
 
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/main_appbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fitsSystemWindows="true">
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/toolbar"
                     style="@style/Toolbar"
+                    app:navigationIconTint="@color/colorAccent"
                     app:titleTextAppearance="@style/Toolbar.TitleText"
+                    app:titleTextColor="@color/colorAccent"
                     tools:navigationIcon="@drawable/ic_toolbar_menu" />
 
             </com.google.android.material.appbar.AppBarLayout>
@@ -41,6 +41,8 @@
             <com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout
                 android:id="@+id/main_refresh"
                 android:layout_width="match_parent"
+                app:loadRegister="@{viewModel.onVideosReloadImp}"
+                app:loadState="@{viewModel.MVideosLoad}"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
@@ -54,18 +56,90 @@
 
             </com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout>
 
+            <!-- 视频详情页 -->
+            <com.kasiengao.ksgframe.common.widget.SlidingLayout
+                android:id="@+id/main_player_detail"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:elevation="5dp"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <!-- 毛玻璃背景 -->
+                <com.kasiengao.ksgframe.common.widget.BlurImageView
+                    android:id="@+id/main_player_blur"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="center"
+                    android:background="@color/background"
+                    android:scaleType="centerCrop" />
+
+                <!-- 视频容器 -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/main_player_container_card"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="@color/black"
+                    app:cardPreventCornerOverlap="false">
+
+                    <com.kasiengao.ksgframe.common.widget.PlayerContainerView
+                        android:id="@+id/main_player_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        tools:layout_height="210dp" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Back -->
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/main_player_detail_back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/view_space"
+                    android:layout_marginTop="12dp"
+                    android:elevation="1dp"
+                    android:onClick="@{() -> viewModel.onBackPressed()}"
+                    android:src="@drawable/ic_back"
+                    android:visibility="gone" />
+
+                <!-- 信息页 -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    app:cardCornerRadius="10dp">
+
+                    <com.kasiengao.ksgframe.common.widget.CFrameLayout
+                        android:id="@+id/main_player_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        tools:layout_height="match_parent">
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textColor="@color/textColorPrimary"
+                            android:textSize="30sp"
+                            android:text="信息页" />
+
+                    </com.kasiengao.ksgframe.common.widget.CFrameLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </com.kasiengao.ksgframe.common.widget.SlidingLayout>
+
             <!-- 悬浮按钮 -->
             <com.google.android.material.floatingactionbutton.FloatingActionButton
-                android:id="@+id/main_trainee"
+                android:id="@+id/main_show_hide_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/view_space"
+                android:layout_marginEnd="@dimen/view_space"
+                android:layout_marginBottom="40dp"
                 android:contentDescription="@string/goto_top"
-                android:rotation="90"
-                android:src="@drawable/ic_back"
+                android:src="@drawable/selector_info"
+                android:visibility="invisible"
                 app:borderWidth="0dp"
-                android:visibility="gone"
-                app:layout_anchor="@id/main_videos"
+                app:layout_anchor="@id/main_player_detail"
                 app:layout_anchorGravity="bottom|end" />
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
@@ -75,7 +149,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:background="@color/colorSecondaryVariant"
+            android:background="@color/background"
             android:gravity="center"
             android:orientation="vertical">
 

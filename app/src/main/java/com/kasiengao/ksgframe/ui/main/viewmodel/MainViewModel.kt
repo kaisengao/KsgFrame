@@ -2,9 +2,13 @@ package com.kasiengao.ksgframe.ui.main.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
+import com.kaisengao.base.state.LoadingState
+import com.kaisengao.mvvm.binding.command.BindingParam
+import com.kaisengao.mvvm.binding.command.BindingParamImp
 import com.kaisengao.mvvm.viewmodel.ToolbarViewModel
-import com.kaisengao.retrofit.observer.dialog.BaseDialogObserver
+import com.kaisengao.retrofit.observer.mvvm.BaseLoadPageObserver
 import com.kasiengao.ksgframe.R
+import com.kasiengao.ksgframe.common.load.MainVideoLoad
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean
 import com.kasiengao.ksgframe.ui.main.model.MainModel
 
@@ -16,9 +20,19 @@ import com.kasiengao.ksgframe.ui.main.model.MainModel
  */
 class MainViewModel(application: Application) : ToolbarViewModel(application) {
 
+    val mVideosLoad: MutableLiveData<LoadingState> by lazy { MutableLiveData() }
+
     val mVideos: MutableLiveData<ArrayList<VideoBean>> by lazy { MutableLiveData() }
 
     private val mModel: MainModel by lazy { MainModel() }
+
+    /**
+     * Reload
+     */
+    val onVideosReloadImp: BindingParamImp<Any> = BindingParamImp {
+        // 请求 视频列表
+        this.requestVideos()
+    }
 
     /**
      * Init Toolbar
@@ -35,14 +49,11 @@ class MainViewModel(application: Application) : ToolbarViewModel(application) {
         this.mModel
             .requestVideos()
             .doOnSubscribe(this)
-            .subscribe(object : BaseDialogObserver<ArrayList<VideoBean>>(getApplication()) {
+            .subscribe(object :
+                BaseLoadPageObserver<ArrayList<VideoBean>>(getApplication(), mVideosLoad) {
                 override fun onResult(videos: ArrayList<VideoBean>) {
                     mVideos.value = videos
                 }
-            })
-    }
-
-    companion object {
-
+            }.setLoadView(MainVideoLoad::class.java))
     }
 }

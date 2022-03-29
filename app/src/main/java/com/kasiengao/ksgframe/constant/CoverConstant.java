@@ -20,10 +20,15 @@ public interface CoverConstant {
 
         String KEY_SMALL_CONTROLLER = "smallController";
 
-        String KEY_ERROR = "error";
+        String KEY_UPLOADER = "uploader";
     }
 
     interface ValueKey {
+
+        /**
+         * UP主信息
+         */
+        String KEY_UPLOADER_DATA = "uploaderData";
 
         /**
          * 横竖屏切换

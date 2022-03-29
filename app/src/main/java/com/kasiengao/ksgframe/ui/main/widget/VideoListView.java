@@ -12,8 +12,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
+import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.kasiengao.ksgframe.player.ListPlayer;
+import com.kasiengao.ksgframe.player.cover.SmallControllerCover;
+import com.kasiengao.ksgframe.player.cover.UploaderCover;
+import com.kasiengao.ksgframe.ui.main.adapter.VideosAdapter;
+import com.kasiengao.ksgframe.ui.main.bean.VideoBean;
+import com.ksg.ksgplayer.cover.CoverManager;
 import com.ksg.ksgplayer.player.IPlayer;
+
+import java.util.ArrayList;
 
 /**
  * @ClassName: VideoListView
@@ -22,6 +30,8 @@ import com.ksg.ksgplayer.player.IPlayer;
  * @Description: 支持滚动播放视频
  */
 public class VideoListView extends RecyclerView {
+
+    private VideosAdapter mAdapter;
 
     public VideoListView(@NonNull Context context) {
         super(context);
@@ -37,8 +47,44 @@ public class VideoListView extends RecyclerView {
      * Init
      */
     private void init() {
+        // Init Cover
+        this.initCover();
+        // Init Adapter
+        this.initAdapter();
         // 注册滚动事件
         this.addOnScrollListener(mScrollListener);
+    }
+
+    /**
+     * Init Cover
+     */
+    private void initCover() {
+        CoverManager coverManager = ListPlayer.getInstance().getCoverManager();
+        // 小型控制器
+        coverManager.addCover(CoverConstant.CoverKey.KEY_SMALL_CONTROLLER, new SmallControllerCover(getContext()));
+        // UP主信息
+        coverManager.addCover(CoverConstant.CoverKey.KEY_UPLOADER, new UploaderCover(getContext()));
+    }
+
+    /**
+     * Init Adapter
+     */
+    private void initAdapter() {
+        // Adapter
+        this.mAdapter = new VideosAdapter();
+        // Recycler
+        this.setLayoutManager(new LinearLayoutManager(getContext()));
+        this.setAdapter(mAdapter);
+    }
+
+    /**
+     * 设置 数据源
+     */
+    public void setData(ArrayList<VideoBean> videos) {
+        // Adapter
+        this.mAdapter.setList(videos);
+        // 自动播放
+        this.smoothScrollBy(0, 1);
     }
 
     /**
@@ -113,8 +159,15 @@ public class VideoListView extends RecyclerView {
                                 break;
                             }
                         }
-                        // 播放新视频
-                        listPlayer.onPlay(layoutPosition, playContainer);
+                        // VideoUrl
+                        VideoBean videoBean = mAdapter.getData().get(layoutPosition);
+                        // 播放视频
+                        listPlayer.onPlay(layoutPosition, videoBean.getVideoUrl(), playContainer);
+                        // 配置UP主信息
+                        listPlayer
+                                .getCoverManager()
+                                .getValuePool()
+                                .putObject(CoverConstant.ValueKey.KEY_UPLOADER_DATA, videoBean);
                         // Break
                         break;
                     }
@@ -122,6 +175,7 @@ public class VideoListView extends RecyclerView {
             }
         }
     };
+
 
     @Override
     protected void onDetachedFromWindow() {

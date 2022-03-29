@@ -12,6 +12,7 @@
         android:layout_height="match_parent"
         android:layout_alignTop="@id/item_player_container"
         android:layout_alignBottom="@id/item_player_container"
+        android:visibility="gone"
         android:scaleType="centerCrop"
         tools:src="@color/colorSecondaryVariant" />
 
@@ -20,6 +21,7 @@
         android:id="@+id/play_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:layout_gravity="center"
         android:indeterminateDrawable="@drawable/selector_play_state" />
 

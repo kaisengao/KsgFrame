@@ -24,7 +24,7 @@ public class ErrorViewLoad extends BaseLoad {
      * View与页面绑定
      */
     @Override
-    protected void onModeViewBind() {
+    protected void onViewBind() {
         this.mErrorTextView = findViewById(R.id.error_text);
         this.findViewById(R.id.error_retry).setOnClickListener(v -> onLoadClick());
     }

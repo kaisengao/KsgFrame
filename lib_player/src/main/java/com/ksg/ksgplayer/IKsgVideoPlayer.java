@@ -2,6 +2,8 @@ package com.ksg.ksgplayer;
 
 import android.view.ViewGroup;
 
+import androidx.annotation.ColorRes;
+
 import com.ksg.ksgplayer.cover.ICoverManager;
 import com.ksg.ksgplayer.listener.OnCoverEventListener;
 import com.ksg.ksgplayer.player.BasePlayer;
@@ -18,6 +20,13 @@ import java.util.List;
  * @Description: 播放器
  */
 public interface IKsgVideoPlayer extends IPlayer {
+
+    /**
+     * 设置 背景颜色
+     *
+     * @param res res
+     */
+    void setBackgroundColor(@ColorRes int res);
 
     /**
      * 设置 覆盖组件管理器

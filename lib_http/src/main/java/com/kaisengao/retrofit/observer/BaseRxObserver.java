@@ -13,6 +13,7 @@ import com.kaisengao.retrofit.util.NetworkUtil;
 import org.jetbrains.annotations.NotNull;
 
 import io.reactivex.Observer;
+import io.reactivex.annotations.NonNull;
 import io.reactivex.disposables.Disposable;
 
 /**
@@ -101,17 +102,17 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
     /**
      * Error 事件
      *
-     * @param e Throwable
+     * @param throwable Throwable
      */
     @Override
-    public void onError(@NotNull Throwable e) {
+    public void onError(@NotNull Throwable throwable) {
         String exception;
         if (!NetworkUtil.isNetConnected(mContext)) {
             exception = mContext.getString(R.string.net_not);
         } else {
-            exception = ExceptionHandle.handleException(mContext, e);
+            exception = ExceptionHandle.handleException(mContext, throwable);
         }
-        this.onError(exception);
+        this.onError(throwable, exception);
     }
 
     @Override
@@ -129,10 +130,19 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
     /**
      * Error
      *
+     * @param throwable throwable
+     * @param message   错误信息
+     */
+    protected void onError(@NonNull Throwable throwable, String message) {
+        this.onError(message);
+    }
+
+    /**
+     * Error
+     *
      * @param message 错误信息
      */
     protected void onError(String message) {
 
     }
-
 }

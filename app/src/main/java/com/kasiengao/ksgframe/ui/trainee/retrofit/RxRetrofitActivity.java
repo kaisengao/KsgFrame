@@ -7,9 +7,10 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kaisengao.retrofit.observer.BaseRxObserver;
 import com.kaisengao.retrofit.observer.dialog.BaseDialogObserver;
-import com.kaisengao.retrofit.observer.mvp.BaseLoadSirObserver;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.mvp.java.BaseToolbarActivity;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 
@@ -86,7 +87,7 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
         this.requestNewsTop()
                 .subscribe(new BaseRxObserver<NewsTopBean>(this) {
                     @Override
-                    protected void onResult(NewsTopBean topBean) {
+                    protected void onResult(@NotNull NewsTopBean topBean) {
 
                         if (topBean != null) {
                             mMessage.setText("Success");
@@ -105,7 +106,7 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
         this.requestNewsTop()
                 .subscribe(new BaseDialogObserver<NewsTopBean>(this) {
                     @Override
-                    protected void onResult(NewsTopBean topBean) {
+                    protected void onResult(@NotNull NewsTopBean topBean) {
 
                         if (topBean != null) {
                             mMessage.setText("Success");
@@ -121,22 +122,22 @@ public class RxRetrofitActivity extends BaseToolbarActivity {
 
         mMessage.setText("");
 
-        this.requestNewsTop()
-                .subscribe(new BaseLoadSirObserver<NewsTopBean>(this, getInflate()) {
-                    @Override
-                    protected void onResult(NewsTopBean topBean) {
-
-                        if (topBean != null) {
-                            mMessage.setText("Success");
-                        }
-                    }
-
-                    @Override
-                    protected void onReload(Object target) {
-                        // Reload
-                        requestLoadSir();
-                    }
-                });
+//        this.requestNewsTop()
+//                .subscribe(new BaseLoadSirObserver<NewsTopBean>(this, getInflate()) {
+//                    @Override
+//                    protected void onResult(@NotNull NewsTopBean topBean) {
+//
+//                        if (topBean != null) {
+//                            mMessage.setText("Success");
+//                        }
+//                    }
+//
+//                    @Override
+//                    protected void onReload(Object target) {
+//                        // Reload
+//                        requestLoadSir();
+//                    }
+//                });
     }
 
     /**

@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
@@ -54,6 +55,16 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
     @Override
     public final IKsgVideoPlayer getPlayer() {
         return mPlayer;
+    }
+
+    /**
+     * 设置 背景颜色
+     *
+     * @param res res
+     */
+    @Override
+    public void setBackgroundColor(@ColorRes int res) {
+        this.mPlayer.setBackgroundColor(res);
     }
 
     /**

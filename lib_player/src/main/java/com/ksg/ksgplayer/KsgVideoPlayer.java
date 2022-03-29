@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
+import androidx.annotation.ColorRes;
+import androidx.core.content.ContextCompat;
+
 import com.ksg.ksgplayer.cover.ICoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
@@ -95,6 +98,16 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
         container.setStateGetter(mStateGetter);
         container.setCoverEventListener(mContainerCoverEventListener);
         return container;
+    }
+
+    /**
+     * 设置 背景颜色
+     *
+     * @param res res
+     */
+    @Override
+    public void setBackgroundColor(@ColorRes int res) {
+        this.mVideoContainer.setBackgroundColor(ContextCompat.getColor(mContext, res));
     }
 
     /**

@@ -226,7 +226,7 @@ public final class StatusBarUtil {
     /**
      * 获取状态栏高度
      */
-    private static int getStatusBarHeight(Context context) {
+    public static int getStatusBarHeight(Context context) {
         int result = 24;
         int resId = context.getResources().getIdentifier("status_bar_height", "dimen", "android");
         if (resId > 0) {
