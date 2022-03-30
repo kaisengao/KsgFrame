@@ -17,6 +17,8 @@
     <!-- 背景色 -->
     <color name="background">#121212</color>
 
+    <color name="driverColor">#12000000</color>
+
     <color name="mainVideoLoadColor">#131313</color>
 
     <color name="color_load_light_center">#26000000</color>

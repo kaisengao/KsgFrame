@@ -63,7 +63,7 @@ public class ListPlayer {
         // 创建 Cover管理器
         this.mCoverManager = new CoverManager();
         // Loading
-        this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_LOADING,new LoadingCover(application));
+        this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_LOADING, new LoadingCover(application));
         // 设置 Cover管理器
         this.mPlayer.setCoverManager(mCoverManager);
         // Cover事件
@@ -241,15 +241,14 @@ public class ListPlayer {
         }
     }
 
-
     /**
      * 全屏
      */
-    private void onFullscreen() {
+    public void onFullscreen() {
         PlayerContainerView currContainer = getCurrContainer();
         if (currContainer != null && mListPlayerListener != null) {
             // Listener
-            this.mListPlayerListener.onFullscreen(currContainer);
+            this.mListPlayerListener.onFullscreen(getCurrPosition(), currContainer);
         }
     }
 
@@ -272,8 +271,9 @@ public class ListPlayer {
         /**
          * 全屏
          *
+         * @param position      当前位置
          * @param listContainer 当前容器
          */
-        void onFullscreen(@NonNull PlayerContainerView listContainer);
+        void onFullscreen(int position, @NonNull PlayerContainerView listContainer);
     }
 }

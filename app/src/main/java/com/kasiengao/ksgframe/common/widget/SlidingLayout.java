@@ -1,6 +1,5 @@
 package com.kasiengao.ksgframe.common.widget;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
@@ -35,15 +34,13 @@ public class SlidingLayout extends FrameLayout {
     private int mTouchDownX;
     private int mLastTouchX;
     private int mLastTouchY;
-    private boolean isConsumed = false;
+    private boolean isConsumed = true;
     /**
      * 页面边缘的阴影图
      */
     private Drawable mLeftShadow;
 
     private Scroller mScroller;
-
-    private OnSlidingListener mSlidingListener;
 
     public SlidingLayout(Context context) {
         this(context, null);
@@ -68,12 +65,6 @@ public class SlidingLayout extends FrameLayout {
         this.mShadowWidth = SHADOW_WIDTH * ((int) getResources().getDisplayMetrics().density);
     }
 
-    /**
-     * 事件
-     */
-    public void setSlidingListener(OnSlidingListener slidingListener) {
-        this.mSlidingListener = slidingListener;
-    }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -90,8 +81,12 @@ public class SlidingLayout extends FrameLayout {
             case MotionEvent.ACTION_MOVE:
                 int deltaX = x - mLastInterceptX;
                 int deltaY = y - mLastInterceptY;
-                // 手指处于屏幕边缘，且横向滑动距离大于纵向滑动距离时，拦截事件
-                intercept = mInterceptDownX < (getWidth() / 2) && Math.abs(deltaX) > Math.abs(deltaY);
+
+                if (mInterceptDownX < (getWidth() / 2f) && Math.abs(deltaX) > Math.abs(deltaY)) {
+                    intercept = true;
+                } else {
+                    intercept = false;
+                }
                 mLastInterceptX = x;
                 mLastInterceptY = y;
                 break;
@@ -103,7 +98,6 @@ public class SlidingLayout extends FrameLayout {
         return intercept;
     }
 
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         int x = (int) ev.getX();
@@ -118,7 +112,7 @@ public class SlidingLayout extends FrameLayout {
                 int deltaX = x - mLastTouchX;
                 int deltaY = y - mLastTouchY;
 
-                if (!isConsumed && mTouchDownX < (getWidth() / 2) && Math.abs(deltaX) > Math.abs(deltaY)) {
+                if (!isConsumed && mTouchDownX < (getWidth() / 2f) && Math.abs(deltaX) > Math.abs(deltaY)) {
                     isConsumed = true;
                 }
 
@@ -174,12 +168,9 @@ public class SlidingLayout extends FrameLayout {
             scrollTo(mScroller.getCurrX(), 0);
             postInvalidate();
         } else if (-getScrollX() >= getWidth()) {
-            if (mSlidingListener != null) {
-                this.mSlidingListener.scrollClose();
-                // 恢复
-                mScroller.startScroll(0, 0, 0, 0, 300);
-                invalidate();
-            }
+            close();
+            mScroller.startScroll(0, 0, 0, 0, 300);
+            invalidate();
         }
     }
 
@@ -200,11 +191,10 @@ public class SlidingLayout extends FrameLayout {
         canvas.restore();
     }
 
-    public interface OnSlidingListener {
+    /**
+     * 关闭
+     */
+    public void close() {
 
-        /**
-         * 滑动关闭
-         */
-        void scrollClose();
     }
 }

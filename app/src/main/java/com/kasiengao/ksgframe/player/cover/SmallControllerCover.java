@@ -282,8 +282,8 @@ public class SmallControllerCover extends BaseCover implements View.OnClickListe
      * @param duration 总进度
      */
     private void setSeekProgressTime(long curr, long duration) {
-        this.mCurrTime.setText(TimeUtil.getTime(mTimeFormat, curr));
-        this.mDurationTime.setText(TimeUtil.getTime(mTimeFormat, duration));
+        this.mCurrTime.setText(TimeUtil.getTimeFormatText(mTimeFormat, curr));
+        this.mDurationTime.setText(TimeUtil.getTimeFormatText(mTimeFormat, duration));
     }
 
     /**

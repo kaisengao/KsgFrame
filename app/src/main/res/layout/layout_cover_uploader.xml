@@ -1,148 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_B3000000"
+    android:gravity="center_vertical"
+    android:visibility="gone"
+    tools:visibility="visible">
 
-    <data>
+    <!-- 头像 -->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/cover_uploader_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="30dp"
+        app:shapeAppearanceOverlay="@style/CircleImageStyle"
+        tools:src="@color/color_D81E06" />
 
-    </data>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <!-- 基本信息-->
+    <LinearLayout
+        android:id="@+id/cover_uploader_info"
+        android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:background="@color/color_B3000000"
-        android:gravity="center_vertical"
-        android:visibility="gone"
-        tools:visibility="visible">
+        android:layout_alignTop="@id/cover_uploader_avatar"
+        android:layout_alignBottom="@id/cover_uploader_avatar"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_toStartOf="@id/info_follow"
+        android:layout_toEndOf="@id/cover_uploader_avatar"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <!-- 头像 -->
-        <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/cover_uploader_avatar"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginStart="30dp"
-            app:shapeAppearanceOverlay="@style/CircleImageStyle"
-            tools:src="@color/color_D81E06" />
-
-        <!-- 基本信息-->
-        <LinearLayout
-            android:id="@+id/cover_uploader_info"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignTop="@id/cover_uploader_avatar"
-            android:layout_alignBottom="@id/cover_uploader_avatar"
-            android:layout_marginStart="10dp"
-            android:layout_marginEnd="10dp"
-            android:layout_toStartOf="@id/cover_uploader_follow"
-            android:layout_toEndOf="@id/cover_uploader_avatar"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <!-- 昵称 -->
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/cover_uploader_nickname"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="#FFFAFA"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                tools:text="蒙奇·D·路飞" />
-
-            <!-- 粉丝 -->
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/cover_uploader_fans"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="3dp"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:textColor="#DCDCDC"
-                android:textSize="14sp"
-                tools:text="3.7万粉丝" />
-
-        </LinearLayout>
-
-        <!-- 关注 -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/cover_uploader_follow"
-            android:layout_width="75dp"
+        <!-- 昵称 -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cover_uploader_nickname"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/cover_uploader_info"
-            android:layout_alignBottom="@id/cover_uploader_info"
-            android:layout_alignParentEnd="true"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="#FFFAFA"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            tools:text="蒙奇·D·路飞" />
+
+        <!-- 粉丝 -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cover_uploader_fans"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
-            android:layout_marginEnd="30dp"
-            android:layout_marginBottom="3dp"
-            android:backgroundTint="@color/color_FF9800"
-            android:text="@string/follow"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textColor="#DCDCDC"
+            android:textSize="14sp"
+            tools:text="3.7万粉丝" />
+
+    </LinearLayout>
+
+    <!-- 关注 -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/info_follow"
+        android:layout_width="75dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/cover_uploader_info"
+        android:layout_alignBottom="@id/cover_uploader_info"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="3dp"
+        android:layout_marginEnd="30dp"
+        android:layout_marginBottom="3dp"
+        android:backgroundTint="@color/color_FF9800"
+        android:text="@string/follow"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        android:theme="@style/Theme.MaterialComponents.DayNight.Bridge"
+        app:cornerRadius="8dp" />
+
+    <View
+        android:id="@+id/cover_uploader_driver"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_below="@id/cover_uploader_avatar"
+        android:layout_alignStart="@id/cover_uploader_avatar"
+        android:layout_alignEnd="@id/info_follow"
+        android:layout_margin="10dp"
+        android:background="@color/color_FF9800" />
+
+    <!-- 功能键-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/cover_uploader_driver"
+        android:layout_alignStart="@id/cover_uploader_driver"
+        android:layout_alignEnd="@id/cover_uploader_driver"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <!-- 重播 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cover_uploader_replay"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="@string/replay"
             android:textColor="@color/white"
-            android:textSize="15sp"
             android:textStyle="bold"
             android:theme="@style/Theme.MaterialComponents.DayNight.Bridge"
-            app:cornerRadius="8dp" />
+            app:cornerRadius="8dp"
+            app:icon="@mipmap/ic_replay"
+            app:iconGravity="textStart"
+            app:iconTint="@color/white"
+            app:rippleColor="@color/color_FF9800"
+            app:strokeColor="@color/color_FF9800"
+            app:strokeWidth="1dp" />
 
-        <View
-            android:id="@+id/cover_uploader_driver"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:layout_below="@id/cover_uploader_avatar"
-            android:layout_alignStart="@id/cover_uploader_avatar"
-            android:layout_alignEnd="@id/cover_uploader_follow"
-            android:layout_margin="10dp"
-            android:background="@color/color_FF9800" />
-
-        <!-- 功能键-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/cover_uploader_driver"
-            android:layout_alignStart="@id/cover_uploader_driver"
-            android:layout_alignEnd="@id/cover_uploader_driver"
+        <!-- 分享 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cover_uploader_share"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="0dp"
+            android:layout_height="45dp"
+            android:layout_marginStart="@dimen/view_space"
+            android:layout_weight="1"
             android:gravity="center"
-            android:orientation="horizontal">
-
-            <!-- 重播 -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/cover_uploader_replay"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="45dp"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/replay"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:theme="@style/Theme.MaterialComponents.DayNight.Bridge"
-                app:cornerRadius="8dp"
-                app:icon="@mipmap/ic_replay"
-                app:iconGravity="textStart"
-                app:iconTint="@color/white"
-                app:rippleColor="@color/color_FF9800"
-                app:strokeColor="@color/color_FF9800"
-                app:strokeWidth="1dp" />
-
-            <!-- 分享 -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/cover_uploader_share"
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:layout_width="0dp"
-                android:layout_height="45dp"
-                android:layout_marginStart="@dimen/view_space"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="@string/share"
-                android:textColor="@color/white"
-                android:textStyle="bold"
-                android:theme="@style/Theme.MaterialComponents.DayNight.Bridge"
-                app:cornerRadius="8dp"
-                app:icon="@mipmap/ic_share"
-                app:iconGravity="textStart"
-                app:iconTint="@color/white"
-                app:rippleColor="@color/color_FF9800"
-                app:strokeColor="@color/color_FF9800"
-                app:strokeWidth="1dp" />
-        </LinearLayout>
-    </RelativeLayout>
-</layout>
+            android:text="@string/share"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:theme="@style/Theme.MaterialComponents.DayNight.Bridge"
+            app:cornerRadius="8dp"
+            app:icon="@mipmap/ic_share"
+            app:iconGravity="textStart"
+            app:iconTint="@color/white"
+            app:rippleColor="@color/color_FF9800"
+            app:strokeColor="@color/color_FF9800"
+            app:strokeWidth="1dp" />
+    </LinearLayout>
+</RelativeLayout>

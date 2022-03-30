@@ -1,37 +1,26 @@
 package com.kasiengao.ksgframe.common.widget;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.widget.LinearLayout;
 
 import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
-
-import com.kaisengao.base.util.GlideUtil;
 
 /**
- * @ClassName: BlurImageView
+ * @ClassName: CLinearLayout
  * @Author: KaiSenGao
- * @CreateDate: 2022/3/29 18:53
- * @Description: 毛玻璃
+ * @CreateDate: 2022/3/30 16:33
+ * @Description:
  */
-public class BlurImageView extends AppCompatImageView {
+public class CLinearLayout extends LinearLayout {
 
-    public BlurImageView(@NonNull Context context) {
+    public CLinearLayout(Context context) {
         super(context);
     }
 
-    public BlurImageView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public CLinearLayout(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
-    }
-
-    /**
-     * 设置 毛玻璃
-     */
-    public void setImageBlur(@Nullable Drawable drawable) {
-        GlideUtil.loadImageBlur(getContext(), drawable, this, 25);
     }
 
     /**
@@ -51,5 +40,4 @@ public class BlurImageView extends AppCompatImageView {
         this.getLayoutParams().height = (int) height;
         this.requestLayout();
     }
-
 }

@@ -17,8 +17,6 @@ public class VideoBean {
     private String mMovieName;
     @SerializedName("heightUrl")
     private String mVideoUrl;
-    @SerializedName("videoTitle")
-    private String mVideoTitle;
     @SerializedName("coverImg")
     private String mCoverImg;
 
@@ -27,6 +25,10 @@ public class VideoBean {
     private String mNickname;
 
     private String mProfile;
+
+    private String mDate;
+
+    private int mViews;
 
     private int mFans;
 
@@ -52,10 +54,6 @@ public class VideoBean {
 
     public String getVideoUrl() {
         return mVideoUrl;
-    }
-
-    public String getVideoTitle() {
-        return mVideoTitle;
     }
 
     public String getCoverImg() {
@@ -84,6 +82,25 @@ public class VideoBean {
 
     public String getProfile() {
         return mProfile;
+    }
+
+    public void setDate(String date) {
+        this.mDate = date;
+    }
+
+    public String getDate() {
+        return mDate;
+    }
+
+    public void setViews(int views) {
+        this.mViews = views;
+    }
+
+    public String getViews() {
+        if (mViews <= 0) {
+            return "";
+        }
+        return NumberUtil.formatBigNum(mViews) + TextUtil.getString(R.string.views);
     }
 
     public void setFans(int fans) {

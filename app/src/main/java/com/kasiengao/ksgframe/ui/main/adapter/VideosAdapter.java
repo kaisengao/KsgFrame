@@ -7,6 +7,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.google.android.material.button.MaterialButton;
 import com.kaisengao.base.util.GlideUtil;
+import com.kaisengao.base.util.SnackbarUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
 import com.kasiengao.ksgframe.player.ListPlayer;
@@ -102,7 +103,7 @@ public class VideosAdapter extends BaseQuickAdapter<VideoBean, VideosAdapter.Vie
             });
             // 分享
             this.getView(R.id.item_video_interact_share).setOnClickListener(v -> {
-
+                SnackbarUtil.with(v).setMessage("分享！分享！分享！分享！分享！分享！分享！分享！").show();
             });
             // Play
             this.mPlayContainer.setOnClickListener(v -> {

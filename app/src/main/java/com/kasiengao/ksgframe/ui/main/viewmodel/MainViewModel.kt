@@ -3,7 +3,6 @@ package com.kasiengao.ksgframe.ui.main.viewmodel
 import android.app.Application
 import androidx.lifecycle.MutableLiveData
 import com.kaisengao.base.state.LoadingState
-import com.kaisengao.mvvm.binding.command.BindingParam
 import com.kaisengao.mvvm.binding.command.BindingParamImp
 import com.kaisengao.mvvm.viewmodel.ToolbarViewModel
 import com.kaisengao.retrofit.observer.mvvm.BaseLoadPageObserver
@@ -23,6 +22,8 @@ class MainViewModel(application: Application) : ToolbarViewModel(application) {
     val mVideosLoad: MutableLiveData<LoadingState> by lazy { MutableLiveData() }
 
     val mVideos: MutableLiveData<ArrayList<VideoBean>> by lazy { MutableLiveData() }
+
+    val mVideo: MutableLiveData<VideoBean> by lazy { MutableLiveData() }
 
     private val mModel: MainModel by lazy { MainModel() }
 
@@ -55,5 +56,14 @@ class MainViewModel(application: Application) : ToolbarViewModel(application) {
                     mVideos.value = videos
                 }
             }.setLoadView(MainVideoLoad::class.java))
+    }
+
+    /**
+     * 刷新信息
+     */
+    fun refreshInfo(position: Int) {
+        this.mVideos.value?.let {
+            mVideo.value = it[position]
+        }
     }
 }

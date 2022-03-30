@@ -17,9 +17,11 @@
     <!-- 背景色 -->
     <color name="background">#FFFFFF</color>
 
+    <color name="driverColor">#F1F1F1</color>
 
     <color name="mainVideoLoadColor">#F1F1F1</color>
-    <color name="color_load_light_center">#4DFFFFFF</color>
+
+    <color name="color_load_light_center">#50FFFFFF</color>
 
     <color name="color_B3000000">#B3000000</color>
     <color name="color_48000000">#48000000</color>

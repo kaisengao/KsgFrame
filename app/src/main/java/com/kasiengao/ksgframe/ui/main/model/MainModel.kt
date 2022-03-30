@@ -2,6 +2,7 @@ package com.kasiengao.ksgframe.ui.main.model
 
 import com.google.gson.reflect.TypeToken
 import com.kaisengao.base.util.CommonUtil
+import com.kaisengao.base.util.TimeUtil
 import com.kaisengao.mvvm.base.model.BaseModel
 import com.kaisengao.retrofit.RxCompose
 import com.kaisengao.retrofit.factory.GsonBuilderFactory
@@ -91,6 +92,7 @@ class MainModel : BaseModel<DataRepository>(Injection.provideDataRepository()) {
         return Observable
             .create(ObservableOnSubscribe<ArrayList<VideoBean>> { emitter ->
                 try {
+                    val currentTime = TimeUtil.getCurrentTime("yyyy-MM-dd")
                     // 数据
                     val json =
                         CommonUtil.getAssetsJson(AppFactory.application(), "VideosJson.json")
@@ -106,8 +108,12 @@ class MainModel : BaseModel<DataRepository>(Injection.provideDataRepository()) {
                         video.avatar = infoBean.avatar
                         video.nickname = infoBean.nickname
                         video.profile = infoBean.profile
+                        video.date = currentTime
+                        mRandom.nextInt(3000000).also {
+                            video.setViews(it)
+                        }
                         mRandom.nextInt(1000000).also {
-                            video.setFans(if (it < 1000) 0 else it)
+                            video.setFans(it)
                         }
                         mRandom.nextInt(300000).also {
                             video.setPraise(if (it < 100) 0 else it)

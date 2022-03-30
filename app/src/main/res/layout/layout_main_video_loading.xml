@@ -186,7 +186,10 @@
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/light"
-        android:layout_width="match_parent"
+        android:layout_width="80dp"
+        android:rotation="5"
+        android:scaleX="1.1"
+        android:scaleY="1.1"
         android:layout_height="match_parent"
         android:scaleType="fitStart"
         android:src="@drawable/shape_load_light" />

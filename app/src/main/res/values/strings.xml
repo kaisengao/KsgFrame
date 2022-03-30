@@ -6,13 +6,13 @@
     <string name="replay">重播</string>
     <string name="share">分享</string>
     <string name="fans">粉丝</string>
+    <string name="comment">评论</string>
+    <string name="views">次观看</string>
 
     <string name="main_video_item_interact_praise">赞</string>
     <string name="main_video_item_interact_stepped">踩</string>
     <string name="main_video_item_interact_comment">评论</string>
     <string name="main_video_item_interact_share">分享</string>
-
-    <string name="goto_top">回到顶部</string>
 
     <string name="bar_trainee">练习生</string>
 

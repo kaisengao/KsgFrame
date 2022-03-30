@@ -3,12 +3,8 @@
     android:shape="rectangle">
 
     <gradient
-        android:centerColor="@color/color_load_light_center"
-        android:endColor="@color/translucent"
-        android:startColor="@color/translucent" />
-
-    <size
-        android:width="15dp"
-        android:height="100dp" />
+        android:endColor="@color/color_load_light_center"
+        android:startColor="@color/translucent"
+        />
 
 </shape>
