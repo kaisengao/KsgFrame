@@ -111,8 +111,6 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun onPause() {
         super.onPause()
-        // 退出全屏
-        ListPlayer.getInstance().onFullscreen(false)
         // 暂停播放
         ListPlayer.getInstance().onPause()
     }

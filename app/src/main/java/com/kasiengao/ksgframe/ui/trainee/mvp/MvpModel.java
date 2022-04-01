@@ -25,6 +25,6 @@ public class MvpModel {
      */
     public TrailerBean requestTrailerList() {
         // 解析Json
-        return this.mJson.fromJson(CommonUtil.getAssetsJson(AppFactory.application(),"VideosJson.json"), TrailerBean.class);
+        return this.mJson.fromJson(CommonUtil.getAssetsJson(AppFactory.application(), "VideosData.json"), TrailerBean.class);
     }
 }

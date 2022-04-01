@@ -17,7 +17,7 @@ import com.kasiengao.ksgframe.ui.main.bean.VideoBean;
 import com.kasiengao.ksgframe.ui.main.player.ListPlayer;
 import com.ksg.ksgplayer.player.IPlayer;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @ClassName: VideoListView
@@ -63,7 +63,7 @@ public class VideoListView extends RecyclerView {
     /**
      * 设置 数据源
      */
-    public void setData(ArrayList<VideoBean> videos) {
+    public void setData(List<VideoBean> videos) {
         // Adapter
         this.mAdapter.setList(videos);
         // 自动播放

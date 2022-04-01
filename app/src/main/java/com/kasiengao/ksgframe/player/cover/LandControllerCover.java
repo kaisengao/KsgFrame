@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kaisengao.base.util.TimeUtil;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.common.util.TextUtil;
 import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.ksg.ksgplayer.event.BundlePool;
 import com.ksg.ksgplayer.event.EventKey;
@@ -34,11 +35,13 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
 
     private AppCompatSeekBar mProgress;
 
-    private AppCompatImageView mPlayState;
-
     private AppCompatTextView mCurrTime;
 
     private AppCompatTextView mDurationTime;
+
+    private AppCompatImageView mPlayState;
+
+    private AppCompatImageView mDanmakuState;
 
     private AppCompatTextView mSpeed;
 
@@ -70,6 +73,7 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
         this.mDurationTime = findViewById(R.id.cover_controller_duration_time);
         this.mPlayState = findViewById(R.id.cover_controller_play_state);
         AppCompatImageView fullscreen = findViewById(R.id.cover_controller_fullscreen);
+        this.mDanmakuState = findViewById(R.id.cover_controller_danmaku);
         this.mSpeed = findViewById(R.id.cover_controller_speed);
         this.mSpeeds = findViewById(R.id.cover_controller_speeds);
         this.mDefaultSpeed = findViewById(R.id.speed_100);
@@ -79,12 +83,14 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
         fullscreen.setOnClickListener(this);
         this.mSpeed.setOnClickListener(this);
         this.mSpeeds.setOnClickListener(this);
+        this.mDanmakuState.setOnClickListener(this);
         // SeekBar
         this.mProgress.setOnSeekBarChangeListener(this);
         // RadioGroup
         this.mSpeeds.setOnCheckedChangeListener(this);
         // Init
         fullscreen.setSelected(true);
+        this.mDanmakuState.setSelected(true);
     }
 
     /**
@@ -96,6 +102,16 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
         // 初始状态
         if (getPlayerStateGetter() != null) {
             this.setPlayState(getPlayerStateGetter().getState());
+            // 倍速
+            float speed = getPlayerStateGetter().getSpeed();
+            if (speed == 1) {
+                this.mDefaultSpeed.setChecked(true);
+                this.mSpeed.setSelected(false);
+                this.mSpeed.setText(TextUtil.getString(R.string.controller_speed));
+            } else {
+                this.mSpeed.setSelected(true);
+                this.mSpeed.setText(String.format("%sX", speed));
+            }
         }
     }
 
@@ -109,7 +125,6 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
                 break;
             case OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE:
                 // 恢复倍数
-                this.mDefaultSpeed.toggle();
                 this.mSpeed.setSelected(false);
                 this.mSpeed.setText(R.string.controller_speed);
                 // 全屏切换
@@ -188,8 +203,17 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
         } else if (id == R.id.cover_controller_fullscreen) {
             // 退出全屏
             this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_EXIT, null);
+        } else if (id == R.id.cover_controller_danmaku) {
+            // 弹幕状态
+            if (mDanmakuState.isSelected()) {
+                this.notifyPrivateEvent(CoverConstant.CoverKey.KEY_DANMAKU,
+                        CoverConstant.PrivateEvent.CODE_REQUEST_DANMAKU_CLOSE, null);
+            } else {
+                this.notifyPrivateEvent(CoverConstant.CoverKey.KEY_DANMAKU,
+                        CoverConstant.PrivateEvent.CODE_REQUEST_DANMAKU_OPEN, null);
+            }
+            this.mDanmakuState.setSelected(!mDanmakuState.isSelected());
         } else if (id == R.id.cover_controller_speed) {
-            // 倍速设置
             // 隐藏控制器
             this.onHideController();
             // Show倍速菜单

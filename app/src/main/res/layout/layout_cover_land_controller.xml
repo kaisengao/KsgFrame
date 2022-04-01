@@ -34,46 +34,6 @@
         android:background="@drawable/ic_shadow_bottom"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <!-- Start/Pause-->
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/cover_controller_play_state"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginStart="30dp"
-            android:layout_marginBottom="12dp"
-            android:src="@drawable/selector_play_state" />
-
-        <!-- Fullscreen -->
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/cover_controller_fullscreen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/cover_controller_play_state"
-            android:layout_alignBottom="@id/cover_controller_play_state"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="30dp"
-            android:src="@drawable/selector_fullscreen_state" />
-
-        <!-- 倍速 -->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/cover_controller_speed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/cover_controller_fullscreen"
-            android:layout_alignBottom="@id/cover_controller_fullscreen"
-            android:layout_marginEnd="@dimen/view_space"
-            android:layout_toStartOf="@id/cover_controller_fullscreen"
-            android:gravity="center"
-            android:paddingStart="10dp"
-            android:paddingEnd="0dp"
-            android:src="@drawable/selector_fullscreen_state"
-            android:text="@string/controller_speed"
-            android:textColor="@color/selector_speed"
-            android:textSize="14sp"
-            tools:ignore="RelativeOverlap" />
-
         <!-- Curr Time-->
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/cover_controller_curr_time"
@@ -125,6 +85,63 @@
             android:textColor="@color/white"
             android:textSize="@dimen/sp_14"
             tools:text="00:00" />
+
+        <!-- Start/Pause-->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cover_controller_play_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginStart="30dp"
+            android:layout_marginBottom="12dp"
+            android:src="@drawable/selector_play_state" />
+
+        <!-- 弹幕 Show/Hide -->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cover_controller_danmaku"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/cover_controller_fullscreen"
+            android:layout_alignBottom="@id/cover_controller_fullscreen"
+            android:layout_marginStart="@dimen/view_space"
+            android:layout_marginEnd="@dimen/view_space"
+            android:layout_toEndOf="@id/cover_controller_play_state"
+            android:gravity="center"
+            android:paddingStart="0dp"
+            android:paddingEnd="20dp"
+            android:src="@drawable/selector_danmaku_state"
+            android:tint="@color/white"
+            tools:ignore="RelativeOverlap" />
+
+        <!-- 倍速 -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cover_controller_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/cover_controller_fullscreen"
+            android:layout_alignBottom="@id/cover_controller_fullscreen"
+            android:layout_marginEnd="@dimen/view_space"
+            android:layout_toStartOf="@id/cover_controller_fullscreen"
+            android:gravity="center"
+            android:paddingStart="20dp"
+            android:paddingEnd="0dp"
+            android:text="@string/controller_speed"
+            android:textColor="@color/selector_speed"
+            android:textSize="16sp"
+            tools:ignore="RelativeOverlap" />
+
+        <!-- Fullscreen -->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/cover_controller_fullscreen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/cover_controller_play_state"
+            android:layout_alignBottom="@id/cover_controller_play_state"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="30dp"
+            android:src="@drawable/selector_fullscreen_state" />
+
     </RelativeLayout>
 
     <!-- 倍速选择 -->
@@ -192,7 +209,6 @@
             android:text="@string/speed_200"
             android:textColor="@color/selector_speed"
             android:textSize="15sp" />
-
     </RadioGroup>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

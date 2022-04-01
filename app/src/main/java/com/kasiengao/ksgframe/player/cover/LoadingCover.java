@@ -26,11 +26,14 @@ public class LoadingCover extends BaseCover {
     protected View onCreateCoverView(Context context) {
         return View.inflate(context, R.layout.layout_cover_loading, null);
     }
+
     /**
      * InitViews
      */
     @Override
-    public void initViews() {}
+    public void initViews() {
+    }
+
     /**
      * loading
      *
@@ -183,6 +186,6 @@ public class LoadingCover extends BaseCover {
      */
     @Override
     public int getCoverLevel() {
-        return levelLow(10);
+        return levelLow(30);
     }
 }

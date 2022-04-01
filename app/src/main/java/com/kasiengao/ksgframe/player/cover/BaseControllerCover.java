@@ -9,6 +9,7 @@ import com.kaisengao.base.configure.ThreadPool;
 import com.kaisengao.base.util.TimeUtil;
 import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.ksg.ksgplayer.cover.BaseCover;
+import com.ksg.ksgplayer.event.BundlePool;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
 import com.ksg.ksgplayer.listener.OnTimerUpdateListener;
@@ -132,9 +133,14 @@ public abstract class BaseControllerCover extends BaseCover implements View.OnCl
                 this.onRenewUi(0, 0);
                 break;
             case OnPlayerListener.PLAYER_EVENT_ON_PREPARED:
-                // 视频准备
+                // 隐藏控制器
+                this.onHideController();
+                break;
             case OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE:
-                // 播放结束
+                // 恢复倍数
+                Bundle obtain = BundlePool.obtain();
+                obtain.putFloat(EventKey.FLOAT_DATA, 1.0f);
+                this.requestSpeed(obtain);
                 // 隐藏控制器
                 this.onHideController();
                 break;

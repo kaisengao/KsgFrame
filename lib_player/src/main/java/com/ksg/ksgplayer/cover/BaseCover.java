@@ -166,6 +166,7 @@ public abstract class BaseCover implements ICover, ICoverHandle, StateGetter, Vi
     public final void onViewAttachedToWindow(View v) {
         // View 与页面视图绑定
         this.onCoverViewBind();
+
     }
 
     /**
@@ -218,7 +219,6 @@ public abstract class BaseCover implements ICover, ICoverHandle, StateGetter, Vi
      */
     @Override
     public void release() {
-
     }
 
     /**

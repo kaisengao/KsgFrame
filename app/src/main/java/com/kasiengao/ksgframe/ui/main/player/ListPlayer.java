@@ -280,7 +280,7 @@ public class ListPlayer {
     /**
      * 全屏切换
      */
-    public void onFullscreen(boolean fullscreen) {
+    private void onFullscreen(boolean fullscreen) {
         if (mFullscreen == fullscreen) {
             return;
         }

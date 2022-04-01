@@ -34,6 +34,7 @@ import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
 import com.kasiengao.ksgframe.common.widget.SlidingLayout;
 import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.kasiengao.ksgframe.databinding.LayoutVideoDetailBinding;
+import com.kasiengao.ksgframe.player.cover.DanmakuCover;
 import com.kasiengao.ksgframe.player.cover.GestureCover;
 import com.kasiengao.ksgframe.player.cover.LandControllerCover;
 import com.kasiengao.ksgframe.player.cover.SmallControllerCover;
@@ -71,6 +72,8 @@ public class VideoDetailView extends FrameLayout {
     private LandControllerCover mLandControllerCover;
 
     private SmallControllerCover mSmallControllerCover;
+
+    private DanmakuCover mDanmakuCover;
 
     public VideoDetailView(Context context) {
         this(context, null);
@@ -129,7 +132,21 @@ public class VideoDetailView extends FrameLayout {
             this.mViewModel = viewModel;
             this.mBinding.setLifecycleOwner(owner);
             this.mBinding.setVariable(BR.viewModel, viewModel);
+            // Init DataObserve
+            this.initDataObserve(owner);
         }
+    }
+
+    /**
+     * Init DataObserve
+     */
+    private void initDataObserve(LifecycleOwner owner) {
+        // 弹幕数据
+        this.mViewModel.getMDanmakuData().observe(owner, data -> {
+            if (data != null && !data.isEmpty()) {
+                this.getDanmakuCover().updateData(data);
+            }
+        });
     }
 
     /**
@@ -277,27 +294,31 @@ public class VideoDetailView extends FrameLayout {
         super.onConfigurationChanged(newConfig);
         // 横竖屏配置
         if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            // 1、打开详情页
+            // 请求弹幕数据
+            this.mViewModel.requestDanmakuData();
+            // 打开详情页
             if (!isOpenDetail) {
                 ListPlayer.getInstance().onOpenDetail();
             }
             this.mBinding.playContainerFullscreen.setVisibility(View.VISIBLE);
-            // 2、绑定全屏容器
-            ListPlayer.getInstance().bindNewContainer(mBinding.playContainerFullscreen);
-            // 3、更换控制器
+            // 设置Cover
             CoverManager coverManager = ListPlayer.getInstance().getCoverManager();
             coverManager.removeCover(CoverConstant.CoverKey.KEY_SMALL_CONTROLLER);
+            coverManager.addCover(CoverConstant.CoverKey.KEY_DANMAKU, getDanmakuCover());
             coverManager.addCover(CoverConstant.CoverKey.KEY_GESTURE, getGestureCover());
             coverManager.addCover(CoverConstant.CoverKey.KEY_LAND_CONTROLLER, getLandControllerCover());
+            // 2绑定全屏容器
+            ListPlayer.getInstance().bindNewContainer(mBinding.playContainerFullscreen);
         } else {
             this.mBinding.playContainerFullscreen.setVisibility(View.GONE);
-            // 1、恢复视频容器
-            ListPlayer.getInstance().bindNewContainer(mBinding.playerContainer);
-            // 2、更换控制器
+            // 设置Cover
             CoverManager coverManager = ListPlayer.getInstance().getCoverManager();
+            coverManager.removeCover(CoverConstant.CoverKey.KEY_DANMAKU);
             coverManager.removeCover(CoverConstant.CoverKey.KEY_GESTURE);
             coverManager.removeCover(CoverConstant.CoverKey.KEY_LAND_CONTROLLER);
             coverManager.addCover(CoverConstant.CoverKey.KEY_SMALL_CONTROLLER, getSmallControllerCover());
+            // 1恢复视频容器
+            ListPlayer.getInstance().bindNewContainer(mBinding.playerContainer);
         }
     }
 
@@ -330,6 +351,16 @@ public class VideoDetailView extends FrameLayout {
             this.mSmallControllerCover = new SmallControllerCover(getContext());
         }
         return mSmallControllerCover;
+    }
+
+    /**
+     * Cover 弹幕
+     */
+    private DanmakuCover getDanmakuCover() {
+        if (mDanmakuCover == null) {
+            this.mDanmakuCover = new DanmakuCover(getContext());
+        }
+        return mDanmakuCover;
     }
 
     /**

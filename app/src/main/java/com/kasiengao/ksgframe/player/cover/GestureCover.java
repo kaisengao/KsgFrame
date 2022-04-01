@@ -14,6 +14,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 import com.kaisengao.base.configure.ThreadPool;
 import com.kaisengao.base.util.CommonUtil;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.common.util.VibratorUtil;
 import com.kasiengao.ksgframe.common.widget.GestureTipsView;
 import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.ksg.ksgplayer.cover.BaseCover;
@@ -33,6 +34,8 @@ import com.ksg.ksgplayer.state.PlayerStateGetter;
 public class GestureCover extends BaseCover implements View.OnTouchListener, OnTouchGestureListener, View.OnLayoutChangeListener {
 
     private long mSlidProgress;
+
+    private float mDeaultSpeed;
 
     private LinearLayout mGestureTipsRoot;
 
@@ -147,36 +150,6 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     }
 
     /**
-     * 长按
-     */
-    @Override
-    public void onLongPress() {
-        // 倍速播放
-        if (getPlayerStateGetter() != null && getPlayerStateGetter().getState() == IPlayer.STATE_START) {
-            // 提示
-            this.mGestureTipsView
-                    .setRooView(mGestureTipsSpeedRoot)
-                    .show();
-            // 2倍速
-            Bundle obtain = BundlePool.obtain();
-            obtain.putFloat(EventKey.FLOAT_DATA, 2.0f);
-            this.requestSpeed(obtain);
-        }
-    }
-
-    /**
-     * 长按结束
-     */
-    @Override
-    public void onLongPressEnd() {
-        this.mGestureTipsView.dismiss();
-        // 停止倍速
-        Bundle obtain = BundlePool.obtain();
-        obtain.putFloat(EventKey.FLOAT_DATA, 1.0f);
-        this.requestSpeed(obtain);
-    }
-
-    /**
      * 单击
      */
     @Override
@@ -192,6 +165,41 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     public void onDoubleTapGesture() {
         // 通知 播放状态 播放/暂停
         this.getValuePool().putObject(CoverConstant.ValueKey.KEY_SWITCH_PLAY, null, false);
+    }
+
+    /**
+     * 长按
+     */
+    @Override
+    public void onLongPress() {
+        // 倍速播放
+        if (getPlayerStateGetter() != null && getPlayerStateGetter().getState() == IPlayer.STATE_START) {
+            this.mDeaultSpeed = getPlayerStateGetter().getSpeed();
+            // 提示
+            this.mGestureTipsView
+                    .setRooView(mGestureTipsSpeedRoot)
+                    .show();
+            // 震动
+            VibratorUtil.vibrate(100);
+            // 通知 控制器 隐藏
+            this.getValuePool().putObject(CoverConstant.ValueKey.KEY_HIDE_CONTROLLER, null);
+            // 在原有速度的基础上x2
+            Bundle obtain = BundlePool.obtain();
+            obtain.putFloat(EventKey.FLOAT_DATA, mDeaultSpeed * 2.0f);
+            this.requestSpeed(obtain);
+        }
+    }
+
+    /**
+     * 长按结束
+     */
+    @Override
+    public void onLongPressEnd() {
+        this.mGestureTipsView.dismiss();
+        // 停止倍速
+        Bundle obtain = BundlePool.obtain();
+        obtain.putFloat(EventKey.FLOAT_DATA, mDeaultSpeed);
+        this.requestSpeed(obtain);
     }
 
     /**

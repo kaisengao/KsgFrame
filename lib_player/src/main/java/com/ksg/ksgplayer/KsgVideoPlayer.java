@@ -700,6 +700,11 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
                 public boolean isBuffering() {
                     return isBuffering;
                 }
+
+                @Override
+                public float getSpeed() {
+                    return mPlayer.getSpeed();
+                }
             };
         }
     };

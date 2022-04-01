@@ -54,4 +54,10 @@ public interface PlayerStateGetter {
      * @return true/false
      */
     boolean isBuffering();
+
+    /**
+     * 获取速度
+     * @return speed
+     */
+    float getSpeed();
 }

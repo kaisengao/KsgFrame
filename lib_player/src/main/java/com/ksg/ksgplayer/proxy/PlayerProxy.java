@@ -98,6 +98,11 @@ public class PlayerProxy implements IPlayer {
             public boolean isBuffering() {
                 return isBuffering;
             }
+
+            @Override
+            public float getSpeed() {
+                return PlayerProxy.this.getSpeed();
+            }
         });
     }
 

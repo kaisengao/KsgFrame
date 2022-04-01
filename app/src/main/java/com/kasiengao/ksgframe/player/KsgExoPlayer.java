@@ -477,7 +477,9 @@ public class KsgExoPlayer extends BasePlayer {
         @Override
         public void onPositionDiscontinuity(@NotNull Player.PositionInfo oldPosition, @NotNull Player.PositionInfo newPosition, int reason) {
             if (reason == DISCONTINUITY_REASON_SEEK) {
-                sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_SEEK_COMPLETE, null);
+                Bundle bundle = BundlePool.obtain();
+                bundle.putLong(EventKey.LONG_DATA, newPosition.positionMs);
+                sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_SEEK_COMPLETE, bundle);
             }
         }
 
@@ -491,7 +493,6 @@ public class KsgExoPlayer extends BasePlayer {
 
         @Override
         public void onRenderedFirstFrame() {
-            updateState(IPlayer.STATE_START);
             sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_VIDEO_RENDER_START, null);
         }
     };

@@ -10,11 +10,12 @@ import com.kasiengao.ksgframe.factory.AppFactory
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean
 import com.kasiengao.ksgframe.ui.trainee.mvvm.Injection
 import com.kasiengao.ksgframe.ui.trainee.mvvm.data.source.DataRepository
+import com.kuaishou.akdanmaku.data.DanmakuItemData
 import io.reactivex.*
 import io.reactivex.Observable
 import java.util.*
+import java.util.Collections.shuffle
 import java.util.concurrent.TimeUnit
-import kotlin.collections.ArrayList
 
 /**
  * @ClassName: MainModel
@@ -110,21 +111,21 @@ class MainModel : BaseModel<DataRepository>(Injection.provideDataRepository()) {
     /**
      * 请求 视频列表
      */
-    fun requestVideos(): Observable<ArrayList<VideoBean>> {
+    fun requestVideos(): Observable<List<VideoBean>> {
         // 模拟请求
         return Observable
-            .create(ObservableOnSubscribe<ArrayList<VideoBean>> { emitter ->
+            .create(ObservableOnSubscribe<List<VideoBean>> { emitter ->
                 try {
                     val currentTime = TimeUtil.getCurrentTime("yyyy-MM-dd")
                     // 数据
                     val json =
-                        CommonUtil.getAssetsJson(AppFactory.application(), "VideosJson.json")
+                        CommonUtil.getAssetsJson(AppFactory.application(), "VideosData.json")
                     // 解析
-                    val type = object : TypeToken<ArrayList<VideoBean>>() {}.type
-                    val videos: ArrayList<VideoBean> =
+                    val type = object : TypeToken<List<VideoBean>>() {}.type
+                    val videos: List<VideoBean> =
                         GsonBuilderFactory.getInstance().fromJson(json, type)
                     // 随机排序
-                    videos.shuffle()
+                    shuffle(videos)
                     // 设置假头像与昵称
                     for (video in videos) {
                         val infoBean = mUsers[mRandom.nextInt(mUsers.size)]
@@ -160,5 +161,30 @@ class MainModel : BaseModel<DataRepository>(Injection.provideDataRepository()) {
             })
             .delay(3000, TimeUnit.MILLISECONDS)
             .compose(RxCompose.applySchedulers())
+    }
+
+    /**
+     * 请求 弹幕数据
+     */
+    fun requestDanmakuData(): Observable<List<DanmakuItemData>> {
+        // 模拟请求
+        return Observable
+            .create(ObservableOnSubscribe<List<DanmakuItemData>> { emitter ->
+                try {
+                    // 数据
+                    val json =
+                        CommonUtil.getAssetsJson(AppFactory.application(), "DanmakuData.json")
+                    // 解析
+                    val type = object : TypeToken<List<DanmakuItemData>>() {}.type
+                    val dataList: List<DanmakuItemData> =
+                        GsonBuilderFactory.getInstance().fromJson(json, type)
+                    // Success
+                    emitter.onNext(dataList)
+                    emitter.onComplete()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    emitter.onError(Exception("出现错误啦!!!"))
+                }
+            }).compose(RxCompose.applySchedulers())
     }
 }

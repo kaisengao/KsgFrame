@@ -7,11 +7,13 @@ import com.kaisengao.base.state.LoadingState
 import com.kaisengao.base.util.SnackbarUtil
 import com.kaisengao.mvvm.binding.command.BindingParamImp
 import com.kaisengao.mvvm.viewmodel.ToolbarViewModel
+import com.kaisengao.retrofit.observer.BaseRxObserver
 import com.kaisengao.retrofit.observer.mvvm.BaseLoadPageObserver
 import com.kasiengao.ksgframe.R
 import com.kasiengao.ksgframe.common.load.MainVideoLoad
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean
 import com.kasiengao.ksgframe.ui.main.model.MainModel
+import com.kuaishou.akdanmaku.data.DanmakuItemData
 
 /**
  * @ClassName: MainViewModel
@@ -23,7 +25,9 @@ class MainViewModel(application: Application) : ToolbarViewModel(application) {
 
     val mVideosLoad: MutableLiveData<LoadingState> by lazy { MutableLiveData() }
 
-    val mVideos: MutableLiveData<ArrayList<VideoBean>> by lazy { MutableLiveData() }
+    val mVideos: MutableLiveData<List<VideoBean>> by lazy { MutableLiveData() }
+
+    val mDanmakuData: MutableLiveData<List<DanmakuItemData>> by lazy { MutableLiveData() }
 
     val mVideo: MutableLiveData<VideoBean> by lazy { MutableLiveData() }
 
@@ -53,11 +57,26 @@ class MainViewModel(application: Application) : ToolbarViewModel(application) {
             .requestVideos()
             .doOnSubscribe(this)
             .subscribe(object :
-                BaseLoadPageObserver<ArrayList<VideoBean>>(getApplication(), mVideosLoad) {
-                override fun onResult(videos: ArrayList<VideoBean>) {
+                BaseLoadPageObserver<List<VideoBean>>(getApplication(), mVideosLoad) {
+                override fun onResult(videos: List<VideoBean>) {
                     mVideos.value = videos
                 }
             }.setLoadView(MainVideoLoad::class.java))
+    }
+
+    /**
+     * 请求 弹幕数据
+     */
+    fun requestDanmakuData() {
+        this.mModel
+            .requestDanmakuData()
+            .doOnSubscribe(this)
+            .subscribe(object :
+                BaseRxObserver<List<DanmakuItemData>>(getApplication()) {
+                override fun onResult(data: List<DanmakuItemData>) {
+                    mDanmakuData.value = data
+                }
+            })
     }
 
     /**

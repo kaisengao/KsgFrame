@@ -23,6 +23,9 @@ public interface CoverConstant {
         String KEY_SMALL_CONTROLLER = "smallController";
 
         String KEY_UPLOADER = "uploader";
+
+        String KEY_DANMAKU = "danmaku";
+
     }
 
     interface ValueKey {
@@ -67,6 +70,17 @@ public interface CoverConstant {
 
     interface PrivateEvent {
 
+        /**
+         * 请求 弹幕开
+         */
+        int CODE_REQUEST_DANMAKU_OPEN = -100;
+
+        /**
+         * 请求 弹幕关
+         */
+        int CODE_REQUEST_DANMAKU_CLOSE = -101;
+
+
         int CODE_GESTURE_SLIDE_SEEK = -200;
     }
 
@@ -96,6 +110,7 @@ public interface CoverConstant {
          * 请求 进度自动更新状态
          */
         int CODE_REQUEST_TIMER_UPDATE_STATE = -150;
+
     }
 
 }

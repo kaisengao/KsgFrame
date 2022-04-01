@@ -43,6 +43,8 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-dash:$exoplayer"
     implementation "com.google.android.exoplayer:exoplayer-hls:$exoplayer"
     implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:$exoplayer"
+    // AkDanmaku
+    implementation 'com.kuaishou:akdanmaku:1.0.3'
     // Base
     implementation project(':lib_base')
     // MVP

@@ -28,11 +28,11 @@ public class GestureTipsView {
 
     public GestureTipsView setBrightnessIcon(AppCompatImageView imageView, int brightness) {
         if (brightness < 20) {
-            imageView.setImageResource(R.drawable.ic_cover_brightness_low);
+            imageView.setImageResource(R.drawable.ic_brightness_low);
         } else if (brightness < 70) {
-            imageView.setImageResource(R.drawable.ic_cover_brightness_medium);
+            imageView.setImageResource(R.drawable.ic_brightness_medium);
         } else {
-            imageView.setImageResource(R.drawable.ic_cover_brightness_high);
+            imageView.setImageResource(R.drawable.ic_brightness_high);
         }
         return this;
     }
