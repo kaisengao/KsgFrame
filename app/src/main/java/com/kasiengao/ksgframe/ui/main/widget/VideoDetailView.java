@@ -42,6 +42,7 @@ import com.kasiengao.ksgframe.player.cover.UploaderCover;
 import com.kasiengao.ksgframe.ui.main.player.ListPlayer;
 import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel;
 import com.ksg.ksgplayer.cover.CoverManager;
+import com.ksg.ksgplayer.player.IPlayer;
 
 /**
  * @ClassName: PlayerDetailView
@@ -99,10 +100,13 @@ public class VideoDetailView extends FrameLayout {
         // 添加状态栏高度
         StatusBarUtil.setStatusBarPadding(getContext(), mBinding.back);
         // 背景图事件同步管理控制器状态
-        this.mBinding.coverImage.setOnClickListener(v ->
+        this.mBinding.coverImage.setOnClickListener(v -> {
+            if (ListPlayer.getInstance().getPlayer().getState() != IPlayer.STATE_COMPLETE) {
                 ListPlayer.getInstance().getCoverManager()
                         .getValuePool()
-                        .putObject(CoverConstant.ValueKey.KEY_SWITCH_CONTROLLER, null));
+                        .putObject(CoverConstant.ValueKey.KEY_SWITCH_CONTROLLER, null);
+            }
+        });
         // 注册视图树中全局布局事件
         this.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override

@@ -340,9 +340,18 @@ public class KsgExoPlayer extends BasePlayer {
      */
     @Override
     public void pause() {
-        this.mExoPlayer.setPlayWhenReady(false);
-        this.updateState(IPlayer.STATE_PAUSE);
-        this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_PAUSE, null);
+        int state = getState();
+        if (state != IPlayer.STATE_DESTROY
+                && state != IPlayer.STATE_ERROR
+                && state != IPlayer.STATE_IDLE
+                && state != IPlayer.STATE_INIT
+                && state != IPlayer.STATE_PAUSE
+                && state != IPlayer.STATE_STOP
+                && state != IPlayer.STATE_COMPLETE) {
+            this.mExoPlayer.setPlayWhenReady(false);
+            this.updateState(IPlayer.STATE_PAUSE);
+            this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_PAUSE, null);
+        }
     }
 
     /**
@@ -350,9 +359,11 @@ public class KsgExoPlayer extends BasePlayer {
      */
     @Override
     public void resume() {
-        this.mExoPlayer.setPlayWhenReady(true);
-        this.updateState(IPlayer.STATE_START);
-        this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_RESUME, null);
+        if (getState() == IPlayer.STATE_PAUSE) {
+            this.mExoPlayer.setPlayWhenReady(true);
+            this.updateState(IPlayer.STATE_START);
+            this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_RESUME, null);
+        }
     }
 
     /**
@@ -360,9 +371,15 @@ public class KsgExoPlayer extends BasePlayer {
      */
     @Override
     public void stop() {
-        this.mExoPlayer.stop();
-        this.updateState(IPlayer.STATE_STOP);
-        this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_STOP, null);
+        int state = getState();
+        if (state == IPlayer.STATE_PREPARED
+                || state == IPlayer.STATE_START
+                || state == IPlayer.STATE_PAUSE
+                || state == IPlayer.STATE_COMPLETE) {
+            this.mExoPlayer.stop();
+            this.updateState(IPlayer.STATE_STOP);
+            this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_STOP, null);
+        }
     }
 
     /**
