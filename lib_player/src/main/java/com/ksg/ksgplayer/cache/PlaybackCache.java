@@ -32,6 +32,7 @@ public class PlaybackCache implements IPlaybackCache {
      */
     @Override
     public void setDataSource(DataSource dataSource) {
+        this.putProgressCache(mDataSource);
         this.mDataSource = dataSource;
     }
 
@@ -49,7 +50,6 @@ public class PlaybackCache implements IPlaybackCache {
     @Override
     public void onIntentStop() {
         this.putProgressCache(mDataSource);
-
     }
 
     /**
@@ -88,22 +88,27 @@ public class PlaybackCache implements IPlaybackCache {
     }
 
     /**
-     * 添加缓存
+     * 添加进度缓存
      */
     @Override
     public void putProgressCache(DataSource dataSource) {
-        if (dataSource != null && mPlayerStateGetter != null) {
+        if (dataSource != null
+                && dataSource.isProgressCache()
+                && dataSource.isReadProgressCache()
+                && mPlayerStateGetter != null) {
             ProgressCache.getInstance().putCache(dataSource.getUrl(), mPlayerStateGetter.getProgress());
         }
     }
 
     /**
-     * 获取缓存
+     * 获取进度缓存
      *
      * @return progress
      */
     public long getProgressCache(DataSource dataSource) {
-        if (dataSource != null) {
+        if (dataSource != null
+                && dataSource.isProgressCache()
+                && dataSource.isReadProgressCache()) {
             return ProgressCache.getInstance().getCache(dataSource.getUrl());
         }
         return 0;
@@ -114,7 +119,9 @@ public class PlaybackCache implements IPlaybackCache {
      */
     @Override
     public void resetProgressCache(DataSource dataSource) {
-        if (dataSource != null) {
+        if (dataSource != null
+                && dataSource.isProgressCache()
+                && dataSource.isReadProgressCache()) {
             ProgressCache.getInstance().putCache(dataSource.getUrl(), 0L);
         }
     }

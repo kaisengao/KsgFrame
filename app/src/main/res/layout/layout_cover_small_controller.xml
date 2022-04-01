@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:src="@drawable/selector_play_state" />
+        android:src="@drawable/selector_load_play_state" />
 
     <!-- Curr Time-->
     <androidx.appcompat.widget.AppCompatTextView
@@ -23,7 +23,6 @@
         android:layout_alignTop="@id/cover_controller_fullscreen"
         android:layout_alignBottom="@id/cover_controller_fullscreen"
         android:layout_alignParentStart="true"
-        android:layout_gravity="center"
         android:layout_marginStart="@dimen/view_space"
         android:gravity="center"
         android:paddingStart="5dp"
@@ -59,7 +58,6 @@
         android:layout_height="wrap_content"
         android:layout_alignTop="@id/cover_controller_fullscreen"
         android:layout_alignBottom="@id/cover_controller_fullscreen"
-        android:layout_gravity="center"
         android:layout_toStartOf="@id/cover_controller_fullscreen"
         android:gravity="center"
         android:paddingStart="5dp"
@@ -78,7 +76,7 @@
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="15dp"
         android:layout_marginBottom="10dp"
-        android:src="@drawable/ic_fullscreen" />
+        android:src="@drawable/selector_fullscreen_state" />
 
     <!-- BottomSeekBar -->
     <ProgressBar

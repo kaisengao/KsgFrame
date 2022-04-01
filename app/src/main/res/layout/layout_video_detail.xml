@@ -10,66 +10,66 @@
             type="com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel" />
     </data>
 
-    <FrameLayout
+    <merge
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:parentTag="com.kasiengao.ksgframe.ui.main.widget.VideoDetailView">
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <com.kasiengao.ksgframe.common.widget.SlidingLayout
+            android:id="@+id/sliding"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <!-- 毛玻璃背景 -->
-            <com.kasiengao.ksgframe.common.widget.CImageView
-                android:id="@+id/cover_image"
+            <androidx.coordinatorlayout.widget.CoordinatorLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_gravity="top"
-                android:background="@color/background"
-                android:scaleType="centerCrop" />
+                android:layout_height="match_parent">
 
-            <!-- 视频容器 -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/player_container_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:backgroundTint="@color/black"
-                app:cardPreventCornerOverlap="false">
+                <!-- 毛玻璃背景 -->
+                <com.kasiengao.ksgframe.common.widget.CImageView
+                    android:id="@+id/cover_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_gravity="top"
+                    android:background="@color/background"
+                    android:scaleType="centerCrop" />
 
-                <com.kasiengao.ksgframe.common.widget.PlayerContainerView
-                    android:id="@+id/player_container"
+                <!-- 视频容器 -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/player_container_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    tools:layout_height="210dp" />
+                    android:backgroundTint="@color/black"
+                    app:cardCornerRadius="0dp">
 
-            </com.google.android.material.card.MaterialCardView>
+                    <com.kasiengao.ksgframe.common.widget.PlayerContainerView
+                        android:id="@+id/player_container"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        tools:layout_height="210dp" />
 
-            <!-- Back -->
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/back"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/view_space"
-                android:layout_marginTop="12dp"
-                android:elevation="1dp"
-                android:onClick="@{() -> viewModel.onBackPressed()}"
-                android:src="@drawable/ic_back"
-                android:visibility="gone" />
+                </com.google.android.material.card.MaterialCardView>
 
-            <!-- 信息页 -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/info_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:behavior_peekHeight="135dp"
-                app:cardCornerRadius="10dp"
-                app:layout_behavior="@string/bottom_sheet_behavior">
+                <!-- Back -->
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/back"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/view_space"
+                    android:layout_marginTop="12dp"
+                    android:elevation="1dp"
+                    android:onClick="@{() -> viewModel.onBackPressed()}"
+                    android:src="@drawable/ic_back"
+                    android:visibility="gone" />
 
+                <!-- 信息页 -->
                 <RelativeLayout
+                    android:id="@+id/info_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:background="@drawable/select_video_detail_info_bg"
+                    app:behavior_peekHeight="135dp"
+                    app:layout_behavior="@string/bottom_sheet_behavior">
 
                     <!-- 头像 -->
                     <com.google.android.material.imageview.ShapeableImageView
@@ -117,7 +117,7 @@
                             android:maxLines="1"
                             android:text="@{viewModel.MVideo.date + ` · `+ viewModel.MVideo.views}"
                             android:textColor="@color/textColorSecondary"
-                            android:textSize="12sp"
+                            android:textSize="13sp"
                             tools:text="2022年03月30日 · 207万次观看" />
 
                     </LinearLayout>
@@ -132,6 +132,7 @@
                         android:layout_alignParentEnd="true"
                         android:layout_marginEnd="@dimen/view_space"
                         android:backgroundTint="@color/color_FF9800"
+                        android:onClick="@{viewModel::onFollow}"
                         android:text="@string/follow"
                         android:textColor="@color/white"
                         android:textSize="14sp"
@@ -150,7 +151,7 @@
                         android:layout_toEndOf="@id/info_follow"
                         android:text="@{viewModel.MVideo.movieName}"
                         android:textColor="@color/textColorPrimary"
-                        android:textSize="17sp"
+                        android:textSize="16sp"
                         tools:text="人人果实·幻兽种·尼卡形态" />
 
                     <!-- Driver-->
@@ -164,14 +165,14 @@
 
                     <!-- 评论 Title -->
                     <androidx.appcompat.widget.AppCompatTextView
-                        android:id="@+id/info_comment_title"
+                        android:id="@+id/info_profile_detail_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_below="@id/info_title_driver"
                         android:layout_marginStart="@dimen/view_space"
                         android:layout_marginTop="10dp"
                         android:paddingBottom="10dp"
-                        android:text="@string/comment"
+                        android:text="UP简介"
                         android:textColor="@color/textColorPrimary"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -181,24 +182,42 @@
                         android:id="@+id/info_other"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/info_comment_title"
+                        android:layout_below="@id/info_profile_detail_title"
                         android:layout_gravity="center"
                         android:orientation="vertical"
                         android:paddingStart="@dimen/view_space"
-                        android:paddingEnd="@dimen/view_space">
+                        android:paddingEnd="@dimen/view_space"
+                        android:paddingBottom="10dp">
 
+                        <!-- 简介信息-->
                         <androidx.appcompat.widget.AppCompatTextView
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:background="@color/color_F49B3C"
-                            android:gravity="center"
-                            android:text="信息页"
+                            android:layout_height="wrap_content"
+                            android:text="@{viewModel.MVideo.profile}"
                             android:textColor="@color/textColorPrimary"
-                            android:textSize="30sp" />
+                            android:textSize="16sp" />
+
+                        <!-- 简介配图 -->
+                        <androidx.appcompat.widget.AppCompatImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="0dp"
+                            android:layout_marginTop="5dp"
+                            android:layout_weight="1"
+                            android:scaleType="centerCrop"
+                            app:loadImage="@{viewModel.MVideo.profileDrawing}" />
 
                     </com.kasiengao.ksgframe.common.widget.CLinearLayout>
                 </RelativeLayout>
-            </com.google.android.material.card.MaterialCardView>
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-    </FrameLayout>
+            </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        </com.kasiengao.ksgframe.common.widget.SlidingLayout>
+
+        <!-- 全屏 -->
+        <com.kasiengao.ksgframe.common.widget.PlayerContainerView
+            android:id="@+id/play_container_fullscreen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/black"
+            android:elevation="5dp"
+            android:visibility="gone" />
+    </merge>
 </layout>

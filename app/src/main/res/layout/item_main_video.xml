@@ -7,6 +7,7 @@
     android:layout_marginStart="10dp"
     android:layout_marginTop="10dp"
     android:layout_marginEnd="10dp"
+    android:foreground="?attr/selectableItemBackground"
     app:cardCornerRadius="10dp">
 
     <RelativeLayout
@@ -48,9 +49,9 @@
                 android:textStyle="bold"
                 tools:text="蒙奇·D·路飞" />
 
-            <!-- 简介 -->
+            <!-- 介绍 -->
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/item_video_profile"
+                android:id="@+id/item_video_introduce"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -115,9 +116,9 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:textColor="@color/selector_item_praise"
+                android:textColor="@color/selector_praise"
                 android:textSize="14sp"
-                app:icon="@drawable/selector_item_praise"
+                app:icon="@drawable/selector_praise"
                 app:iconGravity="textStart"
                 app:iconPadding="5dp"
                 app:iconTint="@color/color_FF9800"
@@ -133,9 +134,9 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="@string/main_video_item_interact_stepped"
-                android:textColor="@color/selector_item_stepped"
+                android:textColor="@color/selector_stepped"
                 android:textSize="14sp"
-                app:icon="@drawable/selector_item_stepped"
+                app:icon="@drawable/selector_stepped"
                 app:iconGravity="textStart"
                 app:iconPadding="5dp"
                 app:iconTint="@color/color_D81E06"

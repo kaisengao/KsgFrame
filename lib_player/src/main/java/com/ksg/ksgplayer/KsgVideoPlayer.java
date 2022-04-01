@@ -36,7 +36,7 @@ import java.util.List;
  * @ClassName: KsgVideoPlayer
  * @Author: KaiSenGao
  * @CreateDate: 2020/5/22 14:08
- * @Description: 播放器 {借鉴 @link https://juejin.im/post/5b0d4e6bf265da090f7376d2}
+ * @Description: 播放器 {完全借鉴于 @link https://juejin.im/post/5b0d4e6bf265da090f7376d2}
  */
 public class KsgVideoPlayer implements IKsgVideoPlayer {
 

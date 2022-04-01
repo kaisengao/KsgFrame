@@ -11,78 +11,84 @@ import android.widget.ProgressBar;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.kaisengao.base.configure.WeakHandler;
+import com.kaisengao.base.configure.ThreadPool;
 import com.kaisengao.base.util.CommonUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.common.widget.GestureTipsView;
 import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.ksg.ksgplayer.cover.BaseCover;
-import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.BundlePool;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.helper.GestureTouchHelper;
-import com.ksg.ksgplayer.listener.OnPlayerListener;
 import com.ksg.ksgplayer.listener.OnTouchGestureListener;
+import com.ksg.ksgplayer.player.IPlayer;
 import com.ksg.ksgplayer.state.PlayerStateGetter;
 
 /**
  * @ClassName: GestureCover
  * @Author: KaiSenGao
  * @CreateDate: 2020/5/28 13:02
- * @Description: 手势操作 Cover
+ * @Description: 手势操作
  */
-public class GestureCover extends BaseCover implements View.OnTouchListener, OnTouchGestureListener {
+public class GestureCover extends BaseCover implements View.OnTouchListener, OnTouchGestureListener, View.OnLayoutChangeListener {
+
+    private long mSlidProgress;
 
     private LinearLayout mGestureTipsRoot;
 
     private LinearLayout mGestureTipsSlidingRoot;
 
+    private LinearLayout mGestureTipsSpeedRoot;
+
     private AppCompatImageView mGestureIcon;
 
     private ProgressBar mGestureProgress;
 
-    private AppCompatImageView mGestureSlidingStatus;
-
     private AppCompatTextView mGestureSlidingTime;
 
-    private long mSlidProgress;
+    private ProgressBar mGestureSlidingProgress;
 
-    private final GestureTipsView mGestureTipsView;
+    private GestureTipsView mGestureTipsView;
 
-    private final GestureTouchHelper mGestureTouchHelper;
+    private GestureTouchHelper mGestureTouchHelper;
 
-    private WeakHandler mHandler;
+    private ThreadPool.MainThreadHandler mHandler;
 
     private final Bundle seekBundle = BundlePool.obtain();
+
+    private final Runnable mSeekRunnable = this::onSeek;
 
     public GestureCover(Context context) {
         super(context);
 
-        // 手势操作 提示View
-        this.mGestureTipsView = new GestureTipsView();
-        // 手势操作帮助类
-        this.mGestureTouchHelper = new GestureTouchHelper(CommonUtil.scanForActivity(mContext), this);
     }
 
     @Override
     protected View onCreateCoverView(Context context) {
+        return View.inflate(context, R.layout.layout_cover_gesture, null);
+    }
 
-
-        View coverView = View.inflate(context, R.layout.layout_cover_gesture, null);
-
-        this.mGestureTipsRoot = coverView.findViewById(R.id.cover_gesture);
-        this.mGestureTipsSlidingRoot =coverView. findViewById(R.id.cover_gesture_sliding);
-        this.mGestureIcon = coverView.findViewById(R.id.cover_gesture_icon);
-        this.mGestureProgress = coverView.findViewById(R.id.cover_gesture_progress);
-        this.mGestureSlidingStatus = coverView.findViewById(R.id.cover_gesture_sliding_status);
-        this.mGestureSlidingTime = coverView.findViewById(R.id.cover_gesture_sliding_time);
-        // 获取视图宽高
-//        this.getScreenSize();
-        // Handler
-        this.mHandler = new WeakHandler();
+    /**
+     * InitViews
+     */
+    @Override
+    public void initViews() {
+        // 手势操作 提示View
+        this.mGestureTipsView = new GestureTipsView();
+        // 手势操作帮助类
+        this.mGestureTouchHelper = new GestureTouchHelper(CommonUtil.scanForActivity(mContext), this);
+        //  Views
+        this.mGestureTipsRoot = findViewById(R.id.cover_gesture);
+        this.mGestureTipsSlidingRoot = findViewById(R.id.cover_gesture_sliding);
+        this.mGestureTipsSpeedRoot = findViewById(R.id.cover_gesture_speed);
+        this.mGestureIcon = findViewById(R.id.cover_gesture_icon);
+        this.mGestureProgress = findViewById(R.id.cover_gesture_progress);
+        this.mGestureSlidingTime = findViewById(R.id.cover_gesture_sliding_time);
+        this.mGestureSlidingProgress = findViewById(R.id.cover_gesture_sliding_progress);
         // OnTouch事件
-        coverView.setOnTouchListener(this);
-        return coverView;
+        this.getCoverView().setOnTouchListener(this);
+        // Handler
+        this.mHandler = ThreadPool.MainThreadHandler.getInstance();
     }
 
     /**
@@ -90,7 +96,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      */
     @Override
     public void onCoverViewBind() {
-
+        this.getCoverView().addOnLayoutChangeListener(this);
     }
 
     /**
@@ -98,9 +104,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      */
     @Override
     public void onCoverViewUnBind() {
-        // Handler
-        this.mHandler.removeCallbacks(mSeekEventRunnable);
-        this.mHandler = null;
+        this.getCoverView().removeOnLayoutChangeListener(this);
     }
 
     /**
@@ -133,14 +137,72 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     }
 
     /**
-     * 亮度手势，手指在Layout左半部上下滑动时候调用
+     * Down事件
+     */
+    @Override
+    public void onDown() {
+        // 初始化基参
+        this.mGestureTouchHelper.setParams(getProgress(), getDuration());
+        this.mGestureSlidingProgress.setMax((int) getDuration());
+    }
+
+    /**
+     * 长按
+     */
+    @Override
+    public void onLongPress() {
+        // 倍速播放
+        if (getPlayerStateGetter() != null && getPlayerStateGetter().getState() == IPlayer.STATE_START) {
+            // 提示
+            this.mGestureTipsView
+                    .setRooView(mGestureTipsSpeedRoot)
+                    .show();
+            // 2倍速
+            Bundle obtain = BundlePool.obtain();
+            obtain.putFloat(EventKey.FLOAT_DATA, 2.0f);
+            this.requestSpeed(obtain);
+        }
+    }
+
+    /**
+     * 长按结束
+     */
+    @Override
+    public void onLongPressEnd() {
+        this.mGestureTipsView.dismiss();
+        // 停止倍速
+        Bundle obtain = BundlePool.obtain();
+        obtain.putFloat(EventKey.FLOAT_DATA, 1.0f);
+        this.requestSpeed(obtain);
+    }
+
+    /**
+     * 单击
+     */
+    @Override
+    public void onSingleTapGesture() {
+        // 通知 控制器 显示/隐藏
+        this.getValuePool().putObject(CoverConstant.ValueKey.KEY_SWITCH_CONTROLLER, null);
+    }
+
+    /**
+     * 双击
+     */
+    @Override
+    public void onDoubleTapGesture() {
+        // 通知 播放状态 播放/暂停
+        this.getValuePool().putObject(CoverConstant.ValueKey.KEY_SWITCH_PLAY, null, false);
+    }
+
+    /**
+     * 亮度
      *
      * @param percent 百分比
      */
     @Override
-    public void onBrightnessGesture(int percent) {
+    public void onSlideBrightness(int percent) {
         // 提示
-        mGestureTipsView
+        this.mGestureTipsView
                 .setRooView(mGestureTipsRoot)
                 .setBrightnessIcon(mGestureIcon, percent)
                 .setProgress(mGestureProgress, percent)
@@ -148,14 +210,14 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     }
 
     /**
-     * 音量手势，手指在Layout右半部上下滑动时候调用
+     * 音量
      *
      * @param percent 百分比
      */
     @Override
-    public void onVolumeGesture(int percent) {
+    public void onSlideVolume(int percent) {
         // 提示
-        mGestureTipsView
+        this.mGestureTipsView
                 .setRooView(mGestureTipsRoot)
                 .setVolumeIcon(mGestureIcon, percent)
                 .setProgress(mGestureProgress, percent)
@@ -163,105 +225,75 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     }
 
     /**
-     * 快进快退手势，手指在Layout左右滑动的时候调用
+     * 快进退
      *
      * @param percent 百分比
      * @param time    时间
      */
     @Override
-    public void onSeekGesture(float percent, String time) {
+    public void onSlideSeek(float percent, String time) {
         // 提示
-        mGestureTipsView
+        this.mGestureTipsView
                 .setRooView(mGestureTipsSlidingRoot)
-                .setSliding(mGestureSlidingStatus, percent)
+                .setProgress(mGestureSlidingProgress, (int) percent)
                 .setTime(mGestureSlidingTime, time)
                 .show();
-        // 通知 ControllerCover 自动更新进度
-        notifyControllerSeek(true);
+        // 通知 通知 滑动进度且停止进度自动更新
+        this.notifySlideSeek(true);
     }
 
     /**
-     * 单击手势，确认是单击的时候调用
+     * 滑动结束 快进退
      */
     @Override
-    public void onSingleTapGesture() {
-        // 组件间通信 通知 ControllerCover
-        this.getValuePool().putString(CoverConstant.ValueKey.KEY_CONTROLLER_STATUS, "");
-    }
-
-    /**
-     * 双击手势，确认是双击的时候调用
-     */
-    @Override
-    public void onDoubleTapGesture() {
-        // 组件间通信 通知 ControllerCover
-        this.getValuePool().putString(CoverConstant.ValueKey.KEY_CONTROLLER_PLAY_STATUS, "");
-    }
-
-    /**
-     * 按下手势，第一根手指按下时候调用
-     */
-    @Override
-    public void onDown() {
-        // 初始化基参
-        this.mGestureTouchHelper.setParams(getProgress(), getDuration());
-    }
-
-    /**
-     * 快进后退手势 滑动结束
-     */
-    @Override
-    public void onSeekEndGesture() {
+    public void onSlideEndSeek() {
         this.mGestureTipsView.dismiss();
-        // 更新进度
+        // 跳转进度
         if (mGestureTouchHelper.getSlideProgress() >= 0) {
-            mHandler.removeCallbacks(mSeekEventRunnable);
-            mHandler.postDelayed(mSeekEventRunnable, 300);
+            this.mHandler.removeCallbacks(mSeekRunnable);
+            this.mHandler.post(mSeekRunnable, 300);
         }
-        // 通知 ControllerCover 自动更新进度
-        notifyControllerSeek(false);
+        // 通知 滑动进度且恢复进度自动更新
+        this.notifySlideSeek(false);
     }
 
     /**
      * 滑动结束
      */
     @Override
-    public void onEndGesture() {
-        mGestureTipsView.dismiss();
+    public void onSlideEnd() {
+        this.mGestureTipsView.dismiss();
     }
 
     /**
-     * 通知 ControllerCover 自动更新进度
+     * 通知 滑动进度
      *
-     * @param timerUpdatePause 暂停
+     * @param timerUpdatePause 进度自动更新状态
      */
-    private void notifyControllerSeek(boolean timerUpdatePause) {
+    private void notifySlideSeek(boolean timerUpdatePause) {
         this.mSlidProgress = mGestureTouchHelper.getSlideProgress();
         seekBundle.putLong(EventKey.LONG_ARG1, mSlidProgress);
         seekBundle.putLong(EventKey.LONG_ARG2, mGestureTouchHelper.getDuration());
         seekBundle.putBoolean(EventKey.BOOL_DATA, timerUpdatePause);
-        notifyPrivateEvent(
-               CoverConstant.CoverKey.KEY_CONTROLLER,
-                CoverConstant.PrivateEvent.CODE_GESTURE_SLIDE_SEEK,
-                seekBundle);
+        this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_TIMER_UPDATE_STATE, seekBundle);
     }
 
     /**
-     * 进度跳转
+     * 跳转进度
      */
-    private final Runnable mSeekEventRunnable = () -> {
+    protected void onSeek() {
         Bundle bundle = BundlePool.obtain();
         bundle.putLong(EventKey.LONG_DATA, mSlidProgress);
         this.requestSeek(bundle);
-    };
+    }
+
 
     /**
-     * 获取屏幕真实宽高
+     * 布局改变事件
      */
-    private void getScreenSize() {
-        this.getCoverView().addOnLayoutChangeListener((v, left, top, right, bottom, oldLeft, oldTop, oldRight, oldBottom) -> {
-            this.mGestureTouchHelper.setView(v.getWidth(), v.getHeight());
-        });
+    @Override
+    public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+        this.mGestureTouchHelper.setView(v.getWidth(), v.getHeight());
     }
 
     /**
@@ -271,10 +303,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      */
     @Override
     public String[] getValueFilters() {
-        return new String[]{
-                CoverConstant.ValueKey.KEY_HL_SCREEN_TOGGLE,
-                CoverConstant.ValueKey.KEY_FULLSCREEN_TOGGLE,
-        };
+        return new String[]{};
     }
 
     /**
@@ -285,20 +314,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      */
     @Override
     public void onValueEvent(String key, Object value) {
-        switch (key) {
-            case   CoverConstant.ValueKey.KEY_HL_SCREEN_TOGGLE:
-                // 横竖屏切换 重新获取视图宽高
-                getScreenSize();
-                break;
-            case   CoverConstant.ValueKey.KEY_FULLSCREEN_TOGGLE:
-                // 全屏状态切换 重新获取视图宽高
-                getScreenSize();
-                // 是否开启滑动手势 (全屏开启)
-                mGestureTouchHelper.setSlideEnabled((boolean) value);
-                break;
-            default:
-                break;
-        }
+
     }
 
     /**
@@ -309,14 +325,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      */
     @Override
     public void onPlayerEvent(int eventCode, Bundle bundle) {
-        // 数据源
-        if (eventCode == OnPlayerListener.PLAYER_EVENT_ON_DATA_SOURCE_SET) {
-            DataSource dataSource = (DataSource) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
-            if (dataSource != null) {
-                // 配置 直播页面不可 快进退
-//                this.mGestureTouchHelper.setSlideHEnabled(!dataSource.isLive());
-            }
-        }
+
     }
 
 
@@ -382,5 +391,14 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     @Override
     public int getCoverLevel() {
         return levelLow(5);
+    }
+
+    /**
+     * 释放
+     */
+    @Override
+    public void release() {
+        super.release();
+        this.mHandler.removeCallbacks(mSeekRunnable);
     }
 }

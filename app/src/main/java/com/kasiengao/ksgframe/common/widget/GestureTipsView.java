@@ -39,20 +39,11 @@ public class GestureTipsView {
 
     public GestureTipsView setVolumeIcon(AppCompatImageView imageView, int volume) {
         if (volume < 5) {
-            imageView.setImageResource(R.drawable.ic_cover_volume_mute);
+            imageView.setImageResource(R.drawable.ic_volume_mute);
         } else if (volume < 60) {
-            imageView.setImageResource(R.drawable.ic_cover_volume_down);
+            imageView.setImageResource(R.drawable.ic_volume_down);
         } else {
-            imageView.setImageResource(R.drawable.ic_cover_volume_up);
-        }
-        return this;
-    }
-
-    public GestureTipsView setSliding(AppCompatImageView imageView, float progress) {
-        if (progress < 0) {
-            imageView.setImageResource(R.drawable.ic_cover_fast_rewind);
-        } else {
-            imageView.setImageResource(R.drawable.ic_cover_fast_forward);
+            imageView.setImageResource(R.drawable.ic_volume_up);
         }
         return this;
     }

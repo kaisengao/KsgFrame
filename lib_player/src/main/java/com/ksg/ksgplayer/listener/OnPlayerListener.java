@@ -166,7 +166,7 @@ public interface OnPlayerListener {
     /**
      * 事件 播放器状态改变
      */
-    int PLAYER_EVENT_ON_STATUS_CHANGE = -99031;
+    int PLAYER_EVENT_ON_STATE_CHANGE = -99031;
 
     /**
      * if you set data provider for player, call back this method when provider start load data.

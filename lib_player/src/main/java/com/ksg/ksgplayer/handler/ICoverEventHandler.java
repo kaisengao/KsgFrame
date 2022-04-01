@@ -81,4 +81,11 @@ public interface ICoverEventHandler {
      */
     void requestPlayDataSource(Bundle bundle);
 
+    /**
+     * 倍速
+     *
+     * @param bundle bundle
+     */
+    void requestSpeed(Bundle bundle);
+
 }

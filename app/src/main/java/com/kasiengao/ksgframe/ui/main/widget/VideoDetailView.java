@@ -4,31 +4,43 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.LinearInterpolator;
+import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.card.MaterialCardView;
 import com.kaisengao.base.util.BlurUtil;
+import com.kaisengao.base.util.CommonUtil;
 import com.kaisengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.BR;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.common.util.SystemUiUtil;
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
 import com.kasiengao.ksgframe.common.widget.SlidingLayout;
+import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.kasiengao.ksgframe.databinding.LayoutVideoDetailBinding;
-import com.kasiengao.ksgframe.player.ListPlayer;
+import com.kasiengao.ksgframe.player.cover.GestureCover;
+import com.kasiengao.ksgframe.player.cover.LandControllerCover;
+import com.kasiengao.ksgframe.player.cover.SmallControllerCover;
+import com.kasiengao.ksgframe.player.cover.UploaderCover;
+import com.kasiengao.ksgframe.ui.main.player.ListPlayer;
 import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel;
+import com.ksg.ksgplayer.cover.CoverManager;
 
 /**
  * @ClassName: PlayerDetailView
@@ -36,11 +48,15 @@ import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel;
  * @CreateDate: 2022/3/30 14:55
  * @Description: 视频详情
  */
-public class VideoDetailView extends SlidingLayout {
+public class VideoDetailView extends FrameLayout {
 
     private int mViewWidth, mViewHeight;
 
     private int mStatusBarHeight;
+
+    private boolean isOpenDetail;
+
+    private boolean mFullscreen;
 
     private PlayerContainerView mListContainer;
 
@@ -48,7 +64,13 @@ public class VideoDetailView extends SlidingLayout {
 
     private LayoutVideoDetailBinding mBinding;
 
-    private BottomSheetBehavior<MaterialCardView> mInfoBehavior;
+    private BottomSheetBehavior<RelativeLayout> mInfoBehavior;
+
+    private GestureCover mGestureCover;
+
+    private LandControllerCover mLandControllerCover;
+
+    private SmallControllerCover mSmallControllerCover;
 
     public VideoDetailView(Context context) {
         this(context, null);
@@ -73,17 +95,26 @@ public class VideoDetailView extends SlidingLayout {
         this.mInfoBehavior.addBottomSheetCallback(mBottomSheetCallback);
         // 添加状态栏高度
         StatusBarUtil.setStatusBarPadding(getContext(), mBinding.back);
+        // 背景图事件同步管理控制器状态
+        this.mBinding.coverImage.setOnClickListener(v ->
+                ListPlayer.getInstance().getCoverManager()
+                        .getValuePool()
+                        .putObject(CoverConstant.ValueKey.KEY_SWITCH_CONTROLLER, null));
         // 注册视图树中全局布局事件
         this.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                mViewWidth = getWidth();
+                mViewHeight = getHeight();
                 // 重新赋值PeekHeight
-                mInfoBehavior.setPeekHeight(mBinding.infoCommentTitle.getBottom());
+                mInfoBehavior.setPeekHeight(mBinding.infoProfileDetailTitle.getBottom());
                 // 设置背景图高度
-                mBinding.coverImage.setHeight(mViewHeight - mInfoBehavior.getPeekHeight() + 20);
+                mBinding.coverImage.setHeight(mViewHeight - mInfoBehavior.getPeekHeight() + 40);
             }
         });
+        // 侧滑关闭
+        this.<SlidingLayout>findViewById(R.id.sliding).setSlidingListener(this::closeDetail);
         // Init Player
         this.initPlayer();
     }
@@ -98,48 +129,68 @@ public class VideoDetailView extends SlidingLayout {
             this.mViewModel = viewModel;
             this.mBinding.setLifecycleOwner(owner);
             this.mBinding.setVariable(BR.viewModel, viewModel);
-            // Init DataObserve
-            this.initDataObserve(owner);
         }
-    }
-
-    /**
-     * Init DataObserve
-     */
-    private void initDataObserve(LifecycleOwner owner) {
-
-
     }
 
     /**
      * Init Player
      */
     private void initPlayer() {
-        ListPlayer.getInstance().setListPlayerListener((position, listContainer) -> {
-            this.mListContainer = listContainer;
-            // 刷新数据
-            this.mViewModel.refreshInfo(position);
-            // 初始高度
-            this.mBinding.infoOther.setHeight(0f);
-            // 背景图
-            Bitmap blurBitmap = BlurUtil.blurDrawable(getContext(), mListContainer.getCoverImage(), 2f);
-            if (blurBitmap != null) {
-                this.mBinding.coverImage.setImageBitmap(blurBitmap);
+        CoverManager coverManager = ListPlayer.getInstance().getCoverManager();
+        // 小型控制器
+        coverManager.addCover(CoverConstant.CoverKey.KEY_SMALL_CONTROLLER, getSmallControllerCover());
+        // UP主信息
+        coverManager.addCover(CoverConstant.CoverKey.KEY_UPLOADER, new UploaderCover(getContext()));
+        // 事件
+        ListPlayer.getInstance().setListPlayerListener(new ListPlayer.OnListPlayerListener() {
+
+            /**
+             * Back
+             */
+            @Override
+            public void onBack() {
+                onBackPressed();
             }
-            // 绑定视频容器
-            ListPlayer.getInstance().bindNewContainer(mBinding.playerContainer);
-            // 打开详情页
-            this.openDetail();
+
+            /**
+             * 打开详情页
+             *
+             * @param position      当前位置
+             * @param listContainer 当前容器
+             */
+            @Override
+            public void onOpenDetail(int position, @NonNull PlayerContainerView listContainer) {
+                mListContainer = listContainer;
+                // 刷新数据
+                mViewModel.refreshInfo(position);
+                // 初始高度
+                mBinding.infoOther.setHeight(0f);
+                // 背景图
+                Bitmap blurBitmap = BlurUtil.blurDrawable(getContext(), mListContainer.getCoverImage(), 20f);
+                if (blurBitmap != null) {
+                    mBinding.coverImage.setImageBitmap(blurBitmap);
+                }
+                // 绑定视频容器
+                ListPlayer.getInstance().bindNewContainer(mBinding.playerContainer);
+                // 打开详情页
+                openDetail();
+            }
+
+            /**
+             * 全屏切换
+             */
+            @Override
+            public void onFullscreen(boolean fullscreen) {
+                VideoDetailView.this.onFullscreen(fullscreen);
+            }
         });
     }
 
     /**
      * 打开详情页
-     *
-     * @param position      当前位置
-     * @param listContainer 列表容器
      */
     public void openDetail() {
+        this.isOpenDetail = true;
         // Show
         this.setVisibility(View.VISIBLE);
         // 显示信息页
@@ -177,8 +228,9 @@ public class VideoDetailView extends SlidingLayout {
      * 关闭详情页
      */
     private void closeDetail() {
-        // 切回至列表容器
-        ListPlayer.getInstance().bindNewContainer(mListContainer);
+        this.isOpenDetail = false;
+        // 切回至旧容器 (原列表容器)
+        ListPlayer.getInstance().onExitDetail(mListContainer);
         // Hide
         this.setVisibility(View.GONE);
         // 隐藏back
@@ -191,12 +243,93 @@ public class VideoDetailView extends SlidingLayout {
         this.mInfoBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
     }
 
+
     /**
-     * 关闭
+     * 全屏
+     *
+     * @param fullscreen 全屏
+     */
+    @SuppressLint("SourceLockedOrientationActivity")
+    public void onFullscreen(boolean fullscreen) {
+        this.mFullscreen = fullscreen;
+        ListPlayer.getInstance().setFullscreen(mFullscreen);
+        // 横竖屏切换
+        AppCompatActivity activity = CommonUtil.scanForActivity(getContext());
+        // 横竖屏
+        if (fullscreen) {
+            // 隐藏系统Ui
+            SystemUiUtil.hideVideoSystemUI(getContext());
+            // 设置横屏（可180°旋转）
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+        } else {
+            // 恢复系统Ui
+            SystemUiUtil.recoverySystemUI(getContext());
+            // 设置竖屏
+            activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+    }
+
+    /**
+     * 配置已更改
      */
     @Override
-    public void close() {
-        this.closeDetail();
+    public void onConfigurationChanged(@NonNull Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // 横竖屏配置
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // 1、打开详情页
+            if (!isOpenDetail) {
+                ListPlayer.getInstance().onOpenDetail();
+            }
+            this.mBinding.playContainerFullscreen.setVisibility(View.VISIBLE);
+            // 2、绑定全屏容器
+            ListPlayer.getInstance().bindNewContainer(mBinding.playContainerFullscreen);
+            // 3、更换控制器
+            CoverManager coverManager = ListPlayer.getInstance().getCoverManager();
+            coverManager.removeCover(CoverConstant.CoverKey.KEY_SMALL_CONTROLLER);
+            coverManager.addCover(CoverConstant.CoverKey.KEY_GESTURE, getGestureCover());
+            coverManager.addCover(CoverConstant.CoverKey.KEY_LAND_CONTROLLER, getLandControllerCover());
+        } else {
+            this.mBinding.playContainerFullscreen.setVisibility(View.GONE);
+            // 1、恢复视频容器
+            ListPlayer.getInstance().bindNewContainer(mBinding.playerContainer);
+            // 2、更换控制器
+            CoverManager coverManager = ListPlayer.getInstance().getCoverManager();
+            coverManager.removeCover(CoverConstant.CoverKey.KEY_GESTURE);
+            coverManager.removeCover(CoverConstant.CoverKey.KEY_LAND_CONTROLLER);
+            coverManager.addCover(CoverConstant.CoverKey.KEY_SMALL_CONTROLLER, getSmallControllerCover());
+        }
+    }
+
+    /**
+     * Cover 手势操作
+     */
+    private GestureCover getGestureCover() {
+        if (mGestureCover == null) {
+            this.mGestureCover = new GestureCover(getContext());
+        }
+        return mGestureCover;
+    }
+
+    /**
+     * Cover 横屏控制器
+     */
+    private LandControllerCover getLandControllerCover() {
+        if (mLandControllerCover == null) {
+            this.mLandControllerCover = new LandControllerCover(getContext());
+
+        }
+        return mLandControllerCover;
+    }
+
+    /**
+     * Cover 小型控制器
+     */
+    private SmallControllerCover getSmallControllerCover() {
+        if (mSmallControllerCover == null) {
+            this.mSmallControllerCover = new SmallControllerCover(getContext());
+        }
+        return mSmallControllerCover;
     }
 
     /**
@@ -204,7 +337,12 @@ public class VideoDetailView extends SlidingLayout {
      */
     public boolean onBackPressed() {
         if (getVisibility() == View.VISIBLE) {
-            // 2关闭详情页
+            // 验证全屏
+            if (mFullscreen) {
+                this.onFullscreen(false);
+                return true;
+            }
+            // 关闭详情页
             this.closeDetail();
             return true;
         }
@@ -218,12 +356,8 @@ public class VideoDetailView extends SlidingLayout {
 
         @Override
         public void onStateChanged(@NonNull View bottomSheet, int newState) {
-            Log.d("zzz", "onStateChanged() called with: bottomSheet = [" + bottomSheet + "], newState = [" + newState + "]");
-//            if (newState == BottomSheetBehavior.STATE_DRAGGING) {
-//                setChildIntercept(true);
-//            } else {
-//                setChildIntercept(false);
-//            }
+            // 切换背景为圆角/直角
+            mBinding.infoCard.setSelected(newState != BottomSheetBehavior.STATE_COLLAPSED);
         }
 
         @Override
@@ -233,7 +367,7 @@ public class VideoDetailView extends SlidingLayout {
             // 更新视频容器的高度
             mBinding.playerContainerCard.setY(moveY);
             // 更新背景图的高度
-            mBinding.coverImage.setHeight(bottomSheet.getY() + 20);
+            mBinding.coverImage.setHeight(bottomSheet.getY() + 40);
         }
     };
 
@@ -256,16 +390,6 @@ public class VideoDetailView extends SlidingLayout {
             );
         }
     };
-
-    /**
-     * SizeChanged
-     */
-    @Override
-    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-        super.onSizeChanged(w, h, oldw, oldh);
-        this.mViewWidth = w;
-        this.mViewHeight = h;
-    }
 
     /**
      * Detached

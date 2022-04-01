@@ -38,8 +38,8 @@ public abstract class BaseCover implements ICover, ICoverHandle, StateGetter, Vi
         this.mContext = context;
         this.mCoverView = onCreateCoverView(context);
         this.mCoverView.addOnAttachStateChangeListener(this);
-        // View 与页面视图绑定
-        this.onCoverViewBind();
+        // InitViews
+        this.initViews();
     }
 
     /**
@@ -164,7 +164,8 @@ public abstract class BaseCover implements ICover, ICoverHandle, StateGetter, Vi
      */
     @Override
     public final void onViewAttachedToWindow(View v) {
-
+        // View 与页面视图绑定
+        this.onCoverViewBind();
     }
 
     /**
@@ -176,6 +177,11 @@ public abstract class BaseCover implements ICover, ICoverHandle, StateGetter, Vi
     public final void onViewDetachedFromWindow(View v) {
         this.onCoverViewUnBind();
     }
+
+    /**
+     * InitViews
+     */
+    public abstract void initViews();
 
     /**
      * View 与页面视图绑定
@@ -205,6 +211,14 @@ public abstract class BaseCover implements ICover, ICoverHandle, StateGetter, Vi
     @Override
     public String getKey() {
         return mKey;
+    }
+
+    /**
+     * 释放
+     */
+    @Override
+    public void release() {
+
     }
 
     /**
@@ -277,18 +291,18 @@ public abstract class BaseCover implements ICover, ICoverHandle, StateGetter, Vi
     }
 
     @Override
-    public final void requestPlayDataSource(Bundle bundle) {
-        this.notifyCoverEvent(ICoverEvent.CODE_REQUEST_PLAY_DATA_SOURCE, bundle);
+    public final void requestSpeed(Bundle bundle) {
+        this.notifyCoverEvent(ICoverEvent.CODE_REQUEST_SPEED, bundle);
     }
 
     @Override
-    public void requestAddEventProducer(Bundle bundle) {
-        this.notifyCoverEvent(ICoverEvent.CODE_REQUEST_EVENT_ADD_PRODUCER, bundle);
+    public void requestAddProducer(Bundle bundle) {
+        this.notifyCoverEvent(ICoverEvent.CODE_REQUEST_ADD_PRODUCER, bundle);
     }
 
     @Override
-    public void requestRemoveEventProducer(Bundle bundle) {
-        this.notifyCoverEvent(ICoverEvent.CODE_REQUEST_EVENT_REMOVE_PRODUCER, bundle);
+    public void requestRemoveProducer(Bundle bundle) {
+        this.notifyCoverEvent(ICoverEvent.CODE_REQUEST_REMOVE_PRODUCER, bundle);
     }
 
     /**

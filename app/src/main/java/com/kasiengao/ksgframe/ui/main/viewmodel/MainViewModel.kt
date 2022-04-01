@@ -1,8 +1,10 @@
 package com.kasiengao.ksgframe.ui.main.viewmodel
 
 import android.app.Application
+import android.view.View
 import androidx.lifecycle.MutableLiveData
 import com.kaisengao.base.state.LoadingState
+import com.kaisengao.base.util.SnackbarUtil
 import com.kaisengao.mvvm.binding.command.BindingParamImp
 import com.kaisengao.mvvm.viewmodel.ToolbarViewModel
 import com.kaisengao.retrofit.observer.mvvm.BaseLoadPageObserver
@@ -65,5 +67,12 @@ class MainViewModel(application: Application) : ToolbarViewModel(application) {
         this.mVideos.value?.let {
             mVideo.value = it[position]
         }
+    }
+
+    /**
+     * 关注
+     */
+    fun onFollow(view: View) {
+        SnackbarUtil.with(view).setMessage("关注一波啊，喂！").show()
     }
 }

@@ -23,6 +23,6 @@
         android:layout_height="wrap_content"
         android:visibility="gone"
         android:layout_gravity="center"
-        android:indeterminateDrawable="@drawable/selector_play_state" />
+        android:indeterminateDrawable="@drawable/selector_load_play_state" />
 
 </merge>

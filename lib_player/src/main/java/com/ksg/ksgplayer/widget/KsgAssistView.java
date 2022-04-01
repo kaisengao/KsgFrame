@@ -375,7 +375,7 @@ public class KsgAssistView implements IKsgVideoView {
      */
     @Override
     public void start() {
-        this.start(0, false);
+        this.start(-1, false);
     }
 
     /**
@@ -404,7 +404,11 @@ public class KsgAssistView implements IKsgVideoView {
         // 播放
         if (mDataSource != null) {
             this.mPlayer.setDataSource(mDataSource);
-            this.mPlayer.start(msc);
+            if (msc <= -1) {
+                this.mPlayer.start();
+            } else {
+                this.mPlayer.start(msc);
+            }
         }
     }
 

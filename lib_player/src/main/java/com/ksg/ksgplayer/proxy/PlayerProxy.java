@@ -105,17 +105,7 @@ public class PlayerProxy implements IPlayer {
      * Init 进度更新计时代理
      */
     private void initTimerCounterProxy() {
-        // 初始化 进度更新计时代理
         this.mTimerCounterProxy = new TimerCounterProxy(1000);
-    }
-
-    /**
-     * 进度更新计时代理状态
-     *
-     * @param useProxy 开/关
-     */
-    public void setUseTimerProxy(boolean useProxy) {
-        this.mTimerCounterProxy.setUseProxy(useProxy);
     }
 
     /**
@@ -295,6 +285,7 @@ public class PlayerProxy implements IPlayer {
     public void setSpeed(float speed) {
         if (isPlayerAvailable()) {
             this.mBasePlayer.setSpeed(speed);
+            this.mTimerCounterProxy.setSpeed(speed);
         }
     }
 
@@ -373,15 +364,6 @@ public class PlayerProxy implements IPlayer {
     }
 
     /**
-     * 播放
-     */
-    @Override
-    public void start() {
-        // 播放
-        this.start(mPlaybackCache.getProgressCache(mDataSource));
-    }
-
-    /**
      * seekTo
      *
      * @param msc 在指定的位置播放
@@ -391,6 +373,16 @@ public class PlayerProxy implements IPlayer {
         if (isPlayerAvailable()) {
             this.mBasePlayer.seekTo(msc);
         }
+    }
+
+
+    /**
+     * 播放
+     */
+    @Override
+    public void start() {
+        // 播放
+        this.start(mPlaybackCache.getProgressCache(mDataSource));
     }
 
     /**

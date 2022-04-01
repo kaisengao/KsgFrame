@@ -8,124 +8,34 @@ package com.ksg.ksgplayer.cover;
  */
 public interface ICoverValue {
 
-    /**
-     * 发送Boolean类型
-     *
-     * @param key   key
-     * @param value value
-     */
-    void putBoolean(String key, boolean value);
-
-    /**
-     * 发送Boolean类型
-     *
-     * @param key    key
-     * @param value  value
-     * @param notify 通知
-     */
-    void putBoolean(String key, boolean value, boolean notify);
-
-    /**
-     * 发送Int类型
-     *
-     * @param key   key
-     * @param value value
-     */
-    void putInt(String key, int value);
-
-    /**
-     * 发送Int类型
-     *
-     * @param key    key
-     * @param value  value
-     * @param notify 通知
-     */
-    void putInt(String key, int value, boolean notify);
-
-    /**
-     * 发送String类型
-     *
-     * @param key   key
-     * @param value value
-     */
-    void putString(String key, String value);
-
-    /**
-     * 发送String类型
-     *
-     * @param key    key
-     * @param value  value
-     * @param notify 通知
-     */
-    void putString(String key, String value, boolean notify);
-
-    /**
-     * 发送Float类型
-     *
-     * @param key   key
-     * @param value value
-     */
-    void putFloat(String key, float value);
-
-    /**
-     * 发送Float类型
-     *
-     * @param key    key
-     * @param value  value
-     * @param notify 通知
-     */
-    void putFloat(String key, float value, boolean notify);
-
-    /**
-     * 发送Long类型
-     *
-     * @param key   key
-     * @param value value
-     */
-    void putLong(String key, long value);
-
-    /**
-     * 发送Long类型
-     *
-     * @param key    key
-     * @param value  value
-     * @param notify 通知
-     */
-    void putLong(String key, long value, boolean notify);
-
-    /**
-     * 发送Double类型
-     *
-     * @param key   key
-     * @param value value
-     */
-    void putDouble(String key, double value);
-
-    /**
-     * 发送Double类型
-     *
-     * @param key    key
-     * @param value  value
-     * @param notify 通知
-     */
-    void putDouble(String key, double value, boolean notify);
 
     /**
      * 发送Object类型
      *
      * @param key   key
      * @param value value
+     * @param cache 缓存
      */
     void putObject(String key, Object value);
 
     /**
      * 发送Object类型
      *
+     * @param key   key
+     * @param value value
+     * @param cache 缓存
+     */
+    void putObject(String key, Object value, boolean cache);
+
+    /**
+     * 发送Object类型
+     *
      * @param key    key
      * @param value  value
+     * @param cache  缓存
      * @param notify 通知
      */
-    void putObject(String key, Object value, boolean notify);
+    void putObject(String key, Object value, boolean cache, boolean notify);
 
     /**
      * 根据 key  获取  boolean类型

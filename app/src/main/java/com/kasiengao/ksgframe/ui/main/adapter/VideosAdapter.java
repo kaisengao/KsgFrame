@@ -7,11 +7,10 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;
 import com.google.android.material.button.MaterialButton;
 import com.kaisengao.base.util.GlideUtil;
-import com.kaisengao.base.util.SnackbarUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
-import com.kasiengao.ksgframe.player.ListPlayer;
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean;
+import com.kasiengao.ksgframe.ui.main.player.ListPlayer;
 import com.ksg.ksgplayer.player.IPlayer;
 
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +43,7 @@ public class VideosAdapter extends BaseQuickAdapter<VideoBean, VideosAdapter.Vie
         // 昵称
         holder.setText(R.id.item_video_nickname, item.getNickname());
         // 简介
-        holder.setText(R.id.item_video_profile, item.getProfile());
+        holder.setText(R.id.item_video_introduce, item.getIntroduce());
         // 标题
         holder.setText(R.id.item_video_title, item.getMovieName());
         // 赞
@@ -99,19 +98,25 @@ public class VideosAdapter extends BaseQuickAdapter<VideoBean, VideosAdapter.Vie
             });
             // 评论
             this.getView(R.id.item_video_interact_comment).setOnClickListener(v -> {
-
+                int layoutPosition = getLayoutPosition();
+                // 进入详情页
+                ListPlayer.getInstance().onEnterDetail(layoutPosition, getData().get(layoutPosition), mPlayContainer);
             });
             // 分享
             this.getView(R.id.item_video_interact_share).setOnClickListener(v -> {
-                SnackbarUtil.with(v).setMessage("分享！分享！分享！分享！分享！分享！分享！分享！").show();
+
             });
             // Play
             this.mPlayContainer.setOnClickListener(v -> {
                 int layoutPosition = getLayoutPosition();
-                // VideoUrl
-                VideoBean videoBean = getData().get(layoutPosition);
                 // 播放视频
-                ListPlayer.getInstance().onPlay(layoutPosition, videoBean.getVideoUrl(), mPlayContainer);
+                ListPlayer.getInstance().onPlay(layoutPosition, getData().get(layoutPosition), mPlayContainer);
+            });
+            // ItemClick
+            view.setOnClickListener(v -> {
+                int layoutPosition = getLayoutPosition();
+                // 进入详情页
+                ListPlayer.getInstance().onEnterDetail(layoutPosition, getData().get(layoutPosition), mPlayContainer);
             });
         }
     }

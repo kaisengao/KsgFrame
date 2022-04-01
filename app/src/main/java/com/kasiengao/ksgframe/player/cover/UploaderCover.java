@@ -40,11 +40,11 @@ public class UploaderCover extends BaseCover implements View.OnClickListener {
     }
 
     /**
-     * View 与页面视图绑定
+     * InitViews
      */
     @SuppressLint("ClickableViewAccessibility")
     @Override
-    public void onCoverViewBind() {
+    public void initViews() {
         this.mUploaderAvatar = findViewById(R.id.cover_uploader_avatar);
         this.mUploaderNickname = findViewById(R.id.cover_uploader_nickname);
         this.mUploaderFans = findViewById(R.id.cover_uploader_fans);
@@ -52,6 +52,14 @@ public class UploaderCover extends BaseCover implements View.OnClickListener {
         this.findViewById(R.id.cover_uploader_replay).setOnClickListener(this);
         // 拦截所有底层事件
         this.getCoverView().setOnTouchListener((v, event) -> true);
+    }
+
+    /**
+     * View 与页面视图绑定
+     */
+    @Override
+    public void onCoverViewBind() {
+
     }
 
     /**

@@ -13,15 +13,9 @@ import com.ksg.ksgplayer.listener.OnPlayerListener;
  */
 public class TimerCounterProxy {
 
-    /**
-     * 计时单位 毫秒
-     */
-    private final int mCounterInterval;
+    private static final int DEFAULT_TIMER = 1000;
 
-    /**
-     * 代理状态 默认开启
-     */
-    private boolean mUseProxy = true;
+    private int mCounterInterval;
 
     private WeakHandler mWeakHandler = new WeakHandler();
 
@@ -35,26 +29,25 @@ public class TimerCounterProxy {
     }
 
     /**
+     * 倍速
+     */
+    public void setSpeed(float speed) {
+        if (speed < 1) {
+            this.mCounterInterval = (int) (DEFAULT_TIMER + (speed * 1000f));
+        } else if (speed > 1) {
+            this.mCounterInterval = (int) (DEFAULT_TIMER - ((speed * 1000f) - DEFAULT_TIMER));
+        } else {
+            this.mCounterInterval = DEFAULT_TIMER;
+        }
+    }
+
+    /**
      * 计时更新通知
      *
      * @param timerCounterListener onCounterUpdateListener
      */
     public void setTimerCounterListener(OnTimerCounterListener timerCounterListener) {
         this.mTimerCounterListener = timerCounterListener;
-    }
-
-    /**
-     * 代理状态
-     *
-     * @param useProxy 开/关
-     */
-    public void setUseProxy(boolean useProxy) {
-        this.mUseProxy = useProxy;
-        if (!useProxy) {
-            this.stop();
-        } else {
-            this.start();
-        }
     }
 
     /**
@@ -72,16 +65,14 @@ public class TimerCounterProxy {
             case OnPlayerListener.PLAYER_EVENT_ON_PAUSE:
             case OnPlayerListener.PLAYER_EVENT_ON_RESUME:
             case OnPlayerListener.PLAYER_EVENT_ON_SEEK_COMPLETE:
-                if (!mUseProxy)
-                    return;
-                // 开启计时
+                // 开启
                 this.start();
                 break;
             case OnPlayerListener.PLAYER_EVENT_ON_STOP:
             case OnPlayerListener.PLAYER_EVENT_ON_RESET:
             case OnPlayerListener.PLAYER_EVENT_ON_DESTROY:
             case OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE:
-                // 取消计时
+                // 取消
                 this.stop();
                 break;
         }
@@ -99,7 +90,7 @@ public class TimerCounterProxy {
     }
 
     /**
-     * 开启计时
+     * 开启
      */
     public void start() {
         this.stop();
@@ -114,22 +105,18 @@ public class TimerCounterProxy {
     }
 
     /**
-     * 取消计时
+     * 取消
      */
     public void stop() {
         this.mWeakHandler.removeCallbacks(loop);
     }
 
     /**
-     * Runnable
+     * Loop
      */
     private final Runnable loop = new Runnable() {
         @Override
         public void run() {
-            // 验证是否开放了计时器
-            if (!mUseProxy) {
-                return;
-            }
             // 计时更新通知
             if (mTimerCounterListener != null) {
                 mTimerCounterListener.onCounter();

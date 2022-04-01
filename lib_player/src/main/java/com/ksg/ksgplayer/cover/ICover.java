@@ -142,4 +142,9 @@ public interface ICover {
      * @return 唯一标识
      */
     String getKey();
+
+    /**
+     * 释放
+     */
+    void release();
 }

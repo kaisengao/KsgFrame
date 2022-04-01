@@ -1,9 +1,9 @@
 package com.ksg.ksgplayer.cover;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * @ClassName: CoverManager
@@ -20,8 +20,8 @@ public final class CoverManager implements ICoverManager {
     private final CoverValuePool mValuePool;
 
     public CoverManager() {
-        this.mCoverMap = new HashMap<>(5);
-        this.mCoverAttachStateChangeListeners = new ArrayList<>();
+        this.mCoverMap = new ConcurrentHashMap<>(5);
+        this.mCoverAttachStateChangeListeners = new CopyOnWriteArrayList<>();
         this.mValuePool = new CoverValuePool(this);
     }
 

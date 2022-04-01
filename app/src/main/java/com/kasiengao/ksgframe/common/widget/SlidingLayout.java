@@ -42,6 +42,8 @@ public class SlidingLayout extends FrameLayout {
 
     private Scroller mScroller;
 
+    private OnSlidingListener mSlidingListener;
+
     public SlidingLayout(Context context) {
         this(context, null);
     }
@@ -65,6 +67,12 @@ public class SlidingLayout extends FrameLayout {
         this.mShadowWidth = SHADOW_WIDTH * ((int) getResources().getDisplayMetrics().density);
     }
 
+    /**
+     * 事件
+     */
+    public void setSlidingListener(OnSlidingListener slidingListener) {
+        this.mSlidingListener = slidingListener;
+    }
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
@@ -74,9 +82,9 @@ public class SlidingLayout extends FrameLayout {
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
                 intercept = false;
-                mInterceptDownX = x;
-                mLastInterceptX = x;
-                mLastInterceptY = y;
+                this.mInterceptDownX = x;
+                this.mLastInterceptX = x;
+                this.mLastInterceptY = y;
                 break;
             case MotionEvent.ACTION_MOVE:
                 int deltaX = x - mLastInterceptX;
@@ -87,12 +95,12 @@ public class SlidingLayout extends FrameLayout {
                 } else {
                     intercept = false;
                 }
-                mLastInterceptX = x;
-                mLastInterceptY = y;
+                this.mLastInterceptX = x;
+                this.mLastInterceptY = y;
                 break;
             case MotionEvent.ACTION_UP:
                 intercept = false;
-                mInterceptDownX = mLastInterceptX = mLastInterceptY = 0;
+                this.mInterceptDownX = mLastInterceptX = mLastInterceptY = 0;
                 break;
         }
         return intercept;
@@ -104,38 +112,42 @@ public class SlidingLayout extends FrameLayout {
         int y = (int) ev.getY();
         switch (ev.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                mTouchDownX = x;
-                mLastTouchX = x;
-                mLastTouchY = y;
+                this.mTouchDownX = x;
+                this.mLastTouchX = x;
+                this.mLastTouchY = y;
                 break;
             case MotionEvent.ACTION_MOVE:
                 int deltaX = x - mLastTouchX;
                 int deltaY = y - mLastTouchY;
 
                 if (!isConsumed && mTouchDownX < (getWidth() / 2f) && Math.abs(deltaX) > Math.abs(deltaY)) {
-                    isConsumed = true;
+                    this.isConsumed = true;
+                }
+
+                if (mLastTouchX<=0){
+                    this.mLastTouchX = (int) ev.getX();
                 }
 
                 if (isConsumed) {
                     int rightMovedX = mLastTouchX - (int) ev.getX();
                     // 左侧即将滑出屏幕
                     if (getScrollX() + rightMovedX >= 0) {
-                        scrollTo(0, 0);
+                        this.scrollTo(0, 0);
                     } else {
-                        scrollBy(rightMovedX, 0);
+                        this.scrollBy(rightMovedX, 0);
                     }
                 }
-                mLastTouchX = x;
-                mLastTouchY = y;
+                this.mLastTouchX = x;
+                this.mLastTouchY = y;
                 break;
             case MotionEvent.ACTION_UP:
-                isConsumed = false;
-                mTouchDownX = mLastTouchX = mLastTouchY = 0;
+                this.isConsumed = false;
+                this.mTouchDownX = mLastTouchX = mLastTouchY = 0;
                 // 根据手指释放时的位置决定回弹还是关闭
                 if (-getScrollX() < getWidth() / 2) {
-                    scrollBack();
+                    this.scrollBack();
                 } else {
-                    scrollClose();
+                    this.scrollClose();
                 }
                 break;
         }
@@ -148,8 +160,8 @@ public class SlidingLayout extends FrameLayout {
     private void scrollBack() {
         int startX = getScrollX();
         int dx = -getScrollX();
-        mScroller.startScroll(startX, 0, dx, 0, 300);
-        invalidate();
+        this.mScroller.startScroll(startX, 0, dx, 0, 300);
+        this.invalidate();
     }
 
     /**
@@ -158,26 +170,26 @@ public class SlidingLayout extends FrameLayout {
     private void scrollClose() {
         int startX = getScrollX();
         int dx = -getScrollX() - getWidth();
-        mScroller.startScroll(startX, 0, dx, 0, 300);
-        invalidate();
+        this.mScroller.startScroll(startX, 0, dx, 0, 300);
+        this.invalidate();
     }
 
     @Override
     public void computeScroll() {
         if (mScroller.computeScrollOffset()) {
-            scrollTo(mScroller.getCurrX(), 0);
-            postInvalidate();
+            this.scrollTo(mScroller.getCurrX(), 0);
+            this.postInvalidate();
         } else if (-getScrollX() >= getWidth()) {
-            close();
-            mScroller.startScroll(0, 0, 0, 0, 300);
-            invalidate();
+            this.close();
+            this.mScroller.startScroll(0, 0, 0, 0, 300);
+            this.invalidate();
         }
     }
 
     @Override
     protected void dispatchDraw(Canvas canvas) {
         super.dispatchDraw(canvas);
-        drawShadow(canvas);
+        this.drawShadow(canvas);
     }
 
     /**
@@ -187,7 +199,7 @@ public class SlidingLayout extends FrameLayout {
         mLeftShadow.setBounds(0, 0, mShadowWidth, getHeight());
         canvas.save();
         canvas.translate(-mShadowWidth, 0);
-        mLeftShadow.draw(canvas);
+        this.mLeftShadow.draw(canvas);
         canvas.restore();
     }
 
@@ -195,6 +207,17 @@ public class SlidingLayout extends FrameLayout {
      * 关闭
      */
     public void close() {
+        if (mSlidingListener != null) {
+            this.mSlidingListener.scrollClose();
+        }
+    }
 
+
+    public interface OnSlidingListener {
+
+        /**
+         * 滑动关闭
+         */
+        void scrollClose();
     }
 }

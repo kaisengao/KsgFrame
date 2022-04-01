@@ -102,16 +102,16 @@ public class PlayerActivity extends BaseToolbarActivity {
                             // 横屏自动旋转 180°
                             : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
                     break;
-                case CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_TOGGLE:
-                    // 全屏切换事件
-                    boolean fullscreen = bundle.getBoolean(EventKey.BOOL_DATA, false);
-                    // 如果在横屏状态下退出了全屏模式需要设置回竖屏
-                    if (mIsLandscape && !fullscreen) {
-                        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-                    }
-                    // 屏幕改变
-                    this.onFullscreen(fullscreen);
-                    break;
+//                case CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_TOGGLE:
+//                    // 全屏切换事件
+//                    boolean fullscreen = bundle.getBoolean(EventKey.BOOL_DATA, false);
+//                    // 如果在横屏状态下退出了全屏模式需要设置回竖屏
+//                    if (mIsLandscape && !fullscreen) {
+//                        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+//                    }
+//                    // 屏幕改变
+//                    this.onFullscreen(fullscreen);
+//                    break;
                 default:
                     break;
             }
@@ -157,7 +157,7 @@ public class PlayerActivity extends BaseToolbarActivity {
             this.mPlayer.requestLayout();
         }, null);
         // 通知组件横屏幕改变
-        this.mCoverManager.getValuePool().putBoolean(CoverConstant.ValueKey.KEY_FULLSCREEN_TOGGLE, fullscreen);
+        this.mCoverManager.getValuePool().putObject(CoverConstant.ValueKey.KEY_FULLSCREEN_TOGGLE, fullscreen);
     }
 
     @Override
@@ -181,7 +181,7 @@ public class PlayerActivity extends BaseToolbarActivity {
             SystemUiUtil.recoverySystemUI(this);
         }
         // 通知组件横竖屏切换
-        this.mCoverManager.getValuePool().putBoolean(CoverConstant.ValueKey.KEY_HL_SCREEN_TOGGLE, mIsLandscape);
+        this.mCoverManager.getValuePool().putObject(CoverConstant.ValueKey.KEY_HL_SCREEN_TOGGLE, mIsLandscape);
     }
 
     @Override

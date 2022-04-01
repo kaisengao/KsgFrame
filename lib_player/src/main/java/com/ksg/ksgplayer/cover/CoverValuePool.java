@@ -42,82 +42,29 @@ public class CoverValuePool implements ICoverValue {
     }
 
     @Override
-    public void putBoolean(String key, boolean value) {
-        put(key, value);
-    }
-
-    @Override
-    public void putBoolean(String key, boolean value, boolean notify) {
-        put(key, value, notify);
-    }
-
-    @Override
-    public void putInt(String key, int value) {
-        put(key, value);
-    }
-
-    @Override
-    public void putInt(String key, int value, boolean notify) {
-        put(key, value, notify);
-    }
-
-    @Override
-    public void putString(String key, String value) {
-        put(key, value);
-    }
-
-    @Override
-    public void putString(String key, String value, boolean notify) {
-        put(key, value, notify);
-    }
-
-    @Override
-    public void putFloat(String key, float value) {
-        put(key, value);
-    }
-
-    @Override
-    public void putFloat(String key, float value, boolean notify) {
-        put(key, value, notify);
-    }
-
-    @Override
-    public void putLong(String key, long value) {
-        put(key, value);
-    }
-
-    @Override
-    public void putLong(String key, long value, boolean notify) {
-        put(key, value, notify);
-    }
-
-    @Override
-    public void putDouble(String key, double value) {
-        put(key, value);
-    }
-
-    @Override
-    public void putDouble(String key, double value, boolean notify) {
-        put(key, value, notify);
-    }
-
-    @Override
     public void putObject(String key, Object value) {
-        put(key, value);
+        put(key, value, true, true);
     }
 
     @Override
-    public void putObject(String key, Object value, boolean notify) {
-        put(key, value, notify);
+    public void putObject(String key, Object value, boolean cache) {
+        put(key, value, cache);
     }
 
-    private void put(String key, Object value) {
-        put(key, value, true);
+    @Override
+    public void putObject(String key, Object value, boolean cache, boolean notify) {
+        put(key, value, cache, notify);
     }
 
-    private void put(String key, Object value, boolean notify) {
-        // 存储
-        this.mValuePool.put(key, value);
+    private void put(String key, Object value, boolean cache) {
+        put(key, value, cache, true);
+    }
+
+    private void put(String key, Object value, boolean cache, boolean notify) {
+        // 缓存
+        if (cache){
+            this.mValuePool.put(key, value);
+        }
         // 通知
         if (notify) {
             Map<String, ICover> allCover = mCoverManager.getAllCover();

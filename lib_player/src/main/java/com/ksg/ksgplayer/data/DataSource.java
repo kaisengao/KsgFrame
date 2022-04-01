@@ -18,13 +18,19 @@ public class DataSource implements Serializable {
 
     private int mRendererType = IRenderer.RENDER_TYPE_SURFACE_VIEW;
 
-    //------------------- 缓存 --------------------------//
+    //------------------- 视频缓存 --------------------------//
 
     private int mMaxVideoCacheCount;
 
     private boolean isVideoCache;
 
     private String mVideoCacheFileName;
+
+    //------------------- 播放进度缓存 --------------------------//
+
+    private boolean isProgressCache = true;
+
+    private boolean isReadProgressCache = true;
 
     public DataSource() {
     }
@@ -41,6 +47,8 @@ public class DataSource implements Serializable {
         mUrl = url;
     }
 
+    //------------------- 渲染器 --------------------------//
+
     public int getRendererType() {
         return mRendererType;
     }
@@ -48,6 +56,8 @@ public class DataSource implements Serializable {
     public void setRendererType(int rendererType) {
         mRendererType = rendererType;
     }
+
+    //------------------- 视频缓存 --------------------------//
 
     public int getMaxVideoCacheCount() {
         return mMaxVideoCacheCount;
@@ -71,5 +81,23 @@ public class DataSource implements Serializable {
 
     public void setVideoCacheFileName(String videoCacheFileName) {
         mVideoCacheFileName = videoCacheFileName;
+    }
+
+    //------------------- 播放进度缓存 --------------------------//
+
+    public boolean isProgressCache() {
+        return isProgressCache;
+    }
+
+    public void setProgressCache(boolean progressCache) {
+        isProgressCache = progressCache;
+    }
+
+    public boolean isReadProgressCache() {
+        return isReadProgressCache;
+    }
+
+    public void setReadProgressCache(boolean readProgressCache) {
+        isReadProgressCache = readProgressCache;
     }
 }

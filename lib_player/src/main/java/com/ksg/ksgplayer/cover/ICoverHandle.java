@@ -66,23 +66,23 @@ public interface ICoverHandle {
     void requestReplay(Bundle bundle);
 
     /**
-     * 请求 设置数据源
+     * 请求 倍速
      *
      * @param bundle bundle
      */
-    void requestPlayDataSource(Bundle bundle);
+    void requestSpeed(Bundle bundle);
 
     /**
      * 请求 添加事件生产者
      *
      * @param bundle bundle
      */
-    void requestAddEventProducer(Bundle bundle);
+    void requestAddProducer(Bundle bundle);
 
     /**
      * 请求 删除事件生产者
      *
      * @param bundle bundle
      */
-    void requestRemoveEventProducer(Bundle bundle);
+    void requestRemoveProducer(Bundle bundle);
 }

@@ -123,11 +123,11 @@ public abstract class BasePlayer implements IPlayer {
      *
      * @param status 状态
      */
-    protected final void updateStatus(int status) {
-        this.mCurrentState = status;
+    protected final void updateState(int state) {
+        this.mCurrentState = state;
         // 发送事件
         Bundle bundle = BundlePool.obtain();
-        bundle.putInt(EventKey.INT_DATA, status);
-        this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_STATUS_CHANGE, bundle);
+        bundle.putInt(EventKey.INT_DATA, state);
+        this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_STATE_CHANGE, bundle);
     }
 }

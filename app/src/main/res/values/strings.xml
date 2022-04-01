@@ -9,6 +9,16 @@
     <string name="comment">评论</string>
     <string name="views">次观看</string>
 
+    <string name="controller_speed">倍速</string>
+
+    <string name="speed_75">0.75X</string>
+    <string name="speed_100">1.0X</string>
+    <string name="speed_125">1.25X</string>
+    <string name="speed_150">1.5X</string>
+    <string name="speed_200">2X</string>
+
+    <string name="speed_play">倍速播放中</string>
+
     <string name="main_video_item_interact_praise">赞</string>
     <string name="main_video_item_interact_stepped">踩</string>
     <string name="main_video_item_interact_comment">评论</string>

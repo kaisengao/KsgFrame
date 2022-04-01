@@ -30,8 +30,12 @@ import com.ksg.ksgplayer.player.IPlayer;
  * @Author: KaiSenGao
  * @CreateDate: 2020/5/26 17:10
  * @Description: Controller
+ * TODO  2022年03月31日 (此类暂时作废)
  */
+@Deprecated
 public class ControllerCover extends BaseCover implements OnTimerUpdateListener, View.OnClickListener {
+
+    private static final int CONTROLLER_DELAY = 4000;
 
     private LinearLayout mControllerTop;
 
@@ -67,36 +71,37 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener,
 
     @Override
     protected View onCreateCoverView(Context context) {
-        View coverView = View.inflate(context, R.layout.layout_cover_controller, null);
-        // Views
-        this.mControllerTop = coverView.findViewById(R.id.cover_controller_top);
-        this.mControllerBottom = coverView.findViewById(R.id.cover_controller_bottom);
-        this.mProgress = coverView.findViewById(R.id.cover_controller_seek);
-        this.mBottomProgress = coverView.findViewById(R.id.cover_controller_bottom_seek);
-        this.mPlayStatus = coverView.findViewById(R.id.cover_controller_play_status);
-        this.mScreenOrientation = coverView.findViewById(R.id.cover_controller_screen_orientation);
-        this.mFullscreenStatus = coverView.findViewById(R.id.cover_controller_fullscreen_status);
-        this.mCurrTime = coverView.findViewById(R.id.cover_controller_curr_time);
-        this.mDurationTime = coverView.findViewById(R.id.cover_controller_duration_time);
-        // OnClick
-        this.mPlayStatus.setOnClickListener(this);
-        this.mScreenOrientation.setOnClickListener(this);
-        this.mFullscreenStatus.setOnClickListener(this);
-        coverView.findViewById(R.id.cover_controller_back).setOnClickListener(this);
-        // SeekBar
-        this.mProgress.setOnSeekBarChangeListener(mSeekBarChangeListener);
-        // Handler
-        this.mHandler = ThreadPool.MainThreadHandler.getInstance();
-        // Return
-        return coverView;
+        return View.inflate(context, R.layout.layout_cover_controller, null);
     }
-
+    /**
+     * InitViews
+     */
+    @Override
+    public void initViews() {}
     /**
      * View 与页面视图绑定
      */
     @Override
     public void onCoverViewBind() {
-
+        // Views
+        this.mControllerTop = findViewById(R.id.cover_controller_top);
+        this.mControllerBottom = findViewById(R.id.cover_controller_bottom);
+        this.mProgress = findViewById(R.id.cover_controller_seek);
+        this.mBottomProgress = findViewById(R.id.cover_controller_bottom_seek);
+        this.mPlayStatus = findViewById(R.id.cover_controller_play_status);
+        this.mScreenOrientation = findViewById(R.id.cover_controller_screen_orientation);
+        this.mFullscreenStatus = findViewById(R.id.cover_controller_fullscreen_status);
+        this.mCurrTime = findViewById(R.id.cover_controller_curr_time);
+        this.mDurationTime = findViewById(R.id.cover_controller_duration_time);
+        // OnClick
+        this.mPlayStatus.setOnClickListener(this);
+        this.mScreenOrientation.setOnClickListener(this);
+        this.mFullscreenStatus.setOnClickListener(this);
+        this.findViewById(R.id.cover_controller_back).setOnClickListener(this);
+        // SeekBar
+        this.mProgress.setOnSeekBarChangeListener(mSeekBarChangeListener);
+        // Handler
+        this.mHandler = ThreadPool.MainThreadHandler.getInstance();
     }
 
     /**
@@ -119,7 +124,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener,
                 CoverConstant.ValueKey.KEY_HL_SCREEN_TOGGLE,
                 CoverConstant.ValueKey.KEY_FULLSCREEN_TOGGLE,
                 CoverConstant.ValueKey.KEY_CONTROLLER_STATUS,
-                CoverConstant.ValueKey.KEY_CONTROLLER_PLAY_STATUS
+                CoverConstant.ValueKey.KEY_SWITCH_PLAY
         };
     }
 
@@ -149,7 +154,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener,
                 // Top/Bottom 菜单
                 this.onControllerStatus();
                 break;
-            case CoverConstant.ValueKey.KEY_CONTROLLER_PLAY_STATUS:
+            case CoverConstant.ValueKey.KEY_SWITCH_PLAY:
                 // Controller 播放状态
                 this.onSwitchPlayStatus();
                 break;
@@ -186,7 +191,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener,
                     onDelayedControllerStatus();
                 }
                 break;
-            case OnPlayerListener.PLAYER_EVENT_ON_STATUS_CHANGE:
+            case OnPlayerListener.PLAYER_EVENT_ON_STATE_CHANGE:
                 // 播放状态改变
                 int status = bundle.getInt(EventKey.INT_DATA);
                 if (status == IPlayer.STATE_PAUSE) {
@@ -302,7 +307,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener,
                 // 全屏切换状态 (true为全屏)
                 Bundle fullscreen = BundlePool.obtain();
                 fullscreen.putBoolean(EventKey.BOOL_DATA, !mFullscreenStatus.isSelected());
-                this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_TOGGLE, fullscreen);
+//                this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_TOGGLE, fullscreen);
                 break;
             default:
                 break;
@@ -314,7 +319,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener,
      */
     private void onDelayedControllerStatus() {
         this.onRemoveDelayedControllerStatus();
-        this.mHandler.post(mControllerStatusRunnable, 8000);
+        this.mHandler.post(mControllerStatusRunnable, CONTROLLER_DELAY);
     }
 
     /**

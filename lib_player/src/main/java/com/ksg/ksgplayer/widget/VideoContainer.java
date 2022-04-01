@@ -311,12 +311,12 @@ public class VideoContainer extends FrameLayout {
         public void onCoverEvent(int eventCode, Bundle bundle) {
             BaseEventProducer producer;
             switch (eventCode) {
-                case ICoverEvent.CODE_REQUEST_EVENT_ADD_PRODUCER:
+                case ICoverEvent.CODE_REQUEST_ADD_PRODUCER:
                     producer = (BaseEventProducer) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
                     // 添加事件生产者
                     addEventProducer(producer);
                     break;
-                case ICoverEvent.CODE_REQUEST_EVENT_REMOVE_PRODUCER:
+                case ICoverEvent.CODE_REQUEST_REMOVE_PRODUCER:
                     // 移除事件生产者
                     producer = (BaseEventProducer) bundle.getSerializable(EventKey.SERIALIZABLE_DATA);
                     removeEventProducer(producer);

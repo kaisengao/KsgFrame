@@ -24,9 +24,13 @@ public class VideoBean {
 
     private String mNickname;
 
-    private String mProfile;
+    private String mIntroduce;
 
     private String mDate;
+
+    private String mProfile;
+
+    private String mProfileDrawing;
 
     private int mViews;
 
@@ -42,10 +46,12 @@ public class VideoBean {
 
     private boolean isStepped;
 
-    public VideoBean(String avatar, String nickname, String profile) {
+    public VideoBean(String avatar, String nickname, String introduce, String profile, String profileDrawing) {
         this.mAvatar = avatar;
         this.mNickname = nickname;
+        this.mIntroduce = introduce;
         this.mProfile = profile;
+        this.mProfileDrawing = profileDrawing;
     }
 
     public String getMovieName() {
@@ -76,12 +82,12 @@ public class VideoBean {
         this.mNickname = nickname;
     }
 
-    public void setProfile(String profile) {
-        this.mProfile = profile;
+    public void setIntroduce(String introduce) {
+        this.mIntroduce = introduce;
     }
 
-    public String getProfile() {
-        return mProfile;
+    public String getIntroduce() {
+        return mIntroduce;
     }
 
     public void setDate(String date) {
@@ -90,6 +96,22 @@ public class VideoBean {
 
     public String getDate() {
         return mDate;
+    }
+
+    public void setProfile(String profile) {
+        this.mProfile = profile;
+    }
+
+    public String getProfile() {
+        return mProfile;
+    }
+
+    public void setProfileDrawing(String profileDrawing) {
+        this.mProfileDrawing = profileDrawing;
+    }
+
+    public String getProfileDrawing() {
+        return mProfileDrawing;
     }
 
     public void setViews(int views) {

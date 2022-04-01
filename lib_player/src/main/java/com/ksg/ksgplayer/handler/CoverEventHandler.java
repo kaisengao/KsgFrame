@@ -55,8 +55,8 @@ public class CoverEventHandler implements ICoverEventHandler {
             case ICoverEvent.CODE_REQUEST_REPLAY:
                 this.requestReplay(bundle);
                 break;
-            case ICoverEvent.CODE_REQUEST_PLAY_DATA_SOURCE:
-                this.requestPlayDataSource(bundle);
+            case ICoverEvent.CODE_REQUEST_SPEED:
+                this.requestSpeed(bundle);
                 break;
             default:
                 break;
@@ -173,4 +173,15 @@ public class CoverEventHandler implements ICoverEventHandler {
             this.mPlayer.start();
         }
     }
+
+    /**
+     * 倍速
+     *
+     * @param bundle bundle
+     */
+    @Override
+    public void requestSpeed(Bundle bundle) {
+        this.mPlayer.setSpeed(bundle.getFloat(EventKey.FLOAT_DATA));
+    }
+
 }

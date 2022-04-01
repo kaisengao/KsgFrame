@@ -9,9 +9,8 @@ import com.kaisengao.base.util.StatusBarUtil
 import com.kaisengao.mvvm.base.activity.BaseVmActivity
 import com.kasiengao.ksgframe.BR
 import com.kasiengao.ksgframe.R
-import com.kasiengao.ksgframe.common.widget.PlayerContainerView
 import com.kasiengao.ksgframe.databinding.ActivityMainBinding
-import com.kasiengao.ksgframe.player.ListPlayer
+import com.kasiengao.ksgframe.ui.main.player.ListPlayer
 import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel
 
 
@@ -112,6 +111,8 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun onPause() {
         super.onPause()
+        // 退出全屏
+        ListPlayer.getInstance().onFullscreen(false)
         // 暂停播放
         ListPlayer.getInstance().onPause()
     }

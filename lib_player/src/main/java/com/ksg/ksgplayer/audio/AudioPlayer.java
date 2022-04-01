@@ -31,7 +31,7 @@ public class AudioPlayer extends BasePlayer {
     public AudioPlayer(Context context) {
         super(context);
         // 初始化通知
-        this.updateStatus(IPlayer.STATE_INIT);
+        this.updateState(IPlayer.STATE_INIT);
     }
 
     /**
@@ -64,7 +64,7 @@ public class AudioPlayer extends BasePlayer {
             this.mMediaPlayer.setOnErrorListener(mErrorListener);
             this.mMediaPlayer.setOnSeekCompleteListener(mOnSeekCompleteListener);
             this.mMediaPlayer.setOnBufferingUpdateListener(mBufferingUpdateListener);
-            this.updateStatus(STATE_INIT);
+            this.updateState(STATE_INIT);
             // dataSource
             this.mMediaPlayer.setDataSource(dataSource.getUrl());
             this.mMediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -75,7 +75,7 @@ public class AudioPlayer extends BasePlayer {
             this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_DATA_SOURCE_SET, bundle);
         } catch (Exception e) {
             this.mTargetState = IPlayer.STATE_ERROR;
-            this.updateStatus(IPlayer.STATE_ERROR);
+            this.updateState(IPlayer.STATE_ERROR);
             this.sendErrorEvent(OnErrorListener.ERROR_EVENT_DATA_SOURCE, e.getMessage());
         }
     }
@@ -218,7 +218,7 @@ public class AudioPlayer extends BasePlayer {
             try {
                 this.mMediaPlayer.seekTo(currentPosition);
             } catch (IllegalStateException e) {
-                this.updateStatus(IPlayer.STATE_ERROR);
+                this.updateState(IPlayer.STATE_ERROR);
                 this.sendErrorEvent(OnErrorListener.ERROR_EVENT_SEEK, null);
             }
             // seekTo
@@ -241,11 +241,11 @@ public class AudioPlayer extends BasePlayer {
             try {
                 this.mMediaPlayer.start();
                 // 开始播放
-                this.updateStatus(IPlayer.STATE_START);
+                this.updateState(IPlayer.STATE_START);
                 this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_START, null);
             } catch (Exception e) {
                 this.mTargetState = IPlayer.STATE_ERROR;
-                this.updateStatus(IPlayer.STATE_ERROR);
+                this.updateState(IPlayer.STATE_ERROR);
                 this.sendErrorEvent(OnErrorListener.ERROR_EVENT_START, e.getMessage());
             }
         }
@@ -277,11 +277,11 @@ public class AudioPlayer extends BasePlayer {
                 && state != IPlayer.STATE_STOP) {
             try {
                 this.mMediaPlayer.pause();
-                this.updateStatus(IPlayer.STATE_PAUSE);
+                this.updateState(IPlayer.STATE_PAUSE);
                 this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_PAUSE, null);
             } catch (IllegalStateException e) {
                 this.mTargetState = IPlayer.STATE_ERROR;
-                this.updateStatus(IPlayer.STATE_ERROR);
+                this.updateState(IPlayer.STATE_ERROR);
                 this.sendErrorEvent(OnErrorListener.ERROR_EVENT_PAUSE, e.getMessage());
             }
         }
@@ -296,11 +296,11 @@ public class AudioPlayer extends BasePlayer {
         if (getState() == IPlayer.STATE_PAUSE) {
             try {
                 this.mMediaPlayer.start();
-                this.updateStatus(IPlayer.STATE_START);
+                this.updateState(IPlayer.STATE_START);
                 this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_RESUME, null);
             } catch (IllegalStateException e) {
                 this.mTargetState = IPlayer.STATE_ERROR;
-                this.updateStatus(IPlayer.STATE_ERROR);
+                this.updateState(IPlayer.STATE_ERROR);
                 this.sendErrorEvent(OnErrorListener.ERROR_EVENT_RESUME, e.getMessage());
             }
         }
@@ -319,11 +319,11 @@ public class AudioPlayer extends BasePlayer {
                 || state == IPlayer.STATE_COMPLETE) {
             try {
                 this.mMediaPlayer.stop();
-                this.updateStatus(IPlayer.STATE_STOP);
+                this.updateState(IPlayer.STATE_STOP);
                 this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_STOP, null);
             } catch (IllegalStateException e) {
                 this.mTargetState = IPlayer.STATE_ERROR;
-                this.updateStatus(IPlayer.STATE_ERROR);
+                this.updateState(IPlayer.STATE_ERROR);
                 this.sendErrorEvent(OnErrorListener.ERROR_EVENT_STOP, e.getMessage());
             }
         }
@@ -337,7 +337,7 @@ public class AudioPlayer extends BasePlayer {
     public void reset() {
         this.mMediaPlayer.reset();
         this.mTargetState = IPlayer.STATE_IDLE;
-        this.updateStatus(IPlayer.STATE_IDLE);
+        this.updateState(IPlayer.STATE_IDLE);
         this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_RESET, null);
     }
 
@@ -366,7 +366,7 @@ public class AudioPlayer extends BasePlayer {
         this.release();
         this.mMediaPlayer = null;
         // 销毁
-        this.updateStatus(IPlayer.STATE_DESTROY);
+        this.updateState(IPlayer.STATE_DESTROY);
         this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_DESTROY, null);
     }
 
@@ -376,7 +376,7 @@ public class AudioPlayer extends BasePlayer {
     private final MediaPlayer.OnPreparedListener mPreparedListener = new MediaPlayer.OnPreparedListener() {
         @Override
         public void onPrepared(MediaPlayer mediaPlayer) {
-            updateStatus(STATE_PREPARED);
+            updateState(STATE_PREPARED);
             sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_PREPARED, null);
             // 准备完成 判断当前状态类型
             if (mTargetState == STATE_START) {
@@ -454,7 +454,7 @@ public class AudioPlayer extends BasePlayer {
         @Override
         public void onCompletion(MediaPlayer mediaPlayer) {
             mTargetState = IPlayer.STATE_COMPLETE;
-            updateStatus(IPlayer.STATE_COMPLETE);
+            updateState(IPlayer.STATE_COMPLETE);
             sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE, null);
         }
     };
@@ -493,7 +493,7 @@ public class AudioPlayer extends BasePlayer {
                     break;
             }
             mTargetState = IPlayer.STATE_ERROR;
-            updateStatus(IPlayer.STATE_ERROR);
+            updateState(IPlayer.STATE_ERROR);
             sendErrorEvent(eventCode, null);
             return true;
         }

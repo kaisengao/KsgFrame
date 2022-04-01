@@ -18,6 +18,8 @@ public interface CoverConstant {
 
         String KEY_CONTROLLER = "controller";
 
+        String KEY_LAND_CONTROLLER = "landController";
+
         String KEY_SMALL_CONTROLLER = "smallController";
 
         String KEY_UPLOADER = "uploader";
@@ -29,6 +31,21 @@ public interface CoverConstant {
          * UP主信息
          */
         String KEY_UPLOADER_DATA = "uploaderData";
+
+        /**
+         * 控制器 显示/隐藏
+         */
+        String KEY_SWITCH_CONTROLLER = "switchController";
+
+        /**
+         * 控制器 隐藏
+         */
+        String KEY_HIDE_CONTROLLER = "hideController";
+
+        /**
+         * 播放状态 播放/暂停
+         */
+        String KEY_SWITCH_PLAY = "switchPlay";
 
         /**
          * 横竖屏切换
@@ -45,10 +62,7 @@ public interface CoverConstant {
          */
         String KEY_CONTROLLER_STATUS = "controllerStatus";
 
-        /**
-         * Controller 播放状态
-         */
-        String KEY_CONTROLLER_PLAY_STATUS = "controllerPlayStatus";
+
     }
 
     interface PrivateEvent {
@@ -69,9 +83,19 @@ public interface CoverConstant {
         int CODE_REQUEST_HL_SCREEN_TOGGLE = -120;
 
         /**
-         * 请求 全屏切换
+         * 请求 进入全屏
          */
-        int CODE_REQUEST_FULLSCREEN_TOGGLE = -140;
+        int CODE_REQUEST_FULLSCREEN_ENTER = -140;
+
+        /**
+         * 请求 退出全屏
+         */
+        int CODE_REQUEST_FULLSCREEN_EXIT = -141;
+
+        /**
+         * 请求 进度自动更新状态
+         */
+        int CODE_REQUEST_TIMER_UPDATE_STATE = -150;
     }
 
 }

@@ -67,6 +67,16 @@ public class PlayerContainerView extends FrameLayout {
     }
 
     /**
+     * 设置 封面图
+     *
+     * @param drawable drawable
+     */
+    public void setCoverImage(Drawable drawable) {
+        this.mCoverImage.setImageDrawable(drawable);
+        this.mCoverImage.setVisibility(View.VISIBLE);
+    }
+
+    /**
      * 获取 封面图
      */
     public Drawable getCoverImage() {
@@ -129,6 +139,15 @@ public class PlayerContainerView extends FrameLayout {
      */
     public void setIntercept(boolean intercept) {
         this.mIntercept = intercept;
+    }
+
+    /**
+     * 获取 拦截事件
+     *
+     * @return True/False
+     */
+    public boolean isIntercept() {
+        return mIntercept;
     }
 
     /**

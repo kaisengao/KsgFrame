@@ -27,29 +27,25 @@ public class BlurUtil {
     private static final float BITMAP_SCALE = 0.2f;
 
     /**
-     * 模糊ImageView
+     * 模糊图片
      *
-     * @param context context
-     * @param img     ImageView
-     * @param level   模糊等级【0 ~ 25之间】
+     * @param context  context
+     * @param Drawable drawable
+     * @param level    模糊等级【0 ~ 25之间】
      */
     public static Bitmap blurDrawable(Context context, Drawable drawable, @FloatRange(from = 0, to = 25) float level) {
         // 将图片处理成模糊
-        Bitmap bitmap = blurBitmap(context, drawableToBitmap(drawable), level);
-        if (bitmap != null) {
-            return bitmap;
-        }
-        return null;
+        return blurBitmap(context, drawableToBitmap(drawable), level);
     }
 
     /**
-     * 模糊图片的具体方法
+     * 模糊图片
      *
      * @param context 上下文对象
      * @param bitmap  需要模糊的图片
      * @return 模糊处理后的图片
      */
-    public static Bitmap blurBitmap(Context context, Bitmap bitmap, @FloatRange(from = 0, to = 25)  float level) {
+    public static Bitmap blurBitmap(Context context, Bitmap bitmap, @FloatRange(from = 0, to = 25) float level) {
         Bitmap outputBitmap;
         try {
 

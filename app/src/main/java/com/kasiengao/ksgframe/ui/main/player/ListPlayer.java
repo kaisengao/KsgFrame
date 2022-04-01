@@ -1,4 +1,4 @@
-package com.kasiengao.ksgframe.player;
+package com.kasiengao.ksgframe.ui.main.player;
 
 import androidx.annotation.NonNull;
 
@@ -7,7 +7,9 @@ import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
 import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.kasiengao.ksgframe.factory.AppFactory;
+import com.kasiengao.ksgframe.player.KsgExoPlayer;
 import com.kasiengao.ksgframe.player.cover.LoadingCover;
+import com.kasiengao.ksgframe.ui.main.bean.VideoBean;
 import com.ksg.ksgplayer.cover.CoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
@@ -27,6 +29,12 @@ public class ListPlayer {
     private int mCurrPosition = -1;
 
     private boolean mUserPause;
+
+    private boolean mFullscreen;
+
+    private boolean mOperable = true;
+
+    private VideoBean mCurrVideoBean;
 
     private PlayerContainerView mCurrContainer;
 
@@ -77,9 +85,19 @@ public class ListPlayer {
                     // 标记暂停
                     this.mUserPause = true;
                     break;
-                case CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_TOGGLE:
-                    // 切换全屏
-                    this.onFullscreen();
+                case CoverConstant.CoverEvent.CODE_REQUEST_BACK:
+                    // Back
+                    if (mListPlayerListener != null) {
+                        mListPlayerListener.onBack();
+                    }
+                    break;
+                case CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_ENTER:
+                    // 进入全屏
+                    this.onFullscreen(true);
+                    break;
+                case CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_EXIT:
+                    // 退出全屏
+                    this.onFullscreen(false);
                     break;
                 default:
                     break;
@@ -173,38 +191,48 @@ public class ListPlayer {
 
     /**
      * 绑定 新容器
+     *
+     * @param newContainer 新容器
      */
-    public void bindNewContainer(PlayerContainerView container) {
+    public void bindNewContainer(PlayerContainerView newContainer) {
+        PlayerContainerView oldContainer = getCurrContainer();
         // 同步状态位
-        if (getCurrContainer() != null) {
-            container.setPlayerState(getCurrContainer().getPlayerState());
-        }
+        newContainer.setIntercept(oldContainer.isIntercept());
+        newContainer.setCoverImage(oldContainer.getCoverImage());
+        newContainer.setPlayerState(oldContainer.getPlayerState());
         // 修改当前容器
-        this.setCurrContainer(container);
+        this.setCurrContainer(newContainer);
         // 重新绑定容器
-        this.getPlayer().bindContainer(container);
+        if (newContainer.getPlayerState() == IPlayer.STATE_START) {
+            this.getPlayer().bindContainer(newContainer);
+        }
     }
 
     /**
      * 播放
      *
      * @param position  当前位置
-     * @param videoUrl  播放地址
+     * @param videoBean 数据源
      * @param container 新的容器
      */
-    public void onPlay(int position, String videoUrl, PlayerContainerView container) {
+    public void onPlay(int position, VideoBean videoBean, PlayerContainerView container) {
         // 重置当前容器
         this.resetCurrContainer();
-        // 标记当前位置与容器
+        // 标记当前位置与容器与数据
         this.setCurrPosition(position);
         this.setCurrContainer(container);
+        this.mCurrVideoBean = videoBean;
         // 设置状态
         container.setPlayerState(IPlayer.STATE_PREPARED);
         // 播放视频
         KsgAssistView player = getPlayer();
         player.unbindContainer();
-        player.setDataSource(new DataSource(videoUrl));
+        player.setDataSource(new DataSource(videoBean.getVideoUrl()));
         player.start();
+        // 配置UP主信息
+        this.getCoverManager()
+                .getValuePool()
+                .putObject(CoverConstant.ValueKey.KEY_UPLOADER_DATA, videoBean);
     }
 
     /**
@@ -242,14 +270,82 @@ public class ListPlayer {
     }
 
     /**
-     * 全屏
+     * 设置 全屏状态
      */
-    public void onFullscreen() {
-        PlayerContainerView currContainer = getCurrContainer();
-        if (currContainer != null && mListPlayerListener != null) {
-            // Listener
-            this.mListPlayerListener.onFullscreen(getCurrPosition(), currContainer);
+    public void setFullscreen(boolean fullscreen) {
+        this.mFullscreen = fullscreen;
+    }
+
+    /**
+     * 全屏切换
+     */
+    public void onFullscreen(boolean fullscreen) {
+        this.mOperable = false;
+        if (mFullscreen == fullscreen) {
+            return;
         }
+        // 全屏切换
+        if (mListPlayerListener != null) {
+            this.mListPlayerListener.onFullscreen(fullscreen);
+        }
+    }
+
+    /**
+     * 进入详情页
+     */
+    public void onEnterDetail(int position, VideoBean videoBean, PlayerContainerView container) {
+        // 验证与当前播放的是否是同一个
+        if (mCurrPosition == position
+                && (mCurrVideoBean != null && mCurrVideoBean == videoBean)
+                && (mCurrContainer != null && mCurrContainer == container)) {
+            // 打开详情页
+            this.onOpenDetail(position, container);
+            return;
+        }
+        // 播放视频
+        this.onPlay(position, videoBean, container);
+        // 打开详情页
+        this.onOpenDetail(position, container);
+    }
+
+    /**
+     * 打开详情页
+     */
+    public void onOpenDetail() {
+        this.onOpenDetail(getCurrPosition(), getCurrContainer());
+    }
+
+    /**
+     * 打开详情页
+     */
+    private void onOpenDetail(int position, PlayerContainerView container) {
+        this.mOperable = false;
+        if (mListPlayerListener != null) {
+            this.mListPlayerListener.onOpenDetail(position, container);
+            // 通知 隐藏控制器
+            this.getCoverManager()
+                    .getValuePool()
+                    .putObject(CoverConstant.ValueKey.KEY_HIDE_CONTROLLER, null, false);
+        }
+    }
+
+    /**
+     * 退出详情页
+     */
+    public void onExitDetail(PlayerContainerView newContainer) {
+        this.mOperable = true;
+        // 切回至旧容器 (原列表容器)
+        ListPlayer.getInstance().bindNewContainer(newContainer);
+    }
+
+    /**
+     * 是否可操作
+     *
+     * @return True/False
+     */
+
+    public boolean isOperable() {
+        return mOperable;
     }
 
     /**
@@ -269,11 +365,21 @@ public class ListPlayer {
     public interface OnListPlayerListener {
 
         /**
-         * 全屏
+         * Back
+         */
+        void onBack();
+
+        /**
+         * 打开详情页
          *
          * @param position      当前位置
          * @param listContainer 当前容器
          */
-        void onFullscreen(int position, @NonNull PlayerContainerView listContainer);
+        void onOpenDetail(int position, @NonNull PlayerContainerView listContainer);
+
+        /**
+         * 全屏切换
+         */
+        void onFullscreen(boolean fullscreen);
     }
 }

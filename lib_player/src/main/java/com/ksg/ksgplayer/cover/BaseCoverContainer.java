@@ -49,6 +49,8 @@ public abstract class BaseCoverContainer implements ICoverContainer {
     @Override
     public void removeCover(BaseCover cover) {
         if (isAvailableCover(cover) && mCovers.contains(cover)) {
+            // 释放
+            cover.release();
             // 移除组件
             this.onCoverRemove(cover);
             // 移除集合

@@ -1,14 +1,18 @@
 package com.kasiengao.ksgframe.player;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.View;
 
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.google.android.exoplayer2.C;
+import com.google.android.exoplayer2.DefaultLoadControl;
+import com.google.android.exoplayer2.DefaultRenderersFactory;
 import com.google.android.exoplayer2.ExoPlayer;
 import com.google.android.exoplayer2.MediaItem;
 import com.google.android.exoplayer2.PlaybackException;
@@ -20,7 +24,6 @@ import com.google.android.exoplayer2.source.dash.DashMediaSource;
 import com.google.android.exoplayer2.source.hls.HlsMediaSource;
 import com.google.android.exoplayer2.source.smoothstreaming.SsMediaSource;
 import com.google.android.exoplayer2.trackselection.DefaultTrackSelector;
-import com.google.android.exoplayer2.upstream.DefaultBandwidthMeter;
 import com.google.android.exoplayer2.upstream.DefaultDataSource;
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSource;
 import com.google.android.exoplayer2.util.Util;
@@ -34,7 +37,11 @@ import com.ksg.ksgplayer.listener.OnPlayerListener;
 import com.ksg.ksgplayer.player.BasePlayer;
 import com.ksg.ksgplayer.player.IPlayer;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.File;
+
+import static com.google.android.exoplayer2.Player.DISCONTINUITY_REASON_SEEK;
 
 /**
  * @ClassName: KsgExoPlayer
@@ -44,26 +51,25 @@ import java.io.File;
  */
 public class KsgExoPlayer extends BasePlayer {
 
-    private static final String TAG = "KsgExoPlayer";
-
     private long mStartPos = -1;
 
     private boolean isPreparing = true;
 
     private boolean isBuffering = false;
 
-    private boolean isPendingSeek = false;
+    protected int lastReportedPlaybackState;
+
+    protected boolean isLastReportedPlayWhenReady;
 
     private ExoPlayer mExoPlayer;
-
-    private DefaultBandwidthMeter mBandwidthMeter;
 
     private HttpProxyCacheServer mCacheServer;
 
     public KsgExoPlayer(Context context) {
         super(context);
         // 初始化通知
-        this.updateStatus(IPlayer.STATE_INIT);
+        this.updateState(IPlayer.STATE_IDLE);
+        this.lastReportedPlaybackState = Player.STATE_IDLE;
     }
 
     /**
@@ -71,10 +77,14 @@ public class KsgExoPlayer extends BasePlayer {
      */
     @Override
     public void initPlayer() {
-        this.mExoPlayer = new ExoPlayer.Builder(mContext)
+        @DefaultRenderersFactory.ExtensionRendererMode int extensionRendererMode = DefaultRenderersFactory.EXTENSION_RENDERER_MODE_PREFER;
+        DefaultRenderersFactory rendererFactory = new DefaultRenderersFactory(mContext);
+        rendererFactory.setExtensionRendererMode(extensionRendererMode);
+        this.mExoPlayer = new ExoPlayer.Builder(mContext, rendererFactory)
+                .setLooper(Looper.myLooper())
                 .setTrackSelector(new DefaultTrackSelector(mContext))
+                .setLoadControl(new DefaultLoadControl())
                 .build();
-        this.mBandwidthMeter = new DefaultBandwidthMeter.Builder(mContext).build();
     }
 
     /**
@@ -103,7 +113,7 @@ public class KsgExoPlayer extends BasePlayer {
                 this.release();
             }
             // 播放准备
-            this.updateStatus(IPlayer.STATE_INIT);
+            this.updateState(IPlayer.STATE_INIT);
             // 事件监听
             this.mExoPlayer.addListener(mListener);
             // Uri
@@ -132,7 +142,7 @@ public class KsgExoPlayer extends BasePlayer {
             bundle.putSerializable(EventKey.SERIALIZABLE_DATA, dataSource);
             this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_DATA_SOURCE_SET, bundle);
         } catch (Exception e) {
-            this.updateStatus(IPlayer.STATE_ERROR);
+            this.updateState(IPlayer.STATE_ERROR);
             this.sendErrorEvent(OnErrorListener.ERROR_EVENT_DATA_SOURCE, e.getMessage());
         }
     }
@@ -293,9 +303,6 @@ public class KsgExoPlayer extends BasePlayer {
      */
     @Override
     public void seekTo(long msc) {
-        if (isInPlaybackState()) {
-            isPendingSeek = true;
-        }
         // 计算百分比
         float percent = ((float) msc) / getDuration();
         // 计算当前位置
@@ -313,6 +320,8 @@ public class KsgExoPlayer extends BasePlayer {
     @Override
     public void start() {
         this.mExoPlayer.setPlayWhenReady(true);
+        this.updateState(IPlayer.STATE_START);
+        this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_START, null);
     }
 
     /**
@@ -322,13 +331,8 @@ public class KsgExoPlayer extends BasePlayer {
      */
     @Override
     public void start(long msc) {
-        if (getState() == STATE_PREPARED && msc > 0) {
-            this.start();
-            this.seekTo(msc);
-        } else {
-            this.mStartPos = msc;
-            this.start();
-        }
+        this.mStartPos = msc;
+        this.start();
     }
 
     /**
@@ -336,16 +340,9 @@ public class KsgExoPlayer extends BasePlayer {
      */
     @Override
     public void pause() {
-        int state = getState();
-        if (isInPlaybackState()
-                && state != STATE_COMPLETE
-                && state != STATE_ERROR
-                && state != STATE_IDLE
-                && state != STATE_INIT
-                && state != STATE_PAUSE
-                && state != STATE_STOP) {
-            this.mExoPlayer.setPlayWhenReady(false);
-        }
+        this.mExoPlayer.setPlayWhenReady(false);
+        this.updateState(IPlayer.STATE_PAUSE);
+        this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_PAUSE, null);
     }
 
     /**
@@ -353,8 +350,9 @@ public class KsgExoPlayer extends BasePlayer {
      */
     @Override
     public void resume() {
-        if (isInPlaybackState() && getState() == STATE_PAUSE)
-            this.mExoPlayer.setPlayWhenReady(true);
+        this.mExoPlayer.setPlayWhenReady(true);
+        this.updateState(IPlayer.STATE_START);
+        this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_RESUME, null);
     }
 
     /**
@@ -362,10 +360,8 @@ public class KsgExoPlayer extends BasePlayer {
      */
     @Override
     public void stop() {
-        this.isPreparing = true;
-        this.isBuffering = false;
         this.mExoPlayer.stop();
-        this.updateStatus(IPlayer.STATE_STOP);
+        this.updateState(IPlayer.STATE_STOP);
         this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_STOP, null);
     }
 
@@ -375,7 +371,7 @@ public class KsgExoPlayer extends BasePlayer {
     @Override
     public void reset() {
         this.stop();
-        this.updateStatus(IPlayer.STATE_IDLE);
+        this.updateState(IPlayer.STATE_IDLE);
         this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_RESET, null);
     }
 
@@ -387,8 +383,6 @@ public class KsgExoPlayer extends BasePlayer {
         if (mExoPlayer == null) {
             return;
         }
-        this.isPreparing = true;
-        this.isBuffering = false;
         this.mExoPlayer.removeListener(mListener);
     }
 
@@ -399,16 +393,8 @@ public class KsgExoPlayer extends BasePlayer {
     public void destroy() {
         this.release();
         this.mExoPlayer.release();
-        this.updateStatus(IPlayer.STATE_DESTROY);
+        this.updateState(IPlayer.STATE_DESTROY);
         this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_DESTROY, null);
-    }
-
-    private boolean isInPlaybackState() {
-        int state = getState();
-        return state != STATE_COMPLETE
-                && state != STATE_ERROR
-                && state != STATE_INIT
-                && state != STATE_STOP;
     }
 
     /**
@@ -418,87 +404,81 @@ public class KsgExoPlayer extends BasePlayer {
 
         @Override
         public void onIsLoadingChanged(boolean isLoading) {
+            // 缓冲进度
             if (!isLoading) {
-                // 缓冲进度
                 setBufferPercentage(mExoPlayer.getBufferedPercentage());
             }
         }
 
         @Override
         public void onPlaybackStateChanged(int playbackState) {
-            if (isPreparing) {
-                switch (playbackState) {
-                    case Player.STATE_READY:
-                        isPreparing = false;
-                        updateStatus(IPlayer.STATE_PREPARED);
-                        sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_PREPARED, null);
-                        if (mStartPos > 0 && mExoPlayer.getDuration() > 0) {
-                            mExoPlayer.seekTo(mStartPos);
-                            mStartPos = -1;
-                        }
-                        break;
-                }
-            }
-            if (isBuffering) {
-                switch (playbackState) {
-                    case Player.STATE_READY:
-                    case Player.STATE_ENDED:
-                        long bitrateEstimate = mBandwidthMeter.getBitrateEstimate();
-                        isBuffering = false;
-                        Bundle bundle = BundlePool.obtain();
-                        bundle.putLong(EventKey.LONG_DATA, bitrateEstimate);
-                        sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_BUFFERING_END, bundle);
-                        break;
-                }
-            }
-            if (isPendingSeek) {
-                switch (playbackState) {
-                    case Player.STATE_READY:
-                        isPendingSeek = false;
-                        sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_SEEK_COMPLETE, null);
-                        break;
-                }
-            }
-            if (!isPreparing) {
-                switch (playbackState) {
-                    case Player.STATE_BUFFERING:
-                        long bitrateEstimate = mBandwidthMeter.getBitrateEstimate();
-                        isBuffering = true;
-                        Bundle bundle = BundlePool.obtain();
-                        bundle.putLong(EventKey.LONG_DATA, bitrateEstimate);
-                        sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_BUFFERING_START, bundle);
-                        break;
-                    case Player.STATE_ENDED:
-                        updateStatus(IPlayer.STATE_COMPLETE);
-                        sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE, null);
-                        break;
-                }
-            }
+            onPlayWhenReadyChanged(isLastReportedPlayWhenReady, playbackState);
         }
 
+        @SuppressLint("SwitchIntDef")
         @Override
-        public void onPlayWhenReadyChanged(boolean playWhenReady, int reason) {
-            if (!isPreparing) {
-                if (playWhenReady) {
-                    if (getState() == STATE_PREPARED) {
-                        updateStatus(IPlayer.STATE_START);
-                        sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_AUDIO_RENDER_START, null);
-                        sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_START, null);
-                    } else {
-                        updateStatus(IPlayer.STATE_START);
-                        sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_RESUME, null);
+        public void onPlayWhenReadyChanged(boolean playWhenReady, int playbackState) {
+            // 重新播放状态顺序为：STATE_IDLE -》STATE_BUFFERING -》STATE_READY
+            // 缓冲时顺序为：STATE_BUFFERING -》STATE_READY
+            if (isLastReportedPlayWhenReady != playWhenReady || lastReportedPlaybackState != playbackState) {
+                if (isBuffering) {
+                    switch (playbackState) {
+                        case Player.STATE_ENDED:
+                        case Player.STATE_READY:
+                            sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_BUFFERING_END, null);
+                            isBuffering = false;
+                            break;
                     }
-                } else {
-                    updateStatus(IPlayer.STATE_PAUSE);
-                    sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_PAUSE, null);
+                }
+
+                if (isPreparing) {
+                    switch (playbackState) {
+                        case Player.STATE_READY:
+                            updateState(IPlayer.STATE_PREPARED);
+                            sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_PREPARED, null);
+                            if (playWhenReady) {
+                                updateState(STATE_START);
+                                sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_START, null);
+                            }
+                            if (mStartPos > 0 && mExoPlayer.getDuration() > 0) {
+                                seekTo(mStartPos);
+                                mStartPos = -1;
+                            }
+                            isPreparing = false;
+                            break;
+                        case Player.STATE_ENDED:
+                            break;
+                    }
+                }
+
+                switch (playbackState) {
+                    case Player.STATE_BUFFERING:
+                        sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_BUFFERING_START, null);
+                        isBuffering = true;
+                        break;
+                    case Player.STATE_ENDED:
+                        updateState(IPlayer.STATE_COMPLETE);
+                        sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE, null);
+                        break;
+                    default:
+                        break;
                 }
             }
+            isLastReportedPlayWhenReady = playWhenReady;
+            lastReportedPlaybackState = playbackState;
         }
 
         @Override
         public void onPlayerError(PlaybackException error) {
-            updateStatus(IPlayer.STATE_ERROR);
+            updateState(IPlayer.STATE_ERROR);
             sendErrorEvent(OnErrorListener.ERROR_EVENT_UNKNOWN, error.errorCode + "|" + error.getErrorCodeName());
+        }
+
+        @Override
+        public void onPositionDiscontinuity(@NotNull Player.PositionInfo oldPosition, @NotNull Player.PositionInfo newPosition, int reason) {
+            if (reason == DISCONTINUITY_REASON_SEEK) {
+                sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_SEEK_COMPLETE, null);
+            }
         }
 
         @Override
@@ -511,7 +491,7 @@ public class KsgExoPlayer extends BasePlayer {
 
         @Override
         public void onRenderedFirstFrame() {
-            updateStatus(IPlayer.STATE_START);
+            updateState(IPlayer.STATE_START);
             sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_VIDEO_RENDER_START, null);
         }
     };

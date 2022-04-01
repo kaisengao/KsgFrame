@@ -34,31 +34,29 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
 
     private boolean mFirstTouch;
 
-    private boolean mChangeVolume;
+    private boolean mLongPress;
 
-    private boolean mChangePosition;
+    private boolean mSlideSeek;
 
-    private boolean mChangeBrightness;
+    private boolean mSlideVolume;
 
-    private boolean mIsSlideEnabled = false;
+    private boolean mSlideBrightness;
 
-    private boolean mIsSlideHEnabled = true;
-
-    private boolean mIsGestureEnabled = true;
+    private boolean mGestureEnabled = true;
 
     private final VolumeHelper mVolumeHelper;
 
     private final GestureDetector mGestureDetector;
 
-    private final OnTouchGestureListener mOnTouchGestureListener;
+    private final OnTouchGestureListener mTouchGestureListener;
 
     /**
-     * @param context                context
-     * @param onTouchGestureListener 手势监听回调
+     * @param context              context
+     * @param touchGestureListener 手势监听回调
      */
-    public GestureTouchHelper(Activity context, OnTouchGestureListener onTouchGestureListener) {
+    public GestureTouchHelper(Activity context, OnTouchGestureListener touchGestureListener) {
         this.mActivity = context;
-        this.mOnTouchGestureListener = onTouchGestureListener;
+        this.mTouchGestureListener = touchGestureListener;
         // 音频帮助类
         this.mVolumeHelper = new VolumeHelper(context);
         // GestureDetector
@@ -66,7 +64,7 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
     }
 
     /**
-     * 设置  View宽
+     * 设置 宽高
      */
     public void setView(int viewWidth, int viewHeight) {
         this.mViewWidth = viewWidth;
@@ -74,24 +72,10 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
     }
 
     /**
-     * 设置 是否可以手势调节进度，音量，亮度功能，默认关闭
-     */
-    public void setSlideEnabled(boolean enableNormal) {
-        this.mIsSlideEnabled = enableNormal;
-    }
-
-    /**
-     * 设置 是否可以手势调节进度，默认开启
-     */
-    public void setSlideHEnabled(boolean enableNormal) {
-        this.mIsSlideHEnabled = enableNormal;
-    }
-
-    /**
-     * 设置 是否开启手势调节进度，音量，亮度，单击，双击，默认开启
+     * 设置 是否开启手势调节，默认开启
      */
     public void setGestureEnabled(boolean gestureEnabled) {
-        this.mIsGestureEnabled = gestureEnabled;
+        this.mGestureEnabled = gestureEnabled;
     }
 
     /**
@@ -111,10 +95,16 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
         this.mTimeFormat = TimeUtil.getFormat(mDuration);
     }
 
+    /**
+     * 视频总时长
+     */
     public long getDuration() {
         return mDuration;
     }
 
+    /**
+     * 滑动的进度
+     */
     public long getSlideProgress() {
         return mSlideProgress;
     }
@@ -126,54 +116,77 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      * @return boolean
      */
     public boolean onTouch(MotionEvent event) {
+        // 验证是否开启了手势
+        if (!mGestureEnabled) {
+            return mGestureDetector.onTouchEvent(event);
+        }
         // 监听Up事件
         if (event.getAction() == MotionEvent.ACTION_UP) {
-            // 1、验证是否开启了滑动手势
-            if (mIsSlideEnabled) {
-                // 2、验证是横向滑动结束还是普通滑动事件
-                if (mChangePosition) {
-                    this.onSeekEndGesture();
-                } else {
-                    this.onEndGesture();
-                }
+            if (mLongPress) {
+                // 长按事件
+                this.onLongPressEnd();
+            } else if (mSlideSeek) {
+                // 滑动进度事件
+                this.onSlideEndSeek();
+            } else {
+                // 滑动其他事件
+                this.onSlideEnd();
             }
         }
         return mGestureDetector.onTouchEvent(event);
     }
 
     /**
-     * 单击手势，确认是单击的时候调用
-     */
-    @Override
-    public boolean onSingleTapConfirmed(MotionEvent e) {
-        this.mOnTouchGestureListener.onSingleTapGesture();
-        return super.onSingleTapConfirmed(e);
-    }
-
-    /**
-     * 双击手势，确认是双击的时候调用
-     */
-    @Override
-    public boolean onDoubleTap(MotionEvent e) {
-        this.mOnTouchGestureListener.onDoubleTapGesture();
-        return super.onDoubleTap(e);
-    }
-
-    /**
-     * 按下手势，第一根手指按下时候调用
+     * Down事件
      */
     @Override
     public boolean onDown(MotionEvent e) {
         // 初始化基参
         this.mSlipRegion = false;
         this.mFirstTouch = true;
-        this.mChangeVolume = false;
-        this.mChangePosition = false;
-        this.mChangeBrightness = false;
+        this.mLongPress = false;
+        this.mSlideSeek = false;
+        this.mSlideVolume = false;
+        this.mSlideBrightness = false;
         // 回调Down事件
-        this.mOnTouchGestureListener.onDown();
+        this.mTouchGestureListener.onDown();
         // 是否开启手势
-        return mIsGestureEnabled;
+        return mGestureEnabled;
+    }
+
+    /**
+     * 单击
+     */
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent e) {
+        this.mTouchGestureListener.onSingleTapGesture();
+        return super.onSingleTapConfirmed(e);
+    }
+
+    /**
+     * 双击
+     */
+    @Override
+    public boolean onDoubleTap(MotionEvent e) {
+        this.mTouchGestureListener.onDoubleTapGesture();
+        return super.onDoubleTap(e);
+    }
+
+    /**
+     * 长按
+     */
+    @Override
+    public void onLongPress(MotionEvent e) {
+        this.mLongPress = true;
+        this.mTouchGestureListener.onLongPress();
+    }
+
+    /**
+     * 长按结束
+     */
+    public void onLongPressEnd() {
+        this.mLongPress = false;
+        this.mTouchGestureListener.onLongPressEnd();
     }
 
     /**
@@ -186,65 +199,37 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         // 验证是否开启了手势 或 滑动手势
-        if (!mIsGestureEnabled || !mIsSlideEnabled) {
+        if (!mGestureEnabled) {
             return true;
         }
         float deltaX = e1.getX() - e2.getX();
         float deltaY = e1.getY() - e2.getY();
         if (mFirstTouch) {
-            this.mChangePosition = Math.abs(distanceX) >= Math.abs(distanceY);
-            if (!mChangePosition) {
+            this.mSlideSeek = Math.abs(distanceX) >= Math.abs(distanceY);
+            if (!mSlideSeek) {
                 //半屏宽度
                 int halfScreen = mViewWidth / 2;
                 if (e2.getX() > halfScreen) {
-                    this.mChangeVolume = true;
+                    this.mSlideVolume = true;
                 } else {
-                    this.mChangeBrightness = true;
+                    this.mSlideBrightness = true;
                 }
             }
             this.mFirstTouch = false;
         }
 
-        if (mChangePosition) {
-            // 验证是否开启了 快进退
-            if (mIsSlideHEnabled) {
-                // 快进后退
-                this.slideToChangePosition(e1.getX(), deltaX);
-            }
-        } else if (mChangeBrightness) {
+        if (mSlideSeek) {
+            // 快进退
+            this.slideToSeek(e1.getX(), deltaX);
+        } else if (mSlideBrightness) {
             // 亮度
-            this.slideToChangeBrightness(deltaY);
-        } else if (mChangeVolume) {
+            this.slideBrightness(deltaY);
+        } else if (mSlideVolume) {
             // 音量
-            this.slideToChangeVolume(deltaY);
+            this.slideVolume(deltaY);
         }
 
         return true;
-    }
-
-    /**
-     * 快进后退
-     *
-     * @param deltaX deltaX
-     */
-    private void slideToChangePosition(float e1x, float deltaX) {
-        // 计算滑动区域 左侧百分之%07的位置开始计算 小于不算
-        //             右侧百分之%93的位置开始计算 大于不算
-        this.mSlipRegion = (e1x > (mViewWidth * 0.07) && e1x < (mViewWidth * 0.93));
-        // 验证是否符合区域
-        if (this.mSlipRegion) {
-            deltaX = -deltaX;
-            // 计算手势滑动产生的新进度
-            mSlideProgress = (long) (deltaX / mViewWidth * 120000 + mProgress);
-            mSlideProgress = mSlideProgress <= 0 ? 0 : mSlideProgress;
-            mSlideProgress = Math.min(mSlideProgress, mDuration);
-            // 时间转换
-            String curr = TimeUtil.getTime(mTimeFormat, mSlideProgress);
-            String duration = TimeUtil.getTime(mTimeFormat, mDuration);
-            String time = curr + " / " + duration;
-            // 回调
-            this.mOnTouchGestureListener.onSeekGesture(deltaX, time);
-        }
     }
 
     /**
@@ -252,13 +237,13 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      *
      * @param deltaY deltaY
      */
-    private void slideToChangeBrightness(float deltaY) {
+    private void slideBrightness(float deltaY) {
         // 新的亮度
         int newBrightness = (int) (deltaY / (mViewHeight - 30 * 2) * 100 + mMaxAppLight);
         // 百分比计算
         int brightness = BrightnessHelper.setAppLight100(mActivity, newBrightness);
         // 回调
-        this.mOnTouchGestureListener.onBrightnessGesture(brightness);
+        this.mTouchGestureListener.onSlideBrightness(brightness);
     }
 
     /**
@@ -266,28 +251,53 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      *
      * @param deltaY deltaY
      */
-    private void slideToChangeVolume(float deltaY) {
+    private void slideVolume(float deltaY) {
         // 新的音量
         int newVolume = (int) (deltaY / (mViewHeight - 30 * 2) * 100 + mCurrentVolume);
         // 百分比计算
         int volume = mVolumeHelper.setVoice100(newVolume);
         // 回调
-        this.mOnTouchGestureListener.onVolumeGesture(volume);
+        this.mTouchGestureListener.onSlideVolume(volume);
     }
 
     /**
-     * 快进后退手势 滑动结束
+     * 快进后退
+     *
+     * @param deltaX deltaX
      */
-    private void onSeekEndGesture() {
-        if (mSlipRegion) {
-            this.mOnTouchGestureListener.onSeekEndGesture();
+    private void slideToSeek(float e1x, float deltaX) {
+        // 计算滑动区域 左侧百分之%07的位置开始计算 小于不算
+        //            右侧百分之%93的位置开始计算 大于不算
+        this.mSlipRegion = (e1x > (mViewWidth * 0.07) && e1x < (mViewWidth * 0.93));
+        // 验证是否符合区域
+        if (this.mSlipRegion) {
+            deltaX = -deltaX;
+            // 计算手势滑动产生的新进度
+            this.mSlideProgress = (long) (deltaX / mViewWidth * 200000 + mProgress);
+            this.mSlideProgress = mSlideProgress <= 0 ? 0 : mSlideProgress;
+            this.mSlideProgress = Math.min(mSlideProgress, mDuration);
+            // 时间转换
+            String curr = TimeUtil.getTime(mTimeFormat, mSlideProgress);
+            String duration = TimeUtil.getTime(mTimeFormat, mDuration);
+            String time = curr + " / " + duration;
+            // 回调
+            this.mTouchGestureListener.onSlideSeek(mSlideProgress, time);
         }
     }
 
     /**
      * 滑动结束
      */
-    private void onEndGesture() {
-        this.mOnTouchGestureListener.onEndGesture();
+    private void onSlideEnd() {
+        this.mTouchGestureListener.onSlideEnd();
+    }
+
+    /**
+     * 滑动结束 快进退
+     */
+    private void onSlideEndSeek() {
+        if (mSlipRegion) {
+            this.mTouchGestureListener.onSlideEndSeek();
+        }
     }
 }

@@ -1,0 +1,275 @@
+package com.kasiengao.ksgframe.player.cover;
+
+import android.content.Context;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+
+import androidx.appcompat.widget.AppCompatImageView;
+import androidx.appcompat.widget.AppCompatSeekBar;
+import androidx.appcompat.widget.AppCompatTextView;
+
+import com.kaisengao.base.util.TimeUtil;
+import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.constant.CoverConstant;
+import com.ksg.ksgplayer.event.BundlePool;
+import com.ksg.ksgplayer.event.EventKey;
+import com.ksg.ksgplayer.listener.OnPlayerListener;
+import com.ksg.ksgplayer.player.IPlayer;
+
+/**
+ * @ClassName: Landscape
+ * @Author: KaiSenGao
+ * @CreateDate: 2022/3/31 16:25
+ * @Description: 横屏控制器
+ */
+public class LandControllerCover extends BaseControllerCover implements RadioGroup.OnCheckedChangeListener {
+
+    private View mControllerTop;
+
+    private View mControllerBottom;
+
+    private AppCompatImageView mBack;
+
+    private AppCompatSeekBar mProgress;
+
+    private AppCompatImageView mPlayState;
+
+    private AppCompatTextView mCurrTime;
+
+    private AppCompatTextView mDurationTime;
+
+    private AppCompatTextView mSpeed;
+
+    private RadioGroup mSpeeds;
+
+    private RadioButton mDefaultSpeed;
+
+    public LandControllerCover(Context context) {
+        super(context);
+    }
+
+    @Override
+    protected View onCreateCoverView(Context context) {
+        return View.inflate(context, R.layout.layout_cover_land_controller, null);
+    }
+
+    /**
+     * InitViews
+     */
+    @Override
+    public void initViews() {
+        super.initViews();
+        // Views
+        this.mControllerTop = findViewById(R.id.cover_controller_top);
+        this.mControllerBottom = findViewById(R.id.cover_controller_bottom);
+        this.mBack = findViewById(R.id.cover_controller_back);
+        this.mProgress = findViewById(R.id.cover_controller_seek);
+        this.mCurrTime = findViewById(R.id.cover_controller_curr_time);
+        this.mDurationTime = findViewById(R.id.cover_controller_duration_time);
+        this.mPlayState = findViewById(R.id.cover_controller_play_state);
+        AppCompatImageView fullscreen = findViewById(R.id.cover_controller_fullscreen);
+        this.mSpeed = findViewById(R.id.cover_controller_speed);
+        this.mSpeeds = findViewById(R.id.cover_controller_speeds);
+        this.mDefaultSpeed = findViewById(R.id.speed_100);
+        // OnClicks
+        this.mBack.setOnClickListener(this);
+        this.mPlayState.setOnClickListener(this);
+        fullscreen.setOnClickListener(this);
+        this.mSpeed.setOnClickListener(this);
+        this.mSpeeds.setOnClickListener(this);
+        // SeekBar
+        this.mProgress.setOnSeekBarChangeListener(this);
+        // RadioGroup
+        this.mSpeeds.setOnCheckedChangeListener(this);
+        // Init
+        fullscreen.setSelected(true);
+    }
+
+    /**
+     * View 与页面视图绑定
+     */
+    @Override
+    public void onCoverViewBind() {
+        super.onCoverViewBind();
+        // 初始状态
+        if (getPlayerStateGetter() != null) {
+            this.setPlayState(getPlayerStateGetter().getState());
+        }
+    }
+
+    @Override
+    public void onPlayerEvent(int eventCode, Bundle bundle) {
+        super.onPlayerEvent(eventCode, bundle);
+        switch (eventCode) {
+            case OnPlayerListener.PLAYER_EVENT_ON_STATE_CHANGE:
+                // 播放状态改变
+                this.setPlayState(bundle.getInt(EventKey.INT_DATA));
+                break;
+            case OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE:
+                // 恢复倍数
+                this.mDefaultSpeed.toggle();
+                this.mSpeed.setSelected(false);
+                this.mSpeed.setText(R.string.controller_speed);
+                // 全屏切换
+                this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_EXIT, null);
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 设置状态
+     */
+    private void setPlayState(int state) {
+        if (state == IPlayer.STATE_PAUSE) {
+            this.mPlayState.setSelected(false);
+        } else if (state == IPlayer.STATE_START) {
+            this.mPlayState.setSelected(true);
+        }
+    }
+
+    /**
+     * 播放状态
+     */
+    @Override
+    protected void onSwitchPlayState() {
+        super.onSwitchPlayState();
+        boolean selected = mPlayState.isSelected();
+        if (selected) {
+            this.requestPause(null);
+        } else {
+            this.requestResume(null);
+        }
+        this.mPlayState.setSelected(!selected);
+    }
+
+    /**
+     * 倍速
+     *
+     * @param checkedId checkedId
+     */
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        float speed;
+        if (checkedId == R.id.speed_75) {
+            speed = 0.75f;
+        } else if (checkedId == R.id.speed_125) {
+            speed = 1.25f;
+        } else if (checkedId == R.id.speed_150) {
+            speed = 1.5f;
+        } else if (checkedId == R.id.speed_200) {
+            speed = 2f;
+        } else {
+            speed = 1.0f;
+        }
+        Bundle obtain = BundlePool.obtain();
+        obtain.putFloat(EventKey.FLOAT_DATA, speed);
+        this.requestSpeed(obtain);
+        this.mSpeeds.setVisibility(View.GONE);
+        this.mSpeed.setSelected(true);
+        this.mSpeed.setText(String.format("%sX", speed));
+    }
+
+    /**
+     * onClick
+     */
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.cover_controller_back) {
+            // Back
+            this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_BACK, null);
+        } else if (id == R.id.cover_controller_play_state) {
+            // 播放状态
+            this.onSwitchPlayState();
+        } else if (id == R.id.cover_controller_fullscreen) {
+            // 退出全屏
+            this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_EXIT, null);
+        } else if (id == R.id.cover_controller_speed) {
+            // 倍速设置
+            // 隐藏控制器
+            this.onHideController();
+            // Show倍速菜单
+            this.mSpeeds.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * 设置 播放进度Time
+     *
+     * @param curr     播放进度
+     * @param duration 总进度
+     */
+    @Override
+    protected void setSeekProgressTime(long curr, long duration) {
+        super.setSeekProgressTime(curr, duration);
+        this.mCurrTime.setText(TimeUtil.getTimeFormatText(mTimeFormat, curr));
+        this.mDurationTime.setText(TimeUtil.getTimeFormatText(mTimeFormat, duration));
+    }
+
+    /**
+     * 设置 播放进度
+     *
+     * @param curr     播放进度
+     * @param duration 总进度
+     */
+    @Override
+    protected void setSeekProgress(long curr, long duration) {
+        super.setSeekProgress(curr, duration);
+        this.mProgress.setMax((int) duration);
+        this.mProgress.setProgress((int) curr);
+        float secondProgress = mBufferPercentage * 1.0f / 100 * duration;
+        // 缓冲进度
+        this.mProgress.setSecondaryProgress((int) secondProgress);
+    }
+
+    /**
+     * 跳转进度
+     */
+    @Override
+    protected void onSeek() {
+        super.onSeek();
+        Bundle bundle = BundlePool.obtain();
+        bundle.putLong(EventKey.LONG_DATA, mProgress.getProgress());
+        this.requestSeek(bundle);
+    }
+
+    /**
+     * 控制器 显示/隐藏
+     */
+    @Override
+    protected void onSwitchController() {
+        if (mSpeeds.getVisibility() == View.VISIBLE) {
+            this.mSpeeds.setVisibility(View.GONE);
+        } else {
+            super.onSwitchController();
+        }
+    }
+
+    /**
+     * 控制器
+     */
+    @Override
+    protected void onController(boolean isShow) {
+        super.onController(isShow);
+        this.mSpeeds.setVisibility(View.GONE);
+        this.mBack.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        this.mControllerTop.setVisibility(isShow ? View.VISIBLE : View.GONE);
+        this.mControllerBottom.setVisibility(isShow ? View.VISIBLE : View.GONE);
+    }
+
+    /**
+     * 获取组件等级
+     *
+     * @return level
+     */
+    @Override
+    public int getCoverLevel() {
+        return levelMedium(30);
+    }
+
+
+}
