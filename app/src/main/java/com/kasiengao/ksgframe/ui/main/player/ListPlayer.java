@@ -273,6 +273,7 @@ public class ListPlayer {
      * 设置 全屏状态
      */
     public void setFullscreen(boolean fullscreen) {
+        this.mOperable = !fullscreen;
         this.mFullscreen = fullscreen;
     }
 
@@ -280,7 +281,6 @@ public class ListPlayer {
      * 全屏切换
      */
     public void onFullscreen(boolean fullscreen) {
-        this.mOperable = false;
         if (mFullscreen == fullscreen) {
             return;
         }
