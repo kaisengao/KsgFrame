@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.common.dialog.ShareDialog;
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
 import com.kasiengao.ksgframe.ui.main.adapter.VideosAdapter;
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean;
@@ -29,6 +30,8 @@ public class VideoListView extends RecyclerView {
 
     private VideosAdapter mAdapter;
 
+    private ShareDialog mShareDialog;
+
     public VideoListView(@NonNull Context context) {
         super(context);
     }
@@ -45,6 +48,8 @@ public class VideoListView extends RecyclerView {
     private void init() {
         // Init Adapter
         this.initAdapter();
+        // Init ShareDialog
+        this.initShareDialog();
         // 注册滚动事件
         this.addOnScrollListener(mScrollListener);
     }
@@ -58,6 +63,21 @@ public class VideoListView extends RecyclerView {
         // Recycler
         this.setLayoutManager(new LinearLayoutManager(getContext()));
         this.setAdapter(mAdapter);
+        // ChildClick
+        this.mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
+            if (view.getId() == R.id.item_video_interact_share) {
+                this.mShareDialog.show();
+            }
+        });
+    }
+
+    /**
+     * Init ShareDialog
+     */
+    private void initShareDialog() {
+        this.mShareDialog = new ShareDialog(getContext());
+        this.mShareDialog.setOnShowListener(dialog -> ListPlayer.getInstance().onPause(false));
+        this.mShareDialog.setOnDismissListener(dialog -> ListPlayer.getInstance().onResume());
     }
 
     /**

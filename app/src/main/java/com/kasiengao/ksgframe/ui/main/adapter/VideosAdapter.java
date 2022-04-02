@@ -104,7 +104,8 @@ public class VideosAdapter extends BaseQuickAdapter<VideoBean, VideosAdapter.Vie
             });
             // 分享
             this.getView(R.id.item_video_interact_share).setOnClickListener(v -> {
-
+                // 回调上级
+                setOnItemChildClick(v, getLayoutPosition());
             });
             // Play
             this.mPlayContainer.setOnClickListener(v -> {

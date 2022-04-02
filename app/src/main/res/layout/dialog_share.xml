@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <!-- 分享 -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/dialog_shares"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:paddingStart="8dp"
+        android:paddingEnd="0dp"
+        tools:itemCount="12"
+        tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        tools:listitem="@layout/item_share"
+        tools:orientation="horizontal" />
+
+    <!--Driver-->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/driverColor" />
+
+    <!-- 取消 -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/dialog_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="12dp"
+        android:text="@string/share_cancel"
+        android:textColor="@color/textColorPrimary"
+        android:textSize="15sp" />
+
+</LinearLayout>

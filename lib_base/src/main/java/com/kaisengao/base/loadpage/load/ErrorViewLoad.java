@@ -35,7 +35,9 @@ public class ErrorViewLoad extends BaseLoad {
      * @param errorText Error提示文字
      */
     public void setErrorText(CharSequence errorText) {
-        this.mErrorTextView.setText(errorText);
+        if (mErrorTextView != null) {
+            this.mErrorTextView.setText(errorText);
+        }
     }
 
     @Override

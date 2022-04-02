@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.AppCompatTextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:drawableTop="@mipmap/ic_wechat"
+    android:drawablePadding="5dp"
+    android:paddingStart="12dp"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp"
+    android:paddingEnd="0dp"
+    android:text="微信好友"
+    android:textColor="@color/textColorPrimary"
+    android:textSize="12sp" />

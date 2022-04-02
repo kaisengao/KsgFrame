@@ -57,9 +57,9 @@ public class KsgExoPlayer extends BasePlayer {
 
     private boolean isBuffering = false;
 
-    protected int lastReportedPlaybackState;
+    protected int mLastPlaybackState;
 
-    protected boolean isLastReportedPlayWhenReady;
+    protected boolean isLastPlayWhenReady;
 
     private ExoPlayer mExoPlayer;
 
@@ -69,7 +69,7 @@ public class KsgExoPlayer extends BasePlayer {
         super(context);
         // 初始化通知
         this.updateState(IPlayer.STATE_IDLE);
-        this.lastReportedPlaybackState = Player.STATE_IDLE;
+        this.mLastPlaybackState = Player.STATE_IDLE;
     }
 
     /**
@@ -429,7 +429,7 @@ public class KsgExoPlayer extends BasePlayer {
 
         @Override
         public void onPlaybackStateChanged(int playbackState) {
-            onPlayWhenReadyChanged(isLastReportedPlayWhenReady, playbackState);
+            onPlayWhenReadyChanged(isLastPlayWhenReady, playbackState);
         }
 
         @SuppressLint("SwitchIntDef")
@@ -437,7 +437,7 @@ public class KsgExoPlayer extends BasePlayer {
         public void onPlayWhenReadyChanged(boolean playWhenReady, int playbackState) {
             // 重新播放状态顺序为：STATE_IDLE -》STATE_BUFFERING -》STATE_READY
             // 缓冲时顺序为：STATE_BUFFERING -》STATE_READY
-            if (isLastReportedPlayWhenReady != playWhenReady || lastReportedPlaybackState != playbackState) {
+            if (isLastPlayWhenReady != playWhenReady || mLastPlaybackState != playbackState) {
                 if (isBuffering) {
                     switch (playbackState) {
                         case Player.STATE_ENDED:
@@ -481,8 +481,8 @@ public class KsgExoPlayer extends BasePlayer {
                         break;
                 }
             }
-            isLastReportedPlayWhenReady = playWhenReady;
-            lastReportedPlaybackState = playbackState;
+            isLastPlayWhenReady = playWhenReady;
+            mLastPlaybackState = playbackState;
         }
 
         @Override

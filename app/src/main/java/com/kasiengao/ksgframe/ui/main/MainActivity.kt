@@ -1,5 +1,6 @@
 package com.kasiengao.ksgframe.ui.main
 
+import android.view.Gravity
 import android.view.View
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -9,6 +10,7 @@ import com.kaisengao.base.util.StatusBarUtil
 import com.kaisengao.mvvm.base.activity.BaseVmActivity
 import com.kasiengao.ksgframe.BR
 import com.kasiengao.ksgframe.R
+import com.kasiengao.ksgframe.common.dialog.ShareDialog
 import com.kasiengao.ksgframe.databinding.ActivityMainBinding
 import com.kasiengao.ksgframe.ui.main.player.ListPlayer
 import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel
@@ -65,10 +67,12 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
             }
 
             override fun onDrawerOpened(drawerView: View) {
+                ListPlayer.getInstance().onPause(false)
                 mBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             }
 
             override fun onDrawerClosed(drawerView: View) {
+                ListPlayer.getInstance().onResume()
                 mBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             }
 
@@ -106,13 +110,17 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     override fun onResume() {
         super.onResume()
         // 继续播放
-        ListPlayer.getInstance().onResume()
+        if (!mBinding.drawerLayout.isDrawerOpen(mBinding.mainTrainee)){
+            ListPlayer.getInstance().onResume()
+        }
     }
 
     override fun onPause() {
         super.onPause()
         // 暂停播放
-        ListPlayer.getInstance().onPause()
+        if (!mBinding.drawerLayout.isDrawerOpen(mBinding.mainTrainee)){
+            ListPlayer.getInstance().onPause()
+        }
     }
 
     override fun onBackPressed() {

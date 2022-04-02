@@ -1,14 +1,15 @@
-package com.kasiengao.ksgframe.ui.trainee;
+package com.kasiengao.ksgframe.common.widget;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.AttributeSet;
 import android.view.View;
+import android.widget.LinearLayout;
 
-import com.kaisengao.mvvm.base.activity.BaseVmActivity;
-import com.kaisengao.mvvm.viewmodel.ToolbarViewModel;
-import com.kasiengao.ksgframe.BR;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import com.kasiengao.ksgframe.R;
-import com.kasiengao.ksgframe.databinding.ActivityTraineeBinding;
 import com.kasiengao.ksgframe.ui.trainee.gesture.GestureActivity;
 import com.kasiengao.ksgframe.ui.trainee.grid.TouchGridActivity;
 import com.kasiengao.ksgframe.ui.trainee.loadpage.LoadPageActivity;
@@ -19,33 +20,30 @@ import com.kasiengao.ksgframe.ui.trainee.retrofit.RxRetrofitActivity;
 import com.kasiengao.ksgframe.ui.trainee.staggered.StaggeredGridActivity;
 
 /**
- * @ClassName: TraineeActivity
+ * @ClassName: TraineeView
  * @Author: KaiSenGao
- * @CreateDate: 2021/12/14 15:30
+ * @CreateDate: 2022/4/2 15:49
  * @Description: 长达好几年的练习生页面
  */
-public class TraineeActivity extends BaseVmActivity<ActivityTraineeBinding, ToolbarViewModel> {
+public class TraineeView extends LinearLayout {
 
-    public static void startActivity(Context context) {
-        Intent intent = new Intent(context, TraineeActivity.class);
-        context.startActivity(intent);
+    public TraineeView(@NonNull Context context) {
+        super(context);
     }
 
-    @Override
-    protected int getContentLayoutId() {
-        return R.layout.activity_trainee;
+    public TraineeView(@NonNull Context context, @Nullable AttributeSet attrs) {
+        super(context, attrs);
+        // Init
+        this.init();
     }
 
-    @Override
-    public int initVariableId() {
-        return BR.viewModel;
-    }
-
-    @Override
-    protected void initWidget() {
-        super.initWidget();
-        // Toolbar Title
-        this.setTitle(R.string.bar_trainee);
+    /**
+     * Init
+     */
+    private void init(){
+        // ContentView
+        View.inflate(getContext(), R.layout.layout_trainee,this);
+        this.setOrientation(LinearLayout.VERTICAL);
         // Mvp
         this.findViewById(R.id.trainee_mvp).setOnClickListener(this::onClick);
         // MvVM
@@ -72,23 +70,21 @@ public class TraineeActivity extends BaseVmActivity<ActivityTraineeBinding, Tool
     private void onClick(View v) {
         int id = v.getId();
         if (id == R.id.trainee_mvp) {
-            this.startActivity(new Intent(this, MvpActivity.class));
+            this.getContext().startActivity(new Intent(getContext(), MvpActivity.class));
         } else if (id == R.id.trainee_mvvm) {
-            this.startActivity(new Intent(this, MvvmActivity.class));
+            this.getContext().startActivity(new Intent(getContext(), MvvmActivity.class));
         } else if (id == R.id.trainee_rx_retrofit) {
-            this.startActivity(new Intent(this, RxRetrofitActivity.class));
+            this.getContext().startActivity(new Intent(getContext(), RxRetrofitActivity.class));
         } else if (id == R.id.trainee_staggered) {
-            this.startActivity(new Intent(this, StaggeredGridActivity.class));
+            this.getContext().startActivity(new Intent(getContext(), StaggeredGridActivity.class));
         } else if (id == R.id.trainee_player) {
-            this.startActivity(new Intent(this, PlayerActivity.class));
+            this.getContext().startActivity(new Intent(getContext(), PlayerActivity.class));
         } else if (id == R.id.trainee_touch_grid) {
-            this.startActivity(new Intent(this, TouchGridActivity.class));
+            this.getContext().startActivity(new Intent(getContext(), TouchGridActivity.class));
         } else if (id == R.id.trainee_gesture) {
-            this.startActivity(new Intent(this, GestureActivity.class));
+            this.getContext().startActivity(new Intent(getContext(), GestureActivity.class));
         } else if (id == R.id.trainee_loadpage) {
-            this.startActivity(new Intent(this, LoadPageActivity.class));
+            this.getContext().startActivity(new Intent(getContext(), LoadPageActivity.class));
         }
     }
-
-
 }

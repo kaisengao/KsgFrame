@@ -62,5 +62,6 @@
     <string name="loading_mvvm">MVVM加载中~</string>
 
     <string name="drap_title">拖拽</string>
+    <string name="share_cancel">取消分享</string>
 
 </resources>

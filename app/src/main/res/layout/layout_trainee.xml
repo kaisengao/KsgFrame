@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools">
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:parentTag="android.widget.LinearLayout">
 
-    <data>
-
-    </data>
+    <!-- Image -->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_beauty" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
-        android:padding="10dp"
-        tools:context=".ui.trainee.TraineeActivity">
+        android:layout_height="match_parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="10dp">
 
             <!-- MVP-->
             <com.google.android.material.button.MaterialButton
@@ -34,44 +40,38 @@
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/trainee_rx_retrofit"
                 style="@style/TraineeBtn"
-                android:text="@string/trainee_rx_retrofit"
-                android:textAllCaps="false" />
+                android:text="@string/trainee_rx_retrofit" />
 
             <!-- Staggered-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/trainee_staggered"
                 style="@style/TraineeBtn"
-                android:text="@string/trainee_staggered"
-                android:textAllCaps="false" />
+                android:text="@string/trainee_staggered" />
 
             <!-- KsgVideoPlayer-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/trainee_player"
                 style="@style/TraineeBtn"
-                android:text="@string/trainee_player"
-                android:textAllCaps="false" />
+                android:text="@string/trainee_player" />
 
             <!-- TouchGrid-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/trainee_touch_grid"
                 style="@style/TraineeBtn"
-                android:text="@string/trainee_grid"
-                android:textAllCaps="false" />
+                android:text="@string/trainee_grid" />
 
             <!-- TouchGrid-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/trainee_gesture"
                 style="@style/TraineeBtn"
-                android:text="@string/trainee_gesture"
-                android:textAllCaps="false" />
+                android:text="@string/trainee_gesture" />
 
             <!-- LoadPage-->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/trainee_loadpage"
                 style="@style/TraineeBtn"
-                android:text="@string/trainee_loadpage"
-                android:textAllCaps="false" />
+                android:text="@string/trainee_loadpage" />
 
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-</layout>
+</merge>

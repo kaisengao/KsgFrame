@@ -67,22 +67,12 @@
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
         <!-- 侧滑抽屉 -->
-        <LinearLayout
+        <com.kasiengao.ksgframe.common.widget.TraineeView
+            android:id="@+id/main_trainee"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="start"
-            android:background="@color/background"
-            android:gravity="center"
-            android:orientation="vertical">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="20dp"
-                android:text="@string/trainee_other"
-                android:textSize="20sp"
-                android:textStyle="bold" />
-        </LinearLayout>
+            android:background="@color/background" />
 
     </androidx.drawerlayout.widget.DrawerLayout>
 </layout>

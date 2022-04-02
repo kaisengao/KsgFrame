@@ -34,6 +34,8 @@ public class ListPlayer {
 
     private boolean mOperable = true;
 
+    private boolean mHideContainer;
+
     private VideoBean mCurrVideoBean;
 
     private PlayerContainerView mCurrContainer;
@@ -235,38 +237,53 @@ public class ListPlayer {
                 .putObject(CoverConstant.ValueKey.KEY_UPLOADER_DATA, videoBean);
     }
 
+
     /**
      * 继续
      */
     public void onResume() {
+        this.mHideContainer = false;
+        // 设置状态
         PlayerContainerView currContainer = getCurrContainer();
         if (currContainer != null) {
-            // 设置状态
             currContainer.setIntercept(true);
             currContainer.setPlayerState(IPlayer.STATE_START);
-            // 继续播放
-            KsgAssistView player = getPlayer();
-            player.bindContainer(currContainer);
-            if (!mUserPause) {
-                player.resume();
-            }
         }
+        // 绑定 视图容器
+        if (mHideContainer) {
+            this.getPlayer().bindContainer(currContainer);
+        }
+        // 继续播放
+        if (!mUserPause) {
+            this.getPlayer().resume();
+        }
+
     }
 
     /**
      * 暂停
      */
     public void onPause() {
+        this.onPause(true);
+    }
+
+    /**
+     * 暂停
+     */
+    public void onPause(boolean hideContainer) {
+        this.mHideContainer = hideContainer;
+        // 设置状态
         PlayerContainerView currContainer = getCurrContainer();
         if (currContainer != null) {
-            // 设置状态
             currContainer.setIntercept(false);
             currContainer.setPlayerState(IPlayer.STATE_PAUSE);
-            // 暂停播放
-            KsgAssistView player = getPlayer();
-            player.unbindContainer();
-            player.pause();
         }
+        // 解绑 视图容器
+        if (mHideContainer) {
+            this.getPlayer().unbindContainer();
+        }
+        // 暂停播放
+        this.getPlayer().pause();
     }
 
     /**
