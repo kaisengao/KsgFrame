@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.kasiengao.ksgframe.R;
-import com.kasiengao.ksgframe.ui.main.adapter.ShareAdapter;
+import com.kasiengao.ksgframe.ui.dialog.adapter.ShareAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,7 +47,7 @@ public class ShareDialog extends Dialog {
 
             window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
             // 动画
-            window.setWindowAnimations(android.R.style.Animation_Dialog);
+            window.setWindowAnimations(android.R.style.Animation_Translucent);
             // dialog背景颜色
             window.setBackgroundDrawableResource(android.R.color.transparent);
         }

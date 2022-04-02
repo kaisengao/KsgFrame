@@ -19,7 +19,7 @@ import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.SimpleDraweeView;
 import com.kaisengao.base.util.DensityUtil;
 import com.kasiengao.ksgframe.R;
-import com.kasiengao.ksgframe.ui.trainee.preview.PreviewBean;
+import com.kasiengao.ksgframe.ui.trainee.element.preview.PreviewBean;
 import com.kasiengao.ksgframe.ui.trainee.element.ShareElementActivity;
 
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +34,7 @@ public class StaggeredGridAdapter extends BaseQuickAdapter<StaggeredGridBean, St
 
     private AppCompatActivity mCompatActivity;
 
-    StaggeredGridAdapter(AppCompatActivity compatActivity) {
+    public StaggeredGridAdapter(AppCompatActivity compatActivity) {
         super(R.layout.item_staggered_grid);
         this.mCompatActivity = compatActivity;
         this.getLoadMoreModule().setEnableLoadMoreIfNotFullPage(false);

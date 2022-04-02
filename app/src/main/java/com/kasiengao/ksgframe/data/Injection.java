@@ -1,7 +1,7 @@
-package com.kasiengao.ksgframe.ui.trainee.mvvm;
+package com.kasiengao.ksgframe.data;
 
-import com.kasiengao.ksgframe.ui.trainee.mvvm.data.source.DataRepository;
-import com.kasiengao.ksgframe.ui.trainee.mvvm.data.source.remote.RemoteDataSource;
+import com.kasiengao.ksgframe.data.source.DataRepository;
+import com.kasiengao.ksgframe.data.source.remote.RemoteDataSource;
 
 /**
  * @ClassName: Injection

@@ -8,7 +8,7 @@
     android:padding="12dp">
 
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/item_video_icon"
+        android:id="@+id/item_cover_image"
         android:layout_width="120dp"
         android:layout_height="80dp"
         app:layout_constraintLeft_toRightOf="@id/item_video_title"
@@ -24,10 +24,10 @@
         android:layout_marginEnd="12dp"
         android:ellipsize="end"
         android:maxLines="2"
-        android:textColor="#232323"
+        android:textColor="@color/textColorPrimary"
         android:textSize="14sp"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@id/item_video_icon"
+        app:layout_constraintRight_toLeftOf="@id/item_cover_image"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="《黑衣人：全球追缉》星际对决终极预告" />
 
@@ -36,7 +36,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp"
-        android:textColor="#999999"
+        android:textColor="@color/textColorSecondary"
         android:textSize="13sp"
         app:layout_constraintLeft_toLeftOf="@id/item_video_title"
         app:layout_constraintRight_toRightOf="@id/item_video_title"
@@ -51,7 +51,7 @@
         android:isIndicator="true"
         android:numStars="5"
         android:rating="1"
-        app:layout_constraintBottom_toBottomOf="@id/item_video_icon"
+        app:layout_constraintBottom_toBottomOf="@id/item_cover_image"
         app:layout_constraintLeft_toLeftOf="@id/item_video_summary" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

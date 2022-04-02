@@ -33,15 +33,13 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
     @ColorRes
     protected int mLoadBgColor;
     @DrawableRes
-    protected int mLoadErrorIcon;
+    protected int mLoadErrorIcon = 0;
 
     protected BaseRxObserver(Context context) {
         this.mContext = context;
-        // 初始化
         this.setLoadMessage(R.string.loading);
         this.setLoadColor(R.color.black);
         this.setLoadBgColor(R.color.white);
-        this.setLoadErrorIcon(R.drawable.ic_error);
     }
 
     /**

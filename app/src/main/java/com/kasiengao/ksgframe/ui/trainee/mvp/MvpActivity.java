@@ -2,21 +2,31 @@ package com.kasiengao.ksgframe.ui.trainee.mvp;
 
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.kaisengao.base.configure.ThreadPool;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout;
+import com.kasiengao.ksgframe.ui.trainee.adapter.VideoAdapter;
+import com.kasiengao.ksgframe.ui.trainee.bean.VideoBean;
 import com.kasiengao.mvp.java.BasePresenterActivity;
+
+import java.util.List;
 
 /**
  * @ClassName: MvpActivity
  * @Author: KaiSenGao
  * @CreateDate: 2020/3/27 23:55
  * @Description: Mvp
+ * TODO (2022年04月02日 建议弃用)
  */
-public class MvpActivity extends BasePresenterActivity<MvpContract.IPresenter> implements MvpContract.IView{
+public class MvpActivity extends BasePresenterActivity<MvpContract.IPresenter> implements SwipeRefreshLayout.OnRefreshListener, MvpContract.IView {
 
-//    private SwipeRefreshLayout mMvpRefresh;
+    private CSwipeRefreshLayout mRefresh;
 
-    private TrailerAdapter mTrailerAdapter;
+    private VideoAdapter mAdapter;
+
+    private List<VideoBean> mVideos;
 
     @Override
     protected int getContentLayoutId() {
@@ -32,7 +42,7 @@ public class MvpActivity extends BasePresenterActivity<MvpContract.IPresenter> i
     protected void initWidget() {
         super.initWidget();
         // Toolbar Title
-        this.setTitle(R.string.mvp_title);
+        this.setTitle(R.string.trainee_mvp);
         // Init Adapter
         this.initAdapter();
     }
@@ -41,39 +51,50 @@ public class MvpActivity extends BasePresenterActivity<MvpContract.IPresenter> i
      * Init Adapter
      */
     private void initAdapter() {
-        // Init
         // Adapter
-        this.mTrailerAdapter = new TrailerAdapter(this);
+        this.mAdapter = new VideoAdapter();
         // Recycler
-        RecyclerView mvpRecycler = findViewById(R.id.mvp_recycler);
-        mvpRecycler.setLayoutManager(new LinearLayoutManager(this));
-        mvpRecycler.setAdapter(this.mTrailerAdapter);
+        RecyclerView recycler = findViewById(R.id.recycler);
+        recycler.setLayoutManager(new LinearLayoutManager(this));
+        recycler.setAdapter(mAdapter);
         // Refresh
-//        this.mMvpRefresh = findViewById(R.id.mvp_refresh);
-//        this.mMvpRefresh.setOnRefreshListener(this);
-//        this.mMvpRefresh.setRefreshing(true);
-//        this.onRefresh();
+        this.mRefresh = findViewById(R.id.refresh);
+        this.mRefresh.setOnRefreshListener(this);
+        this.mRefresh.setRefreshing(true);
+        this.onRefresh();
     }
 
-//    /**
-//     * 下拉刷新
-//     */
-//    @Override
-//    public void onRefresh() {
-//        // 请求 预告视频列表
-//        this.mPresenter.requestTrailerList();
-//    }
+    /**
+     * 下拉刷新
+     */
+    @Override
+    public void onRefresh() {
+        // 请求 预告视频列表
+        this.mPresenter.requestVideos();
+    }
 
     /**
      * 返回 预告视频列表
      *
-     * @param trailerBean 预告视频列表
+     * @param videos 预告视频列表
      */
     @Override
-    public void resultTrailerList(TrailerBean trailerBean) {
+    public void resultVideos(List<VideoBean> videos) {
+        this.mVideos = videos;
+        // 模拟假数据 延迟3秒
+        ThreadPool.MainThreadHandler.getInstance().post(mDataRunnable, 3000);
+    }
+
+    private final Runnable mDataRunnable = () -> {
         // 赋值数据
-        this.mTrailerAdapter.setTrailerBeans(trailerBean.getTrailers());
-//        // 关闭刷新动画
-//        this.mMvpRefresh.setRefreshing(false);
+        this.mAdapter.setList(mVideos);
+        // 关闭刷新动画
+        this.mRefresh.setRefreshing(false);
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        ThreadPool.MainThreadHandler.getInstance().removeCallbacks(mDataRunnable);
     }
 }

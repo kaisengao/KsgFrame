@@ -9,6 +9,8 @@
     <string name="comment">评论</string>
     <string name="views">次观看</string>
 
+    <string name="share_cancel">取消分享</string>
+
     <string name="controller_speed">倍速</string>
 
     <string name="speed_75">0.75X</string>
@@ -37,17 +39,10 @@
 
     <string name="trainee_other">待定</string>
 
-    <string name="camera_title">UVC摄像头</string>
-    <string name="camera_photograph">拍照</string>
-    <string name="camera_start_recording">开始录制</string>
-    <string name="camera_stop_recording">停止录制</string>
-
-    <string name="mvp_title">Mvp模式</string>
-
     <string name="rx_retrofit_title">RxRetrofit</string>
-    <string name="rx_retrofit_menu_normal">normal 请求</string>
-    <string name="rx_retrofit_menu_dialog">Dialog</string>
-    <string name="rx_retrofit_menu_loadsir">LoadSir</string>
+    <string name="rx_retrofit_no_hint">No hint</string>
+    <string name="rx_retrofit_dialog">Dialog</string>
+    <string name="rx_retrofit_loadpage">LoadPage</string>
 
     <string name="staggered_grid_title">图片缓存（%s）</string>
 
@@ -62,6 +57,5 @@
     <string name="loading_mvvm">MVVM加载中~</string>
 
     <string name="drap_title">拖拽</string>
-    <string name="share_cancel">取消分享</string>
 
 </resources>

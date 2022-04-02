@@ -37,8 +37,6 @@ public class KsgAssistView implements IKsgVideoView {
 
     private boolean mRendererTypeChange;
 
-    private DataSource mDataSource;
-
     private KsgVideoPlayer mPlayer;
 
     public KsgAssistView(Context context) {
@@ -256,7 +254,7 @@ public class KsgAssistView implements IKsgVideoView {
      */
     @Override
     public void setDataSource(DataSource dataSource) {
-        this.mDataSource = dataSource;
+        this.mPlayer.setDataSource(dataSource);
     }
 
     /**
@@ -402,13 +400,10 @@ public class KsgAssistView implements IKsgVideoView {
             this.updateRenderer();
         }
         // 播放
-        if (mDataSource != null) {
-            this.mPlayer.setDataSource(mDataSource);
-            if (msc <= -1) {
-                this.mPlayer.start();
-            } else {
-                this.mPlayer.start(msc);
-            }
+        if (msc <= -1) {
+            this.mPlayer.start();
+        } else {
+            this.mPlayer.start(msc);
         }
     }
 

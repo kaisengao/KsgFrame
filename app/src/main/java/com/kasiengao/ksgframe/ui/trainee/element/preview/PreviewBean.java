@@ -1,4 +1,4 @@
-package com.kasiengao.ksgframe.ui.trainee.preview;
+package com.kasiengao.ksgframe.ui.trainee.element.preview;
 
 import java.io.Serializable;
 

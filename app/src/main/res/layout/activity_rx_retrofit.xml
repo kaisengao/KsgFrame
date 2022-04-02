@@ -1,20 +1,72 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <androidx.core.widget.NestedScrollView
+    <data>
+
+        <import type="com.kasiengao.ksgframe.ui.trainee.retrofit.RxRetrofitViewModel" />
+
+        <variable
+            name="viewModel"
+            type="RxRetrofitViewModel" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/message"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:lineSpacingExtra="5dp"
-            android:padding="10dp"
-            android:textColor="@color/black"
-            android:textSize="15sp" />
+            android:layout_height="0dp"
+            android:layout_margin="@dimen/view_space"
+            app:layout_constraintBottom_toTopOf="@id/rx_retrofit_no_hint"
+            app:layout_constraintTop_toTopOf="parent"
+            app:loadRegister="@{viewModel.mReloadImp}"
+            app:loadState="@{viewModel.loadState}">
 
-    </androidx.core.widget.NestedScrollView>
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <androidx.appcompat.widget.AppCompatTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:lineSpacingExtra="5dp"
+                android:text="@{viewModel.data}"
+                android:textColor="@color/textColorPrimary"
+                android:textSize="15sp" />
+
+        </androidx.core.widget.NestedScrollView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/rx_retrofit_no_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/view_space"
+            android:onClick="@{() -> viewModel.requestNoHint()}"
+            android:text="@string/rx_retrofit_no_hint"
+            android:textColor="@color/textColorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/rx_retrofit_dialog"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/rx_retrofit_dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> viewModel.requestDialog()}"
+            android:text="@string/rx_retrofit_dialog"
+            android:textColor="@color/textColorPrimary"
+            app:layout_constraintEnd_toStartOf="@id/rx_retrofit_loadpage"
+            app:layout_constraintStart_toEndOf="@id/rx_retrofit_no_hint"
+            app:layout_constraintTop_toTopOf="@id/rx_retrofit_no_hint" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/rx_retrofit_loadpage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="@{() -> viewModel.requestLoadPage()}"
+            android:text="@string/rx_retrofit_loadpage"
+            android:textColor="@color/textColorPrimary"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/rx_retrofit_dialog"
+            app:layout_constraintTop_toTopOf="@id/rx_retrofit_no_hint" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

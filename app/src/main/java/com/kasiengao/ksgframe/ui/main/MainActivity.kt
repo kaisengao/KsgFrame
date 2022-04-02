@@ -67,12 +67,12 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
             }
 
             override fun onDrawerOpened(drawerView: View) {
-                ListPlayer.getInstance().onPause(false)
+                ListPlayer.getInstance().setOverlap(true)
                 mBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             }
 
             override fun onDrawerClosed(drawerView: View) {
-                ListPlayer.getInstance().onResume()
+                ListPlayer.getInstance().setOverlap(false)
                 mBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             }
 
@@ -124,6 +124,11 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     override fun onBackPressed() {
+        // 侧滑抽屉
+        if (mBinding.drawerLayout.isDrawerOpen(mBinding.mainTrainee)){
+            this.mBinding.drawerLayout.closeDrawer(mBinding.mainTrainee)
+            return
+        }
         // 详情页
         if (mBinding.mainVideoDetail.onBackPressed()) {
             return

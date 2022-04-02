@@ -3,7 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:drawableTop="@mipmap/ic_wechat"
-    android:drawablePadding="5dp"
+    android:drawablePadding="10dp"
     android:paddingStart="12dp"
     android:paddingTop="12dp"
     android:paddingBottom="12dp"

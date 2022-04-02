@@ -10,8 +10,9 @@ import com.kaisengao.base.loadpage.load.LoadingViewLoad;
 import com.kaisengao.base.loadpage.load.base.ILoad;
 import com.kaisengao.base.loadpage.widget.LoadContainer;
 import com.kaisengao.base.util.ToastUtil;
-import com.kaisengao.mvvm.base.activity.BaseActivity;
+import com.kaisengao.mvvm.base.activity.BaseVmActivity;
 import com.kaisengao.retrofit.RxCompose;
+import com.kasiengao.ksgframe.BR;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.databinding.ActivityLoadpageBinding;
 
@@ -29,11 +30,16 @@ import io.reactivex.disposables.Disposable;
  * @CreateDate: 2021/12/15 14:59
  * @Description: LoadActivity
  */
-public class LoadPageActivity extends BaseActivity<ActivityLoadpageBinding> {
+public class LoadPageActivity extends BaseVmActivity<ActivityLoadpageBinding,LoadPageViewModel> {
 
     @Override
     protected int getContentLayoutId() {
         return R.layout.activity_loadpage;
+    }
+
+    @Override
+    public int initVariableId() {
+        return BR.viewModel;
     }
 
     @Override
@@ -241,5 +247,4 @@ public class LoadPageActivity extends BaseActivity<ActivityLoadpageBinding> {
                 .take(3)
                 .compose(RxCompose.applySchedulers());
     }
-
 }

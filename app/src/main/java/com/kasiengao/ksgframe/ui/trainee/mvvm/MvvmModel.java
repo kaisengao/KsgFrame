@@ -1,64 +1,54 @@
 package com.kasiengao.ksgframe.ui.trainee.mvvm;
 
+import com.google.gson.reflect.TypeToken;
+import com.kaisengao.base.factory.AppFactory;
+import com.kaisengao.base.util.CommonUtil;
 import com.kaisengao.mvvm.base.model.BaseModel;
 import com.kaisengao.retrofit.RxCompose;
-import com.kaisengao.retrofit.api.ApiService;
-import com.kaisengao.retrofit.util.ParamsUtil;
-import com.kasiengao.ksgframe.ui.trainee.mvvm.data.source.DataRepository;
-import com.kasiengao.ksgframe.ui.trainee.retrofit.NewsTopBean;
+import com.kaisengao.retrofit.factory.GsonBuilderFactory;
+import com.kasiengao.ksgframe.data.Injection;
+import com.kasiengao.ksgframe.data.source.DataRepository;
+import com.kasiengao.ksgframe.ui.trainee.bean.VideoBean;
 
-import java.util.HashMap;
+import java.lang.reflect.Type;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
-import io.reactivex.ObservableSource;
-import io.reactivex.functions.Function;
+import io.reactivex.ObservableOnSubscribe;
 
 /**
  * @ClassName: MvvmModel
  * @Author: KaiSenGao
  * @CreateDate: 2020/6/17 14:10
- * @Description: MVVM 数据
+ * @Description: MVVM
  */
 public class MvvmModel extends BaseModel<DataRepository> {
 
-    private final ApiService mApiService;
-
     public MvvmModel() {
         super(Injection.provideDataRepository());
-        this.mApiService = mRepository.create(ApiService.class);
-    }
-
-    public Observable<NewsTopBean> requestTest() {
-
-        return Observable
-                // 延时
-                .timer(2, TimeUnit.SECONDS)
-                // 聚合数据
-                .flatMap((Function<Long, ObservableSource<NewsTopBean>>) aLong -> requestNewsTop())
-                .map(newsTopBean -> {
-                    // 模拟错误
-                    int random = (int) (2 * Math.random());
-                    if (random == 1) {
-                        Integer.parseInt("高晓松");
-                    }
-                    return newsTopBean;
-                });
     }
 
     /**
-     * 聚合数据 新闻
+     * 请求 预告视频列表
+     *
+     * @return 预告视频列表集合
      */
-    public Observable<NewsTopBean> requestNewsTop() {
+    public Observable<List<VideoBean>> requestVideos() {
+        return Observable
+                .create((ObservableOnSubscribe<List<VideoBean>>) emitter -> {
+                    // 数据
+                    String json = CommonUtil.getAssetsJson(AppFactory.application(), "VideosData.json");
+                    // 解析
+                    Type type = new TypeToken<List<VideoBean>>() {
+                    }.getType();
+                    List<VideoBean> videos = GsonBuilderFactory.getInstance().fromJson(json, type);
+                    // Next
+                    emitter.onNext(videos);
+                    emitter.onComplete();
+                })
+                .delay(3000, TimeUnit.MILLISECONDS)
+                .compose(RxCompose.applySchedulers());
 
-        String url = "http://v.juhe.cn/toutiao/index";
-
-        String appKey = "1ce0db9e8525d4818462ebe16fa1b810";
-
-        HashMap<String, String> params = new ParamsUtil.HashBuilder()
-                .put("key", appKey)
-                .build();
-
-        return this.mApiService.post(url, params).compose(RxCompose.fromJsonObj(NewsTopBean.class));
     }
 }

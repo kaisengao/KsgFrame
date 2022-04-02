@@ -34,6 +34,8 @@ public class ListPlayer {
 
     private boolean mOperable = true;
 
+    private boolean isOverlap;
+
     private boolean mHideContainer;
 
     private VideoBean mCurrVideoBean;
@@ -224,13 +226,16 @@ public class ListPlayer {
         this.setCurrPosition(position);
         this.setCurrContainer(container);
         this.mCurrVideoBean = videoBean;
-        // 设置状态
-        container.setPlayerState(IPlayer.STATE_PREPARED);
+        container.setPlayerState(IPlayer.STATE_INIT);
         // 播放视频
         KsgAssistView player = getPlayer();
         player.unbindContainer();
         player.setDataSource(new DataSource(videoBean.getVideoUrl()));
-        player.start();
+        if (!isOverlap) {
+            container.setPlayerState(IPlayer.STATE_PREPARED);
+            // 播放
+            player.start();
+        }
         // 配置UP主信息
         this.getCoverManager()
                 .getValuePool()
@@ -242,22 +247,23 @@ public class ListPlayer {
      * 继续
      */
     public void onResume() {
-        this.mHideContainer = false;
-        // 设置状态
+        if (!mPlayer.isItPlaying()) {
+            return;
+        }
         PlayerContainerView currContainer = getCurrContainer();
         if (currContainer != null) {
             currContainer.setIntercept(true);
             currContainer.setPlayerState(IPlayer.STATE_START);
         }
         // 绑定 视图容器
-        if (mHideContainer) {
+        if (mHideContainer && currContainer != null) {
             this.getPlayer().bindContainer(currContainer);
         }
         // 继续播放
         if (!mUserPause) {
             this.getPlayer().resume();
         }
-
+        this.mHideContainer = false;
     }
 
     /**
@@ -271,6 +277,9 @@ public class ListPlayer {
      * 暂停
      */
     public void onPause(boolean hideContainer) {
+        if (!mPlayer.isItPlaying()) {
+            return;
+        }
         this.mHideContainer = hideContainer;
         // 设置状态
         PlayerContainerView currContainer = getCurrContainer();
@@ -284,6 +293,24 @@ public class ListPlayer {
         }
         // 暂停播放
         this.getPlayer().pause();
+    }
+
+    /**
+     * 是否被覆盖
+     *
+     * @param overlap overlap
+     */
+    public void setOverlap(boolean overlap) {
+        this.isOverlap = overlap;
+        this.mOperable = !overlap;
+        int state = getPlayer().getState();
+        if (state == IPlayer.STATE_PAUSE) {
+            this.onResume();
+        } else if (state == IPlayer.STATE_START) {
+            this.onPause(false);
+        } else if (state == IPlayer.STATE_PREPARED) {
+            this.getPlayer().start();
+        }
     }
 
     /**

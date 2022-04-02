@@ -301,7 +301,7 @@ public class ControllerCover extends BaseCover implements OnTimerUpdateListener,
                 // 横竖屏切换  (true为横屏)
                 Bundle screenOrientation = BundlePool.obtain();
                 screenOrientation.putBoolean(EventKey.BOOL_DATA, mScreenOrientation.isSelected());
-                this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_HL_SCREEN_TOGGLE, screenOrientation);
+                this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_LP_SCREEN_TOGGLE, screenOrientation);
                 break;
             case R.id.cover_controller_fullscreen_status:
                 // 全屏切换状态 (true为全屏)

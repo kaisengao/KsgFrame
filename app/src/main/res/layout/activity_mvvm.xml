@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:bind="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools">
 
     <data class="MvvmBinding">
@@ -13,85 +13,18 @@
 
     </data>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
-        android:orientation="vertical"
-        android:paddingTop="25dp"
+        android:background="@color/background"
         tools:context=".ui.trainee.mvvm.MvvmActivity">
 
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/load_btn_1"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{() -> viewModel.requestTest1()}"
-            android:text="LoadSir1" />
-
-        <FrameLayout
-            android:id="@+id/load_root_1"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            bind:loadRegister="@{null}"
-            bind:loadState="@{viewModel.loadState1}">
+            android:layout_height="match_parent"
+            app:loadRegister="@{null}"
+            app:loadState="@{viewModel.loadState}" />
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@{viewModel.liveData}"
-                tools:text="AppCompatTextView" />
-
-        </FrameLayout>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/load_btn_2"
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{() -> viewModel.requestTest2()}"
-            android:text="LoadSir2" />
-
-        <FrameLayout
-            android:id="@+id/load_root_2"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            bind:loadRegister="@{null}"
-            bind:loadState="@{viewModel.loadState2}">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@{viewModel.liveData}"
-                tools:text="AppCompatTextView" />
-
-        </FrameLayout>
-
-        <androidx.appcompat.widget.AppCompatButton
-            style="@style/Widget.AppCompat.Button.Colored"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:onClick="@{() -> viewModel.requestTest3()}"
-            android:text="Dialog" />
-
-        <FrameLayout
-            android:id="@+id/load_dialog"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:text="@{viewModel.liveData}"
-                tools:text="AppCompatTextView" />
-
-        </FrameLayout>
-
-    </LinearLayout>
+    </FrameLayout>
 </layout>

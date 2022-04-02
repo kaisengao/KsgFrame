@@ -93,7 +93,7 @@ public class PlayerActivity extends BaseToolbarActivity {
                     // 回退
                     this.onBackPressed();
                     break;
-                case CoverConstant.CoverEvent.CODE_REQUEST_HL_SCREEN_TOGGLE:
+                case CoverConstant.CoverEvent.CODE_REQUEST_LP_SCREEN_TOGGLE:
                     // 横竖屏切换
                     boolean screenOrientation = bundle.getBoolean(EventKey.BOOL_DATA, false);
                     // 改变横竖屏

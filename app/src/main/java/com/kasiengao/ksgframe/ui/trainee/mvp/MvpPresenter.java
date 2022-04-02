@@ -1,13 +1,12 @@
 package com.kasiengao.ksgframe.ui.trainee.mvp;
 
-import com.kaisengao.base.configure.ThreadPool;
 import com.kasiengao.mvp.java.BasePresenter;
 
 /**
  * @ClassName: MvpPresenter
  * @Author: KaiSenGao
  * @CreateDate: 2020/3/27 23:59
- * @Description: 契约逻辑处理实现类
+ * @Description: MVP
  */
 public class MvpPresenter extends BasePresenter<MvpContract.IView> implements MvpContract.IPresenter {
 
@@ -21,12 +20,8 @@ public class MvpPresenter extends BasePresenter<MvpContract.IView> implements Mv
      * 请求 预告视频列表
      */
     @Override
-    public void requestTrailerList() {
+    public void requestVideos() {
         // Model层生成数据
-        TrailerBean trailerBean = this.mModel.requestTrailerList();
-        // 回调View层 模拟假数据 延迟3秒
-        ThreadPool.MainThreadHandler.getInstance().post(() -> {
-            getView().resultTrailerList(trailerBean);
-        }, 3000);
+        this.getView().resultVideos(mModel.requestVideos());
     }
 }

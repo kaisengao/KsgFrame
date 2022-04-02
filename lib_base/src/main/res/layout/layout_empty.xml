@@ -13,7 +13,6 @@
         android:id="@+id/empty_icon"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:src="@drawable/ic_empty"
         android:tint="@color/black" />
 
     <androidx.appcompat.widget.AppCompatTextView

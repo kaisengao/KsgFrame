@@ -30,9 +30,7 @@
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/toolbar"
                     style="@style/Toolbar"
-                    app:navigationIconTint="@color/colorAccent"
                     app:titleTextAppearance="@style/Toolbar.TitleText"
-                    app:titleTextColor="@color/colorAccent"
                     tools:navigationIcon="@drawable/ic_toolbar_menu" />
 
             </com.google.android.material.appbar.AppBarLayout>

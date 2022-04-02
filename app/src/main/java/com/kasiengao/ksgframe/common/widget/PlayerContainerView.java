@@ -105,6 +105,7 @@ public class PlayerContainerView extends FrameLayout {
                 this.mPlayState.setSelected(false);
                 this.mPlayState.setVisibility(View.VISIBLE);
                 break;
+            case IPlayer.STATE_INIT:
             case IPlayer.STATE_PREPARED:
                 this.mPlayState.setEnabled(false);
                 this.mPlayState.setSelected(false);

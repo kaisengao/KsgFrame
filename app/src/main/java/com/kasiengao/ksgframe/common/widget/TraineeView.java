@@ -44,6 +44,7 @@ public class TraineeView extends LinearLayout {
         // ContentView
         View.inflate(getContext(), R.layout.layout_trainee,this);
         this.setOrientation(LinearLayout.VERTICAL);
+        this.setOnClickListener(this::onClick);
         // Mvp
         this.findViewById(R.id.trainee_mvp).setOnClickListener(this::onClick);
         // MvVM

@@ -64,23 +64,23 @@ public interface CoverConstant {
          * Controller 状态
          */
         String KEY_CONTROLLER_STATUS = "controllerStatus";
-
-
     }
 
     interface PrivateEvent {
 
         /**
-         * 请求 弹幕开
+         * 弹幕开
          */
         int CODE_REQUEST_DANMAKU_OPEN = -100;
 
         /**
-         * 请求 弹幕关
+         * 弹幕关
          */
         int CODE_REQUEST_DANMAKU_CLOSE = -101;
 
-
+        /**
+         * 手势快进通知暂停自动更新
+         */
         int CODE_GESTURE_SLIDE_SEEK = -200;
     }
 
@@ -94,7 +94,12 @@ public interface CoverConstant {
         /**
          * 请求 横竖屏切换
          */
-        int CODE_REQUEST_HL_SCREEN_TOGGLE = -120;
+        int CODE_REQUEST_LP_SCREEN_TOGGLE = -120;
+
+        /**
+         * 请求 全屏切换
+         */
+        int CODE_REQUEST_FULLSCREEN_TOGGLE = -140;
 
         /**
          * 请求 进入全屏
@@ -110,7 +115,5 @@ public interface CoverConstant {
          * 请求 进度自动更新状态
          */
         int CODE_REQUEST_TIMER_UPDATE_STATE = -150;
-
     }
-
 }

@@ -3,4 +3,8 @@
     <color name="black">#000000</color>
     <color name="white">#FFFFFF</color>
     <color name="translucent">#00000000</color>
+
+    <color name="toolbarTextColor">#212121</color>
+    <color name="toolbarIconTint">#212121</color>
+
 </resources>

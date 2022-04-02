@@ -5,6 +5,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetStartWithNavigation">0dp</item>
+        <item name="navigationIconTint">@color/toolbarIconTint</item>
+        <item name="titleTextColor">@color/toolbarTextColor</item>
     </style>
 
 </resources>

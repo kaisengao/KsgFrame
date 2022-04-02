@@ -1,12 +1,15 @@
 package com.kasiengao.ksgframe.ui.trainee.mvp;
 
+import com.kasiengao.ksgframe.ui.trainee.bean.VideoBean;
 import com.kasiengao.mvp.java.BaseContract;
+
+import java.util.List;
 
 /**
  * @ClassName: MvpContract
  * @Author: KaiSenGao
  * @CreateDate: 2020/3/27 23:55
- * @Description: 契约逻辑处理类
+ * @Description: MVP
  */
 public interface MvpContract {
 
@@ -15,9 +18,9 @@ public interface MvpContract {
         /**
          * 返回 预告视频列表
          *
-         * @param trailerBean 预告视频列表
+         * @param videos 预告视频列表
          */
-        void resultTrailerList(TrailerBean trailerBean);
+        void resultVideos(List<VideoBean> videos);
     }
 
     interface IPresenter extends BaseContract.BasePresenter<IView> {
@@ -25,6 +28,6 @@ public interface MvpContract {
         /**
          * 请求 预告视频列表
          */
-        void requestTrailerList();
+        void requestVideos();
     }
 }

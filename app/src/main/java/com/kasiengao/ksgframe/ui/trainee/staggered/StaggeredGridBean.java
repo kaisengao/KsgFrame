@@ -1,6 +1,6 @@
 package com.kasiengao.ksgframe.ui.trainee.staggered;
 
-import com.kasiengao.ksgframe.ui.trainee.preview.PreviewBean;
+import com.kasiengao.ksgframe.ui.trainee.element.preview.PreviewBean;
 
 import java.io.Serializable;
 import java.util.List;

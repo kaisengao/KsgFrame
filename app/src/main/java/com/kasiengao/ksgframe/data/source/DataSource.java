@@ -1,4 +1,4 @@
-package com.kasiengao.ksgframe.ui.trainee.mvvm.data.source;
+package com.kasiengao.ksgframe.data.source;
 
 /**
  * @ClassName: DataSource

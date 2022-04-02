@@ -76,8 +76,8 @@ public class VideoListView extends RecyclerView {
      */
     private void initShareDialog() {
         this.mShareDialog = new ShareDialog(getContext());
-        this.mShareDialog.setOnShowListener(dialog -> ListPlayer.getInstance().onPause(false));
-        this.mShareDialog.setOnDismissListener(dialog -> ListPlayer.getInstance().onResume());
+        this.mShareDialog.setOnShowListener(dialog -> ListPlayer.getInstance().setOverlap(true));
+        this.mShareDialog.setOnDismissListener(dialog -> ListPlayer.getInstance().setOverlap(false));
     }
 
     /**
@@ -87,7 +87,12 @@ public class VideoListView extends RecyclerView {
         // Adapter
         this.mAdapter.setList(videos);
         // 自动播放
-        this.smoothScrollBy(0, 1);
+        this.post(() -> {
+            View play = mAdapter.getViewByPosition(0, R.id.item_player_container);
+            if (play != null) {
+                play.performClick();
+            }
+        });
     }
 
     /**

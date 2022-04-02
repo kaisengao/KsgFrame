@@ -15,28 +15,26 @@ import org.jetbrains.annotations.NotNull;
  */
 public class StaggeredItemDecoration extends RecyclerView.ItemDecoration {
 
-    private int space = 0;
-
-    private int mPos;
+    private final int mSpace;
 
     public StaggeredItemDecoration(int space) {
-        this.space = space;
+        this.mSpace = space;
     }
 
     @Override
     public void getItemOffsets(Rect outRect, @NotNull View view, RecyclerView parent, @NotNull RecyclerView.State state) {
-        outRect.top = space;
+        outRect.top = mSpace;
         // 该View在整个RecyclerView中位置。
-        mPos = parent.getChildAdapterPosition(view);
+        int position = parent.getChildAdapterPosition(view);
         // 两列的左边一列
-        if (mPos % 2 == 0) {
-            outRect.left = space;
-            outRect.right = space / 2;
+        if (position % 2 == 0) {
+            outRect.left = mSpace;
+            outRect.right = mSpace / 2;
         }
         // 两列的右边一列
-        if (mPos % 2 == 1) {
-            outRect.left = space / 2;
-            outRect.right = space;
+        if (position % 2 == 1) {
+            outRect.left = mSpace / 2;
+            outRect.right = mSpace;
         }
     }
 }

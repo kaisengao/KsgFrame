@@ -8,8 +8,8 @@ import com.kaisengao.retrofit.RxCompose
 import com.kaisengao.retrofit.factory.GsonBuilderFactory
 import com.kasiengao.ksgframe.factory.AppFactory
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean
-import com.kasiengao.ksgframe.ui.trainee.mvvm.Injection
-import com.kasiengao.ksgframe.ui.trainee.mvvm.data.source.DataRepository
+import com.kasiengao.ksgframe.data.Injection
+import com.kasiengao.ksgframe.data.source.DataRepository
 import com.kuaishou.akdanmaku.data.DanmakuItemData
 import io.reactivex.*
 import io.reactivex.Observable

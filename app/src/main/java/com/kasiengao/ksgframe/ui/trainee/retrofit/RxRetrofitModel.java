@@ -6,6 +6,7 @@ import com.kaisengao.retrofit.api.ApiService;
 import com.kaisengao.retrofit.util.ParamsUtil;
 
 import java.util.HashMap;
+import java.util.concurrent.TimeUnit;
 
 import io.reactivex.Observable;
 
@@ -17,10 +18,11 @@ import io.reactivex.Observable;
  */
 public class RxRetrofitModel {
 
+    private static final String API = "http://v.juhe.cn/toutiao/index";
+
     private final ApiService mApiService;
 
     public RxRetrofitModel() {
-
         this.mApiService = RetrofitClient.getInstance().create(ApiService.class);
     }
 
@@ -28,15 +30,13 @@ public class RxRetrofitModel {
      * 聚合数据 新闻
      */
     public Observable<NewsTopBean> requestNewsTop() {
-
-        String url = "http://v.juhe.cn/toutiao/index";
-
-        String appKey = "1ce0db9e8525d4818462ebe16fa1b810";
-
         HashMap<String, String> params = new ParamsUtil.HashBuilder()
-                .put("key", appKey)
+                .put("key", "1ce0db9e8525d4818462ebe16fa1b810")
                 .build();
 
-        return this.mApiService.post(url, params).compose(RxCompose.fromJsonObj(NewsTopBean.class));
+        return mApiService
+                .post(API, params)
+                .delay(2000, TimeUnit.MILLISECONDS)
+                .compose(RxCompose.fromJsonObj(NewsTopBean.class));
     }
 }

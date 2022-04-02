@@ -1,4 +1,4 @@
-package com.kasiengao.ksgframe.ui.main.adapter;
+package com.kasiengao.ksgframe.ui.dialog.adapter;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.viewholder.BaseViewHolder;

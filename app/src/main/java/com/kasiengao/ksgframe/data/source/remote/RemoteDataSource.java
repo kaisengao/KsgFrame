@@ -1,7 +1,7 @@
-package com.kasiengao.ksgframe.ui.trainee.mvvm.data.source.remote;
+package com.kasiengao.ksgframe.data.source.remote;
 
 import com.kaisengao.retrofit.RetrofitClient;
-import com.kasiengao.ksgframe.ui.trainee.mvvm.data.source.DataSource;
+import com.kasiengao.ksgframe.data.source.DataSource;
 
 /**
  * @ClassName: RemoteDataSource

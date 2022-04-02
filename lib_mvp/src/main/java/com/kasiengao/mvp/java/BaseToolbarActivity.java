@@ -122,6 +122,7 @@ public abstract class BaseToolbarActivity extends BaseActivity {
         if (mToolbar != null) {
             this.setSupportActionBar(mToolbar);
         }
+        this.setNavigationIcon(R.drawable.ic_back);
     }
 
     /**

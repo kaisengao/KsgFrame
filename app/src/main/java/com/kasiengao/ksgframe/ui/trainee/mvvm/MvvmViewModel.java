@@ -6,105 +6,62 @@ import androidx.annotation.NonNull;
 import androidx.lifecycle.MutableLiveData;
 
 import com.kaisengao.base.state.LoadingState;
-import com.kaisengao.mvvm.base.viewmodel.BaseViewModel;
-import com.kaisengao.retrofit.observer.BaseRxObserver;
-import com.kasiengao.ksgframe.ui.trainee.retrofit.NewsTopBean;
+import com.kaisengao.mvvm.viewmodel.ToolbarViewModel;
+import com.kaisengao.retrofit.observer.mvvm.BaseLoadPageObserver;
+import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.ui.trainee.bean.VideoBean;
+
+import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /**
  * @ClassName: MvvmViewModel
  * @Author: KaiSenGao
  * @CreateDate: 2020/6/16 14:09
- * @Description:
+ * @Description: MVVM
  */
-public class MvvmViewModel extends BaseViewModel {
+public class MvvmViewModel extends ToolbarViewModel {
 
     private final MvvmModel mModel;
 
-    private MutableLiveData<String> mLiveData;
+    private MutableLiveData<LoadingState> mLoadState;
 
-    private MutableLiveData<LoadingState> mLoadState1;
-
-    private MutableLiveData<LoadingState> mLoadState2;
+    private MutableLiveData<List<VideoBean>> mVideos;
 
     public MvvmViewModel(@NonNull Application application) {
         super(application);
         this.mModel = new MvvmModel();
     }
 
-    public void requestTest1() {
-
-//        BaseRxObserver<NewsTopBean> loadSirObserver = new BaseLoadSirObserver<NewsTopBean>(getApplication(), getLoadState1()) {
-//            @Override
-//            protected void onResult(NewsTopBean newsTopBean) {
-//                resultData(this, newsTopBean);
-//            }
-//        }.setLoadMessage(R.string.loading_mvvm)
-//                .setLoadColor(R.color.white)
-//                .setLoadBgColor(R.color.color_F49B3C)
-//                .setLoadErrorIcon(R.drawable.ic_empty);
-//
-//        this.requestTest(loadSirObserver);
+    /**
+     * Init Toolbar
+     */
+    @Override
+    protected void initToolbar() {
+        this.setToolbarTitle(R.string.trainee_mvvm);
     }
 
-    public void requestTest2() {
-
-//        BaseRxObserver<NewsTopBean> loadSirObserver = new BaseLoadSirObserver<NewsTopBean>(getApplication(), getLoadState2()) {
-//            @Override
-//            protected void onResult(NewsTopBean newsTopBean) {
-//                resultData(this, newsTopBean);
-//            }
-//        }.setLoadColor(R.color.black)
-//                .setLoadBgColor(R.color.color_FF5252);
-//
-//        this.requestTest(loadSirObserver);
-    }
-
-    public void requestTest3() {
-
-//        BaseRxObserver<NewsTopBean> loadSirObserver = new BaseDialogObserver<NewsTopBean>(getApplication()) {
-//            @Override
-//            protected void onResult(@NotNull NewsTopBean newsTopBean) {
-//                resultData(this, newsTopBean);
-//            }
-//        }.setLoadMessage(R.string.loading_mvvm).setLoadColor(R.color.black);
-//
-//        this.requestTest(loadSirObserver);
-    }
-
-    private void requestTest(BaseRxObserver<NewsTopBean> observer) {
+    /**
+     * 请求 视频列表
+     */
+    public void requestVideos() {
         this.mModel
-                .requestTest()
+                .requestVideos()
                 .doOnSubscribe(this)
-                .subscribe(observer);
+                .subscribe(new BaseLoadPageObserver<List<VideoBean>>(getApplication(), getLoadState()) {
+                    @Override
+                    protected void onResult(@NotNull List<VideoBean> videos) {
+                        getVideos().setValue(videos);
+                    }
+                });
     }
 
-    private void resultData(BaseRxObserver<NewsTopBean> observer, NewsTopBean newsTopBean) {
-        if (newsTopBean.getResult() != null) {
-            StringBuilder builder = new StringBuilder();
-            int count = 0;
-            for (NewsTopBean.ResultBean.DataBean topBean : newsTopBean.getResult().getData()) {
-                if (count > 5) {
-                    break;
-                }
-                count++;
-                builder.append(topBean.getAuthorName());
-                builder.append("\n");
-            }
-            getLiveData().setValue(builder.toString());
-        } else {
-            observer.onError(new Exception(newsTopBean.getReason()));
-        }
+    public MutableLiveData<LoadingState> getLoadState() {
+        return mLoadState = createLiveData(mLoadState);
     }
 
-    public MutableLiveData<String> getLiveData() {
-        return mLiveData = createLiveData(mLiveData);
-    }
-
-    public MutableLiveData<LoadingState> getLoadState1() {
-        return mLoadState1 = createLiveData(mLoadState1);
-    }
-
-    public MutableLiveData<LoadingState> getLoadState2() {
-        return mLoadState2 = createLiveData(mLoadState2);
+    public MutableLiveData<List<VideoBean>> getVideos() {
+        return mVideos = createLiveData(mVideos);
     }
 }
