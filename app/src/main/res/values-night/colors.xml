@@ -19,8 +19,8 @@
 
     <color name="driverColor">#12000000</color>
 
-    <color name="mainVideoLoadColor">#131313</color>
+    <color name="videoLoadColor">#131313</color>
 
-    <color name="color_load_light_center">#26000000</color>
+    <color name="color_mvvm_load">#26000000</color>
 
 </resources>

@@ -26,7 +26,7 @@
                 android:layout_height="35dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
-                android:src="@color/mainVideoLoadColor"
+                android:src="@color/videoLoadColor"
                 app:shapeAppearanceOverlay="@style/CircleImageStyle" />
 
             <!-- 基本信息-->
@@ -44,14 +44,14 @@
                 <View
                     android:layout_width="80dp"
                     android:layout_height="20dp"
-                    android:background="@color/mainVideoLoadColor" />
+                    android:background="@color/videoLoadColor" />
 
                 <!-- 简介 -->
                 <View
                     android:layout_width="150dp"
                     android:layout_height="20dp"
                     android:layout_marginTop="1dp"
-                    android:background="@color/mainVideoLoadColor" />
+                    android:background="@color/videoLoadColor" />
 
             </LinearLayout>
 
@@ -64,7 +64,7 @@
                 android:layout_alignStart="@id/load_1_avatar"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
-                android:background="@color/mainVideoLoadColor" />
+                android:background="@color/videoLoadColor" />
 
             <!-- PlayerContainer -->
             <View
@@ -74,7 +74,7 @@
                 android:layout_above="@id/load_1_interact"
                 android:layout_below="@id/load_1_title"
                 android:layout_marginTop="5dp"
-                android:background="@color/mainVideoLoadColor" />
+                android:background="@color/videoLoadColor" />
 
             <!-- 互动-->
             <View
@@ -83,7 +83,7 @@
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="5dp"
-                android:background="@color/mainVideoLoadColor"
+                android:background="@color/videoLoadColor"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:paddingStart="5dp"
@@ -112,7 +112,7 @@
                 android:layout_height="35dp"
                 android:layout_marginStart="5dp"
                 android:layout_marginTop="10dp"
-                android:src="@color/mainVideoLoadColor"
+                android:src="@color/videoLoadColor"
                 app:shapeAppearanceOverlay="@style/CircleImageStyle" />
 
             <!-- 基本信息-->
@@ -130,14 +130,14 @@
                 <View
                     android:layout_width="80dp"
                     android:layout_height="20dp"
-                    android:background="@color/mainVideoLoadColor" />
+                    android:background="@color/videoLoadColor" />
 
                 <!-- 简介 -->
                 <View
                     android:layout_width="150dp"
                     android:layout_height="20dp"
                     android:layout_marginTop="1dp"
-                    android:background="@color/mainVideoLoadColor" />
+                    android:background="@color/videoLoadColor" />
 
             </LinearLayout>
 
@@ -150,7 +150,7 @@
                 android:layout_alignStart="@id/load_2_avatar"
                 android:layout_marginTop="5dp"
                 android:layout_marginEnd="5dp"
-                android:background="@color/mainVideoLoadColor" />
+                android:background="@color/videoLoadColor" />
 
             <!-- PlayerContainer -->
             <View
@@ -160,7 +160,7 @@
                 android:layout_above="@id/load_2_interact"
                 android:layout_below="@id/load_2_title"
                 android:layout_marginTop="5dp"
-                android:background="@color/mainVideoLoadColor" />
+                android:background="@color/videoLoadColor" />
 
             <!-- 互动-->
             <View
@@ -169,7 +169,7 @@
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginTop="5dp"
-                android:background="@color/mainVideoLoadColor"
+                android:background="@color/videoLoadColor"
                 android:baselineAligned="false"
                 android:orientation="horizontal"
                 android:paddingStart="5dp"

@@ -9,6 +9,7 @@ import com.kaisengao.base.state.LoadingState;
 import com.kaisengao.mvvm.viewmodel.ToolbarViewModel;
 import com.kaisengao.retrofit.observer.mvvm.BaseLoadPageObserver;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.common.load.MVVMVideoLoad;
 import com.kasiengao.ksgframe.ui.trainee.bean.VideoBean;
 
 import org.jetbrains.annotations.NotNull;
@@ -54,7 +55,7 @@ public class MvvmViewModel extends ToolbarViewModel {
                     protected void onResult(@NotNull List<VideoBean> videos) {
                         getVideos().setValue(videos);
                     }
-                });
+                }.setLoadView(MVVMVideoLoad.class));
     }
 
     public MutableLiveData<LoadingState> getLoadState() {
