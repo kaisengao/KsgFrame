@@ -23,17 +23,8 @@ import org.jetbrains.annotations.NotNull;
  */
 public class VideosAdapter extends BaseQuickAdapter<VideoBean, VideosAdapter.ViewHolder> {
 
-    private int mParentWidth;
-
     public VideosAdapter() {
         super(R.layout.item_main_video);
-    }
-
-    @NotNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NotNull ViewGroup parent, int viewType) {
-        this.mParentWidth = parent.getWidth();
-        return super.onCreateViewHolder(parent, viewType);
     }
 
     @Override
@@ -59,7 +50,7 @@ public class VideosAdapter extends BaseQuickAdapter<VideoBean, VideosAdapter.Vie
         holder.mPlayContainer.setCoverImage(item.getCoverImg());
     }
 
-    class ViewHolder extends BaseViewHolder {
+    protected class ViewHolder extends BaseViewHolder {
 
         private final MaterialButton mPraiseView;
 
@@ -74,7 +65,7 @@ public class VideosAdapter extends BaseQuickAdapter<VideoBean, VideosAdapter.Vie
             // 视频容器 设置比例16/9
             this.mPlayContainer = getView(R.id.item_player_container);
             ViewGroup.LayoutParams layoutParams = mPlayContainer.getLayoutParams();
-            layoutParams.height = mParentWidth * 9 / 16;
+            layoutParams.height = getRecyclerView().getWidth() * 9 / 16;
             this.mPlayContainer.requestLayout();
             // 初始状态位
             this.mPlayContainer.setPlayerState(IPlayer.STATE_IDLE);

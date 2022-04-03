@@ -30,8 +30,6 @@ public class DataSource implements Serializable {
 
     private boolean isProgressCache = true;
 
-    private boolean isReadProgressCache = true;
-
     public DataSource() {
     }
 
@@ -91,13 +89,5 @@ public class DataSource implements Serializable {
 
     public void setProgressCache(boolean progressCache) {
         isProgressCache = progressCache;
-    }
-
-    public boolean isReadProgressCache() {
-        return isReadProgressCache;
-    }
-
-    public void setReadProgressCache(boolean readProgressCache) {
-        isReadProgressCache = readProgressCache;
     }
 }

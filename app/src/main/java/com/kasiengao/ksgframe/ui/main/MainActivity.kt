@@ -36,6 +36,10 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun initWidget() {
         super.initWidget()
+        // Refresh
+        this.mBinding.mainRefresh.setOnRefreshListener {
+            this.mViewModel.requestVideos()
+        }
         // Init ViewDetail
         this.initViewDetail()
         // Init DrawerLayout
@@ -61,7 +65,7 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
      * Init DrawerLayout
      */
     private fun initDrawer() {
-        // 抽屉手势开启与关闭
+        // 抽屉事件
         this.mBinding.drawerLayout.addDrawerListener(object : DrawerListener {
             override fun onDrawerSlide(drawerView: View, slideOffset: Float) {
             }
@@ -79,7 +83,7 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
             override fun onDrawerStateChanged(newState: Int) {
             }
         })
-        // 抽屉默认关闭手势
+        // 抽屉默认关闭
         this.mBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
     }
 

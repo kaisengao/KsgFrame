@@ -35,6 +35,6 @@ public class CSwipeRefreshLayout extends SwipeRefreshLayout {
         // 设置 刷新圆圈的背景色
         this.setProgressBackgroundColorSchemeColor(ContextCompat.getColor(getContext(), R.color.white));
         // 设置 刷新圆圈的下拉距离
-        this.setDistanceToTriggerSync(600);
+        this.setDistanceToTriggerSync(200);
     }
 }

@@ -18,9 +18,8 @@
         tools:context=".ui.main.MainActivity">
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            tools:context=".ui.main.MainActivity">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
             <com.google.android.material.appbar.AppBarLayout
                 android:id="@+id/main_appbar"
@@ -41,8 +40,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:loadRegister="@{viewModel.onVideosReloadImp}"
-                app:loadState="@{viewModel.MVideosLoad}">
+                app:setRefreshing="@{viewModel.MRefreshing}">
 
                 <com.kasiengao.ksgframe.ui.main.widget.VideoListView
                     android:id="@+id/main_videos"

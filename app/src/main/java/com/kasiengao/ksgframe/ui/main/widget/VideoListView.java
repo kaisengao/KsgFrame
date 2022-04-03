@@ -63,6 +63,8 @@ public class VideoListView extends RecyclerView {
         // Recycler
         this.setLayoutManager(new LinearLayoutManager(getContext()));
         this.setAdapter(mAdapter);
+        // EmptyView
+        this.mAdapter.setEmptyView(R.layout.item_main_video_empty);
         // ChildClick
         this.mAdapter.setOnItemChildClickListener((adapter, view, position) -> {
             if (view.getId() == R.id.item_video_interact_share) {
@@ -86,6 +88,7 @@ public class VideoListView extends RecyclerView {
     public void setData(List<VideoBean> videos) {
         // Adapter
         this.mAdapter.setList(videos);
+        this.scrollToPosition(0);
         // 自动播放
         this.post(() -> {
             View play = mAdapter.getViewByPosition(0, R.id.item_player_container);

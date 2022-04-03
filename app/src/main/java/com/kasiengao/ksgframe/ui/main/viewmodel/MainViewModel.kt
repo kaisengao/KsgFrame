@@ -3,17 +3,14 @@ package com.kasiengao.ksgframe.ui.main.viewmodel
 import android.app.Application
 import android.view.View
 import androidx.lifecycle.MutableLiveData
-import com.kaisengao.base.state.LoadingState
 import com.kaisengao.base.util.SnackbarUtil
-import com.kaisengao.mvvm.binding.command.BindingParamImp
 import com.kaisengao.mvvm.viewmodel.ToolbarViewModel
 import com.kaisengao.retrofit.observer.BaseRxObserver
-import com.kaisengao.retrofit.observer.mvvm.BaseLoadPageObserver
 import com.kasiengao.ksgframe.R
-import com.kasiengao.ksgframe.common.load.MainVideoLoad
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean
 import com.kasiengao.ksgframe.ui.main.model.MainModel
 import com.kuaishou.akdanmaku.data.DanmakuItemData
+import io.reactivex.disposables.Disposable
 
 /**
  * @ClassName: MainViewModel
@@ -23,7 +20,7 @@ import com.kuaishou.akdanmaku.data.DanmakuItemData
  */
 class MainViewModel(application: Application) : ToolbarViewModel(application) {
 
-    val mVideosLoad: MutableLiveData<LoadingState> by lazy { MutableLiveData() }
+    val mRefreshing: MutableLiveData<Boolean> by lazy { MutableLiveData() }
 
     val mVideos: MutableLiveData<List<VideoBean>> by lazy { MutableLiveData() }
 
@@ -32,14 +29,6 @@ class MainViewModel(application: Application) : ToolbarViewModel(application) {
     val mVideo: MutableLiveData<VideoBean> by lazy { MutableLiveData() }
 
     private val mModel: MainModel by lazy { MainModel() }
-
-    /**
-     * Reload
-     */
-    val onVideosReloadImp: BindingParamImp<Any> = BindingParamImp {
-        // 请求 视频列表
-        this.requestVideos()
-    }
 
     /**
      * Init Toolbar
@@ -57,11 +46,22 @@ class MainViewModel(application: Application) : ToolbarViewModel(application) {
             .requestVideos()
             .doOnSubscribe(this)
             .subscribe(object :
-                BaseLoadPageObserver<List<VideoBean>>(getApplication(), mVideosLoad) {
+                BaseRxObserver<List<VideoBean>>(getApplication()) {
+                override fun onSubscribe(d: Disposable) {
+                    super.onSubscribe(d)
+                    mRefreshing.value = true
+                }
+
                 override fun onResult(videos: List<VideoBean>) {
                     mVideos.value = videos
+                    mRefreshing.value = false
                 }
-            }.setLoadView(MainVideoLoad::class.java))
+
+                override fun onError(message: String?) {
+                    super.onError(message)
+                    mRefreshing.value = false
+                }
+            })
     }
 
     /**

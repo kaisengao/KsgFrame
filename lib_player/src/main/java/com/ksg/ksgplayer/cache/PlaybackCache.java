@@ -94,7 +94,6 @@ public class PlaybackCache implements IPlaybackCache {
     public void putProgressCache(DataSource dataSource) {
         if (dataSource != null
                 && dataSource.isProgressCache()
-                && dataSource.isReadProgressCache()
                 && mPlayerStateGetter != null) {
             ProgressCache.getInstance().putCache(dataSource.getUrl(), mPlayerStateGetter.getProgress());
         }
@@ -107,8 +106,7 @@ public class PlaybackCache implements IPlaybackCache {
      */
     public long getProgressCache(DataSource dataSource) {
         if (dataSource != null
-                && dataSource.isProgressCache()
-                && dataSource.isReadProgressCache()) {
+                && dataSource.isProgressCache()) {
             return ProgressCache.getInstance().getCache(dataSource.getUrl());
         }
         return 0;
@@ -120,8 +118,7 @@ public class PlaybackCache implements IPlaybackCache {
     @Override
     public void resetProgressCache(DataSource dataSource) {
         if (dataSource != null
-                && dataSource.isProgressCache()
-                && dataSource.isReadProgressCache()) {
+                && dataSource.isProgressCache()) {
             ProgressCache.getInstance().putCache(dataSource.getUrl(), 0L);
         }
     }

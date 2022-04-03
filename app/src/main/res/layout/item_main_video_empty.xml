@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_weight="1"
+        app:cardCornerRadius="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- 头像 -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/load_1_avatar"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:src="@color/mainVideoLoadColor"
+                app:shapeAppearanceOverlay="@style/CircleImageStyle" />
+
+            <!-- 基本信息-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignTop="@id/load_1_avatar"
+                android:layout_alignBottom="@id/load_1_avatar"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_toEndOf="@id/load_1_avatar"
+                android:orientation="vertical">
+
+                <!-- 昵称 -->
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="20dp"
+                    android:background="@color/mainVideoLoadColor" />
+
+                <!-- 简介 -->
+                <View
+                    android:layout_width="150dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="1dp"
+                    android:background="@color/mainVideoLoadColor" />
+
+            </LinearLayout>
+
+            <!-- 标题 -->
+            <View
+                android:id="@+id/load_1_title"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_below="@id/load_1_avatar"
+                android:layout_alignStart="@id/load_1_avatar"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/mainVideoLoadColor" />
+
+            <!-- PlayerContainer -->
+            <View
+                android:id="@+id/load_1_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/load_1_interact"
+                android:layout_below="@id/load_1_title"
+                android:layout_marginTop="5dp"
+                android:background="@color/mainVideoLoadColor" />
+
+            <!-- 互动-->
+            <View
+                android:id="@+id/load_1_interact"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="5dp"
+                android:background="@color/mainVideoLoadColor"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_weight="1"
+        app:cardCornerRadius="10dp">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- 头像 -->
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/load_2_avatar"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_marginStart="5dp"
+                android:layout_marginTop="10dp"
+                android:src="@color/mainVideoLoadColor"
+                app:shapeAppearanceOverlay="@style/CircleImageStyle" />
+
+            <!-- 基本信息-->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignTop="@id/load_2_avatar"
+                android:layout_alignBottom="@id/load_2_avatar"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                android:layout_toEndOf="@id/load_2_avatar"
+                android:orientation="vertical">
+
+                <!-- 昵称 -->
+                <View
+                    android:layout_width="80dp"
+                    android:layout_height="20dp"
+                    android:background="@color/mainVideoLoadColor" />
+
+                <!-- 简介 -->
+                <View
+                    android:layout_width="150dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="1dp"
+                    android:background="@color/mainVideoLoadColor" />
+
+            </LinearLayout>
+
+            <!-- 标题 -->
+            <View
+                android:id="@+id/load_2_title"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_below="@id/load_2_avatar"
+                android:layout_alignStart="@id/load_2_avatar"
+                android:layout_marginTop="5dp"
+                android:layout_marginEnd="5dp"
+                android:background="@color/mainVideoLoadColor" />
+
+            <!-- PlayerContainer -->
+            <View
+                android:id="@+id/load_2_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_above="@id/load_2_interact"
+                android:layout_below="@id/load_2_title"
+                android:layout_marginTop="5dp"
+                android:background="@color/mainVideoLoadColor" />
+
+            <!-- 互动-->
+            <View
+                android:id="@+id/load_2_interact"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginTop="5dp"
+                android:background="@color/mainVideoLoadColor"
+                android:baselineAligned="false"
+                android:orientation="horizontal"
+                android:paddingStart="5dp"
+                android:paddingEnd="5dp" />
+
+        </RelativeLayout>
+    </com.google.android.material.card.MaterialCardView>
+</LinearLayout>
