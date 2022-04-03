@@ -405,7 +405,7 @@ public class PreviewPager<T extends IPreviewParams> extends FrameLayout implemen
             SystemUiUtil.recoverySystemUI(getContext());
         }
         // 通知组件横竖屏切换
-        this.mCoverManager.getValuePool().putObject(CoverConstant.ValueKey.KEY_HL_SCREEN_TOGGLE, mIsLandscape);
+        this.mCoverManager.getValuePool().putObject(CoverConstant.ValueKey.KEY_LP_SCREEN_TOGGLE, mIsLandscape);
     }
 
     /**

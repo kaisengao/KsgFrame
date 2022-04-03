@@ -62,7 +62,6 @@ public class ShareElementActivity extends BaseToolbarActivity {
     @Override
     protected void initArgs(Bundle bundle) {
         super.initArgs(bundle);
-
         this.mPosition = bundle.getInt(POSITION, -1);
         this.mGridBean = (StaggeredGridBean) bundle.getSerializable(DATA);
     }

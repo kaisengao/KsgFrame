@@ -53,17 +53,12 @@ public interface CoverConstant {
         /**
          * 横竖屏切换
          */
-        String KEY_HL_SCREEN_TOGGLE = "hlScreenToggle";
+        String KEY_LP_SCREEN_TOGGLE = "lpScreenToggle";
 
         /**
          * 全屏切换
          */
         String KEY_FULLSCREEN_TOGGLE = "fullscreenToggle";
-
-        /**
-         * Controller 状态
-         */
-        String KEY_CONTROLLER_STATUS = "controllerStatus";
     }
 
     interface PrivateEvent {
@@ -77,11 +72,6 @@ public interface CoverConstant {
          * 弹幕关
          */
         int CODE_REQUEST_DANMAKU_CLOSE = -101;
-
-        /**
-         * 手势快进通知暂停自动更新
-         */
-        int CODE_GESTURE_SLIDE_SEEK = -200;
     }
 
     interface CoverEvent extends ICoverEvent {
@@ -104,12 +94,12 @@ public interface CoverConstant {
         /**
          * 请求 进入全屏
          */
-        int CODE_REQUEST_FULLSCREEN_ENTER = -140;
+        int CODE_REQUEST_FULLSCREEN_ENTER = -141;
 
         /**
          * 请求 退出全屏
          */
-        int CODE_REQUEST_FULLSCREEN_EXIT = -141;
+        int CODE_REQUEST_FULLSCREEN_EXIT = -142;
 
         /**
          * 请求 进度自动更新状态

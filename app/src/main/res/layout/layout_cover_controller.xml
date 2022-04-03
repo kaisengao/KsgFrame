@@ -3,9 +3,9 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    tools:background="@color/black">
+    android:orientation="vertical">
 
+    <!-- Top Controller-->
     <LinearLayout
         android:id="@+id/cover_controller_top"
         android:layout_width="wrap_content"
@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             android:paddingStart="12dp"
             android:paddingEnd="0dp"
-            android:src="@drawable/ic_cover_arrow_back" />
+            android:src="@drawable/ic_cover_back" />
 
     </LinearLayout>
 
@@ -38,10 +38,10 @@
 
         <!-- Start/Pause-->
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/cover_controller_play_status"
+            android:id="@+id/cover_controller_play"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/selector_cover_play_status" />
+            android:src="@drawable/selector_play_state" />
 
         <!-- Curr Time-->
         <androidx.appcompat.widget.AppCompatTextView
@@ -64,9 +64,10 @@
             android:layout_weight="1"
             android:maxHeight="3dp"
             android:minHeight="3dp"
+            tools:progress="20"
             android:progressDrawable="@drawable/shape_seek_bar"
             android:splitTrack="false"
-            android:thumb="@drawable/selector_cover_seek_bar_thumb" />
+            android:thumb="@drawable/selector_seek_bar_thumb" />
 
         <!-- Duration Time-->
         <androidx.appcompat.widget.AppCompatTextView
@@ -83,19 +84,19 @@
 
         <!-- landscape/Portrait -->
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/cover_controller_screen_orientation"
-            android:layout_width="30dp"
+            android:id="@+id/cover_controller_lp_screen"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:paddingStart="2dp"
-            android:paddingEnd="2dp"
-            android:src="@mipmap/ic_cover_rotate" />
+            android:paddingStart="5dp"
+            android:paddingEnd="5dp"
+            android:src="@drawable/ic_rotate" />
 
         <!-- Fullscreen/FullscreenExit-->
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/cover_controller_fullscreen_status"
+            android:id="@+id/cover_controller_fullscreen"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:src="@drawable/selector_cover_fullscreen_status" />
+            android:src="@drawable/selector_fullscreen_state" />
 
     </LinearLayout>
 

@@ -67,7 +67,7 @@
                     android:id="@+id/info_card"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/select_video_detail_info_bg"
+                    android:background="@drawable/selector_video_detail_info_bg"
                     app:behavior_peekHeight="135dp"
                     app:layout_behavior="@string/bottom_sheet_behavior">
 

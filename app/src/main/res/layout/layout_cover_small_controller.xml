@@ -9,7 +9,7 @@
 
     <!-- Start/Pause-->
     <androidx.appcompat.widget.AppCompatImageView
-        android:id="@+id/cover_controller_play_state"
+        android:id="@+id/cover_controller_play"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
@@ -47,7 +47,7 @@
         android:paddingEnd="10dp"
         android:progressDrawable="@drawable/shape_seek_bar"
         android:splitTrack="false"
-        android:thumb="@drawable/selector_cover_seek_bar_thumb"
+        android:thumb="@drawable/selector_seek_bar_thumb"
         tools:progress="20"
         tools:secondaryProgress="40" />
 

@@ -31,8 +31,6 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
 
     private View mControllerBottom;
 
-    private AppCompatImageView mBack;
-
     private AppCompatSeekBar mProgress;
 
     private AppCompatTextView mCurrTime;
@@ -67,18 +65,17 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
         // Views
         this.mControllerTop = findViewById(R.id.cover_controller_top);
         this.mControllerBottom = findViewById(R.id.cover_controller_bottom);
-        this.mBack = findViewById(R.id.cover_controller_back);
         this.mProgress = findViewById(R.id.cover_controller_seek);
         this.mCurrTime = findViewById(R.id.cover_controller_curr_time);
         this.mDurationTime = findViewById(R.id.cover_controller_duration_time);
-        this.mPlayState = findViewById(R.id.cover_controller_play_state);
+        this.mPlayState = findViewById(R.id.cover_controller_play);
         AppCompatImageView fullscreen = findViewById(R.id.cover_controller_fullscreen);
         this.mDanmakuState = findViewById(R.id.cover_controller_danmaku);
         this.mSpeed = findViewById(R.id.cover_controller_speed);
         this.mSpeeds = findViewById(R.id.cover_controller_speeds);
         this.mDefaultSpeed = findViewById(R.id.speed_100);
         // OnClicks
-        this.mBack.setOnClickListener(this);
+        findViewById(R.id.cover_controller_back).setOnClickListener(this);
         this.mPlayState.setOnClickListener(this);
         fullscreen.setOnClickListener(this);
         this.mSpeed.setOnClickListener(this);
@@ -197,7 +194,7 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
         if (id == R.id.cover_controller_back) {
             // Back
             this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_BACK, null);
-        } else if (id == R.id.cover_controller_play_state) {
+        } else if (id == R.id.cover_controller_play) {
             // 播放状态
             this.onSwitchPlayState();
         } else if (id == R.id.cover_controller_fullscreen) {
@@ -219,6 +216,17 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
             // Show倍速菜单
             this.mSpeeds.setVisibility(View.VISIBLE);
         }
+    }
+
+    /**
+     * 跳转进度
+     */
+    @Override
+    protected void onSeek() {
+        super.onSeek();
+        Bundle bundle = BundlePool.obtain();
+        bundle.putLong(EventKey.LONG_DATA, mProgress.getProgress());
+        this.requestSeek(bundle);
     }
 
     /**
@@ -251,17 +259,6 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
     }
 
     /**
-     * 跳转进度
-     */
-    @Override
-    protected void onSeek() {
-        super.onSeek();
-        Bundle bundle = BundlePool.obtain();
-        bundle.putLong(EventKey.LONG_DATA, mProgress.getProgress());
-        this.requestSeek(bundle);
-    }
-
-    /**
      * 控制器 显示/隐藏
      */
     @Override
@@ -280,7 +277,6 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
     protected void onController(boolean isShow) {
         super.onController(isShow);
         this.mSpeeds.setVisibility(View.GONE);
-        this.mBack.setVisibility(isShow ? View.VISIBLE : View.GONE);
         this.mControllerTop.setVisibility(isShow ? View.VISIBLE : View.GONE);
         this.mControllerBottom.setVisibility(isShow ? View.VISIBLE : View.GONE);
     }

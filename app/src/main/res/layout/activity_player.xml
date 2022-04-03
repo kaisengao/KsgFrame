@@ -1,27 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <com.ksg.ksgplayer.widget.KsgVideoView
-        android:id="@+id/player"
+    <data>
+
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:background="@color/black"
-        app:layout_constraintDimensionRatio="H,16:9"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_height="match_parent">
 
-    <!-- 当前 解码器 -->
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/player_decoder"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:padding="5dp"
-        android:textSize="13sp"
-        app:layout_constraintTop_toBottomOf="@id/player"
-        tools:text="ksg" />
+        <com.ksg.ksgplayer.widget.KsgVideoView
+            android:id="@+id/player"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:background="@color/black"
+            android:fitsSystemWindows="true"
+            app:layout_constraintDimensionRatio="H,16:9"
+            app:layout_constraintTop_toTopOf="parent" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+        <!-- 当前 解码器 -->
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/player_decoder"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textSize="13sp"
+            app:layout_constraintTop_toBottomOf="@id/player"
+            tools:text="ksg" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

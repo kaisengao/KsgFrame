@@ -19,10 +19,10 @@
         <!-- Back -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/cover_controller_back"
-            android:layout_width="30dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginStart="32dp"
-            android:src="@drawable/ic_back" />
+            android:src="@drawable/ic_cover_back" />
 
     </LinearLayout>
 
@@ -39,7 +39,7 @@
             android:id="@+id/cover_controller_curr_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignStart="@id/cover_controller_play_state"
+            android:layout_alignStart="@id/cover_controller_play"
             android:layout_alignTop="@id/cover_controller_seek"
             android:layout_alignBottom="@id/cover_controller_seek"
             android:gravity="center"
@@ -54,7 +54,7 @@
             android:id="@+id/cover_controller_seek"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_above="@id/cover_controller_play_state"
+            android:layout_above="@id/cover_controller_play"
             android:layout_gravity="center"
             android:layout_marginBottom="5dp"
             android:layout_toStartOf="@id/cover_controller_duration_time"
@@ -65,7 +65,7 @@
             android:paddingEnd="10dp"
             android:progressDrawable="@drawable/shape_seek_bar"
             android:splitTrack="false"
-            android:thumb="@drawable/selector_cover_seek_bar_thumb"
+            android:thumb="@drawable/selector_seek_bar_thumb"
             tools:progress="20"
             tools:secondaryProgress="40" />
 
@@ -88,7 +88,7 @@
 
         <!-- Start/Pause-->
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/cover_controller_play_state"
+            android:id="@+id/cover_controller_play"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
@@ -106,7 +106,7 @@
             android:layout_alignBottom="@id/cover_controller_fullscreen"
             android:layout_marginStart="@dimen/view_space"
             android:layout_marginEnd="@dimen/view_space"
-            android:layout_toEndOf="@id/cover_controller_play_state"
+            android:layout_toEndOf="@id/cover_controller_play"
             android:gravity="center"
             android:paddingStart="0dp"
             android:paddingEnd="20dp"
@@ -136,8 +136,8 @@
             android:id="@+id/cover_controller_fullscreen"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/cover_controller_play_state"
-            android:layout_alignBottom="@id/cover_controller_play_state"
+            android:layout_alignTop="@id/cover_controller_play"
+            android:layout_alignBottom="@id/cover_controller_play"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="30dp"
             android:src="@drawable/selector_fullscreen_state" />

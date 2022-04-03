@@ -59,7 +59,7 @@ public class SmallControllerCover extends BaseControllerCover implements View.On
         this.mBottomProgress = findViewById(R.id.cover_controller_bottom_seek);
         this.mCurrTime = findViewById(R.id.cover_controller_curr_time);
         this.mDurationTime = findViewById(R.id.cover_controller_duration_time);
-        this.mPlayState = findViewById(R.id.cover_controller_play_state);
+        this.mPlayState = findViewById(R.id.cover_controller_play);
         this.mFullscreen = findViewById(R.id.cover_controller_fullscreen);
         // OnClicks
         this.mPlayState.setOnClickListener(this);
@@ -88,6 +88,61 @@ public class SmallControllerCover extends BaseControllerCover implements View.On
             // 播放状态改变
             this.setPlayState(bundle.getInt(EventKey.INT_DATA));
         }
+    }
+
+    /**
+     * 设置状态
+     */
+    private void setPlayState(int state) {
+        if (state == IPlayer.STATE_PAUSE) {
+            this.mPlayState.setSelected(false);
+        } else if (state == IPlayer.STATE_START) {
+            this.mPlayState.setSelected(true);
+        }
+    }
+
+    /**
+     * 播放状态
+     */
+    @Override
+    protected void onSwitchPlayState() {
+        super.onSwitchPlayState();
+        boolean selected = mPlayState.isSelected();
+        if (selected) {
+            this.requestPause(null);
+        } else {
+            this.requestResume(null);
+        }
+        this.mPlayState.setSelected(!selected);
+    }
+
+    /**
+     * onClick
+     */
+    @Override
+    public void onClick(View view) {
+        int id = view.getId();
+        if (id == R.id.cover_controller_play) {
+            // 播放状态
+            this.onSwitchPlayState();
+        } else if (id == R.id.cover_controller_fullscreen) {
+            // 进入全屏
+            this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_ENTER, null);
+        } else if (id == R.id.cover_controller) {
+            // 控制器 显示/隐藏
+            this.onSwitchController();
+        }
+    }
+
+    /**
+     * 跳转进度
+     */
+    @Override
+    protected void onSeek() {
+        super.onSeek();
+        Bundle bundle = BundlePool.obtain();
+        bundle.putLong(EventKey.LONG_DATA, mProgress.getProgress());
+        this.requestSeek(bundle);
     }
 
     /**
@@ -133,61 +188,6 @@ public class SmallControllerCover extends BaseControllerCover implements View.On
     }
 
     /**
-     * 设置状态
-     */
-    private void setPlayState(int state) {
-        if (state == IPlayer.STATE_PAUSE) {
-            this.mPlayState.setSelected(false);
-        } else if (state == IPlayer.STATE_START) {
-            this.mPlayState.setSelected(true);
-        }
-    }
-
-    /**
-     * 播放状态
-     */
-    @Override
-    protected void onSwitchPlayState() {
-        super.onSwitchPlayState();
-        boolean selected = mPlayState.isSelected();
-        if (selected) {
-            this.requestPause(null);
-        } else {
-            this.requestResume(null);
-        }
-        this.mPlayState.setSelected(!selected);
-    }
-
-    /**
-     * onClick
-     */
-    @Override
-    public void onClick(View view) {
-        int id = view.getId();
-        if (id == R.id.cover_controller_play_state) {
-            // 播放状态
-            this.onSwitchPlayState();
-        } else if (id == R.id.cover_controller_fullscreen) {
-            // 进入全屏
-            this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_ENTER, null);
-        } else if (id == R.id.cover_controller) {
-            // 控制器 显示/隐藏
-            this.onSwitchController();
-        }
-    }
-
-    /**
-     * 跳转进度
-     */
-    @Override
-    protected void onSeek() {
-        super.onSeek();
-        Bundle bundle = BundlePool.obtain();
-        bundle.putLong(EventKey.LONG_DATA, mProgress.getProgress());
-        this.requestSeek(bundle);
-    }
-
-    /**
      * 控制器
      */
     @Override
@@ -208,6 +208,6 @@ public class SmallControllerCover extends BaseControllerCover implements View.On
      */
     @Override
     public int getCoverLevel() {
-        return levelMedium(10);
+        return levelMedium(20);
     }
 }

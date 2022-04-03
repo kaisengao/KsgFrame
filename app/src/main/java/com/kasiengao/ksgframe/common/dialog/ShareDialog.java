@@ -47,7 +47,7 @@ public class ShareDialog extends Dialog {
 
             window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
             // 动画
-            window.setWindowAnimations(android.R.style.Animation_Translucent);
+            window.setWindowAnimations(android.R.style.Animation_Activity);
             // dialog背景颜色
             window.setBackgroundDrawableResource(android.R.color.transparent);
         }

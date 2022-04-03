@@ -86,15 +86,6 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
     }
 
     /**
-     * 子类Activity重写该方法可以设置是否添加Toolbar
-     *
-     * @return 默认返回true表示添加Toolbar，如不需要Toolbar，则重写该方法返回false
-     */
-    protected boolean isDisplayToolbar() {
-        return true;
-    }
-
-    /**
      * 得到当前界面Toolbar的资源文件Id
      *
      * @return 资源文件Id
@@ -108,9 +99,7 @@ public abstract class BaseVmActivity<DB extends ViewDataBinding, VM extends Base
      * Init Toolbar
      */
     private void initToolbar() {
-        // 验证 是否继承了 ToolbarViewModel
-        if (isDisplayToolbar()
-                && (mViewModel instanceof ToolbarViewModel)) {
+        if (mViewModel instanceof ToolbarViewModel) {
             // Toolbar
             this.mToolbar = findViewById(R.id.toolbar);
             // 非空验证
