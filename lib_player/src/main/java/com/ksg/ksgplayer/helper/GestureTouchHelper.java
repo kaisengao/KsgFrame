@@ -44,6 +44,8 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
 
     private boolean mGestureEnabled = true;
 
+    private boolean mGestureSlideEnabled = true;
+
     private final VolumeHelper mVolumeHelper;
 
     private final GestureDetector mGestureDetector;
@@ -76,6 +78,13 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      */
     public void setGestureEnabled(boolean gestureEnabled) {
         this.mGestureEnabled = gestureEnabled;
+    }
+
+    /**
+     * 设置 是否开启手势滑动、默认开启
+     */
+    public void setGestureSlideEnabled(boolean gestureSlideEnabled) {
+        this.mGestureSlideEnabled = gestureSlideEnabled;
     }
 
     /**
@@ -199,7 +208,7 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
         // 验证是否开启了手势 或 滑动手势
-        if (!mGestureEnabled) {
+        if (!mGestureEnabled || !mGestureSlideEnabled) {
             return true;
         }
         float deltaX = e1.getX() - e2.getX();

@@ -38,8 +38,8 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
     protected BaseRxObserver(Context context) {
         this.mContext = context;
         this.setLoadMessage(R.string.loading);
-        this.setLoadColor(R.color.black);
-        this.setLoadBgColor(R.color.white);
+        this.setLoadColor(R.color.textColorPrimary);
+        this.setLoadBgColor(R.color.translucent);
     }
 
     /**

@@ -3,7 +3,7 @@
     android:id="@+id/error_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/background"
     android:gravity="center"
     android:orientation="vertical"
     android:paddingStart="24dp"
@@ -13,7 +13,8 @@
         android:id="@+id/error_icon"
         android:layout_width="80dp"
         android:layout_height="80dp"
-        android:tint="@color/black" />
+        android:visibility="gone"
+        android:tint="@color/textColorPrimary" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/error_text"
@@ -22,7 +23,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center"
         android:text="@string/error"
-        android:textColor="@color/black"
+        android:textColor="@color/textColorPrimary"
         android:textSize="15sp" />
 
     <com.google.android.material.button.MaterialButton
@@ -31,9 +32,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-        android:paddingStart="30dp"
-        android:paddingEnd="30dp"
         android:text="@string/retry"
+        android:textColor="@color/textColorPrimary"
         android:textSize="15sp" />
 
 </LinearLayout>

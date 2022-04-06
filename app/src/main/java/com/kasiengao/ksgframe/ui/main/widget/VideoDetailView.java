@@ -35,7 +35,6 @@ import com.kasiengao.ksgframe.common.widget.SlidingLayout;
 import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.kasiengao.ksgframe.databinding.LayoutVideoDetailBinding;
 import com.kasiengao.ksgframe.player.cover.DanmakuCover;
-import com.kasiengao.ksgframe.player.cover.GestureCover;
 import com.kasiengao.ksgframe.player.cover.LandControllerCover;
 import com.kasiengao.ksgframe.player.cover.SmallControllerCover;
 import com.kasiengao.ksgframe.player.cover.UploaderCover;
@@ -67,8 +66,6 @@ public class VideoDetailView extends FrameLayout {
     private LayoutVideoDetailBinding mBinding;
 
     private BottomSheetBehavior<RelativeLayout> mInfoBehavior;
-
-    private GestureCover mGestureCover;
 
     private LandControllerCover mLandControllerCover;
 
@@ -309,31 +306,19 @@ public class VideoDetailView extends FrameLayout {
             CoverManager coverManager = ListPlayer.getInstance().getCoverManager();
             coverManager.removeCover(CoverConstant.CoverKey.KEY_SMALL_CONTROLLER);
             coverManager.addCover(CoverConstant.CoverKey.KEY_DANMAKU, getDanmakuCover());
-            coverManager.addCover(CoverConstant.CoverKey.KEY_GESTURE, getGestureCover());
             coverManager.addCover(CoverConstant.CoverKey.KEY_LAND_CONTROLLER, getLandControllerCover());
-            // 2绑定全屏容器
+            // 绑定全屏容器
             ListPlayer.getInstance().bindNewContainer(mBinding.playContainerFullscreen);
         } else {
             this.mBinding.playContainerFullscreen.setVisibility(View.GONE);
             // 设置Cover
             CoverManager coverManager = ListPlayer.getInstance().getCoverManager();
             coverManager.removeCover(CoverConstant.CoverKey.KEY_DANMAKU);
-            coverManager.removeCover(CoverConstant.CoverKey.KEY_GESTURE);
             coverManager.removeCover(CoverConstant.CoverKey.KEY_LAND_CONTROLLER);
             coverManager.addCover(CoverConstant.CoverKey.KEY_SMALL_CONTROLLER, getSmallControllerCover());
-            // 1恢复视频容器
+            // 恢复视频容器
             ListPlayer.getInstance().bindNewContainer(mBinding.playerContainer);
         }
-    }
-
-    /**
-     * Cover 手势操作
-     */
-    private GestureCover getGestureCover() {
-        if (mGestureCover == null) {
-            this.mGestureCover = new GestureCover(getContext());
-        }
-        return mGestureCover;
     }
 
     /**

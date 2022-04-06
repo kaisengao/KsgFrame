@@ -89,29 +89,30 @@
         android:id="@+id/cover_gesture_speed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|center"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="@dimen/view_space"
         android:layout_marginTop="40dp"
         android:background="@drawable/shape_gesture_tips"
         android:gravity="center"
         android:orientation="horizontal"
-        android:paddingStart="15dp"
-        android:paddingTop="7dp"
-        android:paddingEnd="15dp"
-        android:paddingBottom="7dp"
+        android:paddingStart="12dp"
+        android:paddingTop="4dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="4dp"
         android:visibility="invisible"
         tools:visibility="visible">
 
         <!-- Tips -->
         <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/cover_gesture_speed_tips"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_speed"
-            android:drawableEnd="@drawable/ic_speed"
             android:drawablePadding="5dp"
             android:gravity="center"
-            android:text="@string/speed_play"
+            android:text="@string/speed_tips"
             android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:textSize="12sp" />
 
     </LinearLayout>
 </FrameLayout>

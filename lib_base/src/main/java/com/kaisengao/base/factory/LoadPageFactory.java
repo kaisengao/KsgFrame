@@ -115,7 +115,7 @@ public class LoadPageFactory {
                 // Loading
                 AVLoadingIndicatorView loadingView = rootView.findViewById(R.id.loading);
                 if (loadingView != null) {
-                    loadingView.setIndicatorColor(color);
+                    loadingView.setIndicatorColor(newColor);
                 }
                 // Loading提示
                 TextView loadingText = rootView.findViewById(R.id.loading_text);

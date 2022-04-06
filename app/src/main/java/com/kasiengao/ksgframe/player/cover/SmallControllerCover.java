@@ -64,7 +64,6 @@ public class SmallControllerCover extends BaseControllerCover implements View.On
         // OnClicks
         this.mPlayState.setOnClickListener(this);
         this.mFullscreen.setOnClickListener(this);
-        this.findViewById(R.id.cover_controller).setOnClickListener(this);
         // SeekBar
         this.mProgress.setOnSeekBarChangeListener(this);
     }
@@ -79,6 +78,13 @@ public class SmallControllerCover extends BaseControllerCover implements View.On
         if (getPlayerStateGetter() != null) {
             this.setPlayState(getPlayerStateGetter().getState());
         }
+        // 手势滑动 默认关闭
+        Bundle bundle = BundlePool.obtain();
+        bundle.putBoolean(EventKey.BOOL_DATA, false);
+        this.notifyPrivateEvent(
+                CoverConstant.CoverKey.KEY_GESTURE,
+                CoverConstant.PrivateEvent.CODE_GESTURE_SLIDE_ENABLED,
+                bundle);
     }
 
     @Override
@@ -128,9 +134,6 @@ public class SmallControllerCover extends BaseControllerCover implements View.On
         } else if (id == R.id.cover_controller_fullscreen) {
             // 进入全屏
             this.notifyCoverEvent(CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_ENTER, null);
-        } else if (id == R.id.cover_controller) {
-            // 控制器 显示/隐藏
-            this.onSwitchController();
         }
     }
 

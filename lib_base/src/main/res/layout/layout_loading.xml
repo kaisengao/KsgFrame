@@ -4,7 +4,7 @@
     android:id="@+id/loading_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/translucent"
     android:gravity="center"
     android:orientation="vertical">
 
@@ -13,7 +13,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        app:indicatorColor="@color/black"
+        app:indicatorColor="@color/textColorPrimary"
         app:indicatorName="BallClipRotateIndicator" />
 
     <androidx.appcompat.widget.AppCompatTextView
@@ -22,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/loading"
-        android:textColor="@color/black"
+        android:textColor="@color/textColorPrimary"
         android:textSize="15sp" />
 
 </LinearLayout>

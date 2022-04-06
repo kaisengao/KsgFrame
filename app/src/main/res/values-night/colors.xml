@@ -10,13 +10,6 @@
     <color name="colorSecondaryVariant">#BB86FC</color>
     <color name="colorOnSecondary">#FFFFFF</color>
 
-    <!-- 主要的文字颜色 -->
-    <color name="textColorPrimary">#FFFFFF</color>
-    <!-- 辅助的文字颜色 -->
-    <color name="textColorSecondary">#A9A9A9</color>
-    <!-- 背景色 -->
-    <color name="background">#121212</color>
-
     <color name="driverColor">#12000000</color>
 
     <color name="videoLoadColor">#131313</color>

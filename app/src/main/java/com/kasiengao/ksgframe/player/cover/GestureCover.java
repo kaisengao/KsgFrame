@@ -1,6 +1,7 @@
 package com.kasiengao.ksgframe.player.cover;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.MotionEvent;
@@ -11,8 +12,8 @@ import android.widget.ProgressBar;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
+import com.kaisengao.base.configure.ActivityManager;
 import com.kaisengao.base.configure.ThreadPool;
-import com.kaisengao.base.util.CommonUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.common.util.VibratorUtil;
 import com.kasiengao.ksgframe.common.widget.GestureTipsView;
@@ -35,7 +36,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
 
     private long mSlidProgress;
 
-    private float mDeaultSpeed;
+    private float mDefaultSpeed;
 
     private LinearLayout mGestureTipsRoot;
 
@@ -79,7 +80,8 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
         // 手势操作 提示View
         this.mGestureTipsView = new GestureTipsView();
         // 手势操作帮助类
-        this.mGestureTouchHelper = new GestureTouchHelper(CommonUtil.scanForActivity(mContext), this);
+        Activity activity = ActivityManager.getInstance().currentActivity();
+        this.mGestureTouchHelper = new GestureTouchHelper(activity, this);
         //  Views
         this.mGestureTipsRoot = findViewById(R.id.cover_gesture);
         this.mGestureTipsSlidingRoot = findViewById(R.id.cover_gesture_sliding);
@@ -174,7 +176,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     public void onLongPress() {
         // 倍速播放
         if (getPlayerStateGetter() != null && getPlayerStateGetter().getState() == IPlayer.STATE_START) {
-            this.mDeaultSpeed = getPlayerStateGetter().getSpeed();
+            this.mDefaultSpeed = getPlayerStateGetter().getSpeed();
             // 提示
             this.mGestureTipsView
                     .setRooView(mGestureTipsSpeedRoot)
@@ -185,7 +187,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
             this.getValuePool().putObject(CoverConstant.ValueKey.KEY_HIDE_CONTROLLER, null);
             // 在原有速度的基础上x2
             Bundle obtain = BundlePool.obtain();
-            obtain.putFloat(EventKey.FLOAT_DATA, mDeaultSpeed * 2.0f);
+            obtain.putFloat(EventKey.FLOAT_DATA, mDefaultSpeed * 2.0f);
             this.requestSpeed(obtain);
         }
     }
@@ -198,7 +200,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
         this.mGestureTipsView.dismiss();
         // 停止倍速
         Bundle obtain = BundlePool.obtain();
-        obtain.putFloat(EventKey.FLOAT_DATA, mDeaultSpeed);
+        obtain.putFloat(EventKey.FLOAT_DATA, mDefaultSpeed);
         this.requestSpeed(obtain);
     }
 
@@ -322,7 +324,6 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      */
     @Override
     public void onValueEvent(String key, Object value) {
-
     }
 
     /**
@@ -366,7 +367,10 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      */
     @Override
     public void onPrivateEvent(int eventCode, Bundle bundle) {
-
+        if (eventCode == CoverConstant.PrivateEvent.CODE_GESTURE_SLIDE_ENABLED) {
+            // 手势滑动 开启/关闭
+            this.mGestureTouchHelper.setGestureSlideEnabled(bundle.getBoolean(EventKey.BOOL_DATA, true));
+        }
     }
 
     /**

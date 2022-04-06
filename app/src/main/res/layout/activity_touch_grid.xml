@@ -6,10 +6,9 @@
 
     </data>
 
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         tools:context=".ui.trainee.grid.TouchGridActivity">
 
         <androidx.recyclerview.widget.RecyclerView
@@ -17,5 +16,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-    </LinearLayout>
+    </FrameLayout>
 </layout>

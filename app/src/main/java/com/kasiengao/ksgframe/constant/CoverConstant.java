@@ -59,6 +59,7 @@ public interface CoverConstant {
          * 全屏切换
          */
         String KEY_FULLSCREEN_TOGGLE = "fullscreenToggle";
+
     }
 
     interface PrivateEvent {
@@ -72,6 +73,11 @@ public interface CoverConstant {
          * 弹幕关
          */
         int CODE_REQUEST_DANMAKU_CLOSE = -101;
+
+        /**
+         * 手势滑动 开启/关闭
+         */
+        int CODE_GESTURE_SLIDE_ENABLED = 200;
     }
 
     interface CoverEvent extends ICoverEvent {

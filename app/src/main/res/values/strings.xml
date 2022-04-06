@@ -19,7 +19,7 @@
     <string name="speed_150">1.5X</string>
     <string name="speed_200">2X</string>
 
-    <string name="speed_play">倍速播放中</string>
+    <string name="speed_tips">快进中</string>
 
     <string name="main_video_item_interact_praise">赞</string>
     <string name="main_video_item_interact_stepped">踩</string>

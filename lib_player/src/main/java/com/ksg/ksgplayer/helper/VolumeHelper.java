@@ -3,10 +3,10 @@ package com.ksg.ksgplayer.helper;
 import android.content.Context;
 import android.media.AudioManager;
 
+import androidx.annotation.IntDef;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
-
-import androidx.annotation.IntDef;
 
 /**
  * @author kaisengao
@@ -65,9 +65,6 @@ public class VolumeHelper {
 
     private int mNowFlag = FLAG_NOTHING;
 
-    /**
-     * 步进值
-     */
     private int mVoiceStep100 = 1;
 
     private final AudioManager mAudioManager;
@@ -78,7 +75,7 @@ public class VolumeHelper {
      * @param context 上下文
      */
     public VolumeHelper(Context context) {
-        mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
+        this.mAudioManager = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
     }
 
     /**

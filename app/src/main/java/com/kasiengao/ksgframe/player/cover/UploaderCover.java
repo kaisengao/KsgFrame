@@ -10,7 +10,6 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.google.android.material.imageview.ShapeableImageView;
 import com.kaisengao.base.util.GlideUtil;
-import com.kaisengao.base.util.KLog;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean;
@@ -119,7 +118,6 @@ public class UploaderCover extends BaseCover implements View.OnClickListener {
      */
     @Override
     public void onPlayerEvent(int eventCode, Bundle bundle) {
-        KLog.d("zzz","eventCode = "+eventCode);
         if (eventCode == OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE) {
             // 播放结束 Show
             this.setCoverVisibility(View.VISIBLE);

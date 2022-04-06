@@ -110,6 +110,13 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
                 this.mSpeed.setText(String.format("%sX", speed));
             }
         }
+        // 手势滑动 默认开启
+        Bundle bundle = BundlePool.obtain();
+        bundle.putBoolean(EventKey.BOOL_DATA, false);
+        this.notifyPrivateEvent(
+                CoverConstant.CoverKey.KEY_GESTURE,
+                CoverConstant.PrivateEvent.CODE_GESTURE_SLIDE_ENABLED,
+                bundle);
     }
 
     @Override

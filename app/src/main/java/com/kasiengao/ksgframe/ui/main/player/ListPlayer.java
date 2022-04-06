@@ -8,6 +8,7 @@ import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
 import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.kasiengao.ksgframe.factory.AppFactory;
 import com.kasiengao.ksgframe.player.KsgExoPlayer;
+import com.kasiengao.ksgframe.player.cover.GestureCover;
 import com.kasiengao.ksgframe.player.cover.LoadingCover;
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean;
 import com.ksg.ksgplayer.cover.CoverManager;
@@ -76,6 +77,8 @@ public class ListPlayer {
         this.mCoverManager = new CoverManager();
         // Loading
         this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_LOADING, new LoadingCover(application));
+        // Gesture
+        this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_GESTURE, new GestureCover(application));
         // 设置 Cover管理器
         this.mPlayer.setCoverManager(mCoverManager);
         // Cover事件
