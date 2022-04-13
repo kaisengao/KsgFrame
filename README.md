@@ -16,7 +16,7 @@
 ### 效果图
 <img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815624.png" width="35%">       <img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815629.png" width="35%">
 
-<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815640.png" width="35%" >      
+<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815640.png" width="70.5%" >      
 
 <img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815634.png" width="35%">       <img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815648.png" width="35%">
 
