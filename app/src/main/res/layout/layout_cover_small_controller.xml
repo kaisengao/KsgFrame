@@ -8,12 +8,12 @@
     tools:background="@color/color_48000000">
 
     <!-- Start/Pause-->
-    <androidx.appcompat.widget.AppCompatImageView
+    <com.kasiengao.ksgframe.common.widget.PlayStateView
         android:id="@+id/cover_controller_play"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:src="@drawable/selector_load_play_state" />
+        android:background="@drawable/shape_play_bg" />
 
     <!-- Curr Time-->
     <androidx.appcompat.widget.AppCompatTextView

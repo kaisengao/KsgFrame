@@ -87,10 +87,10 @@
             tools:text="00:00" />
 
         <!-- Start/Pause-->
-        <androidx.appcompat.widget.AppCompatImageView
+        <com.kasiengao.ksgframe.common.widget.PlayStateView
             android:id="@+id/cover_controller_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentStart="true"
             android:layout_alignParentBottom="true"
             android:layout_marginStart="30dp"

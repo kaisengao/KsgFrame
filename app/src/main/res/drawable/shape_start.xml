@@ -11,7 +11,7 @@
     </item>
 
     <item
-        android:drawable="@drawable/ic_play"
+        android:drawable="@drawable/ic_start"
         android:gravity="center" />
 
 </layer-list>

@@ -12,6 +12,7 @@ import androidx.appcompat.widget.AppCompatTextView;
 
 import com.kaisengao.base.util.TimeUtil;
 import com.kasiengao.ksgframe.R;
+import com.kasiengao.ksgframe.common.widget.PlayStateView;
 import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.ksg.ksgplayer.event.BundlePool;
 import com.ksg.ksgplayer.event.EventKey;
@@ -31,7 +32,7 @@ public class SmallControllerCover extends BaseControllerCover implements View.On
 
     private ProgressBar mBottomProgress;
 
-    private AppCompatImageView mPlayState;
+    private PlayStateView mPlayState;
 
     private AppCompatImageView mFullscreen;
 
@@ -101,9 +102,9 @@ public class SmallControllerCover extends BaseControllerCover implements View.On
      */
     private void setPlayState(int state) {
         if (state == IPlayer.STATE_PAUSE) {
-            this.mPlayState.setSelected(false);
+            this.mPlayState.switchToStart();
         } else if (state == IPlayer.STATE_START) {
-            this.mPlayState.setSelected(true);
+            this.mPlayState.switchToPause();
         }
     }
 
@@ -113,13 +114,16 @@ public class SmallControllerCover extends BaseControllerCover implements View.On
     @Override
     protected void onSwitchPlayState() {
         super.onSwitchPlayState();
-        boolean selected = mPlayState.isSelected();
-        if (selected) {
-            this.requestPause(null);
-        } else {
-            this.requestResume(null);
+        switch (mPlayState.getMCurrState()) {
+            case PlayStateView.STATE_START:
+                this.requestResume(null);
+                break;
+            case PlayStateView.STATE_PAUSE:
+                this.requestPause(null);
+                break;
+            default:
+                break;
         }
-        this.mPlayState.setSelected(!selected);
     }
 
     /**
