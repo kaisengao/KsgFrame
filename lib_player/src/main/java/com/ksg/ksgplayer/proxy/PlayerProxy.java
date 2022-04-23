@@ -114,7 +114,7 @@ public class PlayerProxy implements IPlayer {
     }
 
     /**
-     * 设置（播放器）解码器
+     * 设置 解码器
      *
      * @param decoderView {@link BasePlayer}
      */
@@ -124,7 +124,7 @@ public class PlayerProxy implements IPlayer {
     }
 
     /**
-     * 返回 （播放器）解码器
+     * 返回 解码器
      *
      * @return {@link BasePlayer}
      */
@@ -164,9 +164,9 @@ public class PlayerProxy implements IPlayer {
     }
 
     /**
-     * 设置视频播放地址
+     * 设置数据源
      *
-     * @param dataSource 播放地址
+     * @param dataSource 数据源
      */
     @Override
     public void setDataSource(DataSource dataSource) {
@@ -175,17 +175,9 @@ public class PlayerProxy implements IPlayer {
         this.resetListener();
         // 设置 事件监听
         this.initListener();
-        // 设置 播放地址
-        this.interPlayerSetDataSource(dataSource);
-    }
-
-    /**
-     * 设置 播放地址
-     */
-    private void interPlayerSetDataSource(DataSource dataSource) {
-        // 缓存 设置视频播放地址
+        // 设置 缓存数据源
         this.mPlaybackCache.setDataSource(dataSource);
-        // 设置视频播放地址
+        // 设置 数据源
         if (isPlayerAvailable()) {
             this.mBasePlayer.setDataSource(dataSource);
         }
@@ -251,12 +243,12 @@ public class PlayerProxy implements IPlayer {
     }
 
     /**
-     * 获取渲染器
+     * 获取自定义渲染器
      */
     @Override
-    public View getRenderer() {
+    public View getCustomRenderer() {
         if (isPlayerAvailable()) {
-            return mBasePlayer.getRenderer();
+            return mBasePlayer.getCustomRenderer();
         }
         return null;
     }
@@ -424,18 +416,6 @@ public class PlayerProxy implements IPlayer {
     }
 
     /**
-     * 重新播放
-     *
-     * @param msc 在指定的位置开始播放
-     */
-    public void replay(long msc) {
-        if (mDataSource != null && isPlayerAvailable()) {
-            this.interPlayerSetDataSource(mDataSource);
-            this.mBasePlayer.start(msc);
-        }
-    }
-
-    /**
      * 停止
      */
     @Override
@@ -444,6 +424,18 @@ public class PlayerProxy implements IPlayer {
             this.mBasePlayer.stop();
         }
         this.mPlaybackCache.onIntentStop();
+    }
+
+    /**
+     * 重新播放
+     *
+     * @param msc 在指定的位置开始播放
+     */
+    @Override
+    public void replay(long msc) {
+        if (isPlayerAvailable()) {
+            this.mBasePlayer.replay(msc);
+        }
     }
 
     /**

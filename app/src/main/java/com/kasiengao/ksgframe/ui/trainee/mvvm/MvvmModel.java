@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken;
 import com.kaisengao.base.factory.AppFactory;
 import com.kaisengao.base.util.CommonUtil;
 import com.kaisengao.mvvm.base.model.BaseModel;
-import com.kaisengao.retrofit.RxCompose;
+import com.kaisengao.retrofit.compose.RxCompose;
 import com.kaisengao.retrofit.factory.GsonBuilderFactory;
 import com.kasiengao.ksgframe.data.Injection;
 import com.kasiengao.ksgframe.data.source.DataRepository;

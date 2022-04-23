@@ -31,7 +31,6 @@ import com.kasiengao.ksgframe.BR;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.common.util.SystemUiUtil;
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
-import com.kasiengao.ksgframe.common.widget.SlidingLayout;
 import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.kasiengao.ksgframe.databinding.LayoutVideoDetailBinding;
 import com.kasiengao.ksgframe.player.cover.DanmakuCover;
@@ -117,8 +116,6 @@ public class VideoDetailView extends FrameLayout {
                 mBinding.coverImage.setHeight(mViewHeight - mInfoBehavior.getPeekHeight() + 40);
             }
         });
-        // 侧滑关闭
-        this.<SlidingLayout>findViewById(R.id.sliding).setSlidingListener(this::closeDetail);
         // Init Player
         this.initPlayer();
     }

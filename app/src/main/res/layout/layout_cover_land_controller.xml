@@ -95,7 +95,7 @@
             android:layout_alignParentBottom="true"
             android:layout_marginStart="30dp"
             android:layout_marginBottom="12dp"
-            android:src="@drawable/selector_play_state" />
+            tools:rotation="90" />
 
         <!-- 弹幕 Show/Hide -->
         <androidx.appcompat.widget.AppCompatImageView

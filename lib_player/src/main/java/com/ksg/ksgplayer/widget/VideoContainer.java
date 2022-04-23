@@ -19,6 +19,7 @@ import com.ksg.ksgplayer.event.EventDispatcher;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.event.IEventDispatcher;
 import com.ksg.ksgplayer.listener.OnCoverEventListener;
+import com.ksg.ksgplayer.listener.OnPlayerListener;
 import com.ksg.ksgplayer.listener.OnProducerSenderListener;
 import com.ksg.ksgplayer.producer.BaseEventProducer;
 import com.ksg.ksgplayer.producer.ProducerManager;
@@ -157,12 +158,7 @@ public class VideoContainer extends FrameLayout {
         // 解绑 Cover添加移除事件
         this.mCoverManager.removeCoverAttachStateChangeListener(mCoverAttachStateChangeListener);
         // 循环AttachCover
-        this.mCoverManager.forEach(new ICoverManager.OnLoopListener() {
-            @Override
-            public void onEach(ICover cover) {
-                attachCover(cover);
-            }
-        });
+        this.mCoverManager.forEach(this::attachCover);
         // 添加接收器组更改侦听器，动态附加接收器， 当用户添加或移除接收器时分离接收器
         this.mCoverManager.addCoverAttachStateChangeListener(mCoverAttachStateChangeListener);
     }
@@ -198,6 +194,19 @@ public class VideoContainer extends FrameLayout {
      * @param bundle    bundle
      */
     public final void dispatchPlayEvent(int eventCode, Bundle bundle) {
+        switch (eventCode) {
+            case OnPlayerListener.PLAYER_EVENT_ON_PREPARED:
+                // 设置画面常亮
+                this.setKeepScreenOn(true);
+                break;
+            case OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE:
+            case OnPlayerListener.PLAYER_EVENT_ON_STOP:
+                // 关闭画面常亮
+                this.setKeepScreenOn(false);
+                break;
+            default:
+                break;
+        }
         if (mEventDispatcher != null) {
             this.mEventDispatcher.dispatchPlayEvent(eventCode, bundle);
         }

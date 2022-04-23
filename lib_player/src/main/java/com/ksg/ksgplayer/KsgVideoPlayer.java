@@ -11,6 +11,9 @@ import android.view.ViewParent;
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
 
+import com.ksg.ksgplayer.config.AspectRatio;
+import com.ksg.ksgplayer.config.PlayerConfig;
+import com.ksg.ksgplayer.cover.ICoverEvent;
 import com.ksg.ksgplayer.cover.ICoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
@@ -18,14 +21,17 @@ import com.ksg.ksgplayer.handler.CoverEventHandler;
 import com.ksg.ksgplayer.listener.OnCoverEventListener;
 import com.ksg.ksgplayer.listener.OnErrorListener;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
+import com.ksg.ksgplayer.listener.OnRendererListener;
 import com.ksg.ksgplayer.player.BasePlayer;
 import com.ksg.ksgplayer.player.IPlayer;
-import com.ksg.ksgplayer.proxy.PlayerProxy;
 import com.ksg.ksgplayer.producer.BaseEventProducer;
-import com.ksg.ksgplayer.renderer.AspectRatio;
-import com.ksg.ksgplayer.renderer.IRenderer;
-import com.ksg.ksgplayer.renderer.RendererSurfaceView;
-import com.ksg.ksgplayer.renderer.RendererTextureView;
+import com.ksg.ksgplayer.proxy.PlayerProxy;
+import com.ksg.ksgplayer.renderer.Renderer;
+import com.ksg.ksgplayer.renderer.RendererListenerAdapter;
+import com.ksg.ksgplayer.renderer.RendererType;
+import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView;
+import com.ksg.ksgplayer.renderer.view.KsgSurfaceView;
+import com.ksg.ksgplayer.renderer.view.KsgTextureView;
 import com.ksg.ksgplayer.state.PlayerStateGetter;
 import com.ksg.ksgplayer.state.StateGetter;
 import com.ksg.ksgplayer.widget.VideoContainer;
@@ -43,15 +49,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
 
     private Context mContext;
 
-    private int mVideoWidth;
-
-    private int mVideoHeight;
-
-    private int mVideoSarNum;
-
-    private int mVideoSarDen;
-
-    private int mVideoRotation;
+    private boolean mUserPause;
 
     private boolean isBuffering;
 
@@ -59,13 +57,9 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
 
     private VideoContainer mVideoContainer;
 
-    private final AspectRatio mAspectRatio = AspectRatio.AspectRatio_FIT_PARENT;
-
     private CoverEventHandler mCoverEventHandler;
 
-    private IRenderer mRenderer;
-
-    private IRenderer.Holder mRendererHolder;
+    private Renderer mRenderer;
 
     private OnPlayerListener mPlayerListener;
 
@@ -104,11 +98,11 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     /**
      * 设置 背景颜色
      *
-     * @param res res
+     * @param resId resId
      */
     @Override
-    public void setBackgroundColor(@ColorRes int res) {
-        this.mVideoContainer.setBackgroundColor(ContextCompat.getColor(mContext, res));
+    public void setBackgroundColor(@ColorRes int resId) {
+        this.mVideoContainer.setBackgroundColor(ContextCompat.getColor(mContext, resId));
     }
 
     /**
@@ -187,27 +181,27 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     }
 
     /**
-     * 设置解码器
+     * 设置 解码器
      *
      * @param decoderView decoderView
      */
     @Override
     public boolean setDecoderView(BasePlayer decoderView) {
         BasePlayer oldDecoderView = mPlayer.getDecoderView();
-        // 如果与已有的解码器一致则不需要切换
+        // 去重
         if (oldDecoderView != null && oldDecoderView == decoderView) {
             return false;
         }
-        // 销毁视图资源
-        this.releaseRenderer();
-        // 设置新（播放器）解码器
+        // 设置 解码器
         this.mPlayer.setDecoderView(decoderView);
-        // 设置成功
+        // 设置 渲染器
+        this.setRendererType(PlayerConfig.getRenderType());
+        // Return
         return true;
     }
 
     /**
-     * 返回 （播放器）解码器
+     * 获取 解码器
      *
      * @return {@link BasePlayer}
      */
@@ -216,79 +210,128 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     }
 
     /**
-     * 设置渲染器类型
+     * 设置 渲染器
      *
-     * @param rendererType {@link IRenderer}
+     * @param rendererType {@link Renderer}
      */
     @Override
     public void setRendererType(int rendererType) {
-        // 销毁视图资源
+        Renderer renderer;
+        // 释放渲染器
         this.releaseRenderer();
         // 渲染器
         switch (rendererType) {
-            case IRenderer.RENDER_TYPE_CUSTOM:
-                // 自定义渲染器
-                if (getRenderer() != null) {
-                    this.mVideoContainer.setRenderer(getRenderer());
-                }
-                break;
-            case IRenderer.RENDER_TYPE_SURFACE_VIEW:
+            case RendererType.SURFACE:
                 // SurfaceView
-                this.setRenderer(new RendererSurfaceView(mContext));
+                renderer = new KsgSurfaceView(mContext);
                 break;
-            case IRenderer.RENDER_TYPE_TEXTURE_VIEW:
+            case RendererType.GL_SURFACE:
+                // GLSurfaceView
+                renderer = new KsgGLSurfaceView(mContext);
+                break;
+            case RendererType.TEXTURE:
             default:
-                // 默认 TextureView
-                RendererTextureView textureView = new RendererTextureView(mContext);
-                textureView.setTakeOverSurfaceTexture(true);
-                this.setRenderer(textureView);
+                // TextureView
+                renderer = new KsgTextureView(mContext);
                 break;
         }
-    }
-
-    /**
-     * 设置渲染器
-     *
-     * @param renderer {@link IRenderer}
-     */
-    private void setRenderer(IRenderer renderer) {
         this.mRenderer = renderer;
-        // 初始 holder
-        this.mRendererHolder = null;
         // 初始
         this.mPlayer.setSurface(null);
         this.mPlayer.setDisplay(null);
-        // 设置 Callback
-        this.mRenderer.setCallback(mRendererCallback);
-        // 设置画面宽高比
-        this.mRenderer.updateAspectRatio(mAspectRatio);
-        // 设置画面宽高
-        this.mRenderer.updateVideoSize(mVideoWidth, mVideoHeight);
-        // 设置视频采样率
-        this.mRenderer.setVideoSampleAspectRatio(mVideoSarNum, mVideoSarDen);
-        // 设置视频旋转角度
-        this.mRenderer.setVideoRotation(mVideoRotation);
-        // 设置渲染器View
+        // BindPlayer
+        this.mRenderer.bindPlayer(mPlayer);
+        this.mRenderer.setRendererListener(mRendererListenerAdapter);
+        // 设置渲染器
         this.mVideoContainer.setRenderer(mRenderer.getRendererView());
+    }
+
+    /**
+     * 获取 渲染器
+     *
+     * @return {@link Renderer}
+     */
+    @Override
+    public Renderer getRenderer() {
+        return mRenderer;
     }
 
     /**
      * 释放渲染器
      */
     public void releaseRenderer() {
-        if (mRenderer != null) {
-            this.mRenderer.release();
+        Renderer renderer = getRenderer();
+        if (renderer != null) {
+            renderer.setRendererListener(null);
+            renderer.release();
             this.mRenderer = null;
         }
     }
 
     /**
-     * 获取渲染器
+     * 设置 画面旋转角度
      *
-     * @return {@link IRenderer}
+     * @param degree 角度
      */
-    public IRenderer getIRenderer() {
-        return mRenderer;
+    @Override
+    public void setRotationDegrees(int degree) {
+        if (getRenderer() != null) {
+            this.getRenderer().setRotationDegrees(degree);
+        }
+    }
+
+    /**
+     * 获取 画面旋转角度
+     *
+     * @return degree 角度
+     */
+    @Override
+    public int getRotationDegrees() {
+        if (getRenderer() != null) {
+            return getRenderer().getRotationDegrees();
+        }
+        return 0;
+    }
+
+    /**
+     * 设置 画面比例
+     *
+     * @param aspectRatio {@link AspectRatio}
+     */
+    @Override
+    public void setAspectRatio(int aspectRatio) {
+        if (getRenderer() != null) {
+            // 1、调整View去适应比例变化
+            this.getRenderer().changeLayoutParams(aspectRatio);
+            // 2、设置比例
+            this.getRenderer().setAspectRatio(aspectRatio);
+        }
+    }
+
+    /**
+     * 设置 自定义画面比例
+     *
+     * @param customAspectRatio 自定义比例 （例：16/9 = 1.77）
+     */
+    @Override
+    public void setCustomAspectRatio(int customAspectRatio) {
+        if (getRenderer() != null) {
+            this.getRenderer().setCustomAspectRatio(customAspectRatio);
+        }
+    }
+
+    /**
+     * 截图
+     *
+     * @param shotHigh 高清/普通
+     * @describe: 使用此方法后监听 {@link OnRendererListener}事件获取截图
+     */
+    @Override
+    public boolean onShotPic(boolean shotHigh) {
+        if (mRenderer != null) {
+            return mRenderer.onShotPic(shotHigh);
+        }
+        return false;
     }
 
     /**
@@ -306,10 +349,9 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void initPlayer() {
-        PlayerProxy player = new PlayerProxy();
-        player.setPlayerListener(mPlayerProxyListener);
-        player.setErrorListener(mErrorProxyListener);
-        this.mPlayer = player;
+        this.mPlayer = new PlayerProxy();
+        this.mPlayer.setPlayerListener(mPlayerProxyListener);
+        this.mPlayer.setErrorListener(mErrorProxyListener);
         // Cover事件处理程序实现类
         this.mCoverEventHandler = new CoverEventHandler(mPlayer);
     }
@@ -342,9 +384,9 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     }
 
     /**
-     * 设置视频播放地址
+     * 设置数据源
      *
-     * @param dataSource 播放地址
+     * @param dataSource 数据源
      */
     @Override
     public void setDataSource(DataSource dataSource) {
@@ -372,13 +414,13 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     }
 
     /**
-     * 获取渲染器
+     * 获取自定义渲染器
      *
      * @return View
      */
     @Override
-    public View getRenderer() {
-        return mPlayer.getRenderer();
+    public View getCustomRenderer() {
+        return mPlayer.getCustomRenderer();
     }
 
     /**
@@ -484,7 +526,9 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void pause() {
-        this.mPlayer.pause();
+        if (mPlayer.isItPlaying()) {
+            this.mPlayer.pause();
+        }
     }
 
     /**
@@ -492,7 +536,12 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void resume() {
-        this.mPlayer.resume();
+        if (isItPlaying()) {
+            if (!mUserPause) {
+                this.mPlayer.resume();
+                this.mUserPause = false;
+            }
+        }
     }
 
     /**
@@ -508,6 +557,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      *
      * @param msc 在指定的位置开始播放
      */
+    @Override
     public void replay(long msc) {
         this.mPlayer.replay(msc);
     }
@@ -550,7 +600,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     }
 
     /**
-     * 设置 Cover组件回调事件
+     * 设置 Cover组件事件
      *
      * @param coverEventListener coverEventListener
      */
@@ -560,25 +610,15 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     }
 
     /**
-     * 渲染器Callback
+     * 设置 渲染器事件
+     *
+     * @param rendererListener rendererListener
      */
-    private final IRenderer.Callback mRendererCallback = new IRenderer.Callback() {
-        @Override
-        public void onSurfaceCreated(IRenderer.Holder holder, int width, int height) {
-            mRendererHolder = holder;
-            // 绑定播放器
-            holder.bindPlayer(mPlayer);
-        }
+    @Override
+    public void setRendererListener(OnRendererListener rendererListener) {
+        this.mRendererListenerAdapter.setRendererListener(rendererListener);
+    }
 
-        @Override
-        public void onSurfaceChanged(IRenderer.Holder holder, int format, int width, int height) {
-        }
-
-        @Override
-        public void onSurfaceDestroy(IRenderer.Holder holder) {
-            mRendererHolder = null;
-        }
-    };
     /**
      * 播放事件
      */
@@ -589,51 +629,29 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
                 case OnPlayerListener.PLAYER_EVENT_ON_VIDEO_SIZE_CHANGE:
                     // 事件 视频尺寸改变
                     if (bundle != null) {
-                        mVideoWidth = bundle.getInt(EventKey.INT_ARG1);
-                        mVideoHeight = bundle.getInt(EventKey.INT_ARG2);
-                        mVideoSarNum = bundle.getInt(EventKey.INT_ARG3);
-                        mVideoSarDen = bundle.getInt(EventKey.INT_ARG4);
+                        int videoWidth = bundle.getInt(EventKey.INT_ARG1);
+                        int videoHeight = bundle.getInt(EventKey.INT_ARG2);
+                        int videoSarNum = bundle.getInt(EventKey.INT_ARG3);
+                        int videoSarDen = bundle.getInt(EventKey.INT_ARG4);
                         // 渲染器
-                        if (mRenderer != null) {
-                            // 设置尺寸
-                            mRenderer.updateVideoSize(mVideoWidth, mVideoHeight);
-                            // 设置视频采样率
-                            mRenderer.setVideoSampleAspectRatio(mVideoSarNum, mVideoSarDen);
+                        if (getRenderer() != null) {
+                            // 设置 画面宽高
+                            getRenderer().setVideoSize(videoWidth, videoHeight);
+                            // 设置 视频采样率
+                            getRenderer().setVideoSampleAspectRatio(videoSarNum, videoSarDen);
                         }
                     }
                     break;
                 case OnPlayerListener.PLAYER_EVENT_ON_VIDEO_ROTATION_CHANGED:
                     // 事件 视频旋转
                     if (bundle != null) {
-                        mVideoRotation = bundle.getInt(EventKey.INT_DATA);
+                        int degree = bundle.getInt(EventKey.INT_DATA);
                         // 渲染器
-                        if (mRenderer != null) {
-                            // 设置视频旋转角度
-                            mRenderer.setVideoRotation(mVideoRotation);
+                        if (getRenderer() != null) {
+                            // 设置 画面旋转角度
+                            getRenderer().setRotationDegrees(degree);
                         }
                     }
-                    break;
-                case OnPlayerListener.PLAYER_EVENT_ON_PREPARED:
-                    // 事件 准备完毕
-                    if (bundle != null && mRenderer != null) {
-                        mVideoWidth = bundle.getInt(EventKey.INT_ARG1);
-                        mVideoHeight = bundle.getInt(EventKey.INT_ARG2);
-                        // 设置画面宽高
-                        mRenderer.updateVideoSize(mVideoWidth, mVideoHeight);
-                    }
-                    // 设置画面常亮
-                    mVideoContainer.setKeepScreenOn(true);
-                    // 绑定播放器
-                    if (mRendererHolder != null) {
-                        mRendererHolder.bindPlayer(mPlayer);
-                    }
-                    break;
-                case OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE:
-                    // 事件 播放结束
-                case OnPlayerListener.PLAYER_EVENT_ON_STOP:
-                    // 事件 停止播放
-                    // 取消画面常亮
-                    mVideoContainer.setKeepScreenOn(false);
                     break;
                 case OnPlayerListener.PLAYER_EVENT_ON_BUFFERING_START:
                     // 事件 开始缓冲
@@ -711,11 +729,19 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     };
 
     /**
-     * 组件 事件回调
+     * 组件事件
      */
     private final OnCoverEventListener mContainerCoverEventListener = new OnCoverEventListener() {
         @Override
         public void onCoverEvent(int eventCode, Bundle bundle) {
+            switch (eventCode) {
+                case ICoverEvent.CODE_REQUEST_PAUSE:
+                    mUserPause = true;
+                    break;
+                case ICoverEvent.CODE_REQUEST_RESUME:
+                    mUserPause = false;
+                    break;
+            }
             // Cover事件处理程序
             if (mCoverEventHandler != null) {
                 mCoverEventHandler.onHandle(eventCode, bundle);
@@ -728,12 +754,17 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     };
 
     /**
+     * 渲染器事件
+     */
+    private final RendererListenerAdapter mRendererListenerAdapter = new RendererListenerAdapter() {
+    };
+
+    /**
      * 销毁资源
      */
     @Override
     public void destroy() {
         this.releaseRenderer();
-        this.mRendererHolder = null;
         this.mCoverEventHandler = null;
         this.mPlayer.destroy();
         this.mVideoContainer.destroy();

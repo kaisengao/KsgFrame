@@ -84,7 +84,7 @@ public interface IPlayer {
     /**
      * 设置数据源
      *
-     * @param dataSource 播放地址
+     * @param dataSource 数据源
      */
     void setDataSource(DataSource dataSource);
 
@@ -103,11 +103,11 @@ public interface IPlayer {
     void setDisplay(SurfaceHolder holder);
 
     /**
-     * 获取渲染器
+     * 获取自定义渲染器
      *
      * @return View
      */
-    View getRenderer();
+    View getCustomRenderer();
 
     /**
      * 设置音量
@@ -185,6 +185,13 @@ public interface IPlayer {
      * 停止
      */
     void stop();
+
+    /**
+     * 重新播放
+     *
+     * @param msc 在指定的位置开始播放
+     */
+    void replay(long msc);
 
     /**
      * 重置播放器

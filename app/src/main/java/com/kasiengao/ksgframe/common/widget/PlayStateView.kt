@@ -20,14 +20,12 @@ class PlayStateView @JvmOverloads constructor(
 
     companion object {
 
-        const val STATE_IDLE = 0
-
         const val STATE_START = 1
 
         const val STATE_PAUSE = 2
     }
 
-    var mCurrState = STATE_IDLE
+    var mCurrState = STATE_START
 
     private var mAlpha: Float = 1f
 
@@ -112,6 +110,7 @@ class PlayStateView @JvmOverloads constructor(
      * 启动动画
      */
     private fun startAnim() {
+        this.stopAnim()
         if (mAnimator == null) {
             this.mAnimator = ValueAnimator.ofFloat(0f, 90f)
             this.mAnimator?.addUpdateListener { anim ->
@@ -184,7 +183,7 @@ class PlayStateView @JvmOverloads constructor(
         matrix.postRotate(degree, centerX, centerY)
         matrix.postTranslate(
             (canvas.width * 0.5f) - centerX,
-            canvas.height * 0.5f - centerY
+            (canvas.height * 0.5f) - centerY
         )
         this.mColorMatrix.array[18] = alpha
         this.mBitPaint.colorFilter = ColorMatrixColorFilter(mColorMatrix)

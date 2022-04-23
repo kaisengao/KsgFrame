@@ -11,7 +11,7 @@ import com.kaisengao.base.loadpage.load.base.ILoad;
 import com.kaisengao.base.loadpage.widget.LoadContainer;
 import com.kaisengao.base.util.ToastUtil;
 import com.kaisengao.mvvm.base.activity.BaseVmActivity;
-import com.kaisengao.retrofit.RxCompose;
+import com.kaisengao.retrofit.compose.RxCompose;
 import com.kasiengao.ksgframe.BR;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.databinding.ActivityLoadpageBinding;

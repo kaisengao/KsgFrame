@@ -1,7 +1,7 @@
 package com.kasiengao.ksgframe.ui.trainee.retrofit;
 
 import com.kaisengao.retrofit.RetrofitClient;
-import com.kaisengao.retrofit.RxCompose;
+import com.kaisengao.retrofit.compose.RxCompose;
 import com.kaisengao.retrofit.api.ApiService;
 import com.kaisengao.retrofit.util.ParamsUtil;
 
@@ -37,6 +37,6 @@ public class RxRetrofitModel {
         return mApiService
                 .post(API, params)
                 .delay(2000, TimeUnit.MILLISECONDS)
-                .compose(RxCompose.fromJsonObj(NewsTopBean.class));
+                .compose(RxCompose.handleJsonObj(NewsTopBean.class));
     }
 }

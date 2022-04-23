@@ -11,15 +11,18 @@ import androidx.annotation.ColorRes;
 
 import com.ksg.ksgplayer.IKsgVideoPlayer;
 import com.ksg.ksgplayer.KsgVideoPlayer;
+import com.ksg.ksgplayer.config.AspectRatio;
+import com.ksg.ksgplayer.config.PlayerConfig;
 import com.ksg.ksgplayer.cover.ICoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.listener.OnCoverEventListener;
 import com.ksg.ksgplayer.listener.OnErrorListener;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
+import com.ksg.ksgplayer.listener.OnRendererListener;
 import com.ksg.ksgplayer.player.BasePlayer;
 import com.ksg.ksgplayer.player.IPlayer;
 import com.ksg.ksgplayer.producer.BaseEventProducer;
-import com.ksg.ksgplayer.renderer.IRenderer;
+import com.ksg.ksgplayer.renderer.Renderer;
 
 import java.util.List;
 
@@ -32,8 +35,6 @@ import java.util.List;
 public class KsgAssistView implements IKsgVideoView {
 
     private Context mContext;
-
-    private int mDefaultRendererType;
 
     private boolean mRendererTypeChange;
 
@@ -123,12 +124,12 @@ public class KsgAssistView implements IKsgVideoView {
      */
     @Override
     public void bindContainer(ViewGroup container, boolean updateRenderer) {
-        // 验证是否更新Render 或者 是否强制更新Render
-        if (updateRenderer || isNeedForceUpdateRender()) {
-            // 释放Render
-            this.releaseRenderer();
+        // 更新渲染器
+        if (updateRenderer) {
+            // 释放渲染器
+            this.mPlayer.releaseRenderer();
             // 更新Render
-            this.updateRenderer();
+            this.setRendererType(PlayerConfig.getRenderType());
         }
         // 添加容器
         this.mPlayer.bindContainer(container, updateRenderer);
@@ -143,7 +144,7 @@ public class KsgAssistView implements IKsgVideoView {
     }
 
     /**
-     * 设置（播放器）解码器
+     * 设置 解码器
      *
      * @param decoderView {@link BasePlayer}
      */
@@ -153,53 +154,87 @@ public class KsgAssistView implements IKsgVideoView {
     }
 
     /**
-     * 返回 （播放器）解码器
+     * 返回 解码器
      *
      * @return {@link BasePlayer}
      */
+    @Override
     public BasePlayer getDecoderView() {
         return mPlayer.getDecoderView();
     }
 
     /**
-     * 设置渲染器类型
+     * 设置 渲染器
      *
-     * @param rendererType {@link IRenderer}
+     * @param rendererType {@link Renderer}
      */
     @Override
     public void setRendererType(int rendererType) {
-        this.mRendererTypeChange = mDefaultRendererType != rendererType;
-        this.mDefaultRendererType = rendererType;
-        this.updateRenderer();
+        this.mPlayer.setRendererType(rendererType);
     }
 
     /**
-     * 验证是否需要强制更新渲染器
+     * 获取 渲染器
      *
-     * @return boolean
+     * @return {@link Renderer}
      */
-    private boolean isNeedForceUpdateRender() {
-        return mPlayer.getIRenderer() == null || mPlayer.getIRenderer().isReleased() || mRendererTypeChange;
+    @Override
+    public Renderer getRenderer() {
+        return mPlayer.getRenderer();
     }
 
     /**
-     * 更新渲染器
+     * 设置 画面旋转角度
+     *
+     * @param degree 角度
      */
-    private void updateRenderer() {
-        if (isNeedForceUpdateRender()) {
-            this.mRendererTypeChange = false;
-            this.mPlayer.setRendererType(mDefaultRendererType);
-        }
+    @Override
+    public void setRotationDegrees(int degree) {
+        this.mPlayer.setRotationDegrees(degree);
     }
 
     /**
-     * 释放渲染器
+     * 获取 画面旋转角度
+     *
+     * @return degree 角度
      */
-    private void releaseRenderer() {
-        if (mPlayer.getIRenderer() != null) {
-            this.mPlayer.getIRenderer().setCallback(null);
-            this.mPlayer.releaseRenderer();
+    @Override
+    public int getRotationDegrees() {
+        if (getRenderer() != null) {
+            return getRenderer().getRotationDegrees();
         }
+        return 0;
+    }
+
+    /**
+     * 设置 画面比例
+     *
+     * @param aspectRatio {@link AspectRatio}
+     */
+    @Override
+    public void setAspectRatio(int aspectRatio) {
+        this.mPlayer.setAspectRatio(aspectRatio);
+    }
+
+    /**
+     * 设置 自定义画面比例
+     *
+     * @param customAspectRatio 自定义比例 （例：16/9 = 1.77）
+     */
+    @Override
+    public void setCustomAspectRatio(int customAspectRatio) {
+        this.mPlayer.setCustomAspectRatio(customAspectRatio);
+    }
+
+    /**
+     * 截图
+     *
+     * @param shotHigh 高清/普通
+     * @describe: 使用此方法后监听 {@link OnRendererListener}事件获取截图
+     */
+    @Override
+    public boolean onShotPic(boolean shotHigh) {
+        return mPlayer.onShotPic(shotHigh);
     }
 
     /**
@@ -250,7 +285,7 @@ public class KsgAssistView implements IKsgVideoView {
     /**
      * 设置数据源
      *
-     * @param dataSource 播放地址
+     * @param dataSource 数据源
      */
     @Override
     public void setDataSource(DataSource dataSource) {
@@ -283,8 +318,8 @@ public class KsgAssistView implements IKsgVideoView {
      * @return View
      */
     @Override
-    public View getRenderer() {
-        return mPlayer.getRenderer();
+    public View getCustomRenderer() {
+        return mPlayer.getCustomRenderer();
     }
 
     /**
@@ -373,7 +408,7 @@ public class KsgAssistView implements IKsgVideoView {
      */
     @Override
     public void start() {
-        this.start(-1, false);
+        this.mPlayer.start();
     }
 
     /**
@@ -383,28 +418,7 @@ public class KsgAssistView implements IKsgVideoView {
      */
     @Override
     public void start(long msc) {
-        this.start(msc, false);
-    }
-
-    /**
-     * 播放
-     *
-     * @param msc          在指定的位置开始播放
-     * @param updateRender 是否更新Render
-     */
-    public void start(long msc, boolean updateRender) {
-        if (updateRender) {
-            // 释放Render
-            this.releaseRenderer();
-            // 更新Render
-            this.updateRenderer();
-        }
-        // 播放
-        if (msc <= -1) {
-            this.mPlayer.start();
-        } else {
-            this.mPlayer.start(msc);
-        }
+        this.mPlayer.start(msc);
     }
 
     /**
@@ -436,6 +450,7 @@ public class KsgAssistView implements IKsgVideoView {
      *
      * @param msc 在指定的位置开始播放
      */
+    @Override
     public void replay(long msc) {
         this.mPlayer.replay(msc);
     }
@@ -478,13 +493,23 @@ public class KsgAssistView implements IKsgVideoView {
     }
 
     /**
-     * 设置 Cover组件回调事件
+     * 设置 Cover组件事件
      *
      * @param coverEventListener coverEventListener
      */
     @Override
     public void setCoverEventListener(OnCoverEventListener coverEventListener) {
         this.mPlayer.setCoverEventListener(coverEventListener);
+    }
+
+    /**
+     * 设置 渲染器事件
+     *
+     * @param rendererListener rendererListener
+     */
+    @Override
+    public void setRendererListener(OnRendererListener rendererListener) {
+        this.mPlayer.setRendererListener(rendererListener);
     }
 
     /**

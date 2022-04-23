@@ -66,24 +66,6 @@ public final class GlideUtil {
     }
 
     /**
-     * Load 加载图片Override
-     *
-     * @param context   context
-     * @param url       url
-     * @param width     width
-     * @param height    height
-     * @param imageView imageView
-     */
-    public static void loadImageOverride(Context context, String url, int width, int height, ImageView imageView) {
-        Glide.with(context)
-                .load(url)
-                .priority(Priority.HIGH)
-                .override(width, height)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imageView);
-    }
-
-    /**
      * Load 加载图片Crop
      *
      * @param context   context
@@ -127,6 +109,22 @@ public final class GlideUtil {
                 .load(url)
                 .priority(Priority.HIGH)
                 .transform(new RoundTransform(radius))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
+    }
+
+    /**
+     * Load 加载视频帧
+     *
+     * @param context   context
+     * @param url       url
+     * @param imageView imageView
+     */
+    public static void loadImageFrame(Context context, Object url, ImageView imageView, int frame) {
+        Glide.with(context)
+                .load(url)
+                .frame(frame * 1000L * 1000L)
+                .priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }

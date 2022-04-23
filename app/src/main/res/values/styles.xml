@@ -19,6 +19,15 @@
         <item name="android:textSize">15sp</item>
     </style>
 
+    <!-- 播放器页面 button -->
+    <style name="PlayerMenuBtn" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:backgroundTint">@color/color_FF9800</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <!-- 圆形图片 -->
     <style name="CircleImageStyle">
         <item name="cornerFamily">rounded</item>

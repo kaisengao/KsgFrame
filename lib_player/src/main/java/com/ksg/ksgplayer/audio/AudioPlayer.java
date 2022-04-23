@@ -26,6 +26,8 @@ public class AudioPlayer extends BasePlayer {
 
     private int mTargetState;
 
+    private DataSource mDataSource;
+
     private MediaPlayer mMediaPlayer;
 
     public AudioPlayer(Context context) {
@@ -49,6 +51,7 @@ public class AudioPlayer extends BasePlayer {
      */
     @Override
     public void setDataSource(DataSource dataSource) {
+        this.mDataSource = dataSource;
         try {
             if (this.mMediaPlayer == null) {
                 this.initPlayer();
@@ -106,7 +109,7 @@ public class AudioPlayer extends BasePlayer {
      * @return View
      */
     @Override
-    public View getRenderer() {
+    public View getCustomRenderer() {
         return null;
     }
 
@@ -328,6 +331,19 @@ public class AudioPlayer extends BasePlayer {
             }
         }
         this.mTargetState = IPlayer.STATE_STOP;
+    }
+
+    /**
+     * 重新播放
+     *
+     * @param msc 在指定的位置开始播放
+     */
+    @Override
+    public void replay(long msc) {
+        if (mDataSource != null) {
+            this.setDataSource(mDataSource);
+            this.start(msc);
+        }
     }
 
     /**

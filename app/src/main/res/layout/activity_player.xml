@@ -9,27 +9,108 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:background="@color/background">
 
+        <!-- 播放器本器 -->
         <com.ksg.ksgplayer.widget.KsgVideoView
             android:id="@+id/player"
             android:layout_width="match_parent"
-            android:layout_height="0dp"
+            android:layout_height="600dp"
             android:background="@color/black"
-            android:fitsSystemWindows="true"
-            app:layout_constraintDimensionRatio="H,16:9"
             app:layout_constraintTop_toTopOf="parent" />
 
         <!-- 当前 解码器 -->
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/player_decoder"
-            android:layout_width="match_parent"
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/player_curr_decoder"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:gravity="center"
             android:padding="5dp"
-            android:textSize="13sp"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toStartOf="@id/player_curr_renderer"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/player"
-            tools:text="ksg" />
+            tools:text="KsgExoPlayer" />
+
+        <!-- 当前 渲染器 -->
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/player_curr_renderer"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:padding="5dp"
+            android:textColor="@color/textColorPrimary"
+            android:textSize="15sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/player_curr_decoder"
+            app:layout_constraintTop_toBottomOf="@id/player"
+            tools:text="KsgTextureView" />
+
+        <!--Flow-->
+        <androidx.constraintlayout.helper.widget.Flow
+            android:id="@+id/flow"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            app:constraint_referenced_ids="player_shotPic,player_degree,player_aspectRatio,player_decoder,player_renderer,player_filter,player_bind_network"
+            app:flow_horizontalGap="10dp"
+            app:flow_maxElementsWrap="3"
+            app:flow_wrapMode="chain"
+            app:layout_constraintTop_toBottomOf="@id/player_curr_decoder" />
+
+        <!-- 截图 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/player_shotPic"
+            style="@style/PlayerMenuBtn"
+            android:text="截图" />
+
+        <!-- 旋转 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/player_degree"
+            style="@style/PlayerMenuBtn"
+            android:text="旋转" />
+
+        <!-- 比例 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/player_aspectRatio"
+            style="@style/PlayerMenuBtn"
+            android:text="比例" />
+
+        <!-- 解码器 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/player_decoder"
+            style="@style/PlayerMenuBtn"
+            android:text="解码器" />
+
+        <!-- 渲染器 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/player_renderer"
+            style="@style/PlayerMenuBtn"
+            android:text="渲染器" />
+
+        <!-- 滤镜 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/player_filter"
+            style="@style/PlayerMenuBtn"
+            android:text="滤镜" />
+
+        <!-- 网络事件生产者 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/player_bind_network"
+            style="@style/PlayerMenuBtn"
+            android:text="绑定网络事件" />
+
+        <!-- 截图 -->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/player_shotPic_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="@id/flow"
+            app:layout_constraintStart_toStartOf="@id/flow"
+            app:layout_constraintTop_toBottomOf="@id/flow" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

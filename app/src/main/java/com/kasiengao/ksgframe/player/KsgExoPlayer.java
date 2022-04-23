@@ -1,5 +1,7 @@
 package com.kasiengao.ksgframe.player;
 
+import static com.google.android.exoplayer2.Player.DISCONTINUITY_REASON_SEEK;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
@@ -41,8 +43,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 
-import static com.google.android.exoplayer2.Player.DISCONTINUITY_REASON_SEEK;
-
 /**
  * @ClassName: KsgExoPlayer
  * @Author: KaiSenGao
@@ -53,13 +53,15 @@ public class KsgExoPlayer extends BasePlayer {
 
     private long mStartPos = -1;
 
+    private int mLastPlaybackState;
+
     private boolean isPreparing = true;
 
     private boolean isBuffering = false;
 
-    protected int mLastPlaybackState;
+    private boolean isLastPlayWhenReady;
 
-    protected boolean isLastPlayWhenReady;
+    private DataSource mDataSource;
 
     private ExoPlayer mExoPlayer;
 
@@ -103,6 +105,7 @@ public class KsgExoPlayer extends BasePlayer {
      */
     @Override
     public void setDataSource(DataSource dataSource) {
+        this.mDataSource = dataSource;
         try {
             // 验证初始化
             if (mExoPlayer == null) {
@@ -202,7 +205,7 @@ public class KsgExoPlayer extends BasePlayer {
      * @return View
      */
     @Override
-    public View getRenderer() {
+    public View getCustomRenderer() {
         return null;
     }
 
@@ -379,6 +382,19 @@ public class KsgExoPlayer extends BasePlayer {
             this.mExoPlayer.stop();
             this.updateState(IPlayer.STATE_STOP);
             this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_STOP, null);
+        }
+    }
+
+    /**
+     * 重新播放
+     *
+     * @param msc 在指定的位置开始播放
+     */
+    @Override
+    public void replay(long msc) {
+        if (mDataSource != null) {
+            this.setDataSource(mDataSource);
+            this.start(msc);
         }
     }
 

@@ -4,7 +4,7 @@ import com.google.gson.reflect.TypeToken
 import com.kaisengao.base.util.CommonUtil
 import com.kaisengao.base.util.TimeUtil
 import com.kaisengao.mvvm.base.model.BaseModel
-import com.kaisengao.retrofit.RxCompose
+import com.kaisengao.retrofit.compose.RxCompose
 import com.kaisengao.retrofit.factory.GsonBuilderFactory
 import com.kasiengao.ksgframe.factory.AppFactory
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean
@@ -159,7 +159,7 @@ class MainModel : BaseModel<DataRepository>(Injection.provideDataRepository()) {
                     emitter.onError(Exception("出现错误啦!!!"))
                 }
             })
-            .delay(3000, TimeUnit.MILLISECONDS)
+            .delay(500, TimeUnit.MILLISECONDS)
             .compose(RxCompose.applySchedulers())
     }
 

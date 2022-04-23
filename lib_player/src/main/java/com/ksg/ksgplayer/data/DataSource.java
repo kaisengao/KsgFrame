@@ -1,7 +1,5 @@
 package com.ksg.ksgplayer.data;
 
-import com.ksg.ksgplayer.renderer.IRenderer;
-
 import java.io.Serializable;
 
 /**
@@ -14,10 +12,6 @@ public class DataSource implements Serializable {
 
     private String mUrl;
 
-    //------------------- 渲染器 --------------------------//
-
-    private int mRendererType = IRenderer.RENDER_TYPE_SURFACE_VIEW;
-
     //------------------- 视频缓存 --------------------------//
 
     private int mMaxVideoCacheCount;
@@ -28,7 +22,7 @@ public class DataSource implements Serializable {
 
     //------------------- 播放进度缓存 --------------------------//
 
-    private boolean isProgressCache = true;
+    private boolean isProgressCache = false;
 
     public DataSource() {
     }
@@ -43,16 +37,6 @@ public class DataSource implements Serializable {
 
     public void setUrl(String url) {
         mUrl = url;
-    }
-
-    //------------------- 渲染器 --------------------------//
-
-    public int getRendererType() {
-        return mRendererType;
-    }
-
-    public void setRendererType(int rendererType) {
-        mRendererType = rendererType;
     }
 
     //------------------- 视频缓存 --------------------------//

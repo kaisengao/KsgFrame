@@ -13,7 +13,8 @@
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_centerInParent="true"
-        android:background="@drawable/shape_play_bg" />
+        android:background="@drawable/shape_play_bg"
+        tools:rotation="90" />
 
     <!-- Curr Time-->
     <androidx.appcompat.widget.AppCompatTextView

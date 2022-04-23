@@ -1,5 +1,6 @@
 package com.ksg.ksgplayer.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -15,15 +16,17 @@ import androidx.annotation.Nullable;
 
 import com.ksg.ksgplayer.IKsgVideoPlayer;
 import com.ksg.ksgplayer.KsgVideoPlayer;
+import com.ksg.ksgplayer.config.AspectRatio;
 import com.ksg.ksgplayer.cover.ICoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.listener.OnCoverEventListener;
 import com.ksg.ksgplayer.listener.OnErrorListener;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
+import com.ksg.ksgplayer.listener.OnRendererListener;
 import com.ksg.ksgplayer.player.BasePlayer;
 import com.ksg.ksgplayer.player.IPlayer;
 import com.ksg.ksgplayer.producer.BaseEventProducer;
-import com.ksg.ksgplayer.renderer.IRenderer;
+import com.ksg.ksgplayer.renderer.Renderer;
 
 import java.util.List;
 
@@ -60,11 +63,12 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
     /**
      * 设置 背景颜色
      *
-     * @param res res
+     * @param resId resId
      */
+    @SuppressLint("ResourceType")
     @Override
-    public void setBackgroundColor(@ColorRes int res) {
-        this.mPlayer.setBackgroundColor(res);
+    public void setBackgroundColor(@ColorRes int resId) {
+        this.mPlayer.setBackgroundColor(resId);
     }
 
     /**
@@ -138,7 +142,7 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
     }
 
     /**
-     * 设置（播放器）解码器
+     * 设置 解码器
      *
      * @param decoderView {@link BasePlayer}
      */
@@ -148,22 +152,87 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
     }
 
     /**
-     * 返回 （播放器）解码器
+     * 返回 解码器
      *
      * @return {@link BasePlayer}
      */
+    @Override
     public BasePlayer getDecoderView() {
         return mPlayer.getDecoderView();
     }
 
     /**
-     * 设置渲染器类型
+     * 设置 渲染器
      *
-     * @param rendererType {@link IRenderer}
+     * @param rendererType {@link Renderer}
      */
     @Override
     public void setRendererType(int rendererType) {
         this.mPlayer.setRendererType(rendererType);
+    }
+
+    /**
+     * 获取 渲染器
+     *
+     * @return {@link Renderer}
+     */
+    @Override
+    public Renderer getRenderer() {
+        return mPlayer.getRenderer();
+    }
+
+    /**
+     * 设置 画面旋转角度
+     *
+     * @param degree 角度
+     */
+    @Override
+    public void setRotationDegrees(int degree) {
+        this.mPlayer.setRotationDegrees(degree);
+    }
+
+    /**
+     * 获取 画面旋转角度
+     *
+     * @return degree 角度
+     */
+    @Override
+    public int getRotationDegrees() {
+        if (getRenderer() != null) {
+            return getRenderer().getRotationDegrees();
+        }
+        return 0;
+    }
+
+    /**
+     * 设置 画面比例
+     *
+     * @param aspectRatio {@link AspectRatio}
+     */
+    @Override
+    public void setAspectRatio(int aspectRatio) {
+        this.mPlayer.setAspectRatio(aspectRatio);
+    }
+
+    /**
+     * 设置 自定义画面比例
+     *
+     * @param customAspectRatio 自定义比例 （例：16/9 = 1.77）
+     */
+    @Override
+    public void setCustomAspectRatio(int customAspectRatio) {
+        this.mPlayer.setCustomAspectRatio(customAspectRatio);
+    }
+
+    /**
+     * 截图
+     *
+     * @param shotHigh 高清/普通
+     * @describe: 使用此方法后监听 {@link OnRendererListener}事件获取截图
+     */
+    @Override
+    public boolean onShotPic(boolean shotHigh) {
+        return mPlayer.onShotPic(shotHigh);
     }
 
     /**
@@ -215,15 +284,12 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
     }
 
     /**
-     * 设置视频播放地址
+     * 设置数据源
      *
-     * @param dataSource 播放地址
+     * @param dataSource 数据源
      */
     @Override
-    public final void setDataSource(DataSource dataSource) {
-        // 设置渲染视图
-        this.setRendererType(dataSource.getRendererType());
-        // 设置数据源
+    public void setDataSource(DataSource dataSource) {
         this.mPlayer.setDataSource(dataSource);
     }
 
@@ -253,8 +319,8 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
      * @return View
      */
     @Override
-    public View getRenderer() {
-        return mPlayer.getRenderer();
+    public View getCustomRenderer() {
+        return mPlayer.getCustomRenderer();
     }
 
     /**
@@ -384,6 +450,7 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
      *
      * @param msc 在指定的位置开始播放
      */
+    @Override
     public void replay(long msc) {
         this.mPlayer.replay(msc);
     }
@@ -426,13 +493,23 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
     }
 
     /**
-     * 设置 Cover组件回调事件
+     * 设置 Cover组件事件
      *
      * @param coverEventListener coverEventListener
      */
     @Override
     public void setCoverEventListener(OnCoverEventListener coverEventListener) {
         this.mPlayer.setCoverEventListener(coverEventListener);
+    }
+
+    /**
+     * 设置 渲染器事件
+     *
+     * @param rendererListener rendererListener
+     */
+    @Override
+    public void setRendererListener(OnRendererListener rendererListener) {
+        this.mPlayer.setRendererListener(rendererListener);
     }
 
     /**

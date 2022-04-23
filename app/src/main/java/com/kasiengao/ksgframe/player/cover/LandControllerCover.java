@@ -113,7 +113,7 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
         }
         // 手势滑动 默认开启
         Bundle bundle = BundlePool.obtain();
-        bundle.putBoolean(EventKey.BOOL_DATA, false);
+        bundle.putBoolean(EventKey.BOOL_DATA, true);
         this.notifyPrivateEvent(
                 CoverConstant.CoverKey.KEY_GESTURE,
                 CoverConstant.PrivateEvent.CODE_GESTURE_SLIDE_ENABLED,

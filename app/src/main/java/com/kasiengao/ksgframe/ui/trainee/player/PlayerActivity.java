@@ -3,6 +3,8 @@ package com.kasiengao.ksgframe.ui.trainee.player;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -22,6 +24,10 @@ import com.kasiengao.ksgframe.player.cover.LoadingCover;
 import com.ksg.ksgplayer.cover.CoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
+import com.ksg.ksgplayer.listener.OnRendererListener;
+import com.ksg.ksgplayer.renderer.RendererType;
+import com.ksg.ksgplayer.renderer.filter.GaussianBlurFilter;
+import com.ksg.ksgplayer.renderer.glrender.PIPGLViewRender;
 import com.ksg.ksgplayer.widget.KsgVideoView;
 
 /**
@@ -33,8 +39,6 @@ import com.ksg.ksgplayer.widget.KsgVideoView;
 public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, PlayerViewModel> {
 
     private int[] mScreenSize;
-
-    private boolean mUserPause;
 
     private boolean mFullscreen;
 
@@ -58,6 +62,25 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
         this.mScreenSize = DensityUtil.getScreenSize(this);
         // Init Player
         this.initPlayer();
+
+        this.mBinding.playerShotPic.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBinding.player.onShotPic(true);
+            }
+        });
+
+        this.mBinding.playerFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (!v.isSelected()) {
+//                    mBinding.player.getRenderer().setGLFilter(new GaussianBlurFilter());
+//                }else {
+//                    mBinding.player.getRenderer().setGLFilter(new NoFilter());
+//                }
+                v.setSelected(!v.isSelected());
+            }
+        });
     }
 
     /**
@@ -65,21 +88,24 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
      */
     @SuppressLint("SourceLockedOrientationActivity")
     private void initPlayer() {
-        this.mBinding.player.setDecoderView(new KsgExoPlayer(this));
+        KsgVideoView player = mBinding.player;
+        player.setDecoderView(new KsgExoPlayer(this));
+        player.setRendererType(RendererType.GL_SURFACE);
+
+        player.getRenderer().setGLViewRender(new PIPGLViewRender());
+        player.getRenderer().setGLFilter(new GaussianBlurFilter());
+
+
         // 创建 Cover管理器
         this.mCoverManager = new CoverManager();
         this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_LOADING, new LoadingCover(this));
         this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_GESTURE, new GestureCover(this));
         this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_CONTROLLER, new ControllerCover(this));
         // 设置 覆盖组件管理器
-        this.mBinding.player.setCoverManager(mCoverManager);
-        // Cover组件回调事件
-        this.mBinding.player.getPlayer().setCoverEventListener((eventCode, bundle) -> {
+        player.setCoverManager(mCoverManager);
+        // Cover组件事件
+        player.setCoverEventListener((eventCode, bundle) -> {
             switch (eventCode) {
-                case CoverConstant.CoverEvent.CODE_REQUEST_PAUSE:
-                    // 标记是手动暂停
-                    this.mUserPause = true;
-                    break;
                 case CoverConstant.CoverEvent.CODE_REQUEST_BACK:
                     // 回退
                     this.onBackPressed();
@@ -107,6 +133,14 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
                     break;
             }
         });
+        // 渲染器事件
+        player.setRendererListener(new OnRendererListener() {
+
+            @Override
+            public void onShotPic(Bitmap bitmap) {
+                mBinding.playerShotPicInfo.setImageBitmap(bitmap);
+            }
+        });
         // 播放
         this.onPlay("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4");
     }
@@ -127,7 +161,7 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
      * 获取当前解码器
      */
     private void getCurrentDecoder() {
-        this.mBinding.playerDecoder.setText(mBinding.player.getDecoderView().getClass().getSimpleName());
+        this.mBinding.playerCurrDecoder.setText(mBinding.player.getDecoderView().getClass().getSimpleName());
     }
 
     /**
@@ -176,11 +210,7 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
     @Override
     protected void onResume() {
         super.onResume();
-        if (mBinding.player.isItPlaying()) {
-            if (!mUserPause) {
-                this.mBinding.player.resume();
-            }
-        }
+        this.mBinding.player.resume();
         if (isLandscape) {
             // 隐藏系统Ui
             SystemUiUtil.hideVideoSystemUI(this);
@@ -190,9 +220,7 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
     @Override
     protected void onPause() {
         super.onPause();
-        if (mBinding.player.isItPlaying()) {
-            this.mBinding.player.pause();
-        }
+        this.mBinding.player.pause();
     }
 
     @SuppressLint("SourceLockedOrientationActivity")

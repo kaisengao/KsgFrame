@@ -6,10 +6,11 @@ import androidx.annotation.ColorRes;
 
 import com.ksg.ksgplayer.cover.ICoverManager;
 import com.ksg.ksgplayer.listener.OnCoverEventListener;
+import com.ksg.ksgplayer.listener.OnRendererListener;
 import com.ksg.ksgplayer.player.BasePlayer;
 import com.ksg.ksgplayer.player.IPlayer;
 import com.ksg.ksgplayer.producer.BaseEventProducer;
-import com.ksg.ksgplayer.renderer.IRenderer;
+import com.ksg.ksgplayer.renderer.Renderer;
 
 import java.util.List;
 
@@ -57,7 +58,6 @@ public interface IKsgVideoPlayer extends IPlayer {
      *
      * @return List
      */
-
     List<BaseEventProducer> getEventProducers();
 
     /**
@@ -81,23 +81,78 @@ public interface IKsgVideoPlayer extends IPlayer {
     void unbindContainer();
 
     /**
-     * 设置（播放器）解码器
+     * 设置 解码器
      *
      * @param decoderView {@link BasePlayer}
      */
     boolean setDecoderView(BasePlayer decoderView);
 
     /**
-     * 设置渲染器类型
+     * 获取 解码器
      *
-     * @param rendererType {@link IRenderer}
+     * @return {@link BasePlayer}
+     */
+    BasePlayer getDecoderView();
+
+    /**
+     * 设置 渲染器
+     *
+     * @param rendererType {@link Renderer}
      */
     void setRendererType(int rendererType);
 
     /**
-     * 设置 Cover组件回调事件
+     * 获取 渲染器
+     */
+    Renderer getRenderer();
+
+    /**
+     * 设置 画面旋转角度
+     *
+     * @param degree 角度
+     */
+    void setRotationDegrees(int degree);
+
+    /**
+     * 获取 画面旋转角度
+     *
+     * @return degree 角度
+     */
+    int getRotationDegrees();
+
+    /**
+     * 设置 画面比例
+     *
+     * @param aspectRatio {@link AspectRatio}
+     */
+    void setAspectRatio(int aspectRatio);
+
+    /**
+     * 设置 自定义画面比例
+     *
+     * @param customAspectRatio 自定义比例 （例：16/9 = 1.77）
+     */
+    void setCustomAspectRatio(int customAspectRatio);
+
+    /**
+     * 截图
+     *
+     * @param shotHigh 高清/普通
+     * @describe: 使用此方法后监听 {@link OnRendererListener}事件获取截图
+     */
+    boolean onShotPic(boolean shotHigh);
+
+    /**
+     * 设置 Cover组件事件
      *
      * @param coverEventListener coverEventListener
      */
     void setCoverEventListener(OnCoverEventListener coverEventListener);
+
+    /**
+     * 设置 渲染器事件
+     *
+     * @param rendererListener rendererListener
+     */
+    void setRendererListener(OnRendererListener rendererListener);
 }
