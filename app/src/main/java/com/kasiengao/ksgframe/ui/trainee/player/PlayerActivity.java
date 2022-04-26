@@ -21,13 +21,11 @@ import com.kasiengao.ksgframe.player.KsgExoPlayer;
 import com.kasiengao.ksgframe.player.cover.ControllerCover;
 import com.kasiengao.ksgframe.player.cover.GestureCover;
 import com.kasiengao.ksgframe.player.cover.LoadingCover;
+import com.ksg.ksgplayer.config.AspectRatio;
 import com.ksg.ksgplayer.cover.CoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.listener.OnRendererListener;
-import com.ksg.ksgplayer.renderer.RendererType;
-import com.ksg.ksgplayer.renderer.filter.GaussianBlurFilter;
-import com.ksg.ksgplayer.renderer.glrender.PIPGLViewRender;
 import com.ksg.ksgplayer.widget.KsgVideoView;
 
 /**
@@ -55,6 +53,9 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
     public int initVariableId() {
         return BR.viewModel;
     }
+    //记住切换数据源类型
+    private int mType = 0;
+    protected int mRotate;
 
     @Override
     protected void initWidget() {
@@ -66,7 +67,36 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
         this.mBinding.playerShotPic.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBinding.player.onShotPic(true);
+                mBinding.player.getRenderer().onShotPic();
+            }
+        });
+
+        this.mBinding.playerAspectRatio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mType == 0) {
+                    mType = 1;
+                } else if (mType == 1) {
+                    mType = 2;
+                } else if (mType == 2) {
+                    mType = 3;
+                } else if (mType == 3) {
+                    mType = 4;
+                } else if (mType == 4) {
+                    mType = 0;
+                }
+                resolveTypeUI();
+            }
+        });
+
+        this.mBinding.playerDegree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if ((mBinding.player.getRenderer().getRotationDegrees() - mRotate) == 270) {
+                    mBinding.player.getRenderer().setRotationDegrees(mRotate);
+                } else {
+                    mBinding.player.getRenderer().setRotationDegrees( mBinding.player.getRenderer().getRotationDegrees() + 90);
+                }
             }
         });
 
@@ -82,19 +112,35 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
             }
         });
     }
-
+    private void resolveTypeUI() {
+        if (mType == 1) {
+//            mMoreScale.setText("16:9");
+            mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_16_9);
+        } else if (mType == 2) {
+//            mMoreScale.setText("4:3");
+            mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_4_3);
+        } else if (mType == 3) {
+//            mMoreScale.setText("全屏");
+            mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_FULL);
+        } else if (mType == 4) {
+//            mMoreScale.setText("拉伸全屏");
+            mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_MATCH_FULL);
+        } else if (mType == 0) {
+//            mMoreScale.setText("默认比例");
+            mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_DEFAULT);
+        }
+    }
     /**
      * Init Player
      */
     @SuppressLint("SourceLockedOrientationActivity")
     private void initPlayer() {
         KsgVideoView player = mBinding.player;
+        // 1 (注意调用顺序，否则不生效)
+//        player.setGLViewRender(new PIPGLViewRender(), KsgGLSurfaceView.MODE_RENDER_SIZE);
+        // 2、3
         player.setDecoderView(new KsgExoPlayer(this));
-        player.setRendererType(RendererType.GL_SURFACE);
-
-        player.getRenderer().setGLViewRender(new PIPGLViewRender());
-        player.getRenderer().setGLFilter(new GaussianBlurFilter());
-
+//        player.setRendererType(RendererType.TEXTURE);
 
         // 创建 Cover管理器
         this.mCoverManager = new CoverManager();
@@ -139,6 +185,7 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
             @Override
             public void onShotPic(Bitmap bitmap) {
                 mBinding.playerShotPicInfo.setImageBitmap(bitmap);
+                mBinding.playerShotPicInfo.setRotation(player.getRenderer().getRotationDegrees());
             }
         });
         // 播放

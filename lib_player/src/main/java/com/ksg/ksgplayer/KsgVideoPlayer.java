@@ -11,7 +11,6 @@ import android.view.ViewParent;
 import androidx.annotation.ColorRes;
 import androidx.core.content.ContextCompat;
 
-import com.ksg.ksgplayer.config.AspectRatio;
 import com.ksg.ksgplayer.config.PlayerConfig;
 import com.ksg.ksgplayer.cover.ICoverEvent;
 import com.ksg.ksgplayer.cover.ICoverManager;
@@ -29,6 +28,7 @@ import com.ksg.ksgplayer.proxy.PlayerProxy;
 import com.ksg.ksgplayer.renderer.Renderer;
 import com.ksg.ksgplayer.renderer.RendererListenerAdapter;
 import com.ksg.ksgplayer.renderer.RendererType;
+import com.ksg.ksgplayer.renderer.glrender.GLViewRender;
 import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView;
 import com.ksg.ksgplayer.renderer.view.KsgSurfaceView;
 import com.ksg.ksgplayer.renderer.view.KsgTextureView;
@@ -49,9 +49,13 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
 
     private Context mContext;
 
+    private int mGLModeSize = -1;
+
     private boolean mUserPause;
 
     private boolean isBuffering;
+
+    private GLViewRender mGLViewRender;
 
     private PlayerProxy mPlayer;
 
@@ -181,6 +185,19 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     }
 
     /**
+     * 设置 GLViewRender (仅GLSurfaceView可用)
+     *
+     * @param viewRender {@link GLViewRender}
+     * @param modeSize   {@link KsgGLSurfaceView} 测量模式
+     * @describe: 注意要在 {setDecoderView} 之前设置
+     */
+    @Override
+    public void setGLViewRender(GLViewRender viewRender, int modeSize) {
+        this.mGLViewRender = viewRender;
+        this.mGLModeSize = modeSize;
+    }
+
+    /**
      * 设置 解码器
      *
      * @param decoderView decoderView
@@ -228,6 +245,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
             case RendererType.GL_SURFACE:
                 // GLSurfaceView
                 renderer = new KsgGLSurfaceView(mContext);
+                ((KsgGLSurfaceView) renderer).init(mGLViewRender, mGLModeSize);
                 break;
             case RendererType.TEXTURE:
             default:
@@ -266,72 +284,6 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
             renderer.release();
             this.mRenderer = null;
         }
-    }
-
-    /**
-     * 设置 画面旋转角度
-     *
-     * @param degree 角度
-     */
-    @Override
-    public void setRotationDegrees(int degree) {
-        if (getRenderer() != null) {
-            this.getRenderer().setRotationDegrees(degree);
-        }
-    }
-
-    /**
-     * 获取 画面旋转角度
-     *
-     * @return degree 角度
-     */
-    @Override
-    public int getRotationDegrees() {
-        if (getRenderer() != null) {
-            return getRenderer().getRotationDegrees();
-        }
-        return 0;
-    }
-
-    /**
-     * 设置 画面比例
-     *
-     * @param aspectRatio {@link AspectRatio}
-     */
-    @Override
-    public void setAspectRatio(int aspectRatio) {
-        if (getRenderer() != null) {
-            // 1、调整View去适应比例变化
-            this.getRenderer().changeLayoutParams(aspectRatio);
-            // 2、设置比例
-            this.getRenderer().setAspectRatio(aspectRatio);
-        }
-    }
-
-    /**
-     * 设置 自定义画面比例
-     *
-     * @param customAspectRatio 自定义比例 （例：16/9 = 1.77）
-     */
-    @Override
-    public void setCustomAspectRatio(int customAspectRatio) {
-        if (getRenderer() != null) {
-            this.getRenderer().setCustomAspectRatio(customAspectRatio);
-        }
-    }
-
-    /**
-     * 截图
-     *
-     * @param shotHigh 高清/普通
-     * @describe: 使用此方法后监听 {@link OnRendererListener}事件获取截图
-     */
-    @Override
-    public boolean onShotPic(boolean shotHigh) {
-        if (mRenderer != null) {
-            return mRenderer.onShotPic(shotHigh);
-        }
-        return false;
     }
 
     /**

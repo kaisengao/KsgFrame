@@ -81,8 +81,8 @@ public class MeasureHelper {
      */
     public void doMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (mVideoHeight == 0 || mVideoWidth == 0) {
-            mMeasuredWidth = 1;
-            mMeasuredHeight = 1;
+            this.mMeasuredWidth = 1;
+            this. mMeasuredHeight = 1;
             return;
         }
 

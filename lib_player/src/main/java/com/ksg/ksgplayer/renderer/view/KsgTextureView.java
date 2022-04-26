@@ -1,7 +1,6 @@
 package com.ksg.ksgplayer.renderer.view;
 
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,8 +16,7 @@ import com.ksg.ksgplayer.helper.MeasureHelper;
 import com.ksg.ksgplayer.proxy.PlayerProxy;
 import com.ksg.ksgplayer.renderer.Renderer;
 import com.ksg.ksgplayer.renderer.RendererListener;
-import com.ksg.ksgplayer.renderer.filter.GLFilter;
-import com.ksg.ksgplayer.renderer.glrender.BaseGLViewRender;
+import com.ksg.ksgplayer.renderer.filter.base.GLFilter;
 
 /**
  * @ClassName: KsgTextureView
@@ -71,11 +69,9 @@ public class KsgTextureView extends TextureView implements Renderer, TextureView
         } else {
             this.setSurfaceTexture(mSaveTexture);
         }
-        // 绑定渲染器
         if (mPlayerProxy != null) {
             this.mPlayerProxy.setSurface(mSurface);
         }
-        // 回调
         if (mRendererListener != null) {
             this.mRendererListener.onSurfaceCreated(mSurface, width, height);
         }
@@ -83,7 +79,6 @@ public class KsgTextureView extends TextureView implements Renderer, TextureView
 
     @Override
     public void onSurfaceTextureSizeChanged(@NonNull SurfaceTexture surfaceTexture, int width, int height) {
-        // 回调
         if (mRendererListener != null) {
             this.mRendererListener.onSurfaceChanged(mSurface, width, height);
         }
@@ -91,7 +86,6 @@ public class KsgTextureView extends TextureView implements Renderer, TextureView
 
     @Override
     public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surfaceTexture) {
-        // 回调
         if (mRendererListener != null) {
             this.mRendererListener.onSurfaceDestroy(mSurface);
         }
@@ -151,7 +145,6 @@ public class KsgTextureView extends TextureView implements Renderer, TextureView
      */
     @Override
     public void setRotationDegrees(int degree) {
-        this.mMeasureHelper.setRotationDegrees(degree);
         this.setRotation(degree);
         this.requestLayout();
     }
@@ -186,7 +179,7 @@ public class KsgTextureView extends TextureView implements Renderer, TextureView
      * @param aspectRatio {@link AspectRatio}
      */
     @Override
-    public void setAspectRatio(int aspectRatio) {
+    public void setViewAspectRatio(int aspectRatio) {
         this.mMeasureHelper.setAspectRatio(aspectRatio);
         this.requestLayout();
     }
@@ -213,16 +206,6 @@ public class KsgTextureView extends TextureView implements Renderer, TextureView
     }
 
     /**
-     * 设置 GLViewRender (仅GLSurfaceView可用)
-     *
-     * @param viewRender {@link BaseGLViewRender}
-     */
-    @Override
-    public void setGLViewRender(BaseGLViewRender viewRender) {
-        Log.i(TAG, "not support setGLViewRender now");
-    }
-
-    /**
      * 返回 渲染器View
      *
      * @return View
@@ -234,23 +217,12 @@ public class KsgTextureView extends TextureView implements Renderer, TextureView
 
     /**
      * 截图
-     *
-     * @param shotHigh 高清/普通
      */
     @Override
-    public boolean onShotPic(boolean shotHigh) {
+    public boolean onShotPic() {
         try {
-            Bitmap.Config config;
-            if (shotHigh) {
-                config = Bitmap.Config.ARGB_8888;
-            } else {
-                config = Bitmap.Config.RGB_565;
-            }
-            // 获取帧图
-            Bitmap bitmap = getBitmap(Bitmap.createBitmap(getWidth(), getHeight(), config));
-            // 回调
-            if (mRendererListener != null && bitmap != null) {
-                this.mRendererListener.onShotPic(bitmap);
+            if (mRendererListener != null) {
+                this.mRendererListener.onShotPic(getBitmap());
             }
             return true;
         } catch (Exception e) {

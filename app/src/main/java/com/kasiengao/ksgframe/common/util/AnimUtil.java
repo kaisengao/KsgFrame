@@ -56,7 +56,7 @@ public class AnimUtil {
         // 属性动画
         ValueAnimator animator = ValueAnimator.ofInt(fullScreen ? from : to, fullScreen ? to : from);
         // 设置动画时长
-        animator.setDuration(200);
+        animator.setDuration(5000);
         // 回调监听
         animator.addUpdateListener(animatorUpdateListener);
         animator.addListener(new AnimatorListenerAdapter() {

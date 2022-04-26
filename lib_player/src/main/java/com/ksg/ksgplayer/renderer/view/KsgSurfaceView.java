@@ -14,8 +14,7 @@ import com.ksg.ksgplayer.helper.MeasureHelper;
 import com.ksg.ksgplayer.proxy.PlayerProxy;
 import com.ksg.ksgplayer.renderer.Renderer;
 import com.ksg.ksgplayer.renderer.RendererListener;
-import com.ksg.ksgplayer.renderer.filter.GLFilter;
-import com.ksg.ksgplayer.renderer.glrender.BaseGLViewRender;
+import com.ksg.ksgplayer.renderer.filter.base.GLFilter;
 
 /**
  * @ClassName: KsgSurfaceView
@@ -55,7 +54,6 @@ public class KsgSurfaceView extends SurfaceView implements Renderer, SurfaceHold
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
-        // 回调
         if (mRendererListener != null) {
             this.mRendererListener.onSurfaceCreated(surfaceHolder.getSurface(), getWidth(), getWidth());
         }
@@ -63,7 +61,6 @@ public class KsgSurfaceView extends SurfaceView implements Renderer, SurfaceHold
 
     @Override
     public void surfaceChanged(@NonNull SurfaceHolder surfaceHolder, int format, int width, int height) {
-        // 回调
         if (mRendererListener != null) {
             this.mRendererListener.onSurfaceChanged(surfaceHolder.getSurface(), width, height);
         }
@@ -71,7 +68,6 @@ public class KsgSurfaceView extends SurfaceView implements Renderer, SurfaceHold
 
     @Override
     public void surfaceDestroyed(@NonNull SurfaceHolder surfaceHolder) {
-        // 回调
         if (mRendererListener != null) {
             this.mRendererListener.onSurfaceDestroy(surfaceHolder.getSurface());
         }
@@ -127,9 +123,7 @@ public class KsgSurfaceView extends SurfaceView implements Renderer, SurfaceHold
      */
     @Override
     public void setRotationDegrees(int degree) {
-        this.mMeasureHelper.setRotationDegrees(degree);
-        this.setRotation(degree);
-        this.requestLayout();
+        Log.i(TAG, "not support setRotationDegrees now");
     }
 
     /**
@@ -139,7 +133,7 @@ public class KsgSurfaceView extends SurfaceView implements Renderer, SurfaceHold
      */
     @Override
     public int getRotationDegrees() {
-        return (int) getRotation();
+        return 0;
     }
 
     /**
@@ -162,7 +156,7 @@ public class KsgSurfaceView extends SurfaceView implements Renderer, SurfaceHold
      * @param aspectRatio {@link AspectRatio}
      */
     @Override
-    public void setAspectRatio(int aspectRatio) {
+    public void setViewAspectRatio(int aspectRatio) {
         this.mMeasureHelper.setAspectRatio(aspectRatio);
         this.requestLayout();
     }
@@ -189,16 +183,6 @@ public class KsgSurfaceView extends SurfaceView implements Renderer, SurfaceHold
     }
 
     /**
-     * 设置 GLViewRender (仅GLSurfaceView可用)
-     *
-     * @param viewRender {@link BaseGLViewRender}
-     */
-    @Override
-    public void setGLViewRender(BaseGLViewRender viewRender) {
-        Log.i(TAG, "not support setGLViewRender now");
-    }
-
-    /**
      * 返回 渲染器View
      *
      * @return View
@@ -210,11 +194,9 @@ public class KsgSurfaceView extends SurfaceView implements Renderer, SurfaceHold
 
     /**
      * 截图
-     *
-     * @param shotHigh 高清/普通
      */
     @Override
-    public boolean onShotPic(boolean shotHigh) {
+    public boolean onShotPic() {
         Log.i(TAG, "not support onShotPic now");
         return false;
     }

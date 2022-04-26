@@ -1,19 +1,19 @@
 package com.ksg.ksgplayer.renderer.view;
 
 import android.content.Context;
+import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 
-import com.kaisengao.base.util.KLog;
 import com.ksg.ksgplayer.config.AspectRatio;
 import com.ksg.ksgplayer.helper.MeasureHelper;
 import com.ksg.ksgplayer.proxy.PlayerProxy;
 import com.ksg.ksgplayer.renderer.Renderer;
 import com.ksg.ksgplayer.renderer.RendererListener;
-import com.ksg.ksgplayer.renderer.filter.GLFilter;
-import com.ksg.ksgplayer.renderer.glrender.BaseGLViewRender;
+import com.ksg.ksgplayer.renderer.filter.base.GLFilter;
 import com.ksg.ksgplayer.renderer.glrender.GLViewRender;
 import com.ksg.ksgplayer.renderer.listener.GLSurfaceListener;
 
@@ -25,19 +25,19 @@ import com.ksg.ksgplayer.renderer.listener.GLSurfaceListener;
  */
 public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfaceListener {
 
+    private static final String TAG = KsgSurfaceView.class.getSimpleName();
+
     public static final int MODE_LAYOUT_SIZE = 0;
 
     public static final int MODE_RENDER_SIZE = 1;
 
-    private int mMode = MODE_RENDER_SIZE;
-
-    private int mVideoWidth, mVideoHeight;
+    private int mModeSize = MODE_LAYOUT_SIZE;
 
     private boolean isRelease = false;
 
     private MeasureHelper mMeasureHelper;
 
-    private BaseGLViewRender mViewRender;
+    private GLViewRender mViewRender;
 
     private PlayerProxy mPlayerProxy;
 
@@ -49,40 +49,47 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
 
     public KsgGLSurfaceView(Context context, AttributeSet attrs) {
         super(context, attrs);
-        // Init
-        this.init();
     }
 
     /**
      * Init
      */
-    private void init() {
+    public void init(GLViewRender viewRender, int modeSize) {
         this.setEGLContextClientVersion(2);
         // 视图宽高比算法
         this.mMeasureHelper = new MeasureHelper();
         // Render
-        this.mViewRender = new GLViewRender();
-        // Init GLViewRender
-//        this.initViewRender();
+        if (viewRender != null) {
+            this.mViewRender = viewRender;
+        } else {
+            this.mViewRender = new GLViewRender();
+        }
+        // Mode
+        if (modeSize != -1) {
+            this.mModeSize = modeSize;
+        }
+        // Init ViewRender
+        this.initViewRender();
     }
 
     /**
-     * Init GLViewRender
+     * Init ViewRender
      */
     private void initViewRender() {
         this.mViewRender.setSurfaceView(this);
         this.mViewRender.setGLSurfaceListener(this);
         this.mViewRender.setRendererListener(mRendererListener);
-
         this.setRenderer(mViewRender);
+        this.setRenderMode(RENDERMODE_WHEN_DIRTY);
     }
 
+    /**
+     * onSurfaceAvailable
+     */
     @Override
-    public void onSurfaceAvailable(Surface surface) {
-        KLog.d("zzz","onSurfaceAvailable");
-
+    public void onSurfaceAvailable(SurfaceTexture surfaceTexture) {
         if (mPlayerProxy != null) {
-            this.mPlayerProxy.setSurface(surface);
+            this.mPlayerProxy.setSurface(new Surface(surfaceTexture));
         }
     }
 
@@ -91,7 +98,7 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
      */
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-        if (mMode == MODE_RENDER_SIZE) {
+        if (mModeSize == MODE_RENDER_SIZE) {
             super.onMeasure(widthMeasureSpec, heightMeasureSpec);
             this.mMeasureHelper.prepareMeasure(widthMeasureSpec, heightMeasureSpec, (int) getRotation());
             this.updateRenderSize();
@@ -105,12 +112,8 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
      * Update 渲染尺寸
      */
     protected void updateRenderSize() {
-        if (mViewRender != null && mMode == MODE_RENDER_SIZE) {
-            this.mViewRender.setCurrViewWidth(mMeasureHelper.getMeasuredWidth());
-            this.mViewRender.setCurrViewHeight(mMeasureHelper.getMeasuredHeight());
-            this.mViewRender.setCurrVideoWidth(mVideoWidth);
-            this.mViewRender.setCurrVideoHeight(mVideoHeight);
-            this.mViewRender.initRenderSize();
+        if (mViewRender != null) {
+            this.mViewRender.setVideoInfo(mMeasureHelper.getMeasuredWidth(), mMeasureHelper.getMeasuredHeight());
         }
     }
 
@@ -143,8 +146,6 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
      */
     @Override
     public void setVideoSize(int videoWidth, int videoHeight) {
-        this.mVideoWidth = videoWidth;
-        this.mVideoHeight = videoHeight;
         this.mMeasureHelper.setVideoSize(videoWidth, videoHeight);
         this.requestLayout();
     }
@@ -156,9 +157,7 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
      */
     @Override
     public void setRotationDegrees(int degree) {
-        this.mMeasureHelper.setRotationDegrees(degree);
-        this.setRotation(degree);
-        this.requestLayout();
+        Log.i(TAG, "not support setRotationDegrees now");
     }
 
     /**
@@ -168,7 +167,7 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
      */
     @Override
     public int getRotationDegrees() {
-        return (int) getRotation();
+        return 0;
     }
 
     /**
@@ -191,7 +190,7 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
      * @param aspectRatio {@link AspectRatio}
      */
     @Override
-    public void setAspectRatio(int aspectRatio) {
+    public void setViewAspectRatio(int aspectRatio) {
         this.mMeasureHelper.setAspectRatio(aspectRatio);
         this.requestLayout();
     }
@@ -218,23 +217,6 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
     }
 
     /**
-     * 设置 GLViewRender (仅GLSurfaceView可用)
-     *
-     * @param viewRender {@link BaseGLViewRender}
-     */
-    @Override
-    public void setGLViewRender(BaseGLViewRender viewRender) {
-        if (viewRender != null) {
-            this.mViewRender = viewRender;
-            this.mViewRender.setSurfaceView(this);
-            // Init GLViewRender
-            this.initViewRender();
-            // Update 渲染尺寸
-            this.updateRenderSize();
-        }
-    }
-
-    /**
      * 返回 渲染器View
      *
      * @return View
@@ -246,12 +228,10 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
 
     /**
      * 截图
-     *
-     * @param shotHigh 高清/普通
      */
     @Override
-    public boolean onShotPic(boolean shotHigh) {
-        this.mViewRender.onShotPic(shotHigh);
+    public boolean onShotPic() {
+        this.mViewRender.onShotPic();
         return true;
     }
 

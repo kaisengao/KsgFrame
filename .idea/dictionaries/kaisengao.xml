@@ -3,6 +3,10 @@
     <words>
       <w>danma</w>
       <w>drawee</w>
+      <w>highp</w>
+      <w>lowp</w>
+      <w>mediump</w>
+      <w>renderbuffer</w>
       <w>snackbar</w>
     </words>
   </dictionary>

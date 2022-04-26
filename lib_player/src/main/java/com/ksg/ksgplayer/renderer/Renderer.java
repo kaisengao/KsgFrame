@@ -5,8 +5,7 @@ import android.view.ViewGroup;
 
 import com.ksg.ksgplayer.config.AspectRatio;
 import com.ksg.ksgplayer.proxy.PlayerProxy;
-import com.ksg.ksgplayer.renderer.filter.GLFilter;
-import com.ksg.ksgplayer.renderer.glrender.BaseGLViewRender;
+import com.ksg.ksgplayer.renderer.filter.base.GLFilter;
 
 /**
  * @ClassName: IRender
@@ -15,20 +14,6 @@ import com.ksg.ksgplayer.renderer.glrender.BaseGLViewRender;
  * @Description: 画面渲染接口类
  */
 public interface Renderer {
-
-    /**
-     * 调整View去适应比例变化
-     *
-     * @param aspectRatio {@link AspectRatio}
-     */
-    default void changeLayoutParams(int aspectRatio) {
-        boolean changed = (aspectRatio != AspectRatio.RATIO_DEFAULT);
-        int params = changed ? ViewGroup.LayoutParams.WRAP_CONTENT : ViewGroup.LayoutParams.MATCH_PARENT;
-        ViewGroup.LayoutParams layoutParams = getRendererView().getLayoutParams();
-        layoutParams.width = params;
-        layoutParams.height = params;
-        this.getRendererView().setLayoutParams(layoutParams);
-    }
 
     /**
      * 绑定 播放器
@@ -79,7 +64,33 @@ public interface Renderer {
      *
      * @param aspectRatio {@link AspectRatio}
      */
-    void setAspectRatio(int aspectRatio);
+    default void setAspectRatio(int aspectRatio) {
+        // 1、调整View去适应比例变化
+        this.changeLayoutParams(aspectRatio);
+        // 2、设置比例
+        this.setViewAspectRatio(aspectRatio);
+    }
+
+    /**
+     * 调整View去适应比例变化
+     *
+     * @param aspectRatio {@link AspectRatio}
+     */
+    default void changeLayoutParams(int aspectRatio) {
+        boolean changed = (aspectRatio != AspectRatio.RATIO_DEFAULT);
+        int params = changed ? ViewGroup.LayoutParams.WRAP_CONTENT : ViewGroup.LayoutParams.MATCH_PARENT;
+        ViewGroup.LayoutParams layoutParams = getRendererView().getLayoutParams();
+        layoutParams.width = params;
+        layoutParams.height = params;
+        this.getRendererView().setLayoutParams(layoutParams);
+    }
+
+    /**
+     * 设置 画面比例
+     *
+     * @param aspectRatio {@link AspectRatio}
+     */
+    void setViewAspectRatio(int aspectRatio);
 
     /**
      * 设置 自定义画面比例
@@ -96,13 +107,6 @@ public interface Renderer {
     void setGLFilter(GLFilter filter);
 
     /**
-     * 设置 GLViewRender (仅GLSurfaceView可用)
-     *
-     * @param viewRender {@link BaseGLViewRender}
-     */
-    void setGLViewRender(BaseGLViewRender viewRender);
-
-    /**
      * 返回 渲染器View
      *
      * @return View
@@ -111,10 +115,8 @@ public interface Renderer {
 
     /**
      * 截图
-     *
-     * @param shotHigh 高清/普通
      */
-    boolean onShotPic(boolean shotHigh);
+    boolean onShotPic();
 
     /**
      * 释放资源

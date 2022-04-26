@@ -11,6 +11,8 @@ import com.ksg.ksgplayer.player.BasePlayer;
 import com.ksg.ksgplayer.player.IPlayer;
 import com.ksg.ksgplayer.producer.BaseEventProducer;
 import com.ksg.ksgplayer.renderer.Renderer;
+import com.ksg.ksgplayer.renderer.glrender.GLViewRender;
+import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView;
 
 import java.util.List;
 
@@ -81,6 +83,15 @@ public interface IKsgVideoPlayer extends IPlayer {
     void unbindContainer();
 
     /**
+     * 设置 GLViewRender (仅GLSurfaceView可用)
+     *
+     * @param viewRender {@link GLViewRender}
+     * @param modeSize   {@link KsgGLSurfaceView} 测量模式
+     * @describe: 注意要在 {setDecoderView} 之前设置
+     */
+    void setGLViewRender(GLViewRender viewRender, int modeSize);
+
+    /**
      * 设置 解码器
      *
      * @param decoderView {@link BasePlayer}
@@ -105,42 +116,6 @@ public interface IKsgVideoPlayer extends IPlayer {
      * 获取 渲染器
      */
     Renderer getRenderer();
-
-    /**
-     * 设置 画面旋转角度
-     *
-     * @param degree 角度
-     */
-    void setRotationDegrees(int degree);
-
-    /**
-     * 获取 画面旋转角度
-     *
-     * @return degree 角度
-     */
-    int getRotationDegrees();
-
-    /**
-     * 设置 画面比例
-     *
-     * @param aspectRatio {@link AspectRatio}
-     */
-    void setAspectRatio(int aspectRatio);
-
-    /**
-     * 设置 自定义画面比例
-     *
-     * @param customAspectRatio 自定义比例 （例：16/9 = 1.77）
-     */
-    void setCustomAspectRatio(int customAspectRatio);
-
-    /**
-     * 截图
-     *
-     * @param shotHigh 高清/普通
-     * @describe: 使用此方法后监听 {@link OnRendererListener}事件获取截图
-     */
-    boolean onShotPic(boolean shotHigh);
 
     /**
      * 设置 Cover组件事件
