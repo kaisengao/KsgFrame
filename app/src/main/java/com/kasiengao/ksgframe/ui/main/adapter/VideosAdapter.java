@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public class VideosAdapter extends BaseQuickAdapter<VideoBean, VideosAdapter.ViewHolder> {
 
     public VideosAdapter() {
-        super(R.layout.item_main_video);
+        super(R.layout.item_xbb);
     }
 
     @Override

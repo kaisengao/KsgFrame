@@ -26,6 +26,9 @@ import com.ksg.ksgplayer.cover.CoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.listener.OnRendererListener;
+import com.ksg.ksgplayer.renderer.RendererType;
+import com.ksg.ksgplayer.renderer.glrender.PIPGLViewRender;
+import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView;
 import com.ksg.ksgplayer.widget.KsgVideoView;
 
 /**
@@ -137,10 +140,10 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
     private void initPlayer() {
         KsgVideoView player = mBinding.player;
         // 1 (注意调用顺序，否则不生效)
-//        player.setGLViewRender(new PIPGLViewRender(), KsgGLSurfaceView.MODE_RENDER_SIZE);
+        player.setGLViewRender(new PIPGLViewRender(), KsgGLSurfaceView.MODE_RENDER_SIZE);
         // 2、3
         player.setDecoderView(new KsgExoPlayer(this));
-//        player.setRendererType(RendererType.TEXTURE);
+        player.setRendererType(RendererType.GL_SURFACE);
 
         // 创建 Cover管理器
         this.mCoverManager = new CoverManager();

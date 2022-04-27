@@ -6,9 +6,13 @@
     <color name="colorAccent">#212121</color>
 
     <!-- 第二颜色 -->
-    <color name="colorSecondary">#90CAF9</color>
-    <color name="colorSecondaryVariant">#90CAF9</color>
+    <color name="colorSecondary">#212121</color>
+    <color name="colorSecondaryVariant">#212121</color>
     <color name="colorOnSecondary">#212121</color>
+
+    <color name="PPXToolbarTextColor">#BB86FC</color>
+
+    <color name="XBBToolbarTextColor">#212121</color>
 
     <color name="driverColor">#F1F1F1</color>
 

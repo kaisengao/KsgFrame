@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="viewModel"
+            type="com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel" />
+    </data>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- 视频 -->
+        <com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout
+            android:id="@+id/xbb_refresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:setRefreshing="@{viewModel.MRefreshing}">
+
+            <com.kasiengao.ksgframe.ui.main.widget.VideoListView
+                android:id="@+id/xbb_videos"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:overScrollMode="never"
+                tools:itemCount="20"
+                tools:listitem="@layout/item_xbb" />
+
+        </com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout>
+
+        <!-- 视频详情 -->
+        <com.kasiengao.ksgframe.ui.main.widget.VideoDetailView
+            android:id="@+id/xbb_video_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="invisible" />
+
+    </FrameLayout>
+</layout>

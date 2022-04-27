@@ -1,7 +1,12 @@
 <resources>
 
-    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+    <style name="MainToolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:fontFamily">@font/android</item>
+    </style>
+
+    <style name="MainTabLayout.TabText" parent="TextAppearance.Design.Tab">
+        <item name="android:fontFamily">@font/qtj</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="ShareElementAppTheme" parent="Theme.Ksg">

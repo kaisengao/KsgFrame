@@ -17,50 +17,44 @@
         android:orientation="horizontal"
         tools:context=".ui.main.MainActivity">
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.google.android.material.appbar.AppBarLayout
-                android:id="@+id/main_appbar"
+            <androidx.viewpager.widget.ViewPager
+                android:id="@+id/main_pager"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <FrameLayout
+                android:id="@+id/main_actionbar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <com.google.android.material.appbar.MaterialToolbar
                     android:id="@+id/toolbar"
                     style="@style/Toolbar"
-                    app:titleTextAppearance="@style/Toolbar.TitleText"
+                    android:background="@color/translucent"
+                    android:elevation="0dp"
+                    app:titleTextAppearance="@style/MainToolbar.TitleText"
                     tools:navigationIcon="@drawable/ic_toolbar_menu" />
 
-            </com.google.android.material.appbar.AppBarLayout>
-
-            <!-- 视频 -->
-            <com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout
-                android:id="@+id/main_refresh"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                app:setRefreshing="@{viewModel.MRefreshing}">
-
-                <com.kasiengao.ksgframe.ui.main.widget.VideoListView
-                    android:id="@+id/main_videos"
-                    android:layout_width="match_parent"
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/main_tabs"
+                    android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:overScrollMode="never"
-                    tools:itemCount="20"
-                    tools:listitem="@layout/item_main_video" />
-
-            </com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout>
-
-            <!-- 视频详情 -->
-            <com.kasiengao.ksgframe.ui.main.widget.VideoDetailView
-                android:id="@+id/main_video_detail"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:elevation="5dp"
-                android:visibility="invisible" />
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+                    android:layout_gravity="end"
+                    android:layout_marginEnd="12dp"
+                    android:background="@color/translucent"
+                    android:elevation="0dp"
+                    app:tabGravity="center"
+                    app:tabIndicatorColor="@color/colorSecondaryVariant"
+                    app:tabSelectedTextColor="@color/colorSecondaryVariant"
+                    app:tabTextAppearance="@style/MainTabLayout.TabText"
+                    app:tabTextColor="@color/white"
+                    tools:layout_width="100dp" />
+            </FrameLayout>
+        </FrameLayout>
 
         <!-- 侧滑抽屉 -->
         <com.kasiengao.ksgframe.common.widget.TraineeView

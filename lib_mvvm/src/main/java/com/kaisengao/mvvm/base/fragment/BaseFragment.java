@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
@@ -82,7 +81,6 @@ public abstract class BaseFragment<DB extends ViewDataBinding> extends Fragment 
     /**
      * LayoutId
      */
-    @LayoutRes
     protected abstract int getContentLayoutId();
 
     /**
