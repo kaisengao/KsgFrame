@@ -77,9 +77,9 @@ public abstract class BaseControllerCover extends BaseCover implements View.OnCl
     @Override
     public String[] getValueFilters() {
         return new String[]{
-                CoverConstant.ValueKey.KEY_SWITCH_CONTROLLER,
+                CoverConstant.ValueKey.KEY_GESTURE_SINGLE_TAP,
                 CoverConstant.ValueKey.KEY_HIDE_CONTROLLER,
-                CoverConstant.ValueKey.KEY_SWITCH_PLAY,
+                CoverConstant.ValueKey.KEY_GESTURE_DOUBLE_TAB,
         };
     }
 
@@ -92,7 +92,7 @@ public abstract class BaseControllerCover extends BaseCover implements View.OnCl
     @Override
     public void onValueEvent(String key, Object value) {
         switch (key) {
-            case CoverConstant.ValueKey.KEY_SWITCH_CONTROLLER:
+            case CoverConstant.ValueKey.KEY_GESTURE_SINGLE_TAP:
                 if (value != null) {
                     if ((boolean) value) {
                         this.onShowController();
@@ -108,7 +108,7 @@ public abstract class BaseControllerCover extends BaseCover implements View.OnCl
                 // 隐藏控制器
                 this.onHideController();
                 break;
-            case CoverConstant.ValueKey.KEY_SWITCH_PLAY:
+            case CoverConstant.ValueKey.KEY_GESTURE_DOUBLE_TAB:
                 // 播放状态 播放/暂停
                 this.onSwitchPlayState();
                 break;
@@ -372,7 +372,7 @@ public abstract class BaseControllerCover extends BaseCover implements View.OnCl
      */
     protected void onController(boolean isShow) {
         this.mControllerShow = isShow;
-        this.getValuePool().putObject(CoverConstant.ValueKey.KEY_SWITCH_CONTROLLER, isShow, true, false);
+        this.getValuePool().putObject(CoverConstant.ValueKey.KEY_GESTURE_SINGLE_TAP, isShow, true, false);
     }
 
     /**

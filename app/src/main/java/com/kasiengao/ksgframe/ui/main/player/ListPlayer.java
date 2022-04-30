@@ -15,6 +15,9 @@ import com.ksg.ksgplayer.cover.CoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
 import com.ksg.ksgplayer.player.IPlayer;
+import com.ksg.ksgplayer.renderer.RendererType;
+import com.ksg.ksgplayer.renderer.glrender.PIPGLViewRender;
+import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView;
 import com.ksg.ksgplayer.widget.KsgAssistView;
 
 /**
@@ -71,7 +74,20 @@ public class ListPlayer {
     private void initPlayer() {
         BaseApplication application = AppFactory.application();
         this.mPlayer = new KsgAssistView(application);
+
+        // 1 (注意调用顺序，否则不生效)
+        this.mPlayer.setGLViewRender(new PIPGLViewRender(), KsgGLSurfaceView.MODE_RENDER_SIZE);
+        // 2、3
         this.mPlayer.setDecoderView(new KsgExoPlayer(application));
+        this.mPlayer.setRendererType(RendererType.GL_SURFACE);
+
+//        // 毛玻璃
+//        GLGaussianBlurFilter mGaussianBlurFilter = new GLGaussianBlurFilter(application);
+//        mGaussianBlurFilter.setScaleRatio(2);
+//        mGaussianBlurFilter.setBlurRadius(30);
+//        mGaussianBlurFilter.setBlurOffset(1f, 1f);
+//        mPlayer.getRenderer().setGLFilter(mGaussianBlurFilter);
+
         this.mPlayer.setBackgroundColor(R.color.black);
         // 创建 Cover管理器
         this.mCoverManager = new CoverManager();
@@ -118,8 +134,6 @@ public class ListPlayer {
                     // 设置状态
                     currContainer.setIntercept(true);
                     currContainer.setPlayerState(IPlayer.STATE_START);
-                    // 绑定容器
-                    mPlayer.bindContainer(currContainer);
                 }
             }
         });
@@ -230,14 +244,18 @@ public class ListPlayer {
         this.setCurrContainer(container);
         this.mCurrVideoBean = videoBean;
         container.setPlayerState(IPlayer.STATE_INIT);
+
+        // 绑定容器
+        mPlayer.bindContainer(container,false);
         // 播放视频
         KsgAssistView player = getPlayer();
-        player.unbindContainer();
+//        player.unbindContainer();
         player.setDataSource(new DataSource(videoBean.getVideoUrl()));
         if (!isOverlap) {
             container.setPlayerState(IPlayer.STATE_PREPARED);
             // 播放
             player.start();
+            player.setLooping(true);
         }
         // 配置UP主信息
         this.getCoverManager()

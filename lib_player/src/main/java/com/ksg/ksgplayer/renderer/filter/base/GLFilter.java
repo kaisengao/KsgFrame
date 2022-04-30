@@ -153,9 +153,6 @@ public class GLFilter implements IGLFilter {
 
     @Override
     public void onSurfaceDrawFrame(int textureId) {
-        if (!onReadyToDraw()) {
-            return;
-        }
         this.onDrawPre();
         this.onClear();
         this.onUseProgram();
@@ -243,13 +240,6 @@ public class GLFilter implements IGLFilter {
         int[] fboData = OpenGLESUtils.getFbo(mWidth, mHeight);
         this.mFboId = fboData[0];
         this.mFboTextureId = fboData[1];
-    }
-
-    /**
-     * 绘制准备
-     */
-    public boolean onReadyToDraw() {
-        return true;
     }
 
     /**

@@ -10,7 +10,7 @@
     <color name="colorSecondaryVariant">#212121</color>
     <color name="colorOnSecondary">#212121</color>
 
-    <color name="PPXToolbarTextColor">#BB86FC</color>
+    <color name="PPXToolbarTextColor">#FFFFFF</color>
 
     <color name="XBBToolbarTextColor">#212121</color>
 
@@ -23,6 +23,7 @@
     <color name="color_B3000000">#B3000000</color>
     <color name="color_48000000">#48000000</color>
     <color name="color_66000000">#66000000</color>
+    <color name="color_FFCCCCCC">#FFCCCCCC</color>
 
     <color name="color_FF5252">#FF5252</color>
     <color name="color_F49B3C">#F49B3C</color>
@@ -35,5 +36,7 @@
     <color name="color_212121">#212121</color>
     <color name="color_FF9800">#FF9800</color>
     <color name="color_D81E06">#D81E06</color>
+    <color name="color_EDF4F4">#EDF4F4</color>
+    <color name="color_FCFBFD">#FCFBFD </color>
 
 </resources>

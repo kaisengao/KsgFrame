@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/slack_off"
+        android:icon="@drawable/ic_main_slack_off"
+        android:title="@string/slack_off"
+        app:showAsAction="always" />
+
+</menu>

@@ -24,36 +24,37 @@
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/main_pager"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:overScrollMode="never" />
 
-            <FrameLayout
-                android:id="@+id/main_actionbar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-                <com.google.android.material.appbar.MaterialToolbar
-                    android:id="@+id/toolbar"
-                    style="@style/Toolbar"
-                    android:background="@color/translucent"
-                    android:elevation="0dp"
-                    app:titleTextAppearance="@style/MainToolbar.TitleText"
-                    tools:navigationIcon="@drawable/ic_toolbar_menu" />
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                style="@style/Toolbar"
+                android:background="@color/translucent"
+                android:elevation="0dp"
+                android:paddingStart="0dp"
+                android:paddingEnd="5dp"
+                app:menu="@menu/menu_main"
+                app:navigationIconTint="@color/PPXToolbarTextColor"
+                tools:navigationIcon="@drawable/ic_toolbar_menu">
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/main_tabs"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="end"
-                    android:layout_marginEnd="12dp"
+                    android:layout_gravity="center"
                     android:background="@color/translucent"
                     android:elevation="0dp"
+                    app:tabBackground="@color/translucent"
                     app:tabGravity="center"
-                    app:tabIndicatorColor="@color/colorSecondaryVariant"
-                    app:tabSelectedTextColor="@color/colorSecondaryVariant"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabRippleColor="@color/translucent"
+                    app:tabSelectedTextColor="@color/white"
                     app:tabTextAppearance="@style/MainTabLayout.TabText"
-                    app:tabTextColor="@color/white"
-                    tools:layout_width="100dp" />
-            </FrameLayout>
+                    app:tabTextColor="@color/color_FFCCCCCC" />
+
+            </com.google.android.material.appbar.MaterialToolbar>
+
         </FrameLayout>
 
         <!-- 侧滑抽屉 -->

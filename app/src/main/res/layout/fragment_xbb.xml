@@ -31,12 +31,12 @@
 
         </com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout>
 
-        <!-- 视频详情 -->
-        <com.kasiengao.ksgframe.ui.main.widget.VideoDetailView
-            android:id="@+id/xbb_video_detail"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:visibility="invisible" />
+<!--        &lt;!&ndash; 视频详情 &ndash;&gt;-->
+<!--        <com.kasiengao.ksgframe.ui.main.widget.VideoDetailView-->
+<!--            android:id="@+id/xbb_video_detail"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:visibility="invisible" />-->
 
     </FrameLayout>
 </layout>

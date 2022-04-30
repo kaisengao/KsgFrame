@@ -1,12 +1,10 @@
 package com.ksg.ksgplayer.renderer.filter.base;
 
 import android.content.Context;
-import android.graphics.SurfaceTexture;
 import android.opengl.GLES11Ext;
 import android.opengl.GLES20;
 import android.opengl.Matrix;
 
-import com.ksg.ksgplayer.renderer.listener.GLSurfaceListener;
 import com.ksg.ksgplayer.renderer.utils.OpenGLESUtils;
 
 /**
@@ -35,18 +33,12 @@ public class GLOesFilter extends GLFilter {
     /**
      * 顶点变换矩阵
      */
-    private float[] mMVPMatrix = new float[16];
+    private final float[] mMVPMatrix = new float[16];
 
     /**
      * 纹理变换矩阵
      */
-    private float[] mOesMatrix = new float[16];
-
-    private boolean isReadyToDraw = false;
-
-    private SurfaceTexture mSurfaceTexture;
-
-    private GLSurfaceListener mGLSurfaceListener;
+    private final float[] mOesMatrix = new float[16];
 
     public GLOesFilter(Context context) {
         this(context, "render/base/oes/vertex.frag", "render/base/oes/frag.frag");
@@ -68,6 +60,8 @@ public class GLOesFilter extends GLFilter {
     public void release() {
         super.release();
         this.onDeleteTexture(mOesTextureId);
+        Matrix.setIdentityM(mOesMatrix, 0);
+        Matrix.setIdentityM(mMVPMatrix, 0);
     }
 
     /**
@@ -76,38 +70,6 @@ public class GLOesFilter extends GLFilter {
     @Override
     public void onInitCoordinateBuffer() {
         this.setCoordinateBuffer(OpenGLESUtils.getSquareCoordinateBuffer());
-    }
-
-    /**
-     * 绘制准备
-     */
-    @Override
-    public boolean onReadyToDraw() {
-        if (!isReadyToDraw) {
-            if (mGLSurfaceListener != null) {
-                if (mSurfaceTexture != null) {
-                    this.mSurfaceTexture.release();
-                    this.mSurfaceTexture = null;
-                }
-                this.mSurfaceTexture = new SurfaceTexture(mOesTextureId);
-                this.mGLSurfaceListener.onSurfaceAvailable(mSurfaceTexture);
-                this.isReadyToDraw = true;
-            } else if (mSurfaceTexture != null) {
-                this.mSurfaceTexture.attachToGLContext(mOesTextureId);
-                this.isReadyToDraw = true;
-            }
-        }
-        return isReadyToDraw;
-    }
-
-    /**
-     * 绘制之前
-     */
-    @Override
-    public void onDrawPre() {
-        super.onDrawPre();
-        this.mSurfaceTexture.updateTexImage();
-        this.mSurfaceTexture.getTransformMatrix(mOesMatrix);
     }
 
     /**
@@ -147,11 +109,8 @@ public class GLOesFilter extends GLFilter {
         super.onSurfaceDrawFrame(mOesTextureId);
     }
 
-    /**
-     * SurfaceTexture 事件
-     */
-    public void setGLSurfaceListener(GLSurfaceListener surfaceListener) {
-        this.mGLSurfaceListener = surfaceListener;
+    public int getOesTextureId() {
+        return mOesTextureId;
     }
 
     public int getMatrixLocation() {
@@ -166,15 +125,7 @@ public class GLOesFilter extends GLFilter {
         return mMVPMatrix;
     }
 
-    public void setMVPMatrix(float[] MVPMatrix) {
-        this.mMVPMatrix = MVPMatrix;
-    }
-
     public float[] getOesMatrix() {
         return mOesMatrix;
-    }
-
-    public void setOesMatrix(float[] oesMatrix) {
-        this.mOesMatrix = oesMatrix;
     }
 }

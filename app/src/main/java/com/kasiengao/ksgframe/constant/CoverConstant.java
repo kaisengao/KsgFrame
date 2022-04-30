@@ -31,24 +31,24 @@ public interface CoverConstant {
     interface ValueKey {
 
         /**
+         * 手势 单击
+         */
+        String KEY_GESTURE_SINGLE_TAP = "signalTab";
+
+        /**
+         * 手势 双击
+         */
+        String KEY_GESTURE_DOUBLE_TAB = "doubleTab";
+
+        /**
          * UP主信息
          */
         String KEY_UPLOADER_DATA = "uploaderData";
 
         /**
-         * 控制器 显示/隐藏
-         */
-        String KEY_SWITCH_CONTROLLER = "switchController";
-
-        /**
          * 控制器 隐藏
          */
         String KEY_HIDE_CONTROLLER = "hideController";
-
-        /**
-         * 播放状态 播放/暂停
-         */
-        String KEY_SWITCH_PLAY = "switchPlay";
 
         /**
          * 横竖屏切换

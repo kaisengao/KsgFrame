@@ -416,6 +416,7 @@ public class KsgExoPlayer extends BasePlayer {
         if (mExoPlayer == null) {
             return;
         }
+        this.mExoPlayer.clearVideoSurface();
         this.mExoPlayer.removeListener(mListener);
     }
 

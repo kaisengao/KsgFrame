@@ -100,7 +100,7 @@ public class VideoDetailView extends FrameLayout {
             if (ListPlayer.getInstance().getPlayer().getState() != IPlayer.STATE_COMPLETE) {
                 ListPlayer.getInstance().getCoverManager()
                         .getValuePool()
-                        .putObject(CoverConstant.ValueKey.KEY_SWITCH_CONTROLLER, null);
+                        .putObject(CoverConstant.ValueKey.KEY_GESTURE_SINGLE_TAP, null);
             }
         });
         // 注册视图树中全局布局事件

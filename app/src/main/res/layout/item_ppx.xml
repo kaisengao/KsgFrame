@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    tools:background="@color/black">
 
     <!-- 封面图 -->
     <androidx.appcompat.widget.AppCompatImageView
@@ -9,9 +12,144 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
+    <!-- 播放器-->
     <com.kasiengao.ksgframe.common.widget.PlayerContainerView
         android:id="@+id/item_player_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-</FrameLayout>
+    <!-- 昵称-->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/item_ppx_nickname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/item_ppx_introduce"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="@dimen/view_space"
+        android:layout_marginBottom="5dp"
+        android:layout_toStartOf="@id/item_ppx_share"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:textStyle="bold"
+        tools:text="`@`蒙奇D路飞" />
+
+    <!-- 详情 -->
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/item_ppx_introduce"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/item_ppx_nickname"
+        android:layout_alignEnd="@id/item_ppx_nickname"
+        android:layout_alignBottom="@id/item_ppx_share"
+        android:layout_marginBottom="10dp"
+        android:paddingStart="0dp"
+        android:paddingEnd="@dimen/view_space"
+        android:textColor="@color/color_FCFBFD"
+        android:textSize="13sp"
+        tools:text="《决战中途岛》预告再现海空激战" />
+
+    <!-- 头像-->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/item_ppx_avatar"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_above="@id/item_ppx_praise"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="5dp"
+        android:layout_marginBottom="17.5dp"
+        android:padding="1.5dp"
+        app:shapeAppearanceOverlay="@style/CircleImageStyle"
+        app:strokeColor="@color/color_FCFBFD"
+        app:strokeWidth="1.5dp"
+        tools:src="@mipmap/ic_logo" />
+
+    <!-- 关注-->
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/item_ppx_follow"
+        android:layout_width="match_parent"
+        android:layout_height="15dp"
+        android:layout_above="@id/item_ppx_praise"
+        android:layout_alignStart="@id/item_ppx_avatar"
+        android:layout_alignEnd="@id/item_ppx_avatar"
+        android:layout_alignBottom="@id/item_ppx_avatar"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/color_FF9800"
+        android:src="@drawable/ic_add"
+        android:translationY="7.5dp"
+        app:shapeAppearanceOverlay="@style/CircleImageStyle" />
+
+    <!-- 点赞-->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/item_ppx_praise"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/item_ppx_comment"
+        android:layout_alignStart="@id/item_ppx_avatar"
+        android:layout_alignEnd="@id/item_ppx_avatar"
+        android:gravity="center"
+        android:textColor="@color/color_EDF4F4"
+        android:textSize="10sp"
+        app:icon="@drawable/ic_ppx_praise"
+        app:iconGravity="top"
+        app:iconTint="@color/color_EDF4F4"
+        tools:ignore="SmallSp"
+        tools:text="7432" />
+
+    <!-- 评论-->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/item_ppx_comment"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/item_ppx_collect"
+        android:layout_alignStart="@id/item_ppx_avatar"
+        android:layout_alignEnd="@id/item_ppx_avatar"
+        android:gravity="center"
+        android:textColor="@color/color_EDF4F4"
+        android:textSize="10sp"
+        app:icon="@drawable/ic_ppx_comment"
+        app:iconGravity="top"
+        app:iconTint="@color/color_EDF4F4"
+        tools:ignore="SmallSp"
+        tools:text="7432" />
+
+    <!-- 收藏-->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/item_ppx_collect"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/item_ppx_share"
+        android:layout_alignStart="@id/item_ppx_avatar"
+        android:layout_alignEnd="@id/item_ppx_avatar"
+        android:gravity="center"
+        android:textColor="@color/color_EDF4F4"
+        android:textSize="10sp"
+        app:icon="@drawable/ic_ppx_collect"
+        app:iconGravity="top"
+        app:iconTint="@color/color_EDF4F4"
+        tools:ignore="SmallSp"
+        tools:text="7432" />
+
+    <!-- 分享-->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/item_ppx_share"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@id/item_ppx_avatar"
+        android:layout_alignEnd="@id/item_ppx_avatar"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="10dp"
+        android:gravity="center"
+        android:text="@string/share"
+        android:textColor="@color/color_EDF4F4"
+        android:textSize="10sp"
+        app:icon="@drawable/ic_ppx_share"
+        app:iconGravity="top"
+        app:iconTint="@color/color_EDF4F4"
+        tools:ignore="SmallSp" />
+
+</RelativeLayout>

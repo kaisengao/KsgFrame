@@ -1,9 +1,5 @@
 <resources>
 
-    <style name="MainToolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:fontFamily">@font/android</item>
-    </style>
-
     <style name="MainTabLayout.TabText" parent="TextAppearance.Design.Tab">
         <item name="android:fontFamily">@font/qtj</item>
         <item name="android:textSize">16sp</item>
@@ -37,6 +33,12 @@
     <style name="CircleImageStyle">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- 圆角图片 -->
+    <style name="RoundedImageStyle">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10dp</item>
     </style>
 
 </resources>

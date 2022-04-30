@@ -1,7 +1,11 @@
 package com.kasiengao.ksgframe.ui.main
 
 import android.graphics.Color
+import android.graphics.PorterDuff
+import android.graphics.PorterDuffColorFilter
+import android.view.Menu
 import android.view.View
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -50,7 +54,7 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     override fun initBefore() {
         super.initBefore()
         // 添加状态栏高度
-        StatusBarUtil.setStatusBarPadding(this, mBinding.mainActionbar)
+        StatusBarUtil.setStatusBarPadding(this, mBinding.toolbar)
     }
 
     override fun initWidget() {
@@ -65,7 +69,6 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
      * Init Adapter
      */
     private fun initAdapter() {
-        this.setToolbarColor(mPPXToolbarTextColor)
         // Fragments
         val fragments = mutableListOf(
             PPXFragment(),
@@ -84,12 +87,12 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
                 positionOffset: Float,
                 positionOffsetPixels: Int
             ) {
+                // 背景颜色与阴影
                 if (positionOffset > 0) {
                     val offset = (positionOffset * 100)
-                    // 背景颜色与阴影
                     val bgColor = ColorUtil.percentColor(offset, mToolbarBgColor)
-                    mBinding.mainActionbar.setBackgroundColor(Color.parseColor(bgColor))
-                    mBinding.mainActionbar.elevation = offset
+                    mBinding.toolbar.setBackgroundColor(Color.parseColor(bgColor))
+                    mBinding.toolbar.elevation = offset
                 }
             }
 
@@ -136,25 +139,36 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
      * 设置 Toolbar与TabLayout的颜色
      */
     private fun setToolbarColor(color: Int) {
-        this.mBinding.toolbar.setTitleTextColor(color)
         this.mBinding.toolbar.setNavigationIconTint(color)
-        this.mBinding.mainTabs.setTabTextColors(Color.WHITE, color)
-        this.mBinding.mainTabs.setSelectedTabIndicatorColor(color)
-    }
-
-    public fun getActionBarHeight(): Int {
-        return mBinding.mainActionbar.height
+        this.mBinding.toolbar.menu.getItem(0).icon.let {
+            it.mutate()
+            it.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
+        }
+//        this.mBinding.mainTabs.setTabTextColors(Color.LTGRAY, Color.WHITE)
     }
 
     /**
-     * 菜单的响应事件
+     * 获取 Toolbar的高度
      */
-    override
+    fun getToolbarHeight(): Int {
+        return mBinding.toolbar.height
+    }
 
-    fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
-        if (item.itemId == android.R.id.home) {
-            // 侧滑抽屉
-            this.mBinding.drawerLayout.openDrawer(GravityCompat.START)
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        this.menuInflater.inflate(R.menu.menu_main, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: android.view.MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                // 侧滑抽屉
+                this.mBinding.drawerLayout.openDrawer(GravityCompat.START)
+            }
+            R.id.slack_off -> {
+                // 摸鱼
+                Toast.makeText(this, "摸鱼呀~", Toast.LENGTH_SHORT).show()
+            }
         }
         return true
     }

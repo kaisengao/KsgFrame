@@ -1,6 +1,6 @@
 package com.ksg.ksgplayer.renderer.listener;
 
-import android.graphics.SurfaceTexture;
+import android.view.Surface;
 
 /**     
  * @ClassName: GLSurfaceListener
@@ -10,5 +10,5 @@ import android.graphics.SurfaceTexture;
  */
 public interface GLSurfaceListener {
 
-    void onSurfaceAvailable(SurfaceTexture surfaceTexture);
+    void onSurfaceAvailable(Surface surface);
 }

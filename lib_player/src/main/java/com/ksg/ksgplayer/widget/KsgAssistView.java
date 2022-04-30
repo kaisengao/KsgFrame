@@ -11,7 +11,6 @@ import androidx.annotation.ColorRes;
 
 import com.ksg.ksgplayer.IKsgVideoPlayer;
 import com.ksg.ksgplayer.KsgVideoPlayer;
-import com.ksg.ksgplayer.config.PlayerConfig;
 import com.ksg.ksgplayer.cover.ICoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.listener.OnCoverEventListener;
@@ -22,6 +21,7 @@ import com.ksg.ksgplayer.player.BasePlayer;
 import com.ksg.ksgplayer.player.IPlayer;
 import com.ksg.ksgplayer.producer.BaseEventProducer;
 import com.ksg.ksgplayer.renderer.Renderer;
+import com.ksg.ksgplayer.renderer.RendererType;
 import com.ksg.ksgplayer.renderer.glrender.GLViewRender;
 
 import java.util.List;
@@ -127,7 +127,7 @@ public class KsgAssistView implements IKsgVideoView {
             // 释放渲染器
             this.mPlayer.releaseRenderer();
             // 更新Render
-            this.setRendererType(PlayerConfig.getRenderType());
+            this.setRendererType(RendererType.GL_SURFACE);
         }
         // 添加容器
         this.mPlayer.bindContainer(container, updateRenderer);

@@ -15,24 +15,10 @@ public class GLPIPFilter extends GLOesFilter {
 
     private final GLOesFilter mOesFilter;
 
-    public GLPIPFilter(Context context,GLOesFilter oesFilter) {
+    public GLPIPFilter(Context context, GLOesFilter oesFilter) {
         super(context);
         this.setBindFbo(true);
         this.mOesFilter = oesFilter;
-    }
-
-    /**
-     * 绘制准备
-     */
-    @Override
-    public boolean onReadyToDraw() {
-        return true;
-    }
-    /**
-     * 绘制之前
-     */
-    @Override
-    public void onDrawPre() {
     }
 
     @Override

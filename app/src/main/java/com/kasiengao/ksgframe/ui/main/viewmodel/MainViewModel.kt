@@ -7,7 +7,6 @@ import com.kaisengao.base.util.SnackbarUtil
 import com.kaisengao.mvvm.viewmodel.ToolbarViewModel
 import com.kaisengao.retrofit.observer.BaseRxObserver
 import com.kasiengao.ksgframe.R
-import com.kasiengao.ksgframe.common.util.TextUtil
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean
 import com.kasiengao.ksgframe.ui.main.model.MainModel
 import com.kuaishou.akdanmaku.data.DanmakuItemData
@@ -35,7 +34,7 @@ class MainViewModel(application: Application) : ToolbarViewModel(application) {
      * Init Toolbar
      */
     override fun initToolbar() {
-        this.setToolbarTitle(TextUtil.getString(R.string.title))
+        this.setToolbarTitle(" ")
         this.setNavigationIcon(R.drawable.ic_toolbar_menu)
     }
 

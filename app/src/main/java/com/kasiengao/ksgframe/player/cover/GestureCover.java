@@ -156,8 +156,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      */
     @Override
     public void onSingleTapGesture() {
-        // 通知 控制器 显示/隐藏
-        this.getValuePool().putObject(CoverConstant.ValueKey.KEY_SWITCH_CONTROLLER, null);
+        this.getValuePool().putObject(CoverConstant.ValueKey.KEY_GESTURE_SINGLE_TAP, null);
     }
 
     /**
@@ -165,8 +164,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      */
     @Override
     public void onDoubleTapGesture() {
-        // 通知 播放状态 播放/暂停
-        this.getValuePool().putObject(CoverConstant.ValueKey.KEY_SWITCH_PLAY, null, false);
+        this.getValuePool().putObject(CoverConstant.ValueKey.KEY_GESTURE_DOUBLE_TAB, null, false);
     }
 
     /**

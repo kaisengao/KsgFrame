@@ -26,7 +26,7 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
         super.initWidget()
         // 设置PaddingTop为Toolbar的高度、使得布局下移不会被Toolbar覆盖
         this.mBinding.root.post {
-            (activity as MainActivity).getActionBarHeight().let {
+            (activity as MainActivity).getToolbarHeight().let {
                 this.mBinding.root.setPadding(0, it, 0, 0)
             }
         }
@@ -52,7 +52,7 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
      * Init ViewDetail
      */
     private fun initViewDetail() {
-        this.mBinding.xbbVideoDetail.bindViewModel(this, mViewModel)
+//        this.mBinding.xbbVideoDetail.bindViewModel(this, mViewModel)
     }
 
     /**

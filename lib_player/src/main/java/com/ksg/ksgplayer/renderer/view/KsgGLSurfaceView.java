@@ -1,7 +1,6 @@
 package com.ksg.ksgplayer.renderer.view;
 
 import android.content.Context;
-import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -41,8 +40,6 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
 
     private PlayerProxy mPlayerProxy;
 
-    private RendererListener mRendererListener;
-
     public KsgGLSurfaceView(Context context) {
         this(context, null);
     }
@@ -78,7 +75,6 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
     private void initViewRender() {
         this.mViewRender.setSurfaceView(this);
         this.mViewRender.setGLSurfaceListener(this);
-        this.mViewRender.setRendererListener(mRendererListener);
         this.setRenderer(mViewRender);
         this.setRenderMode(RENDERMODE_WHEN_DIRTY);
     }
@@ -87,9 +83,9 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
      * onSurfaceAvailable
      */
     @Override
-    public void onSurfaceAvailable(SurfaceTexture surfaceTexture) {
+    public void onSurfaceAvailable(Surface surface) {
         if (mPlayerProxy != null) {
-            this.mPlayerProxy.setSurface(new Surface(surfaceTexture));
+            this.mPlayerProxy.setSurface(surface);
         }
     }
 
@@ -134,7 +130,6 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
      */
     @Override
     public void setRendererListener(RendererListener listener) {
-        this.mRendererListener = listener;
         this.mViewRender.setRendererListener(listener);
     }
 

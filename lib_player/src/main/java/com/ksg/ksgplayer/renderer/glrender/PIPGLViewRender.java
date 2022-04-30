@@ -20,15 +20,24 @@ import javax.microedition.khronos.opengles.GL10;
  */
 public class PIPGLViewRender extends GLViewRender {
 
+    private boolean isSetFilter;
+
     private GLPIPFilter mPipFilter;
 
     private GLFilter mPipPreviewFilter;
+
+    private GLGaussianBlurFilter mGaussianBlurFilter;
 
     @Override
     public void setSurfaceView(GLSurfaceView surfaceView) {
         super.setSurfaceView(surfaceView);
         this.mPipFilter = new GLPIPFilter(surfaceView.getContext(), getOesFilter());
         this.mPipPreviewFilter = new GLFilter(surfaceView.getContext());
+        // 毛玻璃
+        this.mGaussianBlurFilter = new GLGaussianBlurFilter(surfaceView.getContext());
+        this.mGaussianBlurFilter.setScaleRatio(2);
+        this.mGaussianBlurFilter.setBlurRadius(30);
+        this.mGaussianBlurFilter.setBlurOffset(3f, 3f);
     }
 
     @Override
@@ -36,13 +45,11 @@ public class PIPGLViewRender extends GLViewRender {
         super.onSurfaceCreated(gl, config);
         this.mPipFilter.onSurfaceCreated();
         this.mPipPreviewFilter.onSurfaceCreated();
-        // 毛玻璃
-        GLGaussianBlurFilter filter = new GLGaussianBlurFilter(mSurfaceView.getContext());
-        filter.setScaleRatio(2);
-        filter.setBlurRadius(30);
-        filter.setBlurOffset(2.5f, 2.5f);
         // 设置滤镜
-        this.setGLFilter(filter);
+        if (!isSetFilter) {
+            this.setGLFilter(mGaussianBlurFilter);
+            this.isSetFilter = true;
+        }
     }
 
     @Override
@@ -54,19 +61,16 @@ public class PIPGLViewRender extends GLViewRender {
 
     @Override
     public void onSurfaceDrawFrame(GL10 gl) {
-        float[] mvpMatrix = getOesFilter().getMVPMatrix();
         // 背景图层
-        Matrix.setIdentityM(mvpMatrix, 0);
-        Matrix.scaleM(mvpMatrix, 0,
-                (float) getViewWidth() / mVideoWidth,
-                (float) getViewHeight() / mVideoHeight, 1);
+        Matrix.scaleM(getOesFilter().getMVPMatrix(), 0, 2f, 2f, 1);
         this.mPipFilter.onDrawSelf();
         this.mPipPreviewFilter.onSurfaceDrawFrame(onFilterDrawFrame(mPipFilter.getFboTextureId()));
         // 预览图层
-        Matrix.setIdentityM(mvpMatrix, 0);
-        Matrix.scaleM(mvpMatrix, 0, 1f, 1f, 1);
+        this.updateTexImage(getOesFilter().getOesMatrix());
+        Matrix.setIdentityM(getOesFilter().getMVPMatrix(), 0);
+        Matrix.scaleM(getOesFilter().getMVPMatrix(), 0, 1f, 1f, 1);
         this.getOesFilter().onDrawSelf();
-        GLES20.glViewport(0, (getViewHeight() / 2) - (mVideoHeight / 2), getViewWidth(), mVideoHeight);
+        GLES20.glViewport(0, (getViewHeight() / 2) - (mVideoHeight / 2), mVideoWidth, mVideoHeight);
         this.getPreviewFilter().onSurfaceDrawFrame(getOesFilter().getFboTextureId());
     }
 

@@ -3,12 +3,16 @@
 
     <string name="title">Xinzzhu</string>
 
+    <string name="phrase">阳光洒肩头，仿如自由人。</string>
+
     <string name="follow">关注</string>
     <string name="replay">重播</string>
     <string name="share">分享</string>
     <string name="fans">粉丝</string>
     <string name="comment">评论</string>
     <string name="views">次观看</string>
+
+    <string name="slack_off">摸鱼</string>
 
     <string name="share_cancel">取消分享</string>
 

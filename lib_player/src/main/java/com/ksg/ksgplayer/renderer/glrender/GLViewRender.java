@@ -3,6 +3,7 @@ package com.ksg.ksgplayer.renderer.glrender;
 
 import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
+import android.view.Surface;
 
 import com.ksg.ksgplayer.renderer.filter.base.GLFilter;
 import com.ksg.ksgplayer.renderer.filter.base.GLOesFilter;
@@ -20,11 +21,17 @@ public class GLViewRender extends BaseGLViewRender implements SurfaceTexture.OnF
 
     private boolean isNewFilter = false;
 
+    private boolean mUpdateSurface = false;
+
     private GLFilter mFilter;
 
     private GLOesFilter mOesFilter;
 
     private GLFilter mPreviewFilter;
+
+    private SurfaceTexture mSaveTexture;
+
+    private Surface mSurface;
 
     @Override
     public void setSurfaceView(GLSurfaceView surfaceView) {
@@ -48,11 +55,11 @@ public class GLViewRender extends BaseGLViewRender implements SurfaceTexture.OnF
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         this.mOesFilter.onSurfaceCreated();
-        this.mOesFilter.setGLSurfaceListener(surfaceTexture -> {
-            surfaceTexture.setOnFrameAvailableListener(this);
-            this.onSurfaceAvailable(surfaceTexture);
-        });
         this.mPreviewFilter.onSurfaceCreated();
+        if (mFilter != null) {
+            this.mFilter.onSurfaceCreated();
+        }
+        this.createTexImage(mOesFilter.getOesTextureId());
     }
 
     @Override
@@ -66,16 +73,48 @@ public class GLViewRender extends BaseGLViewRender implements SurfaceTexture.OnF
 
     @Override
     public void onSurfaceDrawFrame(GL10 gl) {
+        this.updateTexImage(mOesFilter.getOesMatrix());
         this.mOesFilter.onDrawSelf();
         this.mPreviewFilter.onSurfaceDrawFrame(onFilterDrawFrame(mOesFilter.getFboTextureId()));
     }
 
     @Override
-    public void onFrameAvailable(SurfaceTexture surfaceTexture) {
+    public synchronized void onFrameAvailable(SurfaceTexture surfaceTexture) {
+        this.mUpdateSurface = true;
         this.mSurfaceView.requestRender();
     }
 
-    public int onFilterDrawFrame(int fboTextureId) {
+    protected void createTexImage(int textureId) {
+        this.releaseTexImage();
+        this.mSaveTexture = new SurfaceTexture(textureId);
+        this.mSaveTexture.setOnFrameAvailableListener(this);
+        this.mSurface = new Surface(mSaveTexture);
+        this.onSurfaceAvailable(mSurface);
+    }
+
+    protected void updateTexImage(float[] mtx) {
+        synchronized (this) {
+            if (mUpdateSurface) {
+                this.mSaveTexture.updateTexImage();
+                this.mSaveTexture.getTransformMatrix(mtx);
+                this.mUpdateSurface = false;
+            }
+        }
+    }
+
+    protected void releaseTexImage() {
+        if (mSaveTexture != null) {
+            this.mSaveTexture.release();
+            this.mSaveTexture = null;
+        }
+        if (mSurface != null) {
+            this.mSurface.release();
+            this.mSurface = null;
+        }
+        this.onSurfaceAvailable(null);
+    }
+
+    protected int onFilterDrawFrame(int fboTextureId) {
         if (isNewFilter) {
             this.mFilter.onSurfaceCreated();
             this.mFilter.onSurfaceChanged(getViewWidth(), getViewHeight());
@@ -88,16 +127,18 @@ public class GLViewRender extends BaseGLViewRender implements SurfaceTexture.OnF
         return fboTextureId;
     }
 
-    public GLOesFilter getOesFilter() {
+    protected GLOesFilter getOesFilter() {
         return mOesFilter;
     }
 
-    public GLFilter getPreviewFilter() {
+    protected GLFilter getPreviewFilter() {
         return mPreviewFilter;
     }
 
     @Override
     public void release() {
+        this.releaseTexImage();
+
         if (mOesFilter != null) {
             this.mOesFilter.release();
         }

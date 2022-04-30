@@ -1,7 +1,5 @@
 package com.kaisengao.base.util;
 
-import java.util.Locale;
-
 /**
  * @ClassName: NumberUtil
  * @Author: KaiSenGao
@@ -20,8 +18,7 @@ public class NumberUtil {
             return String.valueOf(num);
         }
         String unit = "万";
-        double newNum = num / 10000.0;
-        String numStr = String.format(Locale.getDefault(), "%." + 1 + "f", newNum);
-        return numStr + unit;
+        int newNum = num / 10000;
+        return newNum + unit;
     }
 }
