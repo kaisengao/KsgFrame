@@ -2,10 +2,8 @@ package com.ksg.ksgplayer.renderer.glrender;
 
 import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
-import android.os.Looper;
 import android.view.Surface;
 
-import com.ksg.ksgplayer.config.WeakHandler;
 import com.ksg.ksgplayer.renderer.RendererListener;
 import com.ksg.ksgplayer.renderer.listener.GLSurfaceListener;
 import com.ksg.ksgplayer.renderer.utils.OpenGLESUtils;
@@ -30,8 +28,6 @@ public abstract class BaseGLViewRender implements GLSurfaceView.Renderer {
 
     protected RendererListener mRendererListener;
 
-    private  WeakHandler mHandler = new WeakHandler(Looper.getMainLooper());
-
     public void setSurfaceView(final GLSurfaceView surfaceView) {
         this.mSurfaceView = surfaceView;
     }
@@ -46,7 +42,7 @@ public abstract class BaseGLViewRender implements GLSurfaceView.Renderer {
 
     public void onSurfaceAvailable(final Surface surface) {
         if (mGLSurfaceListener != null) {
-            this.mHandler.post(() -> mGLSurfaceListener.onSurfaceAvailable(surface));
+            this.mGLSurfaceListener.onSurfaceAvailable(surface);
         }
     }
 
@@ -106,7 +102,7 @@ public abstract class BaseGLViewRender implements GLSurfaceView.Renderer {
      */
     protected void onShotPicCallback(Bitmap bitmap) {
         if (mRendererListener != null) {
-            this.mHandler.post(() -> mRendererListener.onShotPic(bitmap));
+            this.mRendererListener.onShotPic(bitmap);
         }
     }
 

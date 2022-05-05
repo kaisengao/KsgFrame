@@ -4,7 +4,7 @@ import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.opengl.Matrix;
 
-import com.ksg.ksgplayer.renderer.filter.GLGaussianBlurFilter;
+import com.ksg.ksgplayer.renderer.filter.GLBlurFilter;
 import com.ksg.ksgplayer.renderer.filter.GLPIPFilter;
 import com.ksg.ksgplayer.renderer.filter.base.GLFilter;
 import com.ksg.ksgplayer.renderer.utils.OpenGLESUtils;
@@ -26,7 +26,7 @@ public class PIPGLViewRender extends GLViewRender {
 
     private GLFilter mPipPreviewFilter;
 
-    private GLGaussianBlurFilter mGaussianBlurFilter;
+    private GLBlurFilter mBlurFilter;
 
     @Override
     public void setSurfaceView(GLSurfaceView surfaceView) {
@@ -34,10 +34,10 @@ public class PIPGLViewRender extends GLViewRender {
         this.mPipFilter = new GLPIPFilter(surfaceView.getContext(), getOesFilter());
         this.mPipPreviewFilter = new GLFilter(surfaceView.getContext());
         // 毛玻璃
-        this.mGaussianBlurFilter = new GLGaussianBlurFilter(surfaceView.getContext());
-        this.mGaussianBlurFilter.setScaleRatio(2);
-        this.mGaussianBlurFilter.setBlurRadius(30);
-        this.mGaussianBlurFilter.setBlurOffset(3f, 3f);
+        this.mBlurFilter = new GLBlurFilter(surfaceView.getContext());
+        this.mBlurFilter.setScaleRatio(2);
+        this.mBlurFilter.setBlurRadius(30);
+        this.mBlurFilter.setBlurOffset(3f, 3f);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class PIPGLViewRender extends GLViewRender {
         this.mPipPreviewFilter.onSurfaceCreated();
         // 设置滤镜
         if (!isSetFilter) {
-            this.setGLFilter(mGaussianBlurFilter);
+            this.setGLFilter(mBlurFilter);
             this.isSetFilter = true;
         }
     }

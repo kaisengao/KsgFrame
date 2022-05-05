@@ -5,6 +5,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter
 import com.chad.library.adapter.base.viewholder.BaseViewHolder
 import com.kaisengao.base.util.GlideUtil
 import com.kasiengao.ksgframe.R
+import com.kasiengao.ksgframe.common.widget.PlayerContainerView
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean
 
 /**
@@ -28,5 +29,7 @@ class PPXAdapter : BaseQuickAdapter<VideoBean, BaseViewHolder>(R.layout.item_ppx
         holder.setText(R.id.item_ppx_comment, item.comment)
         // 收藏
         holder.setText(R.id.item_ppx_collect, item.share)
+        // 设置封面图
+        holder.getView<PlayerContainerView>(R.id.item_player_container).setCoverImage(item.coverImg)
     }
 }

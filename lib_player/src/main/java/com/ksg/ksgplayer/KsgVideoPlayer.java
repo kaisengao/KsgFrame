@@ -1,6 +1,7 @@
 package com.ksg.ksgplayer;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -50,6 +51,8 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     private Context mContext;
 
     private int mGLModeSize = -1;
+
+    private int mRendererType = PlayerConfig.getRenderType();
 
     private boolean mUserPause;
 
@@ -189,12 +192,13 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      *
      * @param viewRender {@link GLViewRender}
      * @param modeSize   {@link KsgGLSurfaceView} 测量模式
-     * @describe: 注意要在 {setDecoderView} 之前设置
      */
     @Override
     public void setGLViewRender(GLViewRender viewRender, int modeSize) {
         this.mGLViewRender = viewRender;
         this.mGLModeSize = modeSize;
+        // 强制设置为GLSurfaceView模式
+        this.setRendererType(RendererType.GL_SURFACE);
     }
 
     /**
@@ -212,7 +216,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
         // 设置 解码器
         this.mPlayer.setDecoderView(decoderView);
         // 设置 渲染器
-        this.setRendererType(PlayerConfig.getRenderType());
+        this.setRendererType(mRendererType);
         // Return
         return true;
     }
@@ -233,10 +237,13 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void setRendererType(int rendererType) {
-        Renderer renderer;
+        this.mRendererType = rendererType;
+        this.mPlayer.setSurface(null);
+        this.mPlayer.setDisplay(null);
         // 释放渲染器
         this.releaseRenderer();
-        // 渲染器
+        // 创建渲染器
+        Renderer renderer;
         switch (rendererType) {
             case RendererType.SURFACE:
                 // SurfaceView
@@ -244,8 +251,9 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
                 break;
             case RendererType.GL_SURFACE:
                 // GLSurfaceView
-                renderer = new KsgGLSurfaceView(mContext);
-                ((KsgGLSurfaceView) renderer).init(mGLViewRender, mGLModeSize);
+                KsgGLSurfaceView glSurfaceView = new KsgGLSurfaceView(mContext);
+                glSurfaceView.init(mGLViewRender, mGLModeSize);
+                renderer = glSurfaceView;
                 break;
             case RendererType.TEXTURE:
             default:
@@ -254,9 +262,6 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
                 break;
         }
         this.mRenderer = renderer;
-        // 初始
-        this.mPlayer.setSurface(null);
-        this.mPlayer.setDisplay(null);
         // BindPlayer
         this.mRenderer.bindPlayer(mPlayer);
         this.mRenderer.setRendererListener(mRendererListenerAdapter);
@@ -709,6 +714,18 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      * 渲染器事件
      */
     private final RendererListenerAdapter mRendererListenerAdapter = new RendererListenerAdapter() {
+
+        /**
+         * 截图
+         *
+         * @param bitmap bitmap
+         */
+        @Override
+        public void onShotPic(Bitmap bitmap) {
+            if (mRendererListener != null) {
+                mVideoContainer.post(() -> mRendererListener.onShotPic(bitmap));
+            }
+        }
     };
 
     /**

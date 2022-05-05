@@ -60,6 +60,9 @@ public class GLViewRender extends BaseGLViewRender implements SurfaceTexture.OnF
             this.mFilter.onSurfaceCreated();
         }
         this.createTexImage(mOesFilter.getOesTextureId());
+        if (mRendererListener != null) {
+            this.mRendererListener.onSurfaceCreated(mSurface, getViewWidth(), getViewHeight());
+        }
     }
 
     @Override
@@ -69,6 +72,9 @@ public class GLViewRender extends BaseGLViewRender implements SurfaceTexture.OnF
             this.mFilter.onSurfaceChanged(width, height);
         }
         this.mPreviewFilter.onSurfaceChanged(width, height);
+        if (mRendererListener != null) {
+            this.mRendererListener.onSurfaceChanged(mSurface, width, height);
+        }
     }
 
     @Override
@@ -94,7 +100,7 @@ public class GLViewRender extends BaseGLViewRender implements SurfaceTexture.OnF
 
     protected void updateTexImage(float[] mtx) {
         synchronized (this) {
-            if (mUpdateSurface) {
+            if (mUpdateSurface && mSaveTexture != null) {
                 this.mSaveTexture.updateTexImage();
                 this.mSaveTexture.getTransformMatrix(mtx);
                 this.mUpdateSurface = false;
@@ -111,7 +117,6 @@ public class GLViewRender extends BaseGLViewRender implements SurfaceTexture.OnF
             this.mSurface.release();
             this.mSurface = null;
         }
-        this.onSurfaceAvailable(null);
     }
 
     protected int onFilterDrawFrame(int fboTextureId) {
@@ -138,7 +143,6 @@ public class GLViewRender extends BaseGLViewRender implements SurfaceTexture.OnF
     @Override
     public void release() {
         this.releaseTexImage();
-
         if (mOesFilter != null) {
             this.mOesFilter.release();
         }
@@ -148,6 +152,9 @@ public class GLViewRender extends BaseGLViewRender implements SurfaceTexture.OnF
         if (mFilter != null) {
             this.mFilter.release();
             this.mFilter = null;
+        }
+        if (mRendererListener != null) {
+            this.mRendererListener.onSurfaceDestroy(mSurface);
         }
     }
 }

@@ -27,8 +27,6 @@ import com.ksg.ksgplayer.player.IPlayer;
  */
 public class PlayerContainerView extends FrameLayout {
 
-    private int mPlayerState = IPlayer.STATE_IDLE;
-
     private boolean mIntercept;
 
     private ProgressBar mPlayState;
@@ -69,6 +67,18 @@ public class PlayerContainerView extends FrameLayout {
     /**
      * 设置 封面图
      *
+     * @param imageUrl imageUrl
+     */
+    public void setCoverImageBlur(String imageUrl, int radius) {
+        if (!TextUtils.isEmpty(imageUrl)) {
+            GlideUtil.loadImageBlur(getContext(), imageUrl, mCoverImage, radius);
+            this.mCoverImage.setVisibility(View.VISIBLE);
+        }
+    }
+
+    /**
+     * 设置 封面图
+     *
      * @param drawable drawable
      */
     public void setCoverImage(Drawable drawable) {
@@ -84,19 +94,11 @@ public class PlayerContainerView extends FrameLayout {
     }
 
     /**
-     * 获取 播放器状态位
-     */
-    public int getPlayerState() {
-        return mPlayerState;
-    }
-
-    /**
      * 设置 播放器状态位
      *
      * @param playerState {@link IPlayer}
      */
     public void setPlayerState(int playerState) {
-        this.mPlayerState = playerState;
         // State
         switch (playerState) {
             case IPlayer.STATE_IDLE:
@@ -173,7 +175,7 @@ public class PlayerContainerView extends FrameLayout {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         // 拦截所有事件
-        if (mIntercept) {
+        if (isIntercept()) {
             return true;
         }
         return super.onTouchEvent(event);

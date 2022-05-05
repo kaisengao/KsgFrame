@@ -23,6 +23,7 @@ import com.ksg.ksgplayer.producer.BaseEventProducer;
 import com.ksg.ksgplayer.renderer.Renderer;
 import com.ksg.ksgplayer.renderer.RendererType;
 import com.ksg.ksgplayer.renderer.glrender.GLViewRender;
+import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView;
 
 import java.util.List;
 
@@ -129,7 +130,7 @@ public class KsgAssistView implements IKsgVideoView {
             // 更新Render
             this.setRendererType(RendererType.GL_SURFACE);
         }
-        // 添加容器
+        // 绑定
         this.mPlayer.bindContainer(container, updateRenderer);
     }
 
@@ -146,7 +147,6 @@ public class KsgAssistView implements IKsgVideoView {
      *
      * @param viewRender {@link GLViewRender}
      * @param modeSize   {@link KsgGLSurfaceView} 测量模式
-     * @describe: 注意要在 {setDecoderView} 之前设置
      */
     @Override
     public void setGLViewRender(GLViewRender viewRender, int modeSize) {

@@ -85,7 +85,7 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
     @Override
     public void onSurfaceAvailable(Surface surface) {
         if (mPlayerProxy != null) {
-            this.mPlayerProxy.setSurface(surface);
+            this.post(() -> mPlayerProxy.setSurface(surface));
         }
     }
 

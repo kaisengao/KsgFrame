@@ -6,18 +6,18 @@ import android.opengl.GLES20;
 import com.ksg.ksgplayer.renderer.filter.base.GLFilter;
 
 /**
- * @ClassName: GLGaussianBlurFilter
+ * @ClassName: GLBlurFilter
  * @Author: KaiSenGao
  * @CreateDate: 2022/4/26 14:38
- * @Description: 高斯模糊 毛玻璃
+ * @Description: 毛玻璃
  */
-public class GLGaussianBlurFilter extends GLFilter {
+public class GLBlurFilter extends GLFilter {
 
     private final Blur mXBlur, mYBlur;
 
     private final GLFilter mPreviewFilter;
 
-    public GLGaussianBlurFilter(Context context) {
+    public GLBlurFilter(Context context) {
         super(context);
         this.mXBlur = new Blur(context);
         this.mYBlur = new Blur(context);

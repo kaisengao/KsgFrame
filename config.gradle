@@ -2,11 +2,11 @@ ext {
 
     // Android开发版本配置
     android = [
-            compileSdkVersion: 30,
-            buildToolsVersion: "30.0.2",
+            compileSdkVersion: 31,
+            buildToolsVersion: "30.0.3",
             applicationId    : "com.kasiengao.ksgframe",
             minSdkVersion    : 21,
-            targetSdkVersion : 29,
+            targetSdkVersion : 31,
             versionCode      : 1,
             versionName      : "1.0",
     ]
@@ -37,7 +37,7 @@ ext {
     // BaseAdapter
     baseRecyclerAdapter = '3.0.4'
     // ExoPlayer
-    exoplayer = '2.16.0'
+    exoplayer = '2.17.1'
     // VideoCache
     videoCache = '2.7.1'
 }

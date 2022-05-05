@@ -17,12 +17,15 @@ import com.kaisengao.mvvm.base.activity.BaseVmActivity
 import com.kasiengao.ksgframe.BR
 import com.kasiengao.ksgframe.R
 import com.kasiengao.ksgframe.common.util.ColorUtil
+import com.kasiengao.ksgframe.constant.CoverConstant
 import com.kasiengao.ksgframe.databinding.ActivityMainBinding
+import com.kasiengao.ksgframe.player.KsgExoPlayer
+import com.kasiengao.ksgframe.player.cover.LoadingCover
 import com.kasiengao.ksgframe.ui.main.adapter.MainAdapter
 import com.kasiengao.ksgframe.ui.main.fragment.PPXFragment
 import com.kasiengao.ksgframe.ui.main.fragment.XBBFragment
-import com.kasiengao.ksgframe.ui.main.player.ListPlayer
 import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel
+import com.ksg.ksgplayer.KsgSinglePlayer
 
 
 /**
@@ -32,6 +35,8 @@ import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel
  * @Description: 启动页面
  */
 class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
+
+    private val mPlayer: KsgSinglePlayer by lazy { KsgSinglePlayer.getInstance() }
 
     private val mToolbarBgColor: String by lazy {
         Integer
@@ -59,10 +64,22 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
     override fun initWidget() {
         super.initWidget()
+        // Init Player
+        this.initPlayer()
         // Init Adapter
         this.initAdapter()
         // Init DrawerLayout
         this.initDrawer()
+    }
+
+    /**
+     * Init Player
+     */
+    private fun initPlayer() {
+        // 解码器
+        this.mPlayer.player.decoderView = KsgExoPlayer(this)
+        // Loading
+        this.mPlayer.coverManager.addCover(CoverConstant.CoverKey.KEY_LOADING, LoadingCover(this))
     }
 
     /**
@@ -119,12 +136,12 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
             }
 
             override fun onDrawerOpened(drawerView: View) {
-                ListPlayer.getInstance().setOverlap(true)
+                mPlayer.setOverlap(true)
                 mBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             }
 
             override fun onDrawerClosed(drawerView: View) {
-                ListPlayer.getInstance().setOverlap(false)
+                mPlayer.setOverlap(false)
                 mBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             }
 
@@ -144,7 +161,6 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
             it.mutate()
             it.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         }
-//        this.mBinding.mainTabs.setTabTextColors(Color.LTGRAY, Color.WHITE)
     }
 
     /**
@@ -177,7 +193,7 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         super.onResume()
         // 继续播放
         if (!mBinding.drawerLayout.isDrawerOpen(mBinding.mainTrainee)) {
-            ListPlayer.getInstance().onResume()
+            this.mPlayer.onResume()
         }
     }
 
@@ -185,7 +201,7 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         super.onPause()
         // 暂停播放
         if (!mBinding.drawerLayout.isDrawerOpen(mBinding.mainTrainee)) {
-            ListPlayer.getInstance().onPause()
+            this.mPlayer.onPause()
         }
     }
 
@@ -193,6 +209,10 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         super.onDestroy()
         // 解绑事件
         this.mBinding.mainPager.clearOnPageChangeListeners()
+        // 释放播放器
+        this.mPlayer.release()
+        // 结束所有Activity
+        ActivityManager.getInstance().finishAllActivity()
     }
 
     override fun onBackPressed() {
@@ -205,11 +225,7 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 //        if (mBinding.mainVideoDetail.onBackPressed()) {
 //            return
 //        }
-        // Super
+        // onBackPressed
         super.onBackPressed()
-        // 释放播放器
-        ListPlayer.getInstance().release()
-        // 结束所有Activity
-        ActivityManager.getInstance().finishAllActivity()
     }
 }

@@ -1,6 +1,7 @@
 package com.kaisengao.base.util;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.widget.ImageView;
 
@@ -8,7 +9,9 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.CircleCrop;
+import com.bumptech.glide.request.target.CustomTarget;
 import com.bumptech.glide.request.target.ImageViewTarget;
+import com.kaisengao.base.transform.BlurTransformation;
 import com.kaisengao.base.transform.RoundTransform;
 
 /**
@@ -56,13 +59,29 @@ public final class GlideUtil {
      * @param url       url
      * @param imageView imageView
      */
-    public static void loadImageBitmap(Context context, String url, ImageView imageView) {
+    public static void loadImageBitmap(Context context, String url, CustomTarget<Bitmap> customTarget) {
         Glide.with(context)
                 .asBitmap()
                 .load(url)
                 .priority(Priority.HIGH)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
-                .into(imageView);
+                .into(customTarget);
+    }
+
+    /**
+     * Load 加载图片Drawable
+     *
+     * @param context   context
+     * @param url       url
+     * @param imageView imageView
+     */
+    public static void loadImageDrawable(Context context, String url, CustomTarget<Drawable> customTarget) {
+        Glide.with(context)
+                .asDrawable()
+                .load(url)
+                .priority(Priority.HIGH)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(customTarget);
     }
 
     /**
@@ -109,6 +128,22 @@ public final class GlideUtil {
                 .load(url)
                 .priority(Priority.HIGH)
                 .transform(new RoundTransform(radius))
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .into(imageView);
+    }
+
+    /**
+     * Load 加载图片(毛玻璃)
+     *
+     * @param context   context
+     * @param url       url
+     * @param imageView imageView
+     */
+    public static void loadImageBlur(Context context, Object url, ImageView imageView, int radius) {
+        Glide.with(context)
+                .load(url)
+                .priority(Priority.HIGH)
+                .transform(new BlurTransformation(context, radius))
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
     }

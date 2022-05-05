@@ -87,7 +87,6 @@ public interface IKsgVideoPlayer extends IPlayer {
      *
      * @param viewRender {@link GLViewRender}
      * @param modeSize   {@link KsgGLSurfaceView} 测量模式
-     * @describe: 注意要在 {setDecoderView} 之前设置
      */
     void setGLViewRender(GLViewRender viewRender, int modeSize);
 

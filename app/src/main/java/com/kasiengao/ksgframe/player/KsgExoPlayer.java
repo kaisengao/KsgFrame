@@ -11,6 +11,8 @@ import android.view.Surface;
 import android.view.SurfaceHolder;
 import android.view.View;
 
+import androidx.annotation.NonNull;
+
 import com.danikula.videocache.HttpProxyCacheServer;
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.DefaultLoadControl;
@@ -39,8 +41,6 @@ import com.ksg.ksgplayer.listener.OnPlayerListener;
 import com.ksg.ksgplayer.player.BasePlayer;
 import com.ksg.ksgplayer.player.IPlayer;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.io.File;
 
 /**
@@ -66,6 +66,8 @@ public class KsgExoPlayer extends BasePlayer {
     private ExoPlayer mExoPlayer;
 
     private HttpProxyCacheServer mCacheServer;
+
+    private SurfaceHolder mHolder;
 
     public KsgExoPlayer(Context context) {
         super(context);
@@ -184,8 +186,11 @@ public class KsgExoPlayer extends BasePlayer {
      */
     @Override
     public void setSurface(Surface surface) {
-        this.mExoPlayer.setVideoSurface(surface);
-        this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_SURFACE_UPDATE, null);
+        this.mExoPlayer.clearVideoSurface();
+        if (surface != null) {
+            this.mExoPlayer.setVideoSurface(surface);
+            this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_SURFACE_UPDATE, null);
+        }
     }
 
     /**
@@ -195,8 +200,14 @@ public class KsgExoPlayer extends BasePlayer {
      */
     @Override
     public void setDisplay(SurfaceHolder holder) {
-        this.mExoPlayer.setVideoSurfaceHolder(holder);
-        this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_SURFACE_HOLDER_UPDATE, null);
+        if (mHolder != null) {
+            this.mExoPlayer.clearVideoSurfaceHolder(mHolder);
+        }
+        if (holder != null) {
+            this.mHolder = holder;
+            this.mExoPlayer.setVideoSurfaceHolder(holder);
+            this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_SURFACE_HOLDER_UPDATE, null);
+        }
     }
 
     /**
@@ -416,7 +427,6 @@ public class KsgExoPlayer extends BasePlayer {
         if (mExoPlayer == null) {
             return;
         }
-        this.mExoPlayer.clearVideoSurface();
         this.mExoPlayer.removeListener(mListener);
     }
 
@@ -426,6 +436,10 @@ public class KsgExoPlayer extends BasePlayer {
     @Override
     public void destroy() {
         this.release();
+        if (mHolder != null) {
+            this.mExoPlayer.clearVideoSurfaceHolder(mHolder);
+        }
+        this.mExoPlayer.clearVideoSurface();
         this.mExoPlayer.release();
         this.updateState(IPlayer.STATE_DESTROY);
         this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_DESTROY, null);
@@ -503,13 +517,13 @@ public class KsgExoPlayer extends BasePlayer {
         }
 
         @Override
-        public void onPlayerError(PlaybackException error) {
+        public void onPlayerError(@NonNull PlaybackException error) {
             updateState(IPlayer.STATE_ERROR);
             sendErrorEvent(OnErrorListener.ERROR_EVENT_UNKNOWN, error.errorCode + "|" + error.getErrorCodeName());
         }
 
         @Override
-        public void onPositionDiscontinuity(@NotNull Player.PositionInfo oldPosition, @NotNull Player.PositionInfo newPosition, int reason) {
+        public void onPositionDiscontinuity(@NonNull Player.PositionInfo oldPosition, @NonNull Player.PositionInfo newPosition, int reason) {
             if (reason == DISCONTINUITY_REASON_SEEK) {
                 Bundle bundle = BundlePool.obtain();
                 bundle.putLong(EventKey.LONG_DATA, newPosition.positionMs);

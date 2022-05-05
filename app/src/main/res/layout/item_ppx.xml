@@ -29,7 +29,7 @@
         android:layout_marginBottom="5dp"
         android:layout_toStartOf="@id/item_ppx_share"
         android:textColor="@color/white"
-        android:textSize="15sp"
+        android:textSize="17sp"
         android:textStyle="bold"
         tools:text="`@`蒙奇D路飞" />
 
@@ -45,7 +45,7 @@
         android:paddingStart="0dp"
         android:paddingEnd="@dimen/view_space"
         android:textColor="@color/color_FCFBFD"
-        android:textSize="13sp"
+        android:textSize="15sp"
         tools:text="《决战中途岛》预告再现海空激战" />
 
     <!-- 头像-->
@@ -90,11 +90,10 @@
         android:layout_alignEnd="@id/item_ppx_avatar"
         android:gravity="center"
         android:textColor="@color/color_EDF4F4"
-        android:textSize="10sp"
+        android:textSize="12sp"
         app:icon="@drawable/ic_ppx_praise"
         app:iconGravity="top"
         app:iconTint="@color/color_EDF4F4"
-        tools:ignore="SmallSp"
         tools:text="7432" />
 
     <!-- 评论-->
@@ -108,11 +107,10 @@
         android:layout_alignEnd="@id/item_ppx_avatar"
         android:gravity="center"
         android:textColor="@color/color_EDF4F4"
-        android:textSize="10sp"
+        android:textSize="12sp"
         app:icon="@drawable/ic_ppx_comment"
         app:iconGravity="top"
         app:iconTint="@color/color_EDF4F4"
-        tools:ignore="SmallSp"
         tools:text="7432" />
 
     <!-- 收藏-->
@@ -126,11 +124,10 @@
         android:layout_alignEnd="@id/item_ppx_avatar"
         android:gravity="center"
         android:textColor="@color/color_EDF4F4"
-        android:textSize="10sp"
+        android:textSize="12sp"
         app:icon="@drawable/ic_ppx_collect"
         app:iconGravity="top"
         app:iconTint="@color/color_EDF4F4"
-        tools:ignore="SmallSp"
         tools:text="7432" />
 
     <!-- 分享-->
@@ -146,10 +143,9 @@
         android:gravity="center"
         android:text="@string/share"
         android:textColor="@color/color_EDF4F4"
-        android:textSize="10sp"
+        android:textSize="12sp"
         app:icon="@drawable/ic_ppx_share"
         app:iconGravity="top"
-        app:iconTint="@color/color_EDF4F4"
-        tools:ignore="SmallSp" />
+        app:iconTint="@color/color_EDF4F4" />
 
 </RelativeLayout>

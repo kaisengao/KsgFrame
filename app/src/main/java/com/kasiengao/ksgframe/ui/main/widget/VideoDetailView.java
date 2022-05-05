@@ -8,7 +8,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,7 +23,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.lifecycle.LifecycleOwner;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.kaisengao.base.util.BlurUtil;
 import com.kaisengao.base.util.CommonUtil;
 import com.kaisengao.base.util.StatusBarUtil;
 import com.kasiengao.ksgframe.BR;
@@ -179,12 +177,12 @@ public class VideoDetailView extends FrameLayout {
                 // 刷新数据
                 mViewModel.refreshInfo(position);
                 // 初始高度
-                mBinding.infoOther.setHeight(0f);
+//                mBinding.infoOther.setHeight(0f);
                 // 背景图
-                Bitmap blurBitmap = BlurUtil.blurDrawable(getContext(), mListContainer.getCoverImage(), 20f);
-                if (blurBitmap != null) {
-                    mBinding.coverImage.setImageBitmap(blurBitmap);
-                }
+//                Bitmap blurBitmap = BlurUtil.blurDrawable(getContext(), mListContainer.getCoverImage(), 20f);
+//                if (blurBitmap != null) {
+//                    mBinding.coverImage.setImageBitmap(blurBitmap);
+//                }
                 // 绑定视频容器
                 ListPlayer.getInstance().bindNewContainer(mBinding.playerContainer);
                 // 打开详情页

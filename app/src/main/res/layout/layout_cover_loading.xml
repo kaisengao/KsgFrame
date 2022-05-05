@@ -11,6 +11,7 @@
         android:id="@+id/cover_loading"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:indeterminateTint="@color/color_FF9800" />
 
 </FrameLayout>

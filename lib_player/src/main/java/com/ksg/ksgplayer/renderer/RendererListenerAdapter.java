@@ -1,6 +1,5 @@
 package com.ksg.ksgplayer.renderer;
 
-import android.graphics.Bitmap;
 import android.view.Surface;
 
 import com.ksg.ksgplayer.listener.OnRendererListener;
@@ -13,7 +12,7 @@ import com.ksg.ksgplayer.listener.OnRendererListener;
  */
 public abstract class RendererListenerAdapter implements RendererListener {
 
-    private OnRendererListener mRendererListener;
+    protected OnRendererListener mRendererListener;
 
     /**
      * 渲染器事件
@@ -22,18 +21,6 @@ public abstract class RendererListenerAdapter implements RendererListener {
      */
     public void setRendererListener(OnRendererListener rendererListener) {
         this.mRendererListener = rendererListener;
-    }
-
-    /**
-     * 截图
-     *
-     * @param bitmap bitmap
-     */
-    @Override
-    public void onShotPic(Bitmap bitmap) {
-        if (mRendererListener != null) {
-            this.mRendererListener.onShotPic(bitmap);
-        }
     }
 
     /**

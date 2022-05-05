@@ -1,5 +1,7 @@
 package com.kasiengao.ksgframe.ui.main.bean;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.SerializedName;
 import com.kaisengao.base.util.NumberUtil;
 import com.kasiengao.ksgframe.R;

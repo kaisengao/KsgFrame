@@ -21,7 +21,7 @@
             android:layout_height="match_parent"
             app:setRefreshing="@{viewModel.MRefreshing}">
 
-            <com.kasiengao.ksgframe.ui.main.widget.VideoListView
+            <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/xbb_videos"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"

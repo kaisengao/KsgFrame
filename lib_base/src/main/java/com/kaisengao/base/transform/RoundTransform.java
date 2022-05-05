@@ -56,11 +56,12 @@ public class RoundTransform extends BitmapTransformation {
         return result;
     }
 
+    @Override
+    public void updateDiskCacheKey(@androidx.annotation.NonNull MessageDigest messageDigest) {
+    }
+
     public String getId() {
         return getClass().getName() + Math.round(mRadius);
     }
 
-    @Override
-    public void updateDiskCacheKey(@androidx.annotation.NonNull MessageDigest messageDigest) {
-    }
 }

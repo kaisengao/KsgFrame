@@ -98,9 +98,9 @@ public class TimerCounterProxy {
     }
 
     /**
-     * 循环计时
+     * 循环
      */
-    private void loopNext() {
+    private void loop() {
         this.mWeakHandler.postDelayed(loop, mCounterInterval);
     }
 
@@ -121,8 +121,8 @@ public class TimerCounterProxy {
             if (mTimerCounterListener != null) {
                 mTimerCounterListener.onCounter();
             }
-            // 循环计时
-            loopNext();
+            // 循环
+            loop();
         }
     };
 

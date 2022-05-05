@@ -146,7 +146,6 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
      *
      * @param viewRender {@link GLViewRender}
      * @param modeSize   {@link KsgGLSurfaceView} 测量模式
-     * @describe: 注意要在 {setDecoderView} 之前设置
      */
     @Override
     public void setGLViewRender(GLViewRender viewRender, int modeSize) {

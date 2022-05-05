@@ -30,6 +30,8 @@ public class KsgSurfaceView extends SurfaceView implements Renderer, SurfaceHold
 
     private MeasureHelper mMeasureHelper;
 
+    private PlayerProxy mPlayerProxy;
+
     private RendererListener mRendererListener;
 
     public KsgSurfaceView(Context context) {
@@ -54,6 +56,9 @@ public class KsgSurfaceView extends SurfaceView implements Renderer, SurfaceHold
 
     @Override
     public void surfaceCreated(@NonNull SurfaceHolder surfaceHolder) {
+        if (mPlayerProxy != null) {
+            this.mPlayerProxy.setDisplay(surfaceHolder);
+        }
         if (mRendererListener != null) {
             this.mRendererListener.onSurfaceCreated(surfaceHolder.getSurface(), getWidth(), getWidth());
         }
@@ -89,9 +94,7 @@ public class KsgSurfaceView extends SurfaceView implements Renderer, SurfaceHold
      */
     @Override
     public void bindPlayer(PlayerProxy playerProxy) {
-        if (playerProxy != null) {
-            playerProxy.setDisplay(getHolder());
-        }
+        this.mPlayerProxy = playerProxy;
     }
 
     /**

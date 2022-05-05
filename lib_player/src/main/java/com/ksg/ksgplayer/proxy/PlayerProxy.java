@@ -139,7 +139,10 @@ public class PlayerProxy implements IPlayer {
      */
     @Override
     public boolean isItPlaying() {
-        return mBasePlayer.isItPlaying();
+        if (isPlayerAvailable()) {
+            return mBasePlayer.isItPlaying();
+        }
+        return false;
     }
 
     /**
@@ -500,17 +503,14 @@ public class PlayerProxy implements IPlayer {
     /**
      * 进度更新计时代理
      */
-    private final TimerCounterProxy.OnTimerCounterListener mTimerCounterListener = new TimerCounterProxy.OnTimerCounterListener() {
-        @Override
-        public void onCounter() {
-            long curr = getCurrentPosition();
-            long duration = getDuration();
-            long bufferPercentage = getBufferPercentage();
-            if (duration <= 0) {
-                return;
-            }
-            onTimerUpdateEvent(curr, duration, bufferPercentage);
+    private final TimerCounterProxy.OnTimerCounterListener mTimerCounterListener = () -> {
+        long curr = getCurrentPosition();
+        long duration = getDuration();
+        long bufferPercentage = getBufferPercentage();
+        if (duration <= 0) {
+            return;
         }
+        this.onTimerUpdateEvent(curr, duration, bufferPercentage);
     };
 
     /**

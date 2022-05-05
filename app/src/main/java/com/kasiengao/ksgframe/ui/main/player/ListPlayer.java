@@ -8,16 +8,12 @@ import com.kasiengao.ksgframe.common.widget.PlayerContainerView;
 import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.kasiengao.ksgframe.factory.AppFactory;
 import com.kasiengao.ksgframe.player.KsgExoPlayer;
-import com.kasiengao.ksgframe.player.cover.GestureCover;
 import com.kasiengao.ksgframe.player.cover.LoadingCover;
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean;
 import com.ksg.ksgplayer.cover.CoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
 import com.ksg.ksgplayer.player.IPlayer;
-import com.ksg.ksgplayer.renderer.RendererType;
-import com.ksg.ksgplayer.renderer.glrender.PIPGLViewRender;
-import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView;
 import com.ksg.ksgplayer.widget.KsgAssistView;
 
 /**
@@ -74,27 +70,12 @@ public class ListPlayer {
     private void initPlayer() {
         BaseApplication application = AppFactory.application();
         this.mPlayer = new KsgAssistView(application);
-
-        // 1 (注意调用顺序，否则不生效)
-        this.mPlayer.setGLViewRender(new PIPGLViewRender(), KsgGLSurfaceView.MODE_RENDER_SIZE);
-        // 2、3
         this.mPlayer.setDecoderView(new KsgExoPlayer(application));
-        this.mPlayer.setRendererType(RendererType.GL_SURFACE);
-
-//        // 毛玻璃
-//        GLGaussianBlurFilter mGaussianBlurFilter = new GLGaussianBlurFilter(application);
-//        mGaussianBlurFilter.setScaleRatio(2);
-//        mGaussianBlurFilter.setBlurRadius(30);
-//        mGaussianBlurFilter.setBlurOffset(1f, 1f);
-//        mPlayer.getRenderer().setGLFilter(mGaussianBlurFilter);
-
         this.mPlayer.setBackgroundColor(R.color.black);
         // 创建 Cover管理器
         this.mCoverManager = new CoverManager();
         // Loading
         this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_LOADING, new LoadingCover(application));
-        // Gesture
-        this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_GESTURE, new GestureCover(application));
         // 设置 Cover管理器
         this.mPlayer.setCoverManager(mCoverManager);
         // Cover事件
@@ -134,6 +115,8 @@ public class ListPlayer {
                     // 设置状态
                     currContainer.setIntercept(true);
                     currContainer.setPlayerState(IPlayer.STATE_START);
+                    // 绑定容器
+                    mPlayer.bindContainer(currContainer);
                 }
             }
         });
@@ -220,13 +203,13 @@ public class ListPlayer {
         // 同步状态位
         newContainer.setIntercept(oldContainer.isIntercept());
         newContainer.setCoverImage(oldContainer.getCoverImage());
-        newContainer.setPlayerState(oldContainer.getPlayerState());
+//        newContainer.setPlayerState(oldContainer.getPlayerState());
         // 修改当前容器
         this.setCurrContainer(newContainer);
         // 重新绑定容器
-        if (newContainer.getPlayerState() == IPlayer.STATE_START) {
-            this.getPlayer().bindContainer(newContainer);
-        }
+//        if (newContainer.getPlayerState() == IPlayer.STATE_START) {
+//            this.getPlayer().bindContainer(newContainer);
+//        }
     }
 
     /**
@@ -244,18 +227,14 @@ public class ListPlayer {
         this.setCurrContainer(container);
         this.mCurrVideoBean = videoBean;
         container.setPlayerState(IPlayer.STATE_INIT);
-
-        // 绑定容器
-        mPlayer.bindContainer(container,false);
         // 播放视频
         KsgAssistView player = getPlayer();
-//        player.unbindContainer();
+        player.unbindContainer();
         player.setDataSource(new DataSource(videoBean.getVideoUrl()));
         if (!isOverlap) {
             container.setPlayerState(IPlayer.STATE_PREPARED);
             // 播放
             player.start();
-            player.setLooping(true);
         }
         // 配置UP主信息
         this.getCoverManager()
