@@ -110,6 +110,7 @@ public class GLViewRender extends BaseGLViewRender implements SurfaceTexture.OnF
 
     protected void releaseTexImage() {
         if (mSaveTexture != null) {
+            this.mSaveTexture.setOnFrameAvailableListener(null);
             this.mSaveTexture.release();
             this.mSaveTexture = null;
         }
@@ -117,6 +118,7 @@ public class GLViewRender extends BaseGLViewRender implements SurfaceTexture.OnF
             this.mSurface.release();
             this.mSurface = null;
         }
+        this.mUpdateSurface = false;
     }
 
     protected int onFilterDrawFrame(int fboTextureId) {
@@ -145,9 +147,11 @@ public class GLViewRender extends BaseGLViewRender implements SurfaceTexture.OnF
         this.releaseTexImage();
         if (mOesFilter != null) {
             this.mOesFilter.release();
+            this.mOesFilter = null;
         }
         if (mPreviewFilter != null) {
             this.mPreviewFilter.release();
+            this.mPreviewFilter = null;
         }
         if (mFilter != null) {
             this.mFilter.release();

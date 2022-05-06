@@ -13,23 +13,23 @@ public class PlayerConfig {
     /**
      * 渲染器
      */
-    private static int sRenderType = RendererType.TEXTURE;
+    private static int sRendererType = RendererType.TEXTURE;
 
     /**
      * 获取 渲染器
      *
      * @return {@link RendererType}
      */
-    public static int getRenderType() {
-        return sRenderType;
+    public static int getRendererType() {
+        return sRendererType;
     }
 
     /**
      * 设置 渲染器
      *
-     * @param renderType {@link RendererType}
+     * @param rendererType {@link RendererType}
      */
-    public static void setRenderType(int renderType) {
-        sRenderType = renderType;
+    public static void setRendererType(int rendererType) {
+        sRendererType = rendererType;
     }
 }

@@ -19,7 +19,7 @@ import com.kasiengao.ksgframe.R
 import com.kasiengao.ksgframe.common.util.ColorUtil
 import com.kasiengao.ksgframe.constant.CoverConstant
 import com.kasiengao.ksgframe.databinding.ActivityMainBinding
-import com.kasiengao.ksgframe.player.KsgExoPlayer
+import com.kasiengao.ksgframe.player.KsgIJKPlayer
 import com.kasiengao.ksgframe.player.cover.LoadingCover
 import com.kasiengao.ksgframe.ui.main.adapter.MainAdapter
 import com.kasiengao.ksgframe.ui.main.fragment.PPXFragment
@@ -36,7 +36,7 @@ import com.ksg.ksgplayer.KsgSinglePlayer
  */
 class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
-    private val mPlayer: KsgSinglePlayer by lazy { KsgSinglePlayer.getInstance() }
+    private val mSignalPlayer: KsgSinglePlayer by lazy { KsgSinglePlayer.getInstance() }
 
     private val mToolbarBgColor: String by lazy {
         Integer
@@ -77,9 +77,13 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
      */
     private fun initPlayer() {
         // 解码器
-        this.mPlayer.player.decoderView = KsgExoPlayer(this)
+        this.mSignalPlayer.player.decoderView =
+            KsgIJKPlayer(this)
         // Loading
-        this.mPlayer.coverManager.addCover(CoverConstant.CoverKey.KEY_LOADING, LoadingCover(this))
+        this.mSignalPlayer.coverManager.addCover(
+            CoverConstant.CoverKey.KEY_LOADING,
+            LoadingCover(this)
+        )
     }
 
     /**
@@ -104,12 +108,9 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
                 positionOffset: Float,
                 positionOffsetPixels: Int
             ) {
-                // 背景颜色与阴影
+                // 背景颜色
                 if (positionOffset > 0) {
-                    val offset = (positionOffset * 100)
-                    val bgColor = ColorUtil.percentColor(offset, mToolbarBgColor)
-                    mBinding.toolbar.setBackgroundColor(Color.parseColor(bgColor))
-                    mBinding.toolbar.elevation = offset
+                    setToolbarBgColor((positionOffset * 100))
                 }
             }
 
@@ -122,6 +123,11 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
             }
 
             override fun onPageScrollStateChanged(state: Int) {
+                when (state) {
+                    ViewPager.SCROLL_STATE_IDLE -> {
+                        setToolbarBgColor(if (viewPager.currentItem == 1) 100f else 0f)
+                    }
+                }
             }
         })
     }
@@ -136,12 +142,12 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
             }
 
             override fun onDrawerOpened(drawerView: View) {
-                mPlayer.setOverlap(true)
+                mSignalPlayer.isOverlap = true
                 mBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
             }
 
             override fun onDrawerClosed(drawerView: View) {
-                mPlayer.setOverlap(false)
+                mSignalPlayer.isOverlap = false
                 mBinding.drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
             }
 
@@ -153,7 +159,7 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     /**
-     * 设置 Toolbar与TabLayout的颜色
+     * 设置 Toolbar颜色
      */
     private fun setToolbarColor(color: Int) {
         this.mBinding.toolbar.setNavigationIconTint(color)
@@ -161,6 +167,15 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
             it.mutate()
             it.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_ATOP)
         }
+    }
+
+    /**
+     * 设置 Toolbar背景颜色
+     */
+    private fun setToolbarBgColor(percent: Float) {
+        val bgColor = ColorUtil.percentColor(percent, mToolbarBgColor)
+        mBinding.toolbar.setBackgroundColor(Color.parseColor(bgColor))
+        mBinding.toolbar.elevation = (percent / 10)
     }
 
     /**
@@ -193,7 +208,7 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         super.onResume()
         // 继续播放
         if (!mBinding.drawerLayout.isDrawerOpen(mBinding.mainTrainee)) {
-            this.mPlayer.onResume()
+            this.mSignalPlayer.onResume()
         }
     }
 
@@ -201,7 +216,7 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         super.onPause()
         // 暂停播放
         if (!mBinding.drawerLayout.isDrawerOpen(mBinding.mainTrainee)) {
-            this.mPlayer.onPause()
+            this.mSignalPlayer.onPause()
         }
     }
 
@@ -210,7 +225,7 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         // 解绑事件
         this.mBinding.mainPager.clearOnPageChangeListeners()
         // 释放播放器
-        this.mPlayer.release()
+        this.mSignalPlayer.release()
         // 结束所有Activity
         ActivityManager.getInstance().finishAllActivity()
     }

@@ -13,6 +13,7 @@ import com.kasiengao.ksgframe.ui.main.adapter.PPXAdapter
 import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel
 import com.ksg.ksgplayer.KsgSinglePlayer
 import com.ksg.ksgplayer.data.DataSource
+import com.ksg.ksgplayer.listener.OnPlayerListener
 import com.ksg.ksgplayer.renderer.glrender.PIPGLViewRender
 import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView
 
@@ -24,7 +25,12 @@ import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView
  */
 class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
 
-    private val mPlayer: KsgSinglePlayer by lazy { KsgSinglePlayer.getInstance() }
+    companion object {
+        const val CURR_POSITION: Int = 1010
+        const val CURR_CONTAINER: Int = 1020
+    }
+
+    private val mSignalPlayer: KsgSinglePlayer by lazy { KsgSinglePlayer.getInstance() }
 
     private lateinit var mAdapter: PPXAdapter
 
@@ -48,6 +54,24 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
     override fun lazyLoad() {
         // 请求 视频列表
         this.mViewModel.requestVideos()
+    }
+
+    /**
+     * Init Player
+     */
+    private fun initPlayer() {
+        this.mSignalPlayer.player.reset()
+        // 设置 GL渲染器
+        if (mSignalPlayer.player.renderer !is GLSurfaceView) {
+            this.mSignalPlayer.player.setGLViewRender(
+                PIPGLViewRender(),
+                KsgGLSurfaceView.MODE_RENDER_SIZE
+            )
+        }
+        // 播放事件
+        this.mSignalPlayer.player.setPlayerListener(null)
+        // 自动播放
+        this.onPlay(mBinding.ppxVideos.currentItem)
     }
 
     /**
@@ -96,31 +120,44 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
             val itemView = it.layoutManager?.findViewByPosition(position)
             itemView?.findViewById<PlayerContainerView>(R.id.item_player_container)
                 ?.let { container: PlayerContainerView ->
-                    mPlayer.bindContainer(container, false)
-                    mPlayer.onPlay(DataSource(mAdapter.data[position].videoUrl))
-                    mPlayer.setLooping(true)
+                    // 记录 坐标
+                    this.mSignalPlayer.putVariable(CURR_POSITION, position)
+                    // 记录 视图容器
+                    this.mSignalPlayer.putVariable(CURR_CONTAINER, container)
+                    // 绑定 视图容器
+                    this.mSignalPlayer.bindContainer(container, false)
+                    // 播放
+                    this.mSignalPlayer.onPlay(DataSource(mAdapter.data[position].videoUrl))
+                    // 设置 循环播放
+                    this.mSignalPlayer.setLooping(true)
                 }
+        }
+    }
+
+    /**
+     * 播放事件
+     */
+    private val mPlayerListener = OnPlayerListener { eventCode, _ ->
+        when (eventCode) {
+            OnPlayerListener.PLAYER_EVENT_ON_PREPARED -> {
+            }
+            OnPlayerListener.PLAYER_EVENT_ON_RESUME -> {
+            }
+            OnPlayerListener.PLAYER_EVENT_ON_PAUSE -> {
+            }
         }
     }
 
     override fun onResume() {
         super.onResume()
-        this.mPlayer.player.setPlayerListener(null)
-        // 切换至GL渲染器并设置为画中画
-        if (mPlayer.player.renderer !is GLSurfaceView) {
-            this.mPlayer.player.setGLViewRender(
-                PIPGLViewRender(),
-                KsgGLSurfaceView.MODE_RENDER_SIZE
-            )
-        }
-        // 播放
-        this.onPlay(mBinding.ppxVideos.currentItem)
+        // Init Player
+        this.initPlayer()
     }
 
     override fun onPause() {
         super.onPause()
         // 暂停播放
-        this.mPlayer.onPause(true)
+        this.mSignalPlayer.onPause()
     }
 
     override fun onDestroy() {

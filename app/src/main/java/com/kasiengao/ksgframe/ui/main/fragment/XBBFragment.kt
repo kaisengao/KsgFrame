@@ -1,7 +1,7 @@
 package com.kasiengao.ksgframe.ui.main.fragment
 
 import android.graphics.Rect
-import android.os.Bundle
+import android.opengl.GLSurfaceView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kaisengao.mvvm.base.fragment.BaseVmFragment
@@ -12,13 +12,12 @@ import com.kasiengao.ksgframe.common.widget.PlayerContainerView
 import com.kasiengao.ksgframe.databinding.FragmentXbbBinding
 import com.kasiengao.ksgframe.ui.main.MainActivity
 import com.kasiengao.ksgframe.ui.main.adapter.XBBAdapter
-import com.kasiengao.ksgframe.ui.main.player.ListPlayer
 import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel
 import com.ksg.ksgplayer.KsgSinglePlayer
+import com.ksg.ksgplayer.config.PlayerConfig
 import com.ksg.ksgplayer.data.DataSource
 import com.ksg.ksgplayer.listener.OnPlayerListener
 import com.ksg.ksgplayer.player.IPlayer
-import com.ksg.ksgplayer.renderer.RendererType
 
 /**
  * @ClassName: XBBFragment
@@ -28,11 +27,14 @@ import com.ksg.ksgplayer.renderer.RendererType
  */
 class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
 
-    private val mPlayer: KsgSinglePlayer by lazy { KsgSinglePlayer.getInstance() }
+    companion object {
+        const val CURR_POSITION: Int = 2010
+        const val CURR_CONTAINER: Int = 2020
+    }
 
-    private var mLastPosition: Int = -1
+    private var mHideContainer = false
 
-    private var mCurrContainer: PlayerContainerView? = null
+    private val mSignalPlayer: KsgSinglePlayer by lazy { KsgSinglePlayer.getInstance() }
 
     private lateinit var mAdapter: XBBAdapter
 
@@ -68,6 +70,30 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
     override fun lazyLoad() {
         // 请求 视频列表
         this.mViewModel.requestVideos()
+    }
+
+    /**
+     * Init Player
+     */
+    private fun initPlayer() {
+        this.mSignalPlayer.player.reset()
+        // 设置 默认渲染器
+        if (mSignalPlayer.player.renderer is GLSurfaceView) {
+//            this.mSignalPlayer.player.rendererType = PlayerConfig.getRendererType()
+            this.mSignalPlayer.player.setRenderer(PlayerConfig.getRendererType())
+        }
+        // 播放事件
+        this.mSignalPlayer.player.setPlayerListener(mPlayerListener)
+        // 自动播放
+        this.mSignalPlayer.getVariable(CURR_POSITION, -1).let {
+            if (it == -1) {
+                this.mBinding.xbbVideos.smoothScrollBy(0, 1)
+            } else {
+                this.mAdapter.getViewByPosition(
+                    it, R.id.item_player_container
+                )?.performClick()
+            }
+        }
     }
 
     /**
@@ -144,10 +170,12 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
 //                    return
 //                }
                 // 计算当前正在播放的组件是否已经滚出了屏幕
-                val currContainer = ListPlayer.getInstance().currContainer
-                if (currContainer != null && !currContainer.getLocalVisibleRect(Rect())) {
-                    // 暂停播放
-                    ListPlayer.getInstance().onPause()
+                mSignalPlayer.getVariable<PlayerContainerView>(CURR_CONTAINER)?.let {
+                    if (!it.getLocalVisibleRect(Rect())) {
+                        mHideContainer = true
+                        // 暂停播放
+                        mSignalPlayer.onPause()
+                    }
                 }
             }
 
@@ -176,29 +204,29 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
                             continue
                         }
                         // 获取当前Item的Position
-                        val layoutPosition: Int =
+                        val position: Int =
                             mBinding.xbbVideos.getChildLayoutPosition(itemView)
                         // 验证当前可视的Item是否是正在播放的Item
-                        val currContainer = mPlayer.currContainer
-                        if (layoutPosition == mPlayer.position
+                        val currContainer = mSignalPlayer.getVariable<PlayerContainerView>(
+                            CURR_CONTAINER
+                        )
+                        if (position == mSignalPlayer.getVariable(CURR_POSITION)
                             && currContainer != null
-                            && currContainer === container
+                            && currContainer.equals(container)
                         ) {
-                            // 判断状态 如果是暂停状态则继续播放
-                            if (mPlayer.player.state == IPlayer.STATE_PAUSE) {
-                                // 继续播放
-                                mPlayer.onResume()
-                                // Break
-                                break
-                            }
-                            // 判断状态 如果是正在播放则跳出方法
-                            if (mPlayer.player.state == IPlayer.STATE_START) {
-                                // Break
-                                break
+                            when (mSignalPlayer.player.state) {
+                                IPlayer.STATE_PAUSE -> {
+                                    mSignalPlayer.onResume()
+                                    break
+                                }
+                                IPlayer.STATE_PREPARED,
+                                IPlayer.STATE_START -> {
+                                    break
+                                }
                             }
                         }
-                        // play
-                        onPlay(layoutPosition, container)
+                        // 播放
+                        onPlay(position, container)
                         // Break
                         break
                     }
@@ -207,58 +235,88 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
         }
 
     /**
-     * 重置当前容器
-     */
-    private fun resetCurrContainer() {
-        this.mCurrContainer?.let {
-            it.isIntercept = false
-            it.setPlayerState(IPlayer.STATE_IDLE)
-        }
-        this.mCurrContainer = null
-    }
-
-    /**
      * 播放
      *
      * @param position 坐标
      * @param container 视频容器
      */
     private fun onPlay(position: Int, container: PlayerContainerView) {
-        // 重置当前容器
-        this.resetCurrContainer()
-        // 缓存当前容器
-        this.mCurrContainer = container
-        // 记录 坐标
-        this.mPlayer.position = position
         // 设置状态位
-        container.setPlayerState(IPlayer.STATE_INIT)
-        // 播放
-        if (!mPlayer.isOverlap) {
-            container.setPlayerState(IPlayer.STATE_PREPARED)
-            // 播放
-            this.mPlayer.onPlay(DataSource(mAdapter.data[position].videoUrl))
+        container.setPlayerState(IPlayer.STATE_PREPARED)
+        // 重置 缓存
+        this.setPlayerState(false, IPlayer.STATE_IDLE)?.let {
+            // 移除缓存
+            this.mSignalPlayer.removeVariable(CURR_CONTAINER)
         }
-        this.mLastPosition = position
+        // 解绑 视图容器ß
+        this.mSignalPlayer.unbindContainer()
+        // 记录 坐标
+        this.mSignalPlayer.putVariable(CURR_POSITION, position)
+        // 记录 视图容器
+        this.mSignalPlayer.putVariable(CURR_CONTAINER, container)
+        // 播放
+        this.mSignalPlayer.onPlay(DataSource(mAdapter.data[position].videoUrl))
+        // 设置 循环播放
+        this.mSignalPlayer.setLooping(true)
+    }
+
+    /**
+     * 修改状态位
+     */
+    private fun setPlayerState(intercept: Boolean, playerState: Int): PlayerContainerView? {
+        this.mSignalPlayer.getVariable<PlayerContainerView>(CURR_CONTAINER)?.let {
+            // 拦截状态
+            it.isIntercept = intercept
+            // 播放状态
+            it.setPlayerState(playerState)
+            return it
+        }
+        return null
+    }
+
+    /**
+     * 播放事件
+     */
+    private val mPlayerListener = OnPlayerListener { eventCode, _ ->
+        when (eventCode) {
+            OnPlayerListener.PLAYER_EVENT_ON_PREPARED -> {
+                // 修改状态位
+                this.setPlayerState(true, IPlayer.STATE_START)?.let {
+                    // 绑定 视图容器
+                    this.mSignalPlayer.bindContainer(it, false)
+                }
+            }
+            OnPlayerListener.PLAYER_EVENT_ON_RESUME -> {
+                // 修改状态位
+                this.setPlayerState(true, IPlayer.STATE_START)?.let {
+                    // 绑定 视图容器
+                    if (mHideContainer) {
+                        this.mSignalPlayer.bindContainer(it, false)
+                    }
+                    this.mHideContainer = false
+                }
+            }
+            OnPlayerListener.PLAYER_EVENT_ON_PAUSE -> {
+                // 修改状态位
+                this.setPlayerState(false, IPlayer.STATE_PAUSE)
+                // 解绑 视图容器
+                if (mHideContainer) {
+                    this.mSignalPlayer.unbindContainer()
+                }
+            }
+        }
     }
 
     override fun onResume() {
         super.onResume()
-        // 播放事件
-        this.mPlayer.player.setPlayerListener { eventCode: Int, bundle: Bundle? ->
-            if (eventCode == OnPlayerListener.PLAYER_EVENT_ON_PREPARED) {
-                if (mCurrContainer != null) {
-                    // 设置状态
-                    mCurrContainer!!.isIntercept = true
-                    mCurrContainer!!.setPlayerState(IPlayer.STATE_START)
-                    // 绑定容器
-                    this.mPlayer.bindContainer(mCurrContainer, false)
-                }
-            }
-        }
-        // 切换至普通渲染器
-        this.mPlayer.player.setRendererType(RendererType.TEXTURE)
-        // 自动播放
-        this.mAdapter.getViewByPosition(mLastPosition, R.id.item_player_container)?.performClick()
+        // Init Player
+        this.initPlayer()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        // 暂停播放
+        this.mSignalPlayer.onPause()
     }
 
     override fun onDestroy() {

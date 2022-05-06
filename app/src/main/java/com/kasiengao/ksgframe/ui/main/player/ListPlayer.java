@@ -202,7 +202,7 @@ public class ListPlayer {
         PlayerContainerView oldContainer = getCurrContainer();
         // 同步状态位
         newContainer.setIntercept(oldContainer.isIntercept());
-        newContainer.setCoverImage(oldContainer.getCoverImage());
+//        newContainer.setCoverImage(oldContainer.getCoverImage());
 //        newContainer.setPlayerState(oldContainer.getPlayerState());
         // 修改当前容器
         this.setCurrContainer(newContainer);

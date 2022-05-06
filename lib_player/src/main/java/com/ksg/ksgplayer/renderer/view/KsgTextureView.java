@@ -86,6 +86,9 @@ public class KsgTextureView extends TextureView implements Renderer, TextureView
 
     @Override
     public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surfaceTexture) {
+        // 释放
+        this.releaseTexImage();
+        // Listener
         if (mRendererListener != null) {
             this.mRendererListener.onSurfaceDestroy(mSurface);
         }
@@ -231,11 +234,9 @@ public class KsgTextureView extends TextureView implements Renderer, TextureView
     }
 
     /**
-     * 释放资源
+     * 释放
      */
-    @Override
-    public void release() {
-        this.isRelease = true;
+    protected void releaseTexImage() {
         if (mSaveTexture != null) {
             this.mSaveTexture.release();
             this.mSaveTexture = null;
@@ -244,6 +245,15 @@ public class KsgTextureView extends TextureView implements Renderer, TextureView
             this.mSurface.release();
             this.mSurface = null;
         }
+    }
+
+    /**
+     * 释放资源
+     */
+    @Override
+    public void release() {
+        this.isRelease = true;
+        this.releaseTexImage();
         this.setSurfaceTextureListener(null);
     }
 

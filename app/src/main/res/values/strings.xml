@@ -29,10 +29,11 @@
     <string name="PPX_title">皮皮虾</string>
     <string name="XBB_title">象拔蚌</string>
 
-    <string name="main_video_item_interact_praise">赞</string>
-    <string name="main_video_item_interact_stepped">踩</string>
-    <string name="main_video_item_interact_comment">评论</string>
-    <string name="main_video_item_interact_share">分享</string>
+    <string name="interact_praise">赞</string>
+    <string name="interact_stepped">踩</string>
+    <string name="interact_comment">评论</string>
+    <string name="interact_share">分享</string>
+    <string name="interact_collect">收藏</string>
 
     <string name="bar_trainee">练习生</string>
 

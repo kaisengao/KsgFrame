@@ -105,11 +105,25 @@ public interface IKsgVideoPlayer extends IPlayer {
     BasePlayer getDecoderView();
 
     /**
+     * 设置 渲染器类型
+     *
+     * @param rendererType {@link RendererType}
+     */
+    void setRendererType(int rendererType);
+
+    /**
+     * 获取 渲染器类型
+     *
+     * @return {@link RendererType}
+     */
+    int getRendererType();
+
+    /**
      * 设置 渲染器
      *
      * @param rendererType {@link Renderer}
      */
-    void setRendererType(int rendererType);
+    void setRenderer(int rendererType);
 
     /**
      * 获取 渲染器

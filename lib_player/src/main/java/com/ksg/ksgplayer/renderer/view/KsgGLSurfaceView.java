@@ -130,7 +130,9 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
      */
     @Override
     public void setRendererListener(RendererListener listener) {
-        this.mViewRender.setRendererListener(listener);
+        if (mViewRender != null) {
+            this.mViewRender.setRendererListener(listener);
+        }
     }
 
     /**
@@ -208,7 +210,9 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
      */
     @Override
     public void setGLFilter(GLFilter filter) {
-        this.mViewRender.setGLFilter(filter);
+        if (mViewRender != null) {
+            this.mViewRender.setGLFilter(filter);
+        }
     }
 
     /**
@@ -226,8 +230,11 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
      */
     @Override
     public boolean onShotPic() {
-        this.mViewRender.onShotPic();
-        return true;
+        if (mViewRender != null) {
+            this.mViewRender.onShotPic();
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -236,7 +243,10 @@ public class KsgGLSurfaceView extends GLSurfaceView implements Renderer, GLSurfa
     @Override
     public void release() {
         this.isRelease = true;
-        this.mViewRender.release();
+        if (mViewRender != null) {
+            this.mViewRender.release();
+            this.mViewRender = null;
+        }
     }
 
     /**

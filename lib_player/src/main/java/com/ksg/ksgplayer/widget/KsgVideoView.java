@@ -26,7 +26,9 @@ import com.ksg.ksgplayer.player.BasePlayer;
 import com.ksg.ksgplayer.player.IPlayer;
 import com.ksg.ksgplayer.producer.BaseEventProducer;
 import com.ksg.ksgplayer.renderer.Renderer;
+import com.ksg.ksgplayer.renderer.RendererType;
 import com.ksg.ksgplayer.renderer.glrender.GLViewRender;
+import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView;
 
 import java.util.List;
 
@@ -173,13 +175,33 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
     }
 
     /**
+     * 设置 渲染器类型
+     *
+     * @param rendererType {@link RendererType}
+     */
+    @Override
+    public void setRendererType(int rendererType) {
+        this.mPlayer.setRendererType(rendererType);
+    }
+
+    /**
+     * 获取 渲染器类型
+     *
+     * @return {@link RendererType}
+     */
+    @Override
+    public int getRendererType() {
+        return mPlayer.getRendererType();
+    }
+
+    /**
      * 设置 渲染器
      *
      * @param rendererType {@link Renderer}
      */
     @Override
-    public void setRendererType(int rendererType) {
-        this.mPlayer.setRendererType(rendererType);
+    public void setRenderer(int rendererType) {
+        this.mPlayer.setRenderer(rendererType);
     }
 
     /**

@@ -28,8 +28,8 @@ class PPXAdapter : BaseQuickAdapter<VideoBean, BaseViewHolder>(R.layout.item_ppx
         // 评论
         holder.setText(R.id.item_ppx_comment, item.comment)
         // 收藏
-        holder.setText(R.id.item_ppx_collect, item.share)
+        holder.setText(R.id.item_ppx_collect, item.collect)
         // 设置封面图
-        holder.getView<PlayerContainerView>(R.id.item_player_container).setCoverImage(item.coverImg)
+        holder.getView<PlayerContainerView>(R.id.item_player_container).setCoverImage(item.coverImg,ImageView.ScaleType.FIT_CENTER)
     }
 }

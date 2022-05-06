@@ -33,10 +33,11 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    // Ijk
+    // IjkPlayer
     implementation "tv.danmaku.ijk.media:ijkplayer-java:0.8.8"
-    // Tencent
-    implementation "com.tencent.liteavsdk:LiteAVSDK_Smart:6.6.7551@aar"
+    implementation 'tv.danmaku.ijk.media:ijkplayer-armv7a:0.8.8'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-arm64:0.8.8'
+    implementation 'tv.danmaku.ijk.media:ijkplayer-x86:0.8.8'
     // ExoPlayer
     implementation "com.google.android.exoplayer:exoplayer-core:$exoplayer"
     implementation "com.google.android.exoplayer:exoplayer-dash:$exoplayer"

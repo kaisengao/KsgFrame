@@ -10,19 +10,18 @@
         android:id="@+id/cover_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignTop="@id/item_player_container"
-        android:layout_alignBottom="@id/item_player_container"
         android:visibility="gone"
-        android:scaleType="centerCrop"
-        tools:src="@color/colorSecondaryVariant" />
+        tools:src="@color/colorSecondaryVariant"
+        tools:visibility="visible" />
 
     <!-- 状态位 -->
     <ProgressBar
         android:id="@+id/play_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
         android:layout_gravity="center"
-        android:indeterminateDrawable="@drawable/selector_load_play_state" />
+        android:indeterminateDrawable="@drawable/selector_load_play_state"
+        android:visibility="gone"
+        tools:visibility="visible" />
 
 </merge>

@@ -18,6 +18,7 @@
         <entry key="app/src/main/res/drawable/ic_praise.xml" value="0.2275" />
         <entry key="app/src/main/res/drawable/ic_round_playlist_add_24.xml" value="0.2305" />
         <entry key="app/src/main/res/drawable/ic_toolbar_menu.xml" value="0.2435" />
+        <entry key="app/src/main/res/drawable/selector_load_play_state.xml" value="0.2305" />
         <entry key="app/src/main/res/drawable/selector_play_state.xml" value="0.4215" />
         <entry key="app/src/main/res/drawable/shape_seek_bar.xml" value="0.2215" />
         <entry key="app/src/main/res/layout/activity_gesture.xml" value="0.1" />
@@ -35,7 +36,7 @@
         <entry key="app/src/main/res/layout/layout_cover_land_controller.xml" value="0.4337719298245614" />
         <entry key="app/src/main/res/layout/layout_cover_loading.xml" value="0.362962962962963" />
         <entry key="app/src/main/res/layout/layout_cover_small_controller.xml" value="0.4337719298245614" />
-        <entry key="app/src/main/res/layout/layout_play_container.xml" value="0.4337719298245614" />
+        <entry key="app/src/main/res/layout/layout_play_container.xml" value="0.2" />
         <entry key="app/src/main/res/layout/layout_trainee.xml" value="0.412962962962963" />
         <entry key="app/src/main/res/layout/layout_video_detail.xml" value="0.4276315789473684" />
         <entry key="app/src/main/res/menu/menu_main_fish.xml" value="0.4337719298245614" />

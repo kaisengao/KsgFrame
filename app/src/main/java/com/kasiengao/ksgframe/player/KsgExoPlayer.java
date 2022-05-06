@@ -92,15 +92,6 @@ public class KsgExoPlayer extends BasePlayer {
     }
 
     /**
-     * Get Player
-     *
-     * @return ExoPlayer
-     */
-    public ExoPlayer getExoPlayer() {
-        return mExoPlayer;
-    }
-
-    /**
      * 设置视频播放地址
      *
      * @param dataSource 播放地址
@@ -415,6 +406,7 @@ public class KsgExoPlayer extends BasePlayer {
     @Override
     public void reset() {
         this.stop();
+        this.release();
         this.updateState(IPlayer.STATE_IDLE);
         this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_RESET, null);
     }
@@ -427,6 +419,10 @@ public class KsgExoPlayer extends BasePlayer {
         if (mExoPlayer == null) {
             return;
         }
+        if (mHolder != null) {
+            this.mExoPlayer.clearVideoSurfaceHolder(mHolder);
+        }
+        this.mExoPlayer.clearVideoSurface();
         this.mExoPlayer.removeListener(mListener);
     }
 
@@ -436,10 +432,6 @@ public class KsgExoPlayer extends BasePlayer {
     @Override
     public void destroy() {
         this.release();
-        if (mHolder != null) {
-            this.mExoPlayer.clearVideoSurfaceHolder(mHolder);
-        }
-        this.mExoPlayer.clearVideoSurface();
         this.mExoPlayer.release();
         this.updateState(IPlayer.STATE_DESTROY);
         this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_DESTROY, null);

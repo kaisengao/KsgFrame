@@ -128,7 +128,7 @@ public class KsgAssistView implements IKsgVideoView {
             // 释放渲染器
             this.mPlayer.releaseRenderer();
             // 更新Render
-            this.setRendererType(RendererType.GL_SURFACE);
+            this.setRenderer(getRendererType());
         }
         // 绑定
         this.mPlayer.bindContainer(container, updateRenderer);
@@ -174,13 +174,33 @@ public class KsgAssistView implements IKsgVideoView {
     }
 
     /**
+     * 设置 渲染器类型
+     *
+     * @param rendererType {@link RendererType}
+     */
+    @Override
+    public void setRendererType(int rendererType) {
+        this.mPlayer.setRendererType(rendererType);
+    }
+
+    /**
+     * 获取 渲染器类型
+     *
+     * @return {@link RendererType}
+     */
+    @Override
+    public int getRendererType() {
+        return mPlayer.getRendererType();
+    }
+
+    /**
      * 设置 渲染器
      *
      * @param rendererType {@link Renderer}
      */
     @Override
-    public void setRendererType(int rendererType) {
-        this.mPlayer.setRendererType(rendererType);
+    public void setRenderer(int rendererType) {
+        this.mPlayer.setRenderer(rendererType);
     }
 
     /**

@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import androidx.annotation.Keep;
@@ -57,34 +58,23 @@ public class PlayerContainerView extends FrameLayout {
      *
      * @param imageUrl imageUrl
      */
-    public void setCoverImage(String imageUrl) {
+    public void setCoverImage(String imageUrl, ImageView.ScaleType scaleType) {
         if (!TextUtils.isEmpty(imageUrl)) {
             GlideUtil.loadImage(getContext(), imageUrl, mCoverImage);
+            this.mCoverImage.setScaleType(scaleType);
             this.mCoverImage.setVisibility(View.VISIBLE);
         }
     }
 
-    /**
-     * 设置 封面图
-     *
-     * @param imageUrl imageUrl
-     */
-    public void setCoverImageBlur(String imageUrl, int radius) {
-        if (!TextUtils.isEmpty(imageUrl)) {
-            GlideUtil.loadImageBlur(getContext(), imageUrl, mCoverImage, radius);
-            this.mCoverImage.setVisibility(View.VISIBLE);
-        }
-    }
-
-    /**
-     * 设置 封面图
-     *
-     * @param drawable drawable
-     */
-    public void setCoverImage(Drawable drawable) {
-        this.mCoverImage.setImageDrawable(drawable);
-        this.mCoverImage.setVisibility(View.VISIBLE);
-    }
+//    /**
+//     * 设置 封面图
+//     *
+//     * @param drawable drawable
+//     */
+//    public void setCoverImage(Drawable drawable) {
+//        this.mCoverImage.setImageDrawable(drawable);
+//        this.mCoverImage.setVisibility(View.VISIBLE);
+//    }
 
     /**
      * 获取 封面图

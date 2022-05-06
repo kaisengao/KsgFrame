@@ -16,7 +16,7 @@
 
         <!-- 头像 -->
         <com.google.android.material.imageview.ShapeableImageView
-            android:id="@+id/item_video_avatar"
+            android:id="@+id/item_xbb_avatar"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_marginStart="5dp"
@@ -28,18 +28,18 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignTop="@id/item_video_avatar"
-            android:layout_alignBottom="@id/item_video_avatar"
+            android:layout_alignTop="@id/item_xbb_avatar"
+            android:layout_alignBottom="@id/item_xbb_avatar"
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
-            android:layout_toStartOf="@id/item_video_menu"
-            android:layout_toEndOf="@id/item_video_avatar"
+            android:layout_toStartOf="@id/item_xbb_menu"
+            android:layout_toEndOf="@id/item_xbb_avatar"
             android:gravity="center"
             android:orientation="vertical">
 
             <!-- 昵称 -->
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/item_video_nickname"
+                android:id="@+id/item_xbb_nickname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -51,7 +51,7 @@
 
             <!-- 介绍 -->
             <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/item_video_introduce"
+                android:id="@+id/item_xbb_introduce"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
@@ -64,11 +64,11 @@
 
         <!-- 菜单 -->
         <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/item_video_menu"
+            android:id="@+id/item_xbb_menu"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@id/item_video_avatar"
-            android:layout_alignBottom="@id/item_video_avatar"
+            android:layout_alignTop="@id/item_xbb_avatar"
+            android:layout_alignBottom="@id/item_xbb_avatar"
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="5dp"
             android:paddingStart="5dp"
@@ -77,12 +77,12 @@
 
         <!-- 标题 -->
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/item_video_title"
+            android:id="@+id/item_xbb_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_video_avatar"
-            android:layout_alignStart="@id/item_video_avatar"
-            android:layout_alignEnd="@id/item_video_menu"
+            android:layout_below="@id/item_xbb_avatar"
+            android:layout_alignStart="@id/item_xbb_avatar"
+            android:layout_alignEnd="@id/item_xbb_menu"
             android:layout_marginTop="5dp"
             android:textColor="@color/textColorPrimary"
             android:textSize="17sp"
@@ -93,13 +93,13 @@
             android:id="@+id/item_player_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/item_video_title"
+            android:layout_below="@id/item_xbb_title"
             android:layout_marginTop="5dp"
             tools:layout_height="210dp" />
 
         <!-- 互动-->
         <LinearLayout
-            android:id="@+id/item_video_interact"
+            android:id="@+id/item_xbb_interact"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/item_player_container"
@@ -110,7 +110,7 @@
 
             <!-- 赞 -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/item_video_interact_praise"
+                android:id="@+id/item_xbb_interact_praise"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -127,13 +127,13 @@
 
             <!-- 踩 -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/item_video_interact_stepped"
+                android:id="@+id/item_xbb_interact_stepped"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="@string/main_video_item_interact_stepped"
+                android:text="@string/interact_stepped"
                 android:textColor="@color/selector_stepped"
                 android:textSize="14sp"
                 app:icon="@drawable/selector_stepped"
@@ -144,7 +144,7 @@
 
             <!-- 评论 -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/item_video_interact_comment"
+                android:id="@+id/item_xbb_interact_comment"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -161,7 +161,7 @@
 
             <!-- 分享 -->
             <com.google.android.material.button.MaterialButton
-                android:id="@+id/item_video_interact_share"
+                android:id="@+id/item_xbb_interact_share"
                 style="@style/Widget.MaterialComponents.Button.TextButton"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

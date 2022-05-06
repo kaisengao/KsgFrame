@@ -52,7 +52,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
 
     private int mGLModeSize = -1;
 
-    private int mRendererType = PlayerConfig.getRenderType();
+    private int mRendererType = PlayerConfig.getRendererType();
 
     private boolean mUserPause;
 
@@ -198,7 +198,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
         this.mGLViewRender = viewRender;
         this.mGLModeSize = modeSize;
         // 强制设置为GLSurfaceView模式
-        this.setRendererType(RendererType.GL_SURFACE);
+        this.setRenderer(RendererType.GL_SURFACE);
     }
 
     /**
@@ -216,7 +216,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
         // 设置 解码器
         this.mPlayer.setDecoderView(decoderView);
         // 设置 渲染器
-        this.setRendererType(mRendererType);
+        this.setRenderer(getRendererType());
         // Return
         return true;
     }
@@ -231,12 +231,32 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     }
 
     /**
+     * 设置 渲染器类型
+     *
+     * @param rendererType {@link RendererType}
+     */
+    @Override
+    public void setRendererType(int rendererType) {
+        this.mRendererType = rendererType;
+    }
+
+    /**
+     * 获取 渲染器类型
+     *
+     * @return {@link RendererType}
+     */
+    @Override
+    public int getRendererType() {
+        return mRendererType;
+    }
+
+    /**
      * 设置 渲染器
      *
      * @param rendererType {@link Renderer}
      */
     @Override
-    public void setRendererType(int rendererType) {
+    public void setRenderer(int rendererType) {
         this.mRendererType = rendererType;
         this.mPlayer.setSurface(null);
         this.mPlayer.setDisplay(null);

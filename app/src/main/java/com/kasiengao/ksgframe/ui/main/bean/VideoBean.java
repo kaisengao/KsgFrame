@@ -1,7 +1,5 @@
 package com.kasiengao.ksgframe.ui.main.bean;
 
-import android.graphics.Bitmap;
-
 import com.google.gson.annotations.SerializedName;
 import com.kaisengao.base.util.NumberUtil;
 import com.kasiengao.ksgframe.R;
@@ -140,7 +138,7 @@ public class VideoBean {
 
     public String getPraise() {
         if (mPraise <= 0) {
-            return TextUtil.getString(R.string.main_video_item_interact_praise);
+            return TextUtil.getString(R.string.interact_praise);
         }
         return NumberUtil.formatBigNum(mPraise);
     }
@@ -159,7 +157,7 @@ public class VideoBean {
 
     public String getComment() {
         if (mComment <= 0) {
-            return TextUtil.getString(R.string.main_video_item_interact_comment);
+            return TextUtil.getString(R.string.interact_comment);
         }
         return NumberUtil.formatBigNum(mComment);
     }
@@ -170,7 +168,14 @@ public class VideoBean {
 
     public String getShare() {
         if (mShare <= 0) {
-            return TextUtil.getString(R.string.main_video_item_interact_share);
+            return TextUtil.getString(R.string.interact_share);
+        }
+        return NumberUtil.formatBigNum(mShare);
+    }
+
+    public String getCollect() {
+        if (mShare <= 0) {
+            return TextUtil.getString(R.string.interact_collect);
         }
         return NumberUtil.formatBigNum(mShare);
     }

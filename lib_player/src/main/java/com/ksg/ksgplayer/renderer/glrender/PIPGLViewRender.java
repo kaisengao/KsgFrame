@@ -61,6 +61,9 @@ public class PIPGLViewRender extends GLViewRender {
 
     @Override
     public void onSurfaceDrawFrame(GL10 gl) {
+        if (getOesFilter() == null) {
+            return;
+        }
         // 背景图层
         Matrix.scaleM(getOesFilter().getMVPMatrix(), 0, 2f, 2f, 1);
         this.mPipFilter.onDrawSelf();
@@ -88,9 +91,11 @@ public class PIPGLViewRender extends GLViewRender {
         super.release();
         if (mPipFilter != null) {
             this.mPipFilter.release();
+            this.mPipFilter = null;
         }
         if (mPipPreviewFilter != null) {
             this.mPipPreviewFilter.release();
+            this.mPipPreviewFilter = null;
         }
     }
 }

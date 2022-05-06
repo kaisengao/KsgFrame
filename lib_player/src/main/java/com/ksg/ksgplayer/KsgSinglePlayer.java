@@ -21,15 +21,9 @@ import java.util.Map;
  */
 public class KsgSinglePlayer {
 
-    private static final int CURR_POSITION = 0x80;
-
-    private static final int CURR_CONTAINER = 0x90;
-
     private static KsgSinglePlayer instance;
 
     private boolean isOverlap;
-
-    private boolean mHideContainer;
 
     private Map<Integer, Object> mVariableCaches;
 
@@ -49,6 +43,7 @@ public class KsgSinglePlayer {
     }
 
     private KsgSinglePlayer() {
+        // 创建遍历缓存池
         this.mVariableCaches = new HashMap<>();
         // Init Player
         this.initPlayer();
@@ -87,15 +82,15 @@ public class KsgSinglePlayer {
     /**
      * 缓存 变量
      */
-    public void putVariable(int key, Object value) {
+    public <T> void putVariable(int key, T value) {
         this.mVariableCaches.put(key, value);
     }
 
     /**
      * 获取 变量
      */
-    public Object getVariable(int key) {
-        return getVariable(key, null);
+    public <T> T getVariable(int key) {
+        return (T) getVariable(key, null);
     }
 
     /**
@@ -103,27 +98,16 @@ public class KsgSinglePlayer {
      *
      * @param defValue 默认值
      */
-    public Object getVariable(int key, Object defValue) {
+    public <T> T getVariable(int key, T defValue) {
         Object value = mVariableCaches.get(key);
-        return value == null ? defValue : value;
+        return value == null ? defValue : (T) value;
     }
 
     /**
-     * 记录 坐标
-     *
-     * @param position 坐标
+     * 删除 变量
      */
-    public void setPosition(int position) {
-        this.putVariable(CURR_POSITION, position);
-    }
-
-    /**
-     * 返回 坐标
-     *
-     * @return 坐标
-     */
-    public int getPosition() {
-        return (int) getVariable(CURR_POSITION, -1);
+    public void removeVariable(int key) {
+        this.mVariableCaches.remove(key);
     }
 
     /**
@@ -133,7 +117,6 @@ public class KsgSinglePlayer {
      * @param updateRenderer 更新渲染器
      */
     public void bindContainer(ViewGroup container, boolean updateRenderer) {
-        this.putVariable(CURR_CONTAINER, container);
         this.mPlayer.bindContainer(container, updateRenderer);
     }
 
@@ -142,15 +125,6 @@ public class KsgSinglePlayer {
      */
     public void unbindContainer() {
         this.mPlayer.unbindContainer();
-    }
-
-    /**
-     * 返回 视图容器
-     *
-     * @return container
-     */
-    public ViewGroup getCurrContainer() {
-        return (ViewGroup) getVariable(CURR_CONTAINER);
     }
 
     /**
@@ -177,37 +151,16 @@ public class KsgSinglePlayer {
         if (!mPlayer.isItPlaying()) {
             return;
         }
-        // 绑定 视图容器
-        ViewGroup currContainer = getCurrContainer();
-        if (mHideContainer && currContainer != null) {
-            this.getPlayer().bindContainer(currContainer);
-        }
-        // 继续播放
         this.getPlayer().resume();
-        // 恢复状态位
-        this.mHideContainer = false;
     }
 
     /**
      * 暂停
      */
     public void onPause() {
-        this.onPause(true);
-    }
-
-    /**
-     * 暂停
-     */
-    public void onPause(boolean hideContainer) {
         if (!mPlayer.isItPlaying()) {
             return;
         }
-        this.mHideContainer = hideContainer;
-        // 解绑 视图容器
-        if (mHideContainer) {
-            this.unbindContainer();
-        }
-        // 暂停播放
         this.getPlayer().pause();
     }
 
@@ -222,7 +175,7 @@ public class KsgSinglePlayer {
         if (state == IPlayer.STATE_PAUSE) {
             this.onResume();
         } else if (state == IPlayer.STATE_START) {
-            this.onPause(false);
+            this.onPause();
         } else if (state == IPlayer.STATE_PREPARED) {
             this.getPlayer().start();
         }

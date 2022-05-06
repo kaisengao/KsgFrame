@@ -143,7 +143,7 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
         player.setGLViewRender(new PIPGLViewRender(), KsgGLSurfaceView.MODE_RENDER_SIZE);
         // 2、3
         player.setDecoderView(new KsgExoPlayer(this));
-        player.setRendererType(RendererType.GL_SURFACE);
+        player.setRenderer(RendererType.GL_SURFACE);
 
         // 创建 Cover管理器
         this.mCoverManager = new CoverManager();
