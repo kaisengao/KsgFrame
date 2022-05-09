@@ -374,13 +374,9 @@ public class KsgIJKPlayer extends BasePlayer {
             this.seekTo(mStartPos);
             this.mStartPos = -1;
         }
-        if (mCurrentState == IPlayer.STATE_START) {
-            this.start();
-        } else if (mCurrentState == IPlayer.STATE_PAUSE) {
-            this.pause();
-        } else if (mCurrentState == IPlayer.STATE_STOP
-                || mCurrentState == IPlayer.STATE_IDLE) {
-            this.reset();
+        if (iMediaPlayer.isPlaying()) {
+            this.updateState(STATE_START);
+            this.sendPlayerEvent(OnPlayerListener.PLAYER_EVENT_ON_START, null);
         }
     };
 

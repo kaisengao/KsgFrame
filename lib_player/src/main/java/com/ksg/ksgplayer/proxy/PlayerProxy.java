@@ -15,7 +15,7 @@ import com.ksg.ksgplayer.listener.OnErrorListener;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
 import com.ksg.ksgplayer.player.BasePlayer;
 import com.ksg.ksgplayer.player.IPlayer;
-import com.ksg.ksgplayer.state.PlayerStateGetter;
+import com.ksg.ksgplayer.state.PlayerInfoGetter;
 
 /**
  * @ClassName: PlayerProxy
@@ -72,38 +72,7 @@ public class PlayerProxy implements IPlayer {
      */
     private void initPlaybackCache() {
         this.mPlaybackCache = new PlaybackCache();
-        this.mPlaybackCache.bindPlayStateGetter(new PlayerStateGetter() {
-
-            @Override
-            public int getState() {
-                return PlayerProxy.this.getState();
-            }
-
-            @Override
-            public long getProgress() {
-                return getCurrentPosition();
-            }
-
-            @Override
-            public long getDuration() {
-                return PlayerProxy.this.getDuration();
-            }
-
-            @Override
-            public int getBufferPercentage() {
-                return PlayerProxy.this.getBufferPercentage();
-            }
-
-            @Override
-            public boolean isBuffering() {
-                return isBuffering;
-            }
-
-            @Override
-            public float getSpeed() {
-                return PlayerProxy.this.getSpeed();
-            }
-        });
+        this.mPlaybackCache.bindPlayInfoGetter(mPlayerInfoGetter);
     }
 
     /**
@@ -525,6 +494,46 @@ public class PlayerProxy implements IPlayer {
         bundle.putLong(EventKey.LONG_ARG3, bufferPercentage);
         this.callBackPlayEventListener(OnPlayerListener.PLAYER_EVENT_ON_TIMER_UPDATE, bundle);
     }
+
+    /**
+     * 播放信息
+     */
+    public final PlayerInfoGetter mPlayerInfoGetter = new PlayerInfoGetter() {
+        @Override
+        public int getState() {
+            return PlayerProxy.this.getState();
+        }
+
+        @Override
+        public long getProgress() {
+            return getCurrentPosition();
+        }
+
+        @Override
+        public long getDuration() {
+            return PlayerProxy.this.getDuration();
+        }
+
+        @Override
+        public int getBufferPercentage() {
+            return PlayerProxy.this.getBufferPercentage();
+        }
+
+        @Override
+        public boolean isBuffering() {
+            return isBuffering;
+        }
+
+        @Override
+        public float getSpeed() {
+            return PlayerProxy.this.getSpeed();
+        }
+
+        @Override
+        public boolean isItPlaying() {
+            return PlayerProxy.this.isItPlaying();
+        }
+    };
 
     /**
      * 播放事件

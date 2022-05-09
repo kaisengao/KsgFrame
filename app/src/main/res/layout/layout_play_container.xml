@@ -14,13 +14,14 @@
         tools:src="@color/colorSecondaryVariant"
         tools:visibility="visible" />
 
-    <!-- 状态位 -->
-    <ProgressBar
-        android:id="@+id/play_state"
+    <!-- Play -->
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/play_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:indeterminateDrawable="@drawable/selector_load_play_state"
+        android:background="@drawable/shape_play_bg"
+        android:src="@drawable/ic_start"
         android:visibility="gone"
         tools:visibility="visible" />
 

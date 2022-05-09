@@ -248,6 +248,14 @@ public class MeasureHelper {
         }
     }
 
+    public int getVideoWidth() {
+        return mVideoWidth;
+    }
+
+    public int getVideoHeight() {
+        return mVideoHeight;
+    }
+
     public int getMeasuredWidth() {
         return mMeasuredWidth;
     }

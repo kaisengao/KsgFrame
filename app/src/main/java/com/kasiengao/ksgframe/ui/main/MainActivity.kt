@@ -20,6 +20,7 @@ import com.kasiengao.ksgframe.common.util.ColorUtil
 import com.kasiengao.ksgframe.constant.CoverConstant
 import com.kasiengao.ksgframe.databinding.ActivityMainBinding
 import com.kasiengao.ksgframe.player.KsgIJKPlayer
+import com.kasiengao.ksgframe.player.cover.GestureCover
 import com.kasiengao.ksgframe.player.cover.LoadingCover
 import com.kasiengao.ksgframe.ui.main.adapter.MainAdapter
 import com.kasiengao.ksgframe.ui.main.fragment.PPXFragment
@@ -36,6 +37,8 @@ import com.ksg.ksgplayer.KsgSinglePlayer
  */
 class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
 
+    private var mLastCurrentItem = 0
+
     private val mSignalPlayer: KsgSinglePlayer by lazy { KsgSinglePlayer.getInstance() }
 
     private val mToolbarBgColor: String by lazy {
@@ -51,6 +54,8 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     private val mXBBToolbarTextColor: Int by lazy {
         ContextCompat.getColor(this@MainActivity, R.color.XBBToolbarTextColor)
     }
+
+    private lateinit var mAdapter: MainAdapter
 
     override fun getContentLayoutId(): Int = R.layout.activity_main
 
@@ -84,6 +89,11 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
             CoverConstant.CoverKey.KEY_LOADING,
             LoadingCover(this)
         )
+        // Gesture
+        this.mSignalPlayer.coverManager.addCover(
+            CoverConstant.CoverKey.KEY_GESTURE,
+            GestureCover(this)
+        )
     }
 
     /**
@@ -95,10 +105,11 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
             PPXFragment(),
             XBBFragment()
         )
+        // Adapter
+        this.mAdapter = MainAdapter(supportFragmentManager, fragments)
         // ViewPager
         val viewPager = mBinding.mainPager
-        // Adapter
-        viewPager.adapter = MainAdapter(supportFragmentManager, fragments)
+        viewPager.adapter = mAdapter
         // TabLayout
         this.mBinding.mainTabs.setupWithViewPager(viewPager)
         // 事件
@@ -123,13 +134,25 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
             }
 
             override fun onPageScrollStateChanged(state: Int) {
-                when (state) {
-                    ViewPager.SCROLL_STATE_IDLE -> {
-                        setToolbarBgColor(if (viewPager.currentItem == 1) 100f else 0f)
+                if (state == ViewPager.SCROLL_STATE_IDLE) {
+                    val currentItem = viewPager.currentItem
+                    // 背景颜色
+                    setToolbarBgColor(if (currentItem == 1) 100f else 0f)
+                    // ShowHide
+                    if (mLastCurrentItem != currentItem) {
+                        fragments[currentItem].onHiddenChanged(false)
+                        fragments[mLastCurrentItem].onHiddenChanged(true)
+                        mLastCurrentItem = currentItem
                     }
                 }
             }
         })
+        // Init
+        viewPager.post {
+            val currentItem = viewPager.currentItem
+            fragments[currentItem].onHiddenChanged(false)
+            this.mLastCurrentItem = currentItem
+        }
     }
 
     /**
@@ -174,8 +197,22 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
      */
     private fun setToolbarBgColor(percent: Float) {
         val bgColor = ColorUtil.percentColor(percent, mToolbarBgColor)
-        mBinding.toolbar.setBackgroundColor(Color.parseColor(bgColor))
-        mBinding.toolbar.elevation = (percent / 10)
+        this.mBinding.toolbar.setBackgroundColor(Color.parseColor(bgColor))
+        this.mBinding.toolbar.elevation = (percent / 10)
+    }
+
+    /**
+     * 锁定 ViewPager滑动
+     */
+    fun lockVpScroll() {
+        this.mBinding.mainPager.setScrollable(false)
+    }
+
+    /**
+     * 解锁 ViewPager滑动
+     */
+    fun unlockVpScroll() {
+        this.mBinding.mainPager.setScrollable(true)
     }
 
     /**
@@ -204,20 +241,18 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         return true
     }
 
-    override fun onResume() {
-        super.onResume()
-        // 继续播放
-        if (!mBinding.drawerLayout.isDrawerOpen(mBinding.mainTrainee)) {
-            this.mSignalPlayer.onResume()
+    override fun onBackPressed() {
+        // 侧滑抽屉
+        if (mBinding.drawerLayout.isDrawerOpen(mBinding.mainTrainee)) {
+            this.mBinding.drawerLayout.closeDrawer(mBinding.mainTrainee)
+            return
         }
-    }
-
-    override fun onPause() {
-        super.onPause()
-        // 暂停播放
-        if (!mBinding.drawerLayout.isDrawerOpen(mBinding.mainTrainee)) {
-            this.mSignalPlayer.onPause()
+        // Fragment
+        if (mAdapter.getFragment(mBinding.mainPager.currentItem).onBackPressed()) {
+            return
         }
+        // onBackPressed
+        super.onBackPressed()
     }
 
     override fun onDestroy() {
@@ -228,19 +263,5 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
         this.mSignalPlayer.release()
         // 结束所有Activity
         ActivityManager.getInstance().finishAllActivity()
-    }
-
-    override fun onBackPressed() {
-        // 侧滑抽屉
-        if (mBinding.drawerLayout.isDrawerOpen(mBinding.mainTrainee)) {
-            this.mBinding.drawerLayout.closeDrawer(mBinding.mainTrainee)
-            return
-        }
-//        // 详情页
-//        if (mBinding.mainVideoDetail.onBackPressed()) {
-//            return
-//        }
-        // onBackPressed
-        super.onBackPressed()
     }
 }

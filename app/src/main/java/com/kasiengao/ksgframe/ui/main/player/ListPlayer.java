@@ -113,8 +113,8 @@ public class ListPlayer {
                 PlayerContainerView currContainer = getCurrContainer();
                 if (currContainer != null) {
                     // 设置状态
-                    currContainer.setIntercept(true);
-                    currContainer.setPlayerState(IPlayer.STATE_START);
+//                    currContainer.setIntercept(true);
+//                    currContainer.setPlayerState(IPlayer.STATE_START);
                     // 绑定容器
                     mPlayer.bindContainer(currContainer);
                 }
@@ -172,7 +172,7 @@ public class ListPlayer {
         PlayerContainerView currContainer = getCurrContainer();
         if (currContainer != null) {
             currContainer.setIntercept(false);
-            currContainer.setPlayerState(IPlayer.STATE_IDLE);
+//            currContainer.setPlayerState(IPlayer.STATE_IDLE);
             this.setCurrContainer(null);
         }
     }
@@ -226,13 +226,13 @@ public class ListPlayer {
         this.setCurrPosition(position);
         this.setCurrContainer(container);
         this.mCurrVideoBean = videoBean;
-        container.setPlayerState(IPlayer.STATE_INIT);
+//        container.setPlayerState(IPlayer.STATE_INIT);
         // 播放视频
         KsgAssistView player = getPlayer();
         player.unbindContainer();
         player.setDataSource(new DataSource(videoBean.getVideoUrl()));
         if (!isOverlap) {
-            container.setPlayerState(IPlayer.STATE_PREPARED);
+//            container.setPlayerState(IPlayer.STATE_PREPARED);
             // 播放
             player.start();
         }
@@ -252,8 +252,8 @@ public class ListPlayer {
         }
         PlayerContainerView currContainer = getCurrContainer();
         if (currContainer != null) {
-            currContainer.setIntercept(true);
-            currContainer.setPlayerState(IPlayer.STATE_START);
+//            currContainer.setIntercept(true);
+//            currContainer.setPlayerState(IPlayer.STATE_START);
         }
         // 绑定 视图容器
         if (mHideContainer && currContainer != null) {
@@ -285,7 +285,7 @@ public class ListPlayer {
         PlayerContainerView currContainer = getCurrContainer();
         if (currContainer != null) {
             currContainer.setIntercept(false);
-            currContainer.setPlayerState(IPlayer.STATE_PAUSE);
+//            currContainer.setPlayerState(IPlayer.STATE_PAUSE);
         }
         // 解绑 视图容器
         if (mHideContainer) {
@@ -328,6 +328,7 @@ public class ListPlayer {
         if (mFullscreen == fullscreen) {
             return;
         }
+        this.mFullscreen = fullscreen;
         // 全屏切换
         if (mListPlayerListener != null) {
             this.mListPlayerListener.onFullscreen(fullscreen);

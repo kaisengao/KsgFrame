@@ -98,10 +98,10 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
     public void onCoverViewBind() {
         super.onCoverViewBind();
         // 初始状态
-        if (getPlayerStateGetter() != null) {
-            this.setPlayState(getPlayerStateGetter().getState());
+        if (getPlayerInfoGetter() != null) {
+            this.setPlayState(getPlayerInfoGetter().getState());
             // 倍速
-            float speed = getPlayerStateGetter().getSpeed();
+            float speed = getPlayerInfoGetter().getSpeed();
             if (speed == 1) {
                 this.mDefaultSpeed.setChecked(true);
                 this.mSpeed.setSelected(false);
@@ -111,13 +111,15 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
                 this.mSpeed.setText(String.format("%sX", speed));
             }
         }
-        // 手势滑动 默认开启
-        Bundle bundle = BundlePool.obtain();
-        bundle.putBoolean(EventKey.BOOL_DATA, true);
-        this.notifyPrivateEvent(
-                CoverConstant.CoverKey.KEY_GESTURE,
-                CoverConstant.PrivateEvent.CODE_GESTURE_SLIDE_ENABLED,
-                bundle);
+        // 开启手势滑动
+        this.setGestureEnabled(true, true);
+    }
+
+    @Override
+    public void onCoverViewUnBind() {
+        super.onCoverViewUnBind();
+        // 关闭手势
+        this.setGestureEnabled(false, false);
     }
 
     @Override
@@ -146,7 +148,8 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
     private void setPlayState(int state) {
         if (state == IPlayer.STATE_PAUSE) {
             this.mPlayState.switchToStart();
-        } else if (state == IPlayer.STATE_START) {
+        } else if (state == IPlayer.STATE_START
+                || state == IPlayer.STATE_COMPLETE) {
             this.mPlayState.switchToPause();
         }
     }

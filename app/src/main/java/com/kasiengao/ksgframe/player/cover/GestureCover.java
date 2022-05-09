@@ -1,19 +1,21 @@
 package com.kasiengao.ksgframe.player.cover;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
-import com.kaisengao.base.configure.ActivityManager;
 import com.kaisengao.base.configure.ThreadPool;
+import com.kaisengao.base.util.CommonUtil;
 import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.common.util.VibratorUtil;
 import com.kasiengao.ksgframe.common.widget.GestureTipsView;
@@ -24,7 +26,7 @@ import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.helper.GestureTouchHelper;
 import com.ksg.ksgplayer.listener.OnTouchGestureListener;
 import com.ksg.ksgplayer.player.IPlayer;
-import com.ksg.ksgplayer.state.PlayerStateGetter;
+import com.ksg.ksgplayer.state.PlayerInfoGetter;
 
 /**
  * @ClassName: GestureCover
@@ -37,6 +39,8 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     private long mSlidProgress;
 
     private float mDefaultSpeed;
+
+    private FrameLayout mGestureRoot;
 
     private LinearLayout mGestureTipsRoot;
 
@@ -80,9 +84,12 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
         // 手势操作 提示View
         this.mGestureTipsView = new GestureTipsView();
         // 手势操作帮助类
-        Activity activity = ActivityManager.getInstance().currentActivity();
+        AppCompatActivity activity = CommonUtil.scanForActivity(mContext);
         this.mGestureTouchHelper = new GestureTouchHelper(activity, this);
+        this.mGestureTouchHelper.setGestureEnabled(false);
+        this.mGestureTouchHelper.setGestureSlideEnabled(false);
         //  Views
+        this.mGestureRoot = findViewById(R.id.cover_gesture_root);
         this.mGestureTipsRoot = findViewById(R.id.cover_gesture);
         this.mGestureTipsSlidingRoot = findViewById(R.id.cover_gesture_sliding);
         this.mGestureTipsSpeedRoot = findViewById(R.id.cover_gesture_speed);
@@ -116,7 +123,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      * 视频总时长
      */
     private long getDuration() {
-        PlayerStateGetter playerStateGetter = getPlayerStateGetter();
+        PlayerInfoGetter playerStateGetter = getPlayerInfoGetter();
         return playerStateGetter == null ? 0 : playerStateGetter.getDuration();
     }
 
@@ -124,7 +131,7 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      * 视频播放进度
      */
     private long getProgress() {
-        PlayerStateGetter playerStateGetter = getPlayerStateGetter();
+        PlayerInfoGetter playerStateGetter = getPlayerInfoGetter();
         return playerStateGetter == null ? 0 : playerStateGetter.getProgress();
     }
 
@@ -155,16 +162,16 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      * 单击
      */
     @Override
-    public void onSingleTapGesture() {
-        this.getValuePool().putObject(CoverConstant.ValueKey.KEY_GESTURE_SINGLE_TAP, null);
+    public void onSingleTap() {
+        this.getValuePool().putObject(CoverConstant.ValueKey.KEY_GESTURE_SINGLE_TAP, null, false);
     }
 
     /**
      * 双击
      */
     @Override
-    public void onDoubleTapGesture() {
-        this.getValuePool().putObject(CoverConstant.ValueKey.KEY_GESTURE_DOUBLE_TAB, null, false);
+    public void onDoubleTap() {
+        this.getValuePool().putObject(CoverConstant.ValueKey.KEY_GESTURE_DOUBLE_TAP, null, false);
     }
 
     /**
@@ -173,8 +180,8 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     @Override
     public void onLongPress() {
         // 倍速播放
-        if (getPlayerStateGetter() != null && getPlayerStateGetter().getState() == IPlayer.STATE_START) {
-            this.mDefaultSpeed = getPlayerStateGetter().getSpeed();
+        if (getPlayerInfoGetter() != null && getPlayerInfoGetter().getState() == IPlayer.STATE_START) {
+            this.mDefaultSpeed = getPlayerInfoGetter().getSpeed();
             // 提示
             this.mGestureTipsView
                     .setRooView(mGestureTipsSpeedRoot)
@@ -311,7 +318,9 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      */
     @Override
     public String[] getValueFilters() {
-        return new String[]{};
+        return new String[]{
+                CoverConstant.ValueKey.KEY_GESTURE_PADDING_TOP
+        };
     }
 
     /**
@@ -322,6 +331,10 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      */
     @Override
     public void onValueEvent(String key, Object value) {
+        if (key.equals(CoverConstant.ValueKey.KEY_GESTURE_PADDING_TOP)) {
+            // 增加padding值 防止被遮挡
+            this.mGestureRoot.setPadding(0, (int) value, 0, 0);
+        }
     }
 
     /**
@@ -334,7 +347,6 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
     public void onPlayerEvent(int eventCode, Bundle bundle) {
 
     }
-
 
     /**
      * 错误事件
@@ -365,9 +377,11 @@ public class GestureCover extends BaseCover implements View.OnTouchListener, OnT
      */
     @Override
     public void onPrivateEvent(int eventCode, Bundle bundle) {
-        if (eventCode == CoverConstant.PrivateEvent.CODE_GESTURE_SLIDE_ENABLED) {
+        if (eventCode == CoverConstant.PrivateEvent.CODE_GESTURE_ENABLED) {
+            // 手势 开启/关闭
+            this.mGestureTouchHelper.setGestureEnabled(bundle.getBoolean(EventKey.BOOL_ARG1, false));
             // 手势滑动 开启/关闭
-            this.mGestureTouchHelper.setGestureSlideEnabled(bundle.getBoolean(EventKey.BOOL_DATA, true));
+            this.mGestureTouchHelper.setGestureSlideEnabled(bundle.getBoolean(EventKey.BOOL_ARG2, false));
         }
     }
 

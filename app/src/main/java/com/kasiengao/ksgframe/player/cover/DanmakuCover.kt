@@ -57,13 +57,13 @@ class DanmakuCover(context: Context) : BaseCover(context) {
             this.initDanmaku()
         }
         // 初始状态
-        if (playerStateGetter != null) {
-            playerStateGetter.state.also {
+        if (playerInfoGetter != null) {
+            playerInfoGetter.state.also {
                 if (it == IPlayer.STATE_PAUSE) {
                     this.mDanmakuPlayer.pause()
                 } else if (it == IPlayer.STATE_START) {
                     this.mDanmakuPlayer.start(config)
-                    this.mDanmakuPlayer.seekTo(playerStateGetter.progress)
+                    this.mDanmakuPlayer.seekTo(playerInfoGetter.progress)
                 }
             }
         }
@@ -106,7 +106,7 @@ class DanmakuCover(context: Context) : BaseCover(context) {
                 bundle?.let {
                     this.mDanmakuPlayer.seekTo(it.getLong(EventKey.LONG_DATA))
                 }
-                playerStateGetter.let {
+                playerInfoGetter.let {
                     this.setPlayState(it.state)
                 }
             }

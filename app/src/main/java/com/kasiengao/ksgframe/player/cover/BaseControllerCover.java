@@ -78,8 +78,8 @@ public abstract class BaseControllerCover extends BaseCover implements View.OnCl
     public String[] getValueFilters() {
         return new String[]{
                 CoverConstant.ValueKey.KEY_GESTURE_SINGLE_TAP,
+                CoverConstant.ValueKey.KEY_GESTURE_DOUBLE_TAP,
                 CoverConstant.ValueKey.KEY_HIDE_CONTROLLER,
-                CoverConstant.ValueKey.KEY_GESTURE_DOUBLE_TAB,
         };
     }
 
@@ -93,24 +93,14 @@ public abstract class BaseControllerCover extends BaseCover implements View.OnCl
     public void onValueEvent(String key, Object value) {
         switch (key) {
             case CoverConstant.ValueKey.KEY_GESTURE_SINGLE_TAP:
-                if (value != null) {
-                    if ((boolean) value) {
-                        this.onShowController();
-                    } else {
-                        this.onHideController();
-                    }
-                } else {
-                    // 控制器 显示/隐藏
-                    this.onSwitchController();
-                }
+                this.onSingleTap(value);
+                break;
+            case CoverConstant.ValueKey.KEY_GESTURE_DOUBLE_TAP:
+                this.onDoubleTap();
                 break;
             case CoverConstant.ValueKey.KEY_HIDE_CONTROLLER:
                 // 隐藏控制器
                 this.onHideController();
-                break;
-            case CoverConstant.ValueKey.KEY_GESTURE_DOUBLE_TAB:
-                // 播放状态 播放/暂停
-                this.onSwitchPlayState();
                 break;
             default:
                 break;
@@ -319,6 +309,30 @@ public abstract class BaseControllerCover extends BaseCover implements View.OnCl
     }
 
     /**
+     * 单击
+     */
+    protected void onSingleTap(Object value) {
+        // 控制器 显示/隐藏
+        if (value != null) {
+            if ((boolean) value) {
+                this.onShowController();
+            } else {
+                this.onHideController();
+            }
+        } else {
+            this.onSwitchController();
+        }
+    }
+
+    /**
+     * 双击
+     */
+    protected void onDoubleTap() {
+        // 播放状态 播放/暂停
+        this.onSwitchPlayState();
+    }
+
+    /**
      * 播放状态
      */
     protected void onSwitchPlayState() {
@@ -373,6 +387,23 @@ public abstract class BaseControllerCover extends BaseCover implements View.OnCl
     protected void onController(boolean isShow) {
         this.mControllerShow = isShow;
         this.getValuePool().putObject(CoverConstant.ValueKey.KEY_GESTURE_SINGLE_TAP, isShow, true, false);
+    }
+
+    /**
+     * 设置手势
+     *
+     * @param enabled      手势
+     * @param slideEnabled 滑动手势
+     */
+    protected void setGestureEnabled(boolean enabled, boolean slideEnabled) {
+        // 手势
+        Bundle bundle = BundlePool.obtain();
+        bundle.putBoolean(EventKey.BOOL_ARG1, enabled);
+        bundle.putBoolean(EventKey.BOOL_ARG2, slideEnabled);
+        this.notifyPrivateEvent(
+                CoverConstant.CoverKey.KEY_GESTURE,
+                CoverConstant.PrivateEvent.CODE_GESTURE_ENABLED,
+                bundle);
     }
 
     /**

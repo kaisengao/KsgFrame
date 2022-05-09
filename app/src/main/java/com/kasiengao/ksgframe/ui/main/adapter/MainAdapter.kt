@@ -1,6 +1,5 @@
 package com.kasiengao.ksgframe.ui.main.adapter
 
-import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentStatePagerAdapter
@@ -23,4 +22,7 @@ class MainAdapter(
     override fun getItem(position: Int): Fragment = mFragments[position]
 
     override fun getPageTitle(position: Int): CharSequence = mFragments[position].title
+
+    fun getFragment(position: Int): BaseFragment<*> = mFragments[position]
+
 }

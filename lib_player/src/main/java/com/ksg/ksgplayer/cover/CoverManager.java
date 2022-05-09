@@ -1,5 +1,6 @@
 package com.ksg.ksgplayer.cover;
 
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,6 +60,26 @@ public final class CoverManager implements ICoverManager {
         // 回调 移除事件
         if (cover != null) {
             this.callBackCoverDetached(key, cover);
+        }
+    }
+
+    /**
+     * RemoveAll 覆盖组件
+     *
+     * @param filter 过滤器（不包含在内的）
+     */
+    @Override
+    public void removeAllCover(OnCoverFilter filter) {
+        Iterator<Map.Entry<String, ICover>> iterator = mCoverMap.entrySet().iterator();
+        while (iterator.hasNext()) {
+            ICover cover = iterator.next().getValue();
+            if (filter != null && filter.filter(cover)) {
+                continue;
+            }
+            // 移除组件
+            iterator.remove();
+            // 回调 移除事件
+            this.callBackCoverDetached(cover.getKey(), cover);
         }
     }
 

@@ -26,6 +26,14 @@ public interface ICoverManager {
     void removeCover(String key);
 
     /**
+     * RemoveAll 覆盖组件
+     *
+     * @param filter 过滤器（不包含在内的）
+     * @param key    key
+     */
+    void removeAllCover(OnCoverFilter filter);
+
+    /**
      * 获取覆盖组件
      *
      * @param key key
@@ -112,7 +120,7 @@ public interface ICoverManager {
     interface OnLoopListener {
 
         /**
-         * 寻找每个
+         * 每个
          *
          * @param cover cover
          */

@@ -3,7 +3,7 @@ package com.ksg.ksgplayer.cache;
 import android.os.Bundle;
 
 import com.ksg.ksgplayer.data.DataSource;
-import com.ksg.ksgplayer.state.PlayerStateGetter;
+import com.ksg.ksgplayer.state.PlayerInfoGetter;
 
 /**
  * @ClassName: IPlaybackCache
@@ -16,9 +16,9 @@ public interface IPlaybackCache {
     /**
      * 绑定 播放状态获取器
      *
-     * @param playerStateGetter playerStateGetter
+     * @param playerInfoGetter playerInfoGetter
      */
-    void bindPlayStateGetter(PlayerStateGetter playerStateGetter);
+    void bindPlayInfoGetter(PlayerInfoGetter playerInfoGetter);
 
     /**
      * 设置 播放地址

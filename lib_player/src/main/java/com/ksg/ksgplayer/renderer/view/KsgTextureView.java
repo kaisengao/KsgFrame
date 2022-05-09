@@ -87,7 +87,6 @@ public class KsgTextureView extends TextureView implements Renderer, TextureView
     @Override
     public boolean onSurfaceTextureDestroyed(@NonNull SurfaceTexture surfaceTexture) {
         // 释放
-        this.releaseTexImage();
         // Listener
         if (mRendererListener != null) {
             this.mRendererListener.onSurfaceDestroy(mSurface);

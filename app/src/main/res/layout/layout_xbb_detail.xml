@@ -13,7 +13,7 @@
     <merge
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:parentTag="com.kasiengao.ksgframe.ui.main.widget.VideoDetailView">
+        tools:parentTag="com.kasiengao.ksgframe.ui.main.widget.XBBDetailView">
 
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -54,7 +54,6 @@
                 android:layout_marginStart="@dimen/view_space"
                 android:layout_marginTop="12dp"
                 android:elevation="1dp"
-                android:onClick="@{() -> viewModel.onBackPressed()}"
                 android:src="@drawable/ic_cover_back"
                 android:visibility="gone" />
 

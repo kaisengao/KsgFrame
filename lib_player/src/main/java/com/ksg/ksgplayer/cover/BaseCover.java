@@ -9,7 +9,7 @@ import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 
 import com.ksg.ksgplayer.listener.OnCoverEventListener;
-import com.ksg.ksgplayer.state.PlayerStateGetter;
+import com.ksg.ksgplayer.state.PlayerInfoGetter;
 import com.ksg.ksgplayer.state.StateGetter;
 
 /**
@@ -240,12 +240,12 @@ public abstract class BaseCover implements ICover, ICoverHandle, StateGetter, Vi
     /**
      * 获取 播放状态
      *
-     * @return {@link PlayerStateGetter}
+     * @return {@link PlayerInfoGetter}
      */
     @Override
-    public final PlayerStateGetter getPlayerStateGetter() {
+    public final PlayerInfoGetter getPlayerInfoGetter() {
         if (mStateGetter != null) {
-            return mStateGetter.getPlayerStateGetter();
+            return mStateGetter.getPlayerInfoGetter();
         }
         return null;
     }

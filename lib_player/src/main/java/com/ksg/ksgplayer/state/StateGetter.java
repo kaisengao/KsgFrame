@@ -8,9 +8,9 @@ package com.ksg.ksgplayer.state;
 public interface StateGetter {
 
     /**
-     * 播放状态获取
+     * 播放信息获取
      *
      * @return 播放状态
      */
-    PlayerStateGetter getPlayerStateGetter();
+    PlayerInfoGetter getPlayerInfoGetter();
 }

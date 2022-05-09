@@ -9,7 +9,6 @@ import com.kaisengao.base.util.GlideUtil
 import com.kasiengao.ksgframe.R
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean
-import com.ksg.ksgplayer.player.IPlayer
 
 /**
  * @ClassName: XBBAdapter
@@ -59,10 +58,9 @@ class XBBAdapter : BaseQuickAdapter<VideoBean, XBBAdapter.ViewHolder>(R.layout.i
             val layoutParams = mPlayContainer.layoutParams
             layoutParams.height = recyclerView.width * 9 / 16
             this.mPlayContainer.requestLayout()
-            // 初始状态位
-            this.mPlayContainer.setPlayerState(IPlayer.STATE_IDLE)
+            this.mPlayContainer.setPlayShowed(true)
             // 赞
-            this.getView<View>(R.id.item_xbb_interact_praise).setOnClickListener { v: View ->
+            this.getView<View>(R.id.item_xbb_interact_praise).setOnClickListener {
                 val videoBean: VideoBean = data[layoutPosition]
                 videoBean.isPraised = !videoBean.isPraised
                 if (videoBean.isPraised) {
@@ -74,17 +72,15 @@ class XBBAdapter : BaseQuickAdapter<VideoBean, XBBAdapter.ViewHolder>(R.layout.i
                 this.mPraiseView.isSelected = videoBean.isPraised
             }
             // 踩
-            this.getView<View>(R.id.item_xbb_interact_stepped).setOnClickListener { v: View ->
+            this.getView<View>(R.id.item_xbb_interact_stepped).setOnClickListener {
                 val videoBean: VideoBean = data[layoutPosition]
                 videoBean.isStepped = !videoBean.isStepped
                 this.mSteppedView.isSelected = videoBean.isStepped
             }
             // 评论
             this.getView<View>(R.id.item_xbb_interact_comment).setOnClickListener { v: View ->
-                val layoutPosition = layoutPosition
-                // 进入详情页
-//                ListPlayer.getInstance()
-//                    .onEnterDetail(layoutPosition, data[layoutPosition], mPlayContainer)
+                // 回调上级
+                setOnItemChildClick(v, layoutPosition)
             }
             // 分享
             this.getView<View>(R.id.item_xbb_interact_share).setOnClickListener { v: View ->
@@ -95,12 +91,6 @@ class XBBAdapter : BaseQuickAdapter<VideoBean, XBBAdapter.ViewHolder>(R.layout.i
             this.mPlayContainer.setOnClickListener { v: View ->
                 // 回调上级
                 setOnItemChildClick(v, layoutPosition)
-            }
-            // ItemClick
-            view.setOnClickListener { v: View ->
-                val layoutPosition = layoutPosition
-                // 进入详情页
-//                ListPlayer.getInstance().onEnterDetail(layoutPosition, getData().get(layoutPosition), mPlayContainer);
             }
         }
     }

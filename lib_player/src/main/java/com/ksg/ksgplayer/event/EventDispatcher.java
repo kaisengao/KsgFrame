@@ -2,7 +2,6 @@ package com.ksg.ksgplayer.event;
 
 import android.os.Bundle;
 
-import com.ksg.ksgplayer.cover.ICover;
 import com.ksg.ksgplayer.cover.ICoverManager;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
 import com.ksg.ksgplayer.listener.OnTimerUpdateListener;
@@ -35,30 +34,20 @@ public final class EventDispatcher implements IEventDispatcher {
         if (mCoverManager == null) {
             return;
         }
-        switch (eventCode) {
-            case OnPlayerListener.PLAYER_EVENT_ON_TIMER_UPDATE:
-                mCoverManager.forEach(new ICoverManager.OnLoopListener() {
-                    @Override
-                    public void onEach(ICover cover) {
-                        if (cover instanceof OnTimerUpdateListener && bundle != null) {
-                            ((OnTimerUpdateListener) cover).onTimerUpdate(
-                                    bundle.getLong(EventKey.LONG_ARG1),
-                                    bundle.getLong(EventKey.LONG_ARG2),
-                                    bundle.getLong(EventKey.LONG_ARG3));
-                        }
-                        cover.onPlayerEvent(eventCode, bundle);
-                    }
-                });
-            default:
-                mCoverManager.forEach(new ICoverManager.OnLoopListener() {
-                    @Override
-                    public void onEach(ICover cover) {
-                        cover.onPlayerEvent(eventCode, bundle);
-                    }
-                });
-                break;
+        if (eventCode == OnPlayerListener.PLAYER_EVENT_ON_TIMER_UPDATE) {
+            this.mCoverManager.forEach(cover -> {
+                if (cover instanceof OnTimerUpdateListener && bundle != null) {
+                    ((OnTimerUpdateListener) cover).onTimerUpdate(
+                            bundle.getLong(EventKey.LONG_ARG1),
+                            bundle.getLong(EventKey.LONG_ARG2),
+                            bundle.getLong(EventKey.LONG_ARG3));
+                }
+                cover.onPlayerEvent(eventCode, bundle);
+            });
+        } else {
+            this.mCoverManager.forEach(cover -> cover.onPlayerEvent(eventCode, bundle));
         }
-        recycleBundle(bundle);
+        this.recycleBundle(bundle);
     }
 
     /**
@@ -69,24 +58,19 @@ public final class EventDispatcher implements IEventDispatcher {
      */
     @Override
     public void dispatchErrorEvent(final int eventCode, final Bundle bundle) {
-        mCoverManager.forEach(new ICoverManager.OnLoopListener() {
-            @Override
-            public void onEach(ICover cover) {
-                cover.onErrorEvent(eventCode, bundle);
-            }
-        });
-        recycleBundle(bundle);
+        this.mCoverManager.forEach(cover -> cover.onErrorEvent(eventCode, bundle));
+        this.recycleBundle(bundle);
     }
 
     /**
      * Cover事件
      *
-     * @param eventCode   eventCode
-     * @param bundle      bundle
+     * @param eventCode eventCode
+     * @param bundle    bundle
      */
     @Override
     public void dispatchCoverEvent(final int eventCode, final Bundle bundle) {
-        dispatchCoverEvent(eventCode, bundle, null);
+        this.dispatchCoverEvent(eventCode, bundle, null);
     }
 
     /**
@@ -98,13 +82,8 @@ public final class EventDispatcher implements IEventDispatcher {
      */
     @Override
     public void dispatchCoverEvent(final int eventCode, final Bundle bundle, ICoverManager.OnCoverFilter coverFilter) {
-        mCoverManager.forEach(coverFilter, new ICoverManager.OnLoopListener() {
-            @Override
-            public void onEach(ICover cover) {
-                cover.onCoverEvent(eventCode, bundle);
-            }
-        });
-        recycleBundle(bundle);
+        this.mCoverManager.forEach(coverFilter, cover -> cover.onCoverEvent(eventCode, bundle));
+        this.recycleBundle(bundle);
     }
 
     /**
@@ -116,13 +95,8 @@ public final class EventDispatcher implements IEventDispatcher {
      */
     @Override
     public void dispatchProducerEvent(final int eventCode, final Bundle bundle, ICoverManager.OnCoverFilter coverFilter) {
-        mCoverManager.forEach(coverFilter, new ICoverManager.OnLoopListener() {
-            @Override
-            public void onEach(ICover cover) {
-                cover.onProducerEvent(eventCode, bundle);
-            }
-        });
-        recycleBundle(bundle);
+        this.mCoverManager.forEach(coverFilter, cover -> cover.onProducerEvent(eventCode, bundle));
+        this.recycleBundle(bundle);
     }
 
     /**
@@ -134,12 +108,7 @@ public final class EventDispatcher implements IEventDispatcher {
      */
     @Override
     public void dispatchProducerData(final String key, final Object data, ICoverManager.OnCoverFilter coverFilter) {
-        mCoverManager.forEach(coverFilter, new ICoverManager.OnLoopListener() {
-            @Override
-            public void onEach(ICover cover) {
-                cover.onProducerData(key, data);
-            }
-        });
+        this.mCoverManager.forEach(coverFilter, cover -> cover.onProducerData(key, data));
     }
 
     private void recycleBundle(Bundle bundle) {

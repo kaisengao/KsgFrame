@@ -28,6 +28,11 @@ public interface EventKey {
     String LONG_ARG3 = "long_arg3";
     String LONG_ARG4 = "long_arg4";
 
+    String BOOL_ARG1 = "bool_arg1";
+    String BOOL_ARG2 = "bool_arg2";
+    String BOOL_ARG3 = "bool_arg3";
+    String BOOL_ARG4 = "bool_arg4";
+
     String STRING_ARG1 = "STRING_ARG1";
     String STRING_ARG2 = "STRING_ARG2";
 }

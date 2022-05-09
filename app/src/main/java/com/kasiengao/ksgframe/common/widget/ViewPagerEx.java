@@ -39,5 +39,4 @@ public class ViewPagerEx extends ViewPager {
     public void setScrollable(boolean scrollable) {
         this.mCanScroll = scrollable;
     }
-
 }

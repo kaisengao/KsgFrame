@@ -62,7 +62,7 @@ public class CoverValuePool implements ICoverValue {
 
     private void put(String key, Object value, boolean cache, boolean notify) {
         // 缓存
-        if (cache){
+        if (cache) {
             this.mValuePool.put(key, value);
         }
         // 通知

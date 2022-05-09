@@ -8,12 +8,16 @@ import com.kasiengao.ksgframe.BR
 import com.kasiengao.ksgframe.R
 import com.kasiengao.ksgframe.common.util.TextUtil
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView
+import com.kasiengao.ksgframe.constant.CoverConstant
 import com.kasiengao.ksgframe.databinding.FragmentPpxBinding
+import com.kasiengao.ksgframe.player.cover.GestureCover
+import com.kasiengao.ksgframe.player.cover.LoadingCover
+import com.kasiengao.ksgframe.player.cover.PPXControllerCover
+import com.kasiengao.ksgframe.ui.main.MainActivity
 import com.kasiengao.ksgframe.ui.main.adapter.PPXAdapter
 import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel
 import com.ksg.ksgplayer.KsgSinglePlayer
 import com.ksg.ksgplayer.data.DataSource
-import com.ksg.ksgplayer.listener.OnPlayerListener
 import com.ksg.ksgplayer.renderer.glrender.PIPGLViewRender
 import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView
 
@@ -30,7 +34,11 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
         const val CURR_CONTAINER: Int = 1020
     }
 
+    private var mHidden = true
+
     private val mSignalPlayer: KsgSinglePlayer by lazy { KsgSinglePlayer.getInstance() }
+
+    private val mController: PPXControllerCover by lazy { PPXControllerCover(context) }
 
     private lateinit var mAdapter: PPXAdapter
 
@@ -56,6 +64,14 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
         this.mViewModel.requestVideos()
     }
 
+    override fun onHiddenChanged(hidden: Boolean) {
+        this.mHidden = hidden
+        // Init Player
+        if (!mHidden) {
+            this.initPlayer()
+        }
+    }
+
     /**
      * Init Player
      */
@@ -68,8 +84,22 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
                 KsgGLSurfaceView.MODE_RENDER_SIZE
             )
         }
-        // 播放事件
-        this.mSignalPlayer.player.setPlayerListener(null)
+        // CoverManager
+        this.mSignalPlayer.coverManager.let {
+            // 移除Cover
+            it.removeAllCover { cover ->
+                ((cover is LoadingCover) || (cover is GestureCover))
+            }
+            // Controller
+            it.addCover(
+                CoverConstant.CoverKey.KEY_PPX_CONTROLLER, mController
+            )
+            // 手势提示UI 设置PaddingTop使得布局下移不会被Toolbar覆盖
+            val toolbarHeight = (activity as MainActivity).getToolbarHeight()
+            it.valuePool.putObject(CoverConstant.ValueKey.KEY_GESTURE_PADDING_TOP, toolbarHeight,false)
+        }
+        // Cover事件
+        this.mSignalPlayer.player.setCoverEventListener(null)
         // 自动播放
         this.onPlay(mBinding.ppxVideos.currentItem)
     }
@@ -134,30 +164,18 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
         }
     }
 
-    /**
-     * 播放事件
-     */
-    private val mPlayerListener = OnPlayerListener { eventCode, _ ->
-        when (eventCode) {
-            OnPlayerListener.PLAYER_EVENT_ON_PREPARED -> {
-            }
-            OnPlayerListener.PLAYER_EVENT_ON_RESUME -> {
-            }
-            OnPlayerListener.PLAYER_EVENT_ON_PAUSE -> {
-            }
-        }
-    }
-
     override fun onResume() {
         super.onResume()
-        // Init Player
-        this.initPlayer()
+        if (!mHidden) {
+            this.mSignalPlayer.onResume()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        // 暂停播放
-        this.mSignalPlayer.onPause()
+        if (!mHidden) {
+            this.mSignalPlayer.onPause()
+        }
     }
 
     override fun onDestroy() {

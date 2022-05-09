@@ -15,12 +15,12 @@ public interface OnTouchGestureListener {
     /**
      * 单击
      */
-    void onSingleTapGesture();
+    void onSingleTap();
 
     /**
      * 双击
      */
-    void onDoubleTapGesture();
+    void onDoubleTap();
 
     /**
      * 长按

@@ -44,17 +44,13 @@ class PlayStateView @JvmOverloads constructor(
         )
     }
 
+    var mBitStart: Bitmap? = null
+
+    var mBitPause: Bitmap? = null
+
     private val mMatrixStart: Matrix by lazy { Matrix() }
 
     private val mMatrixPause: Matrix by lazy { Matrix() }
-
-    private val mBitStart: Bitmap by lazy {
-        BitmapUtils.getVectorBitmap(getContext(), R.drawable.ic_start)
-    }
-
-    private val mBitPause: Bitmap by lazy {
-        BitmapUtils.getVectorBitmap(getContext(), R.drawable.ic_pause)
-    }
 
     private var mAnimator: ValueAnimator? = null
 
@@ -64,6 +60,9 @@ class PlayStateView @JvmOverloads constructor(
     init {
         // Init 画笔
         this.initPaint()
+        // InitIcon
+        this.mBitStart = BitmapUtils.getVectorBitmap(getContext(), R.drawable.ic_start)
+        this.mBitPause = BitmapUtils.getVectorBitmap(getContext(), R.drawable.ic_pause)
     }
 
     /**
@@ -170,11 +169,14 @@ class PlayStateView @JvmOverloads constructor(
      */
     private fun onDrawIcon(
         canvas: Canvas,
-        bitmap: Bitmap,
+        bitmap: Bitmap?,
         matrix: Matrix,
         degree: Float,
         alpha: Float
     ) {
+        if (bitmap == null) {
+            return
+        }
         val centerX = bitmap.width * 0.5f
         val centerY = bitmap.height * 0.5f
         matrix.reset()

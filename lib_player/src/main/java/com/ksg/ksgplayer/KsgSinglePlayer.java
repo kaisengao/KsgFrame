@@ -1,5 +1,6 @@
 package com.ksg.ksgplayer;
 
+import android.graphics.Color;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -90,7 +91,7 @@ public class KsgSinglePlayer {
      * 获取 变量
      */
     public <T> T getVariable(int key) {
-        return (T) getVariable(key, null);
+        return getVariable(key, null);
     }
 
     /**
@@ -98,6 +99,7 @@ public class KsgSinglePlayer {
      *
      * @param defValue 默认值
      */
+    @SuppressWarnings("unchecked")
     public <T> T getVariable(int key, T defValue) {
         Object value = mVariableCaches.get(key);
         return value == null ? defValue : (T) value;
@@ -151,6 +153,9 @@ public class KsgSinglePlayer {
         if (!mPlayer.isItPlaying()) {
             return;
         }
+        if (isOverlap) {
+            return;
+        }
         this.getPlayer().resume();
     }
 
@@ -171,13 +176,16 @@ public class KsgSinglePlayer {
      */
     public void setOverlap(boolean overlap) {
         this.isOverlap = overlap;
-        int state = getPlayer().getState();
-        if (state == IPlayer.STATE_PAUSE) {
-            this.onResume();
-        } else if (state == IPlayer.STATE_START) {
-            this.onPause();
-        } else if (state == IPlayer.STATE_PREPARED) {
-            this.getPlayer().start();
+        if (getPlayer().isItPlaying()) {
+            if (isOverlap) {
+                this.onPause();
+            } else {
+                this.onResume();
+            }
+        } else {
+            if (getPlayer().getState() == IPlayer.STATE_PREPARED) {
+                this.getPlayer().start();
+            }
         }
     }
 

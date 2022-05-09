@@ -168,7 +168,7 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      */
     @Override
     public boolean onSingleTapConfirmed(MotionEvent e) {
-        this.mTouchGestureListener.onSingleTapGesture();
+        this.mTouchGestureListener.onSingleTap();
         return super.onSingleTapConfirmed(e);
     }
 
@@ -177,7 +177,7 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      */
     @Override
     public boolean onDoubleTap(MotionEvent e) {
-        this.mTouchGestureListener.onDoubleTapGesture();
+        this.mTouchGestureListener.onDoubleTap();
         return super.onDoubleTap(e);
     }
 

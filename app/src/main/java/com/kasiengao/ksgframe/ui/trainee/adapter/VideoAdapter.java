@@ -24,9 +24,8 @@ public class VideoAdapter extends BaseQuickAdapter<VideoBean, BaseViewHolder> {
 
     @Override
     protected void convert(@NotNull BaseViewHolder holder, VideoBean item) {
-        holder.setText(R.id.item_xbb_title,item.getMovieName());
+        holder.setText(R.id.item_video_title,item.getMovieName());
         holder.setText(R.id.item_video_summary,item.getType().toString());
-        holder.setText(R.id.item_xbb_title,item.getMovieName());
         holder.<AppCompatRatingBar>getView(R.id.item_video_rating).setRating((float) (1 + Math.random() * (5 - 1 + 1)));
 
         GlideUtil.loadImageRound(getContext(), item.getCoverImg(), holder.getView(R.id.item_cover_image),4);

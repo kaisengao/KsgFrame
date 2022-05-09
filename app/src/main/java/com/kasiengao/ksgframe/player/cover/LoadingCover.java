@@ -7,8 +7,7 @@ import android.view.View;
 import com.kasiengao.ksgframe.R;
 import com.ksg.ksgplayer.cover.BaseCover;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
-import com.ksg.ksgplayer.player.IPlayer;
-import com.ksg.ksgplayer.state.PlayerStateGetter;
+import com.ksg.ksgplayer.state.PlayerInfoGetter;
 
 /**
  * @ClassName: LoadingCover
@@ -48,8 +47,8 @@ public class LoadingCover extends BaseCover {
      */
     @Override
     public void onCoverViewBind() {
-        PlayerStateGetter playerStateGetter = getPlayerStateGetter();
-        if (playerStateGetter != null && isItPlaying(playerStateGetter)) {
+        PlayerInfoGetter playerStateGetter = getPlayerInfoGetter();
+        if (playerStateGetter != null && getPlayerInfoGetter().isItPlaying()) {
             this.setLoadingState(playerStateGetter.isBuffering());
         }
     }
@@ -60,21 +59,6 @@ public class LoadingCover extends BaseCover {
     @Override
     public void onCoverViewUnBind() {
 
-    }
-
-    /**
-     * 当前播放状态
-     *
-     * @param playerStateGetter {@link PlayerStateGetter}
-     * @return boolean
-     */
-    private boolean isItPlaying(PlayerStateGetter playerStateGetter) {
-        int state = playerStateGetter.getState();
-        return state != IPlayer.STATE_STOP
-                && state != IPlayer.STATE_ERROR
-                && state != IPlayer.STATE_IDLE
-                && state != IPlayer.STATE_INIT
-                && state != IPlayer.STATE_COMPLETE;
     }
 
     /**

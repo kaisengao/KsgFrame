@@ -5,9 +5,9 @@ import com.ksg.ksgplayer.player.IPlayer;
 /**
  * @author kaisengao
  * @create: 2019/1/29 13:47
- * @describe: 播放状态
+ * @describe: 播放信息
  */
-public interface PlayerStateGetter {
+public interface PlayerInfoGetter {
 
     /**
      * 获取状态.
@@ -57,7 +57,15 @@ public interface PlayerStateGetter {
 
     /**
      * 获取速度
+     *
      * @return speed
      */
     float getSpeed();
+
+    /**
+     * 是否处于播放
+     *
+     * @return boolean
+     */
+    boolean isItPlaying();
 }

@@ -4,7 +4,7 @@ import android.os.Bundle;
 
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
-import com.ksg.ksgplayer.state.PlayerStateGetter;
+import com.ksg.ksgplayer.state.PlayerInfoGetter;
 
 /**
  * @ClassName: PlaybackCache
@@ -16,15 +16,15 @@ public class PlaybackCache implements IPlaybackCache {
 
     private DataSource mDataSource;
 
-    private PlayerStateGetter mPlayerStateGetter;
+    private PlayerInfoGetter mPlayerInfoGetter;
 
     /**
      * 绑定 播放状态获取器
      *
-     * @param playerStateGetter playerStateGetter
+     * @param playerInfoGetter playerInfoGetter
      */
-    public final void bindPlayStateGetter(PlayerStateGetter playerStateGetter) {
-        this.mPlayerStateGetter = playerStateGetter;
+    public final void bindPlayInfoGetter(PlayerInfoGetter playerInfoGetter) {
+        this.mPlayerInfoGetter = playerInfoGetter;
     }
 
     /**
@@ -58,7 +58,7 @@ public class PlaybackCache implements IPlaybackCache {
     @Override
     public void onIntentDestroy() {
         this.putProgressCache(mDataSource);
-        this.mPlayerStateGetter = null;
+        this.mPlayerInfoGetter = null;
     }
 
     /**
@@ -94,8 +94,8 @@ public class PlaybackCache implements IPlaybackCache {
     public void putProgressCache(DataSource dataSource) {
         if (dataSource != null
                 && dataSource.isProgressCache()
-                && mPlayerStateGetter != null) {
-            ProgressCache.getInstance().putCache(dataSource.getUrl(), mPlayerStateGetter.getProgress());
+                && mPlayerInfoGetter != null) {
+            ProgressCache.getInstance().putCache(dataSource.getUrl(), mPlayerInfoGetter.getProgress());
         }
     }
 

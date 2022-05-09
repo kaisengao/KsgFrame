@@ -79,6 +79,13 @@ public abstract class BaseFragment<DB extends ViewDataBinding> extends Fragment 
     }
 
     /**
+     * onBackPressed
+     */
+    public Boolean onBackPressed() {
+        return false;
+    }
+
+    /**
      * LayoutId
      */
     protected abstract int getContentLayoutId();

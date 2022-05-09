@@ -9,7 +9,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import androidx.annotation.Keep;
 import androidx.annotation.NonNull;
@@ -18,7 +17,6 @@ import androidx.appcompat.widget.AppCompatImageView;
 
 import com.kaisengao.base.util.GlideUtil;
 import com.kasiengao.ksgframe.R;
-import com.ksg.ksgplayer.player.IPlayer;
 
 /**
  * @ClassName: PlayerContainerView
@@ -30,7 +28,7 @@ public class PlayerContainerView extends FrameLayout {
 
     private boolean mIntercept;
 
-    private ProgressBar mPlayState;
+    private AppCompatImageView mPlayIcon;
 
     private AppCompatImageView mCoverImage;
 
@@ -49,8 +47,17 @@ public class PlayerContainerView extends FrameLayout {
      */
     private void init() {
         View controlView = View.inflate(getContext(), R.layout.layout_play_container, this);
-        this.mPlayState = controlView.findViewById(R.id.play_state);
+        this.mPlayIcon = controlView.findViewById(R.id.play_icon);
         this.mCoverImage = controlView.findViewById(R.id.cover_image);
+    }
+
+    /**
+     * 设置 Play图标展示
+     *
+     * @param showed show/hide
+     */
+    public void setPlayShowed(boolean showed) {
+        this.mPlayIcon.setVisibility(showed ? VISIBLE : GONE);
     }
 
     /**
@@ -66,63 +73,21 @@ public class PlayerContainerView extends FrameLayout {
         }
     }
 
-//    /**
-//     * 设置 封面图
-//     *
-//     * @param drawable drawable
-//     */
-//    public void setCoverImage(Drawable drawable) {
-//        this.mCoverImage.setImageDrawable(drawable);
-//        this.mCoverImage.setVisibility(View.VISIBLE);
-//    }
+    /**
+     * 设置 封面图
+     *
+     * @param drawable drawable
+     */
+    public void setCoverImage(Drawable drawable) {
+        this.mCoverImage.setImageDrawable(drawable);
+        this.mCoverImage.setVisibility(View.VISIBLE);
+    }
 
     /**
      * 获取 封面图
      */
     public Drawable getCoverImage() {
         return mCoverImage.getDrawable();
-    }
-
-    /**
-     * 设置 播放器状态位
-     *
-     * @param playerState {@link IPlayer}
-     */
-    public void setPlayerState(int playerState) {
-        // State
-        switch (playerState) {
-            case IPlayer.STATE_IDLE:
-            case IPlayer.STATE_PAUSE:
-                this.mPlayState.setEnabled(true);
-                this.mPlayState.setSelected(false);
-                this.mPlayState.setVisibility(View.VISIBLE);
-                break;
-            case IPlayer.STATE_INIT:
-            case IPlayer.STATE_PREPARED:
-                this.mPlayState.setEnabled(false);
-                this.mPlayState.setSelected(false);
-                this.mPlayState.setVisibility(View.VISIBLE);
-                break;
-            case IPlayer.STATE_START:
-                this.mPlayState.setEnabled(false);
-                this.mPlayState.setSelected(true);
-                this.mPlayState.setVisibility(View.GONE);
-                break;
-            default:
-                this.mPlayState.setEnabled(true);
-                this.mPlayState.setSelected(false);
-                this.mPlayState.setVisibility(View.GONE);
-                break;
-        }
-    }
-
-    /**
-     * 获取 播放器状态位
-     *
-     * @return {@link IPlayer}
-     */
-    public ProgressBar getPlayState() {
-        return mPlayState;
     }
 
     /**

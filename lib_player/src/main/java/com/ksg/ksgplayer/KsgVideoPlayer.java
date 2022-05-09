@@ -33,7 +33,7 @@ import com.ksg.ksgplayer.renderer.glrender.GLViewRender;
 import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView;
 import com.ksg.ksgplayer.renderer.view.KsgSurfaceView;
 import com.ksg.ksgplayer.renderer.view.KsgTextureView;
-import com.ksg.ksgplayer.state.PlayerStateGetter;
+import com.ksg.ksgplayer.state.PlayerInfoGetter;
 import com.ksg.ksgplayer.state.StateGetter;
 import com.ksg.ksgplayer.widget.VideoContainer;
 
@@ -56,11 +56,9 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
 
     private boolean mUserPause;
 
-    private boolean isBuffering;
-
     private GLViewRender mGLViewRender;
 
-    private PlayerProxy mPlayer;
+    private PlayerProxy mPlayerProxy;
 
     private VideoContainer mVideoContainer;
 
@@ -88,18 +86,17 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
         this.mContext = context;
         // Init Player
         this.initPlayer();
-        // 初始化视图容器
-        this.mVideoContainer = createContainer();
+        // Init Container
+        initContainer();
     }
 
     /**
-     * 创建视图容器
+     * Init Container
      */
-    private VideoContainer createContainer() {
-        VideoContainer container = new VideoContainer(mContext);
-        container.setStateGetter(mStateGetter);
-        container.setCoverEventListener(mContainerCoverEventListener);
-        return container;
+    private void initContainer() {
+        this.mVideoContainer = new VideoContainer(mContext);
+        this.mVideoContainer.setStateGetter(mStateGetter);
+        this.mVideoContainer.setCoverEventListener(mContainerCoverEventListener);
     }
 
     /**
@@ -208,13 +205,13 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public boolean setDecoderView(BasePlayer decoderView) {
-        BasePlayer oldDecoderView = mPlayer.getDecoderView();
+        BasePlayer oldDecoderView = mPlayerProxy.getDecoderView();
         // 去重
         if (oldDecoderView != null && oldDecoderView == decoderView) {
             return false;
         }
         // 设置 解码器
-        this.mPlayer.setDecoderView(decoderView);
+        this.mPlayerProxy.setDecoderView(decoderView);
         // 设置 渲染器
         this.setRenderer(getRendererType());
         // Return
@@ -227,7 +224,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      * @return {@link BasePlayer}
      */
     public BasePlayer getDecoderView() {
-        return mPlayer.getDecoderView();
+        return mPlayerProxy.getDecoderView();
     }
 
     /**
@@ -258,8 +255,8 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     @Override
     public void setRenderer(int rendererType) {
         this.mRendererType = rendererType;
-        this.mPlayer.setSurface(null);
-        this.mPlayer.setDisplay(null);
+        this.mPlayerProxy.setSurface(null);
+        this.mPlayerProxy.setDisplay(null);
         // 释放渲染器
         this.releaseRenderer();
         // 创建渲染器
@@ -283,7 +280,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
         }
         this.mRenderer = renderer;
         // BindPlayer
-        this.mRenderer.bindPlayer(mPlayer);
+        this.mRenderer.bindPlayer(mPlayerProxy);
         this.mRenderer.setRendererListener(mRendererListenerAdapter);
         // 设置渲染器
         this.mVideoContainer.setRenderer(mRenderer.getRendererView());
@@ -318,7 +315,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public boolean isItPlaying() {
-        return mPlayer.isItPlaying();
+        return mPlayerProxy.isItPlaying();
     }
 
     /**
@@ -326,11 +323,11 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void initPlayer() {
-        this.mPlayer = new PlayerProxy();
-        this.mPlayer.setPlayerListener(mPlayerProxyListener);
-        this.mPlayer.setErrorListener(mErrorProxyListener);
+        this.mPlayerProxy = new PlayerProxy();
+        this.mPlayerProxy.setPlayerListener(mPlayerProxyListener);
+        this.mPlayerProxy.setErrorListener(mErrorProxyListener);
         // Cover事件处理程序实现类
-        this.mCoverEventHandler = new CoverEventHandler(mPlayer);
+        this.mCoverEventHandler = new CoverEventHandler(mPlayerProxy);
     }
 
     /**
@@ -347,7 +344,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public int getState() {
-        return mPlayer.getState();
+        return mPlayerProxy.getState();
     }
 
     /**
@@ -357,7 +354,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      * @param bundle bundle
      */
     public void option(int code, Bundle bundle) {
-        this.mPlayer.option(code, bundle);
+        this.mPlayerProxy.option(code, bundle);
     }
 
     /**
@@ -367,7 +364,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void setDataSource(DataSource dataSource) {
-        this.mPlayer.setDataSource(dataSource);
+        this.mPlayerProxy.setDataSource(dataSource);
     }
 
     /**
@@ -377,7 +374,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void setSurface(Surface surface) {
-        this.mPlayer.setSurface(surface);
+        this.mPlayerProxy.setSurface(surface);
     }
 
     /**
@@ -387,7 +384,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void setDisplay(SurfaceHolder holder) {
-        this.mPlayer.setDisplay(holder);
+        this.mPlayerProxy.setDisplay(holder);
     }
 
     /**
@@ -397,7 +394,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public View getCustomRenderer() {
-        return mPlayer.getCustomRenderer();
+        return mPlayerProxy.getCustomRenderer();
     }
 
     /**
@@ -405,7 +402,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void setVolume(float left, float right) {
-        this.mPlayer.setVolume(left, right);
+        this.mPlayerProxy.setVolume(left, right);
     }
 
     /**
@@ -413,7 +410,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void setLooping(boolean looping) {
-        this.mPlayer.setLooping(looping);
+        this.mPlayerProxy.setLooping(looping);
     }
 
     /**
@@ -421,7 +418,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void setSpeed(float speed) {
-        this.mPlayer.setSpeed(speed);
+        this.mPlayerProxy.setSpeed(speed);
     }
 
     /**
@@ -429,7 +426,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public float getSpeed() {
-        return mPlayer.getSpeed();
+        return mPlayerProxy.getSpeed();
     }
 
     /**
@@ -437,7 +434,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public long getTcpSpeed() {
-        return mPlayer.getTcpSpeed();
+        return mPlayerProxy.getTcpSpeed();
     }
 
     /**
@@ -445,7 +442,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public int getBufferPercentage() {
-        return mPlayer.getBufferPercentage();
+        return mPlayerProxy.getBufferPercentage();
     }
 
     /**
@@ -453,7 +450,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public long getCurrentPosition() {
-        return mPlayer.getCurrentPosition();
+        return mPlayerProxy.getCurrentPosition();
     }
 
     /**
@@ -461,7 +458,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public long getDuration() {
-        return mPlayer.getDuration();
+        return mPlayerProxy.getDuration();
     }
 
     /**
@@ -469,7 +466,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public boolean isPlaying() {
-        return mPlayer.isPlaying();
+        return mPlayerProxy.isPlaying();
     }
 
     /**
@@ -477,7 +474,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void seekTo(long msc) {
-        this.mPlayer.seekTo(msc);
+        this.mPlayerProxy.seekTo(msc);
     }
 
     /**
@@ -485,7 +482,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void start() {
-        this.mPlayer.start();
+        this.mPlayerProxy.start();
     }
 
     /**
@@ -495,7 +492,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void start(long msc) {
-        this.mPlayer.start(msc);
+        this.mPlayerProxy.start(msc);
     }
 
     /**
@@ -503,9 +500,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void pause() {
-        if (mPlayer.isItPlaying()) {
-            this.mPlayer.pause();
-        }
+        this.mPlayerProxy.pause();
     }
 
     /**
@@ -513,11 +508,9 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void resume() {
-        if (isItPlaying()) {
-            if (!mUserPause) {
-                this.mPlayer.resume();
-                this.mUserPause = false;
-            }
+        if (!mUserPause) {
+            this.mPlayerProxy.resume();
+            this.mUserPause = false;
         }
     }
 
@@ -526,7 +519,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void stop() {
-        this.mPlayer.stop();
+        this.mPlayerProxy.stop();
     }
 
     /**
@@ -536,7 +529,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void replay(long msc) {
-        this.mPlayer.replay(msc);
+        this.mPlayerProxy.replay(msc);
     }
 
     /**
@@ -544,7 +537,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void reset() {
-        this.mPlayer.reset();
+        this.mPlayerProxy.reset();
     }
 
     /**
@@ -552,7 +545,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void release() {
-        this.mPlayer.release();
+        this.mPlayerProxy.release();
     }
 
     /**
@@ -597,6 +590,17 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     }
 
     /**
+     * 一些状态获取器
+     */
+    private final StateGetter mStateGetter = new StateGetter() {
+
+        @Override
+        public PlayerInfoGetter getPlayerInfoGetter() {
+            return mPlayerProxy.mPlayerInfoGetter;
+        }
+    };
+
+    /**
      * 播放事件
      */
     private final OnPlayerListener mPlayerProxyListener = new OnPlayerListener() {
@@ -630,14 +634,6 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
                         }
                     }
                     break;
-                case OnPlayerListener.PLAYER_EVENT_ON_BUFFERING_START:
-                    // 事件 开始缓冲
-                    isBuffering = true;
-                    break;
-                case OnPlayerListener.PLAYER_EVENT_ON_BUFFERING_END:
-                    // 事件 结束缓冲
-                    isBuffering = false;
-                    break;
                 default:
                     break;
             }
@@ -662,46 +658,6 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
             if (mErrorListener != null) {
                 mErrorListener.onErrorEvent(eventCode, bundle);
             }
-        }
-    };
-
-    /**
-     * 一些状态获取器
-     */
-    private final StateGetter mStateGetter = new StateGetter() {
-        @Override
-        public PlayerStateGetter getPlayerStateGetter() {
-            return new PlayerStateGetter() {
-                @Override
-                public int getState() {
-                    return mPlayer.getState();
-                }
-
-                @Override
-                public long getProgress() {
-                    return mPlayer.getCurrentPosition();
-                }
-
-                @Override
-                public long getDuration() {
-                    return mPlayer.getDuration();
-                }
-
-                @Override
-                public int getBufferPercentage() {
-                    return mPlayer.getBufferPercentage();
-                }
-
-                @Override
-                public boolean isBuffering() {
-                    return isBuffering;
-                }
-
-                @Override
-                public float getSpeed() {
-                    return mPlayer.getSpeed();
-                }
-            };
         }
     };
 
@@ -755,7 +711,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     public void destroy() {
         this.releaseRenderer();
         this.mCoverEventHandler = null;
-        this.mPlayer.destroy();
+        this.mPlayerProxy.destroy();
         this.mVideoContainer.destroy();
         this.unbindContainer();
     }

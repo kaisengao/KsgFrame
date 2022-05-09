@@ -22,6 +22,8 @@ public interface CoverConstant {
 
         String KEY_SMALL_CONTROLLER = "smallController";
 
+        String KEY_PPX_CONTROLLER = "PPXController";
+
         String KEY_UPLOADER = "uploader";
 
         String KEY_DANMAKU = "danmaku";
@@ -38,12 +40,22 @@ public interface CoverConstant {
         /**
          * 手势 双击
          */
-        String KEY_GESTURE_DOUBLE_TAB = "doubleTab";
+        String KEY_GESTURE_DOUBLE_TAP = "doubleTab";
 
         /**
-         * UP主信息
+         * 手势 长按
          */
-        String KEY_UPLOADER_DATA = "uploaderData";
+        String KEY_GESTURE_LONG_PRESS = "longPress";
+
+        /**
+         * 手势 长按结束
+         */
+        String KEY_GESTURE_LONG_PRESS_END = "longPressEnd";
+
+        /**
+         * 手势 PaddingTop
+         */
+        String KEY_GESTURE_PADDING_TOP = "gesturePaddingTop";
 
         /**
          * 控制器 隐藏
@@ -60,6 +72,10 @@ public interface CoverConstant {
          */
         String KEY_FULLSCREEN_TOGGLE = "fullscreenToggle";
 
+        /**
+         * UP主信息
+         */
+        String KEY_UPLOADER_DATA = "uploaderData";
     }
 
     interface PrivateEvent {
@@ -75,9 +91,9 @@ public interface CoverConstant {
         int CODE_REQUEST_DANMAKU_CLOSE = -101;
 
         /**
-         * 手势滑动 开启/关闭
+         * 手势 开启/关闭
          */
-        int CODE_GESTURE_SLIDE_ENABLED = 200;
+        int CODE_GESTURE_ENABLED = 150;
     }
 
     interface CoverEvent extends ICoverEvent {
