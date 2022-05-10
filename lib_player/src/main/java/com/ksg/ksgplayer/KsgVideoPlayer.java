@@ -1,5 +1,6 @@
 package com.ksg.ksgplayer;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -9,8 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
-import androidx.annotation.ColorRes;
-import androidx.core.content.ContextCompat;
+import androidx.annotation.ColorInt;
 
 import com.ksg.ksgplayer.config.PlayerConfig;
 import com.ksg.ksgplayer.cover.ICoverEvent;
@@ -102,11 +102,12 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     /**
      * 设置 背景颜色
      *
-     * @param resId resId
+     * @param color color
      */
+    @SuppressLint("ResourceAsColor")
     @Override
-    public void setBackgroundColor(@ColorRes int resId) {
-        this.mVideoContainer.setBackgroundColor(ContextCompat.getColor(mContext, resId));
+    public void setBackgroundColor(@ColorInt int color) {
+        this.mVideoContainer.setBackgroundColor(color);
     }
 
     /**

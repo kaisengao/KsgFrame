@@ -110,7 +110,8 @@ class XBBVideosView @JvmOverloads constructor(
     private fun onPlay(position: Int, container: PlayerContainerView) {
         // 重置容器
         this.resetContainer()
-        // 设置 拦截状态
+        // 初始容器
+        container.onHideView()
         container.isIntercept = true
         // 数据源
         val videoBean = mAdapter.data[position]
@@ -133,6 +134,7 @@ class XBBVideosView @JvmOverloads constructor(
      * 重置容器
      */
     private fun resetContainer() {
+        this.mContainer?.onShowView()
         this.mContainer?.isIntercept = false
         this.mContainer = null
     }

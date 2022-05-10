@@ -18,7 +18,7 @@ public class ViewPagerEx extends ViewPager {
     private boolean mCanScroll = true;
 
     public ViewPagerEx(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public ViewPagerEx(Context context, AttributeSet attrs) {

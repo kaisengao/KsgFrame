@@ -148,9 +148,10 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
     private void setPlayState(int state) {
         if (state == IPlayer.STATE_PAUSE) {
             this.mPlayState.switchToStart();
-        } else if (state == IPlayer.STATE_START
-                || state == IPlayer.STATE_COMPLETE) {
+            this.mPlayState.setSelected(false);
+        } else if (state == IPlayer.STATE_START) {
             this.mPlayState.switchToPause();
+            this.mPlayState.setSelected(true);
         }
     }
 
@@ -160,16 +161,13 @@ public class LandControllerCover extends BaseControllerCover implements RadioGro
     @Override
     protected void onSwitchPlayState() {
         super.onSwitchPlayState();
-        switch (mPlayState.getMCurrState()) {
-            case PlayStateView.STATE_START:
-                this.requestResume(null);
-                break;
-            case PlayStateView.STATE_PAUSE:
-                this.requestPause(null);
-                break;
-            default:
-                break;
+        boolean selected = mPlayState.isSelected();
+        if (selected) {
+            this.requestPause(null);
+        } else {
+            this.requestResume(null);
         }
+        this.mPlayState.setSelected(!selected);
     }
 
     /**

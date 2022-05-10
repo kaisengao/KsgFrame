@@ -3,16 +3,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:parentTag="android.widget.FrameLayout">
+    tools:layout_height="210dp"
+    tools:parentTag="com.kasiengao.ksgframe.common.widget.PlayerContainerView">
 
     <!-- 封面图 -->
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/cover_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        tools:src="@color/colorSecondaryVariant"
-        tools:visibility="visible" />
+        tools:src="@color/colorSecondaryVariant" />
 
     <!-- Play -->
     <androidx.appcompat.widget.AppCompatImageView
@@ -21,8 +20,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/shape_play_bg"
-        android:src="@drawable/ic_start"
-        android:visibility="gone"
-        tools:visibility="visible" />
+        android:src="@drawable/ic_start" />
 
 </merge>

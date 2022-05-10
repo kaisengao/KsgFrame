@@ -16,7 +16,7 @@ import androidx.annotation.Nullable;
 public class CLinearLayout extends LinearLayout {
 
     public CLinearLayout(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public CLinearLayout(Context context, @Nullable AttributeSet attrs) {

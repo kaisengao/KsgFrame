@@ -1,5 +1,6 @@
 package com.ksg.ksgplayer.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.Surface;
@@ -7,7 +8,7 @@ import android.view.SurfaceHolder;
 import android.view.View;
 import android.view.ViewGroup;
 
-import androidx.annotation.ColorRes;
+import androidx.annotation.ColorInt;
 
 import com.ksg.ksgplayer.IKsgVideoPlayer;
 import com.ksg.ksgplayer.KsgVideoPlayer;
@@ -58,11 +59,12 @@ public class KsgAssistView implements IKsgVideoView {
     /**
      * 设置 背景颜色
      *
-     * @param res res
+     * @param color color
      */
+    @SuppressLint("ResourceAsColor")
     @Override
-    public void setBackgroundColor(@ColorRes int res) {
-        this.mPlayer.setBackgroundColor(res);
+    public void setBackgroundColor(@ColorInt int color) {
+        this.mPlayer.setBackgroundColor(color);
     }
 
     /**

@@ -49,6 +49,8 @@ public class PlayerContainerView extends FrameLayout {
         View controlView = View.inflate(getContext(), R.layout.layout_play_container, this);
         this.mPlayIcon = controlView.findViewById(R.id.play_icon);
         this.mCoverImage = controlView.findViewById(R.id.cover_image);
+        // HideView
+        this.onHideView();
     }
 
     /**
@@ -88,6 +90,22 @@ public class PlayerContainerView extends FrameLayout {
      */
     public Drawable getCoverImage() {
         return mCoverImage.getDrawable();
+    }
+
+    /**
+     * 显示View
+     */
+    public void onShowView() {
+        this.mPlayIcon.setVisibility(VISIBLE);
+        this.mCoverImage.setVisibility(VISIBLE);
+    }
+
+    /**
+     * 隐藏View
+     */
+    public void onHideView() {
+        this.mPlayIcon.setVisibility(GONE);
+        this.mCoverImage.setVisibility(GONE);
     }
 
     /**

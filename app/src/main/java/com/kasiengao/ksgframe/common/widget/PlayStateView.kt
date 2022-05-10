@@ -25,7 +25,7 @@ class PlayStateView @JvmOverloads constructor(
         const val STATE_PAUSE = 2
     }
 
-    var mCurrState = STATE_START
+    private var mCurrState = STATE_START
 
     private var mAlpha: Float = 1f
 

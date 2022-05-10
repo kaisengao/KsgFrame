@@ -55,7 +55,7 @@ public class KsgSinglePlayer {
      */
     private void initPlayer() {
         this.mPlayer = new KsgAssistView(AppFactory.application());
-        this.mPlayer.setBackgroundColor(R.color.black);
+        this.mPlayer.setBackgroundColor(Color.BLACK);
         // 创建 Cover管理器
         this.mCoverManager = new CoverManager();
         // 设置 Cover管理器

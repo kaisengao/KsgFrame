@@ -202,20 +202,6 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     }
 
     /**
-     * 锁定 ViewPager滑动
-     */
-    fun lockVpScroll() {
-        this.mBinding.mainPager.setScrollable(false)
-    }
-
-    /**
-     * 解锁 ViewPager滑动
-     */
-    fun unlockVpScroll() {
-        this.mBinding.mainPager.setScrollable(true)
-    }
-
-    /**
      * 获取 Toolbar的高度
      */
     fun getToolbarHeight(): Int {

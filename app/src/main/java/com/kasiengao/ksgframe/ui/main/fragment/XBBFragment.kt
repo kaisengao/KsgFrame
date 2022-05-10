@@ -1,6 +1,7 @@
 package com.kasiengao.ksgframe.ui.main.fragment
 
 import android.view.ViewGroup
+import androidx.core.view.contains
 import com.kaisengao.mvvm.base.fragment.BaseVmFragment
 import com.kasiengao.ksgframe.BR
 import com.kasiengao.ksgframe.R
@@ -9,6 +10,7 @@ import com.kasiengao.ksgframe.common.widget.PlayerContainerView
 import com.kasiengao.ksgframe.databinding.FragmentXbbBinding
 import com.kasiengao.ksgframe.ui.main.MainActivity
 import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel
+import com.kasiengao.ksgframe.ui.main.widget.XBBDetailView
 import com.kasiengao.ksgframe.ui.main.widget.XBBVideosView
 
 /**
@@ -21,6 +23,8 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
 
     private var mHidden = true
 
+    private val mDetailView: XBBDetailView by lazy { XBBDetailView(context!!) }
+
     override fun getContentLayoutId(): Int = R.layout.fragment_xbb
 
     override fun initVariableId(): Int = BR.viewModel
@@ -29,10 +33,10 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
 
     override fun initWidget() {
         super.initWidget()
-        // 设置PaddingTop为Toolbar的高度、使得布局下移不会被Toolbar覆盖
+        // 设置PaddingTop使得布局下移不会被Toolbar覆盖
         this.mBinding.root.post {
             (activity as MainActivity).getToolbarHeight().let {
-                (mBinding.xbbRefresh.layoutParams as ViewGroup.MarginLayoutParams).topMargin = it
+                this.mBinding.root.setPadding(0,it,0,0)
             }
         }
         // Refresh
@@ -71,8 +75,8 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
      */
     private fun initVideos() {
         // 事件
+        this.mDetailView.mVideoListener = mVideoListener
         this.mBinding.xbbVideos.mVideoListener = mVideoListener
-        this.mBinding.xbbVideoDetail.mVideoListener = mVideoListener
     }
 
     /**
@@ -84,7 +88,7 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
          * Back
          */
         override fun onBack() {
-            mBinding.xbbVideoDetail.onBackPressed()
+            mDetailView.onBackPressed()
         }
 
         /**
@@ -95,13 +99,13 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
             position: Int,
             container: PlayerContainerView
         ) {
-            (activity as MainActivity).let {
-                if (fullscreen) {
-                    it.lockVpScroll()
-                    it.supportActionBar?.hide()
-                }
-            }
-            mBinding.xbbVideoDetail.onFullscreen(fullscreen, position, container)
+//            (activity as MainActivity).let {
+//                if (fullscreen) {
+//                    it.lockVpScroll()
+//                    it.supportActionBar?.hide()
+//                }
+//            }
+//            mBinding.xbbVideoDetail.onFullscreen(fullscreen, position, container)
         }
 
         /**
@@ -112,11 +116,18 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
          */
         override fun openDetail(position: Int, listContainer: PlayerContainerView?) {
             listContainer?.let { container ->
-                (activity as MainActivity).let {
-                    it.lockVpScroll()
-                    it.supportActionBar?.hide()
+                activity?.let {
+                    val viewGroup = it.findViewById<ViewGroup>(android.R.id.content)
+                    if (!viewGroup.contains(mDetailView)) {
+                        viewGroup.addView(
+                            mDetailView, ViewGroup.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT,
+                                ViewGroup.LayoutParams.MATCH_PARENT
+                            )
+                        )
+                    }
                 }
-                mBinding.xbbVideoDetail.openDetail(position, container)
+                mDetailView.openDetail(position, container)
             }
         }
 
@@ -124,10 +135,7 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
          * 关闭详情页
          */
         override fun closeDetail() {
-            (activity as MainActivity).let {
-                it.unlockVpScroll()
-                it.supportActionBar?.show()
-            }
+            activity?.findViewById<ViewGroup>(android.R.id.content)?.removeView(mDetailView)
         }
     }
 
@@ -135,7 +143,7 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
      * Init ViewDetail
      */
     private fun initViewDetail() {
-        this.mBinding.xbbVideoDetail.bindViewModel(this, mViewModel)
+        this.mDetailView.bindViewModel(this, mViewModel)
     }
 
     /**
@@ -154,15 +162,19 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
 
     override fun onResume() {
         super.onResume()
-        this.mBinding.xbbVideos.onResume()
+        if (!mHidden) {
+            this.mBinding.xbbVideos.onResume()
+        }
     }
 
     override fun onPause() {
         super.onPause()
-        this.mBinding.xbbVideos.onPause()
+        if (!mHidden) {
+            this.mBinding.xbbVideos.onPause()
+        }
     }
 
     override fun onBackPressed(): Boolean {
-        return mBinding.xbbVideoDetail.onBackPressed()
+        return mDetailView.onBackPressed()
     }
 }

@@ -28,7 +28,7 @@ import com.kasiengao.ksgframe.ui.trainee.staggered.StaggeredGridActivity;
 public class TraineeView extends LinearLayout {
 
     public TraineeView(@NonNull Context context) {
-        super(context);
+        this(context, null);
     }
 
     public TraineeView(@NonNull Context context, @Nullable AttributeSet attrs) {

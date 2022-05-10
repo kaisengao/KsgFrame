@@ -111,10 +111,11 @@ public class PPXControllerCover extends BaseControllerCover {
     private void setPlayState(int state) {
         if (state == IPlayer.STATE_PAUSE) {
             this.mPlayState.switchToStart();
+            this.mPlayState.setSelected(false);
             this.setCoverVisibility(View.VISIBLE);
-        } else if (state == IPlayer.STATE_START
-                || state == IPlayer.STATE_COMPLETE) {
+        } else if (state == IPlayer.STATE_START) {
             this.mPlayState.switchToPause();
+            this.mPlayState.setSelected(true);
             this.setCoverVisibility(View.GONE);
         }
     }
@@ -122,18 +123,16 @@ public class PPXControllerCover extends BaseControllerCover {
     /**
      * 播放状态
      */
+    @Override
     protected void onSwitchPlayState() {
         super.onSwitchPlayState();
-        switch (mPlayState.getMCurrState()) {
-            case PlayStateView.STATE_START:
-                this.requestResume(null);
-                break;
-            case PlayStateView.STATE_PAUSE:
-                this.requestPause(null);
-                break;
-            default:
-                break;
+        boolean selected = mPlayState.isSelected();
+        if (selected) {
+            this.requestPause(null);
+        } else {
+            this.requestResume(null);
         }
+        this.mPlayState.setSelected(!selected);
     }
 
     /**

@@ -16,6 +16,11 @@ public class ColorUtil {
      * @return #xxxx
      */
     public static String percentColor(float percent, String color) {
+        if (percent < 0) {
+            percent = 0;
+        } else if (percent > 100) {
+            percent = 100;
+        }
         // 计算百分比色值
         percent = percent / 100;
         percent = Math.round(percent * 100) / 100f;

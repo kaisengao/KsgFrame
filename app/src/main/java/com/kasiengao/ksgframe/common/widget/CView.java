@@ -2,25 +2,23 @@ package com.kasiengao.ksgframe.common.widget;
 
 import android.content.Context;
 import android.util.AttributeSet;
+import android.view.View;
 
 import androidx.annotation.Keep;
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatImageView;
 
 /**
- * @ClassName: BlurImageView
+ * @ClassName: CView
  * @Author: KaiSenGao
- * @CreateDate: 2022/3/29 18:53
+ * @CreateDate: 2022/5/10 19:04
  * @Description:
  */
-public class CImageView extends AppCompatImageView {
+public class CView extends View {
 
-    public CImageView(@NonNull Context context) {
+    public CView(Context context) {
         this(context, null);
     }
 
-    public CImageView(@NonNull Context context, @Nullable AttributeSet attrs) {
+    public CView(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
@@ -41,5 +39,4 @@ public class CImageView extends AppCompatImageView {
         this.getLayoutParams().height = (int) height;
         this.requestLayout();
     }
-
 }

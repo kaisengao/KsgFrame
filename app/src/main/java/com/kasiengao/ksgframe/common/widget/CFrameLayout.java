@@ -15,7 +15,7 @@ import androidx.annotation.Keep;
 public class CFrameLayout extends FrameLayout {
 
     public CFrameLayout(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public CFrameLayout(Context context, AttributeSet attrs) {
