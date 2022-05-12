@@ -4,13 +4,9 @@ import com.kaisengao.mvvm.base.fragment.BaseVmFragment
 import com.kasiengao.ksgframe.BR
 import com.kasiengao.ksgframe.R
 import com.kasiengao.ksgframe.common.util.TextUtil
-import com.kasiengao.ksgframe.common.widget.PlayerContainerView
 import com.kasiengao.ksgframe.databinding.FragmentXbbBinding
 import com.kasiengao.ksgframe.ui.main.MainActivity
-import com.kasiengao.ksgframe.ui.main.bean.VideoBean
 import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel
-import com.kasiengao.ksgframe.ui.main.widget.XBBDetailView
-import com.kasiengao.ksgframe.ui.main.widget.XBBVideosView
 
 /**
  * @ClassName: XBBFragment
@@ -21,8 +17,6 @@ import com.kasiengao.ksgframe.ui.main.widget.XBBVideosView
 class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
 
     private var mHidden = true
-
-    private val mDetailView: XBBDetailView by lazy { XBBDetailView(context!!) }
 
     override fun getContentLayoutId(): Int = R.layout.fragment_xbb
 
@@ -57,76 +51,11 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
     }
 
     /**
-     * FragmentHidden
-     */
-    override fun onHiddenChanged(hidden: Boolean) {
-        this.mHidden = hidden
-        // Init Player
-        if (!mHidden) {
-            this.mBinding.xbbVideos.initPlayer()
-        }
-    }
-
-    /**
      * Init Videos
      */
     private fun initVideos() {
-        this.mDetailView.init(activity!!, mBinding.xbbVideos)
-        // 事件
-        this.mDetailView.mVideoListener = mVideoListener
-        this.mBinding.xbbVideos.mVideoListener = mVideoListener
-    }
-
-    /**
-     * 事件
-     */
-    private val mVideoListener = object : XBBVideosView.OnVideoListener {
-
-        /**
-         * Back
-         */
-        override fun onBack() {
-//            mDetailView.onBackPressed()
-        }
-
-        /**
-         * 全屏
-         */
-        override fun onFullscreen(
-            fullscreen: Boolean,
-            position: Int,
-            container: PlayerContainerView
-        ) {
-//            (activity as MainActivity).let {
-//                if (fullscreen) {
-//                    it.lockVpScroll()
-//                    it.supportActionBar?.hide()
-//                }
-//            }
-//            mBinding.xbbVideoDetail.onFullscreen(fullscreen, position, container)
-        }
-
-        /**
-         * 打开详情页
-         *
-         * @param position      列表位置
-         * @param data          数据源
-         * @param listContainer 列表容器
-         */
-        override fun openDetail(
-            position: Int,
-            data: List<VideoBean>,
-            listContainer: PlayerContainerView
-        ) {
-            mDetailView.openDetail(position, data, listContainer)
-        }
-
-        /**
-         * 关闭详情页
-         */
-        override fun closeDetail() {
-            mDetailView.closeDetail()
-        }
+        this.mBinding.xbbVideos.init(activity!!)
+        this.mBinding.xbbVideos.bindViewModel(this, mViewModel)
     }
 
     /**
@@ -138,6 +67,17 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
             videos?.let {
                 this.mBinding.xbbVideos.setData(it)
             }
+        }
+    }
+
+    /**
+     * FragmentHidden
+     */
+    override fun onHiddenChanged(hidden: Boolean) {
+        this.mHidden = hidden
+        // Init Player
+        if (!mHidden) {
+            this.mBinding.xbbVideos.initPlayer()
         }
     }
 
@@ -156,6 +96,6 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
     }
 
     override fun onBackPressed(): Boolean {
-        return mDetailView.onBackPressed()
+        return mBinding.xbbVideos.onBackPressed()
     }
 }

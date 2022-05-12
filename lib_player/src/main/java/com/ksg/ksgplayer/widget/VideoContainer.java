@@ -117,19 +117,7 @@ public class VideoContainer extends FrameLayout {
      * @param view view
      */
     public final void setRenderer(View view) {
-        // 非空验证
-        if (mRendererLayout.getChildCount() > 0) {
-            View childAt = mRendererLayout.getChildAt(0);
-            // 1、过滤同一个渲染器避免重复添加
-            if (childAt == view) {
-                return;
-            }
-            // 2、不是同一个则清空容器
-            else {
-                this.mRendererLayout.removeAllViews();
-            }
-        }
-        // AddView
+        this.mRendererLayout.removeAllViews();
         this.mRendererLayout.addView(view, new LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT,

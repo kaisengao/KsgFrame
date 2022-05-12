@@ -3,10 +3,10 @@ package com.ksg.ksgplayer.handler;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.ksg.ksgplayer.KsgVideoPlayer;
 import com.ksg.ksgplayer.cover.ICoverEvent;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
-import com.ksg.ksgplayer.proxy.PlayerProxy;
 
 /**
  * @ClassName: CoverEventHandler
@@ -16,9 +16,9 @@ import com.ksg.ksgplayer.proxy.PlayerProxy;
  */
 public class CoverEventHandler implements ICoverEventHandler {
 
-    private final PlayerProxy mPlayer;
+    private final KsgVideoPlayer mPlayer;
 
-    public CoverEventHandler(PlayerProxy player) {
+    public CoverEventHandler(KsgVideoPlayer player) {
         this.mPlayer = player;
     }
 

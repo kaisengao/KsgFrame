@@ -1,6 +1,5 @@
 package com.kasiengao.ksgframe.player.cover;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -14,7 +13,9 @@ import com.kasiengao.ksgframe.R;
 import com.kasiengao.ksgframe.constant.CoverConstant;
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean;
 import com.ksg.ksgplayer.cover.BaseCover;
+import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
+import com.ksg.ksgplayer.player.IPlayer;
 
 /**
  * @ClassName: UploaderCover
@@ -42,7 +43,6 @@ public class UploaderCover extends BaseCover implements View.OnClickListener {
     /**
      * InitViews
      */
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void initViews() {
         this.mUploaderAvatar = findViewById(R.id.cover_uploader_avatar);
@@ -51,7 +51,7 @@ public class UploaderCover extends BaseCover implements View.OnClickListener {
         // OnClick
         this.findViewById(R.id.cover_uploader_replay).setOnClickListener(this);
         // 拦截所有底层事件
-        this.getCoverView().setOnTouchListener((v, event) -> true);
+        this.getCoverView().setOnClickListener(this);
     }
 
     /**
@@ -118,11 +118,13 @@ public class UploaderCover extends BaseCover implements View.OnClickListener {
      */
     @Override
     public void onPlayerEvent(int eventCode, Bundle bundle) {
-        if (eventCode == OnPlayerListener.PLAYER_EVENT_ON_PLAY_COMPLETE) {
-            // 播放结束 Show
-            this.setCoverVisibility(View.VISIBLE);
-        } else {
-            this.setCoverVisibility(View.GONE);
+        if (eventCode == OnPlayerListener.PLAYER_EVENT_ON_STATE_CHANGE) {
+            // 播放状态改变
+            if (bundle.getInt(EventKey.INT_DATA) == IPlayer.STATE_COMPLETE) {
+                this.setCoverVisibility(View.VISIBLE);
+            } else {
+                this.setCoverVisibility(View.GONE);
+            }
         }
     }
 
@@ -189,7 +191,6 @@ public class UploaderCover extends BaseCover implements View.OnClickListener {
             // 重播
             this.requestReplay(null);
         }
-
     }
 
     /**

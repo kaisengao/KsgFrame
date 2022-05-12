@@ -1,25 +1,32 @@
 package com.kasiengao.ksgframe.ui.main.widget
 
+import android.annotation.SuppressLint
+import android.app.Activity
 import android.content.Context
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.Rect
 import android.opengl.GLSurfaceView
 import android.util.AttributeSet
+import android.view.ViewGroup
+import androidx.core.view.contains
+import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.kasiengao.ksgframe.R
+import com.kasiengao.ksgframe.common.util.SystemUiUtil
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView
 import com.kasiengao.ksgframe.constant.CoverConstant
-import com.kasiengao.ksgframe.player.cover.GestureCover
-import com.kasiengao.ksgframe.player.cover.LoadingCover
-import com.kasiengao.ksgframe.player.cover.SmallControllerCover
-import com.kasiengao.ksgframe.player.cover.UploaderCover
+import com.kasiengao.ksgframe.player.cover.*
 import com.kasiengao.ksgframe.ui.main.adapter.XBBAdapter
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean
+import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel
 import com.ksg.ksgplayer.KsgSinglePlayer
 import com.ksg.ksgplayer.config.PlayerConfig
 import com.ksg.ksgplayer.data.DataSource
 import com.ksg.ksgplayer.listener.OnCoverEventListener
 import com.ksg.ksgplayer.player.IPlayer
+import com.kuaishou.akdanmaku.data.DanmakuItemData
 
 
 /**
@@ -32,23 +39,47 @@ class XBBVideosView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : RecyclerView(context, attrs) {
 
+    private lateinit var mActivity: Activity
+
     private var mPosition: Int = 0
 
-    private var mContainer: PlayerContainerView? = null
+    private var mFullscreen = false
+
+    private var mItemContainer: PlayerContainerView? = null
 
     private val mSignalPlayer: KsgSinglePlayer by lazy { KsgSinglePlayer.getInstance() }
 
-    private val mController: SmallControllerCover by lazy { SmallControllerCover(context) }
+    private val mDetailView: XBBDetailView by lazy { XBBDetailView(context) }
+
+    private val mFullScreenView: PlayerContainerView by lazy {
+        PlayerContainerView(context).also {
+            it.isIntercept = true
+        }
+    }
+
+    private val mSmallController: SmallControllerCover by lazy { SmallControllerCover(context) }
+
+    private val mLandController: LandControllerCover by lazy { LandControllerCover(context) }
 
     private val mUploader: UploaderCover by lazy { UploaderCover(context) }
 
+    private val mDanmaku: DanmakuCover by lazy { DanmakuCover(context) }
+
     private val mAdapter: XBBAdapter by lazy { XBBAdapter() }
 
-    var mVideoListener: OnVideoListener? = null
+    private lateinit var mViewModel: MainViewModel
 
     init {
         // Init Adapter
         this.initAdapter()
+    }
+
+    /**
+     * Init
+     */
+    fun init(activity: Activity) {
+        this.mActivity = activity
+        this.mDetailView.init(activity, this)
     }
 
     /**
@@ -101,7 +132,7 @@ class XBBVideosView @JvmOverloads constructor(
             }
             // Controller
             it.addCover(
-                CoverConstant.CoverKey.KEY_SMALL_CONTROLLER, mController
+                CoverConstant.CoverKey.KEY_SMALL_CONTROLLER, mSmallController
             )
             // Uploader
             it.addCover(
@@ -113,8 +144,8 @@ class XBBVideosView @JvmOverloads constructor(
         // Cover事件
         this.mSignalPlayer.player.setCoverEventListener(mCoverEventListener)
         // 自动播放
-        if (mContainer != null) {
-            this.mContainer?.performClick()
+        if (mItemContainer != null) {
+            this.mItemContainer?.performClick()
         } else {
             this.smoothScrollBy(0, 1)
         }
@@ -126,11 +157,34 @@ class XBBVideosView @JvmOverloads constructor(
     private val mCoverEventListener = OnCoverEventListener { eventCode, _ ->
         when (eventCode) {
             CoverConstant.CoverEvent.CODE_REQUEST_BACK ->
-                this.mVideoListener?.onBack()
+                this.onBackPressed()
             CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_ENTER ->
                 this.onFullscreen(true)
             CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_EXIT ->
                 this.onFullscreen(false)
+        }
+    }
+
+    /**
+     * 绑定 ViewModel
+     *
+     * @param viewModel VM
+     */
+    fun bindViewModel(owner: LifecycleOwner, viewModel: MainViewModel) {
+        this.mViewModel = viewModel
+        // Init DataObserve
+        this.initDataObserve(owner)
+    }
+
+    /**
+     * Init DataObserve
+     */
+    private fun initDataObserve(owner: LifecycleOwner) {
+        // 弹幕数据
+        this.mViewModel.mDanmakuData.observe(owner) { data: List<DanmakuItemData> ->
+            if (data.isNotEmpty()) {
+                this.mDanmaku.updateData(data)
+            }
         }
     }
 
@@ -151,53 +205,52 @@ class XBBVideosView @JvmOverloads constructor(
         // 记录 坐标
         this.mPosition = position
         // 记录 视图容器
-        this.mContainer = container
+        this.mItemContainer = container
         // 绑定 视图容器
         this.mSignalPlayer.bindContainer(container, true)
-        // 播放
-        this.mSignalPlayer.onPlay(DataSource(videoBean.videoUrl))
-        // 设置 循环播放
-        this.mSignalPlayer.setLooping(false)
-        // 配置UP主信息
-        this.mSignalPlayer.coverManager.valuePool
-            .putObject(CoverConstant.ValueKey.KEY_UPLOADER_DATA, videoBean, false)
+        // 开始
+        this.onStart(videoBean)
+    }
+
+    /**
+     * 获取当前视频容器
+     */
+    private fun getCurrContainer(): PlayerContainerView {
+        return if (mDetailView.isOpenDetail) {
+            mDetailView.mItemView.getPlayerContainer()
+        } else {
+            mItemContainer!!
+        }
     }
 
     /**
      * 重置容器
      */
     private fun resetContainer() {
-        this.mContainer?.onShowView()
-        this.mContainer?.isIntercept = false
-        this.mContainer = null
-    }
-
-    /**
-     * 全屏
-     */
-    private fun onFullscreen(fullscreen: Boolean) {
-        this.mVideoListener?.onFullscreen(fullscreen, mPosition, mContainer!!)
+        this.mItemContainer?.onShowView()
+        this.mItemContainer?.isIntercept = false
+        this.mItemContainer = null
     }
 
     /**
      * 打开详情页
      */
     private fun openDetail(position: Int) {
-        (findViewHolderForLayoutPosition(position) as XBBAdapter.ViewHolder).let {
-            // 列表截取
-            val subList = mAdapter.data.subList(position, mAdapter.data.size)
-            // 验证与当前播放的是否是同一个
-            if (mPosition == position && mContainer != null && mContainer === it.mPlayContainer) {
-                // 打开详情页
-                this.mVideoListener?.openDetail(position, subList, it.mPlayContainer)
-                return
-            }
-            // 播放
-            this.onPlay(position, it.mPlayContainer)
+        val playerContainer = getItemPlayContainer(position)
+        // 列表截取
+        val subList = mAdapter.data.subList(position, mAdapter.data.size)
+        // 验证与当前播放的是否是同一个
+        if (mPosition == position && mItemContainer != null && mItemContainer === playerContainer) {
             // 打开详情页
-            this.mVideoListener?.openDetail(position, subList, it.mPlayContainer)
+            this.mDetailView.openDetail(position, subList, playerContainer)
+            return
         }
+        // 播放
+        this.onPlay(position, playerContainer)
+        // 打开详情页
+        this.mDetailView.openDetail(position, subList, playerContainer)
     }
+
 
     /**
      * 滚动事件
@@ -208,10 +261,6 @@ class XBBVideosView @JvmOverloads constructor(
 
         override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
             super.onScrollStateChanged(recyclerView, newState)
-//                // 验证是否可操作
-//                if (!ListPlayer.getInstance().isOperable) {
-//                    return
-//                }
             // 滚动状态
             if (newState == SCROLL_STATE_IDLE) {
                 // 停止滚动
@@ -221,12 +270,8 @@ class XBBVideosView @JvmOverloads constructor(
 
         override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
             super.onScrolled(recyclerView, dx, dy)
-//                // 验证是否可操作
-//                if (!ListPlayer.getInstance().isOperable) {
-//                    return
-//                }
             // 计算当前正在播放的组件是否已经滚出了屏幕
-            mContainer?.let {
+            mItemContainer?.let {
                 if (!it.getLocalVisibleRect(Rect())) {
                     // 设置 拦截状态
                     it.isIntercept = false
@@ -266,13 +311,13 @@ class XBBVideosView @JvmOverloads constructor(
                     val position = getChildLayoutPosition(itemView)
                     // 验证当前可视的Item是否是正在播放的Item
                     if (position == mPosition
-                        && mContainer != null
-                        && mContainer!! === container
+                        && mItemContainer != null
+                        && mItemContainer!! === container
                     ) {
                         when (mSignalPlayer.player.state) {
                             IPlayer.STATE_PAUSE -> {
                                 // 设置 拦截状态
-                                mContainer?.let {
+                                mItemContainer?.let {
                                     // 设置 拦截状态
                                     it.isIntercept = true
                                     // 绑定 视图容器
@@ -283,7 +328,8 @@ class XBBVideosView @JvmOverloads constructor(
                                 break
                             }
                             IPlayer.STATE_PREPARED,
-                            IPlayer.STATE_START -> {
+                            IPlayer.STATE_START,
+                            IPlayer.STATE_COMPLETE -> {
                                 break
                             }
                         }
@@ -295,6 +341,33 @@ class XBBVideosView @JvmOverloads constructor(
                 }
             }
         }
+    }
+
+    /**
+     * 指定Item滑动到顶部
+     */
+    fun scrollToPositionWithOffset(position: Int) {
+        (layoutManager as LinearLayoutManager).scrollToPositionWithOffset(position, 0)
+    }
+
+    /**
+     * 获取Item中的视频容器View
+     */
+    fun getItemPlayContainer(position: Int): PlayerContainerView {
+        return (findViewHolderForLayoutPosition(position) as XBBAdapter.ViewHolder).mPlayContainer
+    }
+
+    /**
+     * 开始
+     */
+    fun onStart(videoBean: VideoBean) {
+        // 播放
+        this.mSignalPlayer.onStart(DataSource(videoBean.videoUrl))
+        // 设置 循环播放
+        this.mSignalPlayer.setLooping(false)
+        // 配置UP主信息
+        this.mSignalPlayer.coverManager.valuePool
+            .putObject(CoverConstant.ValueKey.KEY_UPLOADER_DATA, videoBean, false)
     }
 
     /**
@@ -314,7 +387,62 @@ class XBBVideosView @JvmOverloads constructor(
      */
     fun renewParam(position: Int, container: PlayerContainerView) {
         this.mPosition = position
-        this.mContainer = container
+        this.mItemContainer = container
+    }
+
+    /**
+     * 全屏
+     */
+    @SuppressLint("SourceLockedOrientationActivity")
+    private fun onFullscreen(fullscreen: Boolean) {
+        this.mFullscreen = fullscreen
+        // 横竖屏
+        if (fullscreen) {
+            // 隐藏系统Ui
+            SystemUiUtil.hideVideoSystemUI(context)
+            // 请求弹幕数据
+            this.mViewModel.requestDanmakuData()
+            // 全屏容器添加到View层级下
+            this.mActivity.findViewById<ViewGroup>(android.R.id.content)?.let {
+                if (!it.contains(this)) {
+                    it.addView(mFullScreenView)
+                }
+            }
+            // 设置横屏
+            this.mActivity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+        } else {
+            // 恢复系统Ui
+            SystemUiUtil.recoverySystemUI(context)
+            // 全屏容器从View层级中移除
+            this.mActivity.findViewById<ViewGroup>(android.R.id.content)
+                ?.removeView(mFullScreenView)
+            // 设置竖屏
+            this.mActivity.requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+        }
+    }
+
+    /**
+     * 配置已更改
+     */
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        // 横竖屏配置
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // 设置Cover
+            val coverManager = mSignalPlayer.coverManager
+            coverManager.removeCover(CoverConstant.CoverKey.KEY_SMALL_CONTROLLER)
+            coverManager.addCover(CoverConstant.CoverKey.KEY_DANMAKU, mDanmaku)
+            coverManager.addCover(CoverConstant.CoverKey.KEY_LAND_CONTROLLER, mLandController)
+            // 绑定全屏容器
+            this.mSignalPlayer.bindContainer(mFullScreenView, false)
+        } else {
+            // 设置Cover
+            val coverManager = mSignalPlayer.coverManager
+            coverManager.removeCover(CoverConstant.CoverKey.KEY_DANMAKU)
+            coverManager.removeCover(CoverConstant.CoverKey.KEY_LAND_CONTROLLER)
+            coverManager.addCover(CoverConstant.CoverKey.KEY_SMALL_CONTROLLER, mSmallController)
+            // 恢复视频容器
+            this.mSignalPlayer.bindContainer(getCurrContainer(), false)
+        }
     }
 
     /**
@@ -341,32 +469,13 @@ class XBBVideosView @JvmOverloads constructor(
     }
 
     /**
-     * 事件
+     * onBackPressed
      */
-    interface OnVideoListener {
-
-        /**
-         * Back
-         */
-        fun onBack()
-
-        /**
-         * 全屏
-         */
-        fun onFullscreen(fullscreen: Boolean, position: Int, container: PlayerContainerView)
-
-        /**
-         * 打开详情页
-         *
-         * @param position      列表位置
-         * @param data          数据源
-         * @param listContainer 列表容器
-         */
-        fun openDetail(position: Int, data: List<VideoBean>, listContainer: PlayerContainerView)
-
-        /**
-         * 关闭详情页
-         */
-        fun closeDetail()
+    fun onBackPressed(): Boolean {
+        if (mFullscreen) {
+            this.onFullscreen(false)
+            return true
+        }
+        return mDetailView.onBackPressed()
     }
 }

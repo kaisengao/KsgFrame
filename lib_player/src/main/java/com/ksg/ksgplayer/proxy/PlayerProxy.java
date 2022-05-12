@@ -79,7 +79,7 @@ public class PlayerProxy implements IPlayer {
      * Init 进度更新计时代理
      */
     private void initTimerCounterProxy() {
-        this.mTimerCounterProxy = new TimerCounterProxy(1000);
+        this.mTimerCounterProxy = new TimerCounterProxy(TimerCounterProxy.DEFAULT_TIMER);
     }
 
     /**
@@ -254,7 +254,6 @@ public class PlayerProxy implements IPlayer {
     public void setSpeed(float speed) {
         if (isPlayerAvailable()) {
             this.mBasePlayer.setSpeed(speed);
-            this.mTimerCounterProxy.setSpeed(speed);
         }
     }
 

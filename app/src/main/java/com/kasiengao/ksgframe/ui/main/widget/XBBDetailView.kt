@@ -18,7 +18,6 @@ import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.contains
 import androidx.databinding.DataBindingUtil
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import com.kaisengao.base.util.StatusBarUtil
@@ -28,16 +27,14 @@ import com.kasiengao.ksgframe.common.widget.CView
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView
 import com.kasiengao.ksgframe.constant.CoverConstant
 import com.kasiengao.ksgframe.databinding.LayoutXbbDetailVpBinding
-import com.kasiengao.ksgframe.ui.main.adapter.XBBAdapter
 import com.kasiengao.ksgframe.ui.main.bean.VideoBean
 import com.ksg.ksgplayer.KsgSinglePlayer
-import com.ksg.ksgplayer.data.DataSource
 
 /**
  * @ClassName: XBBDetailView
  * @Author: KaiSenGao
  * @CreateDate: 2022/5/11 11:38
- * @Description: 视频详情 ViewPager
+ * @Description: 视频详情
  */
 class XBBDetailView(context: Context) : RelativeLayout(context) {
 
@@ -60,7 +57,7 @@ class XBBDetailView(context: Context) : RelativeLayout(context) {
 
     private var mFirstLayout = false
 
-    private var isOpenDetail = false
+    var isOpenDetail = false
 
     private val mBgColor: String by lazy {
         Integer
@@ -80,13 +77,11 @@ class XBBDetailView(context: Context) : RelativeLayout(context) {
 
     private val mAdapter: Adapter by lazy { Adapter() }
 
-    private lateinit var mItemView: XBBDetailItemView
+    lateinit var mItemView: XBBDetailItemView
 
     private lateinit var mVideosView: XBBVideosView
 
     private lateinit var mListContainer: PlayerContainerView
-
-    var mVideoListener: XBBVideosView.OnVideoListener? = null
 
     init {
         this.mBinding.statusBar.setHeight(mStatusBarHeight.toFloat())
@@ -144,7 +139,7 @@ class XBBDetailView(context: Context) : RelativeLayout(context) {
     /**
      * 关闭详情页
      */
-    fun closeDetail() {
+    private fun closeDetail() {
         // HideView
         this.onClosedHideView()
         this.mItemView.setBackgroundColor(Color.TRANSPARENT)
@@ -198,7 +193,7 @@ class XBBDetailView(context: Context) : RelativeLayout(context) {
     private val mCloseDetailAnimatorListener = object : AnimatorListenerAdapter() {
         override fun onAnimationEnd(animation: Animator?) {
             // 更新列表参数
-            mVideosView.renewParam(getListRealPosition(), mListContainer)
+            mVideosView.renewParam(getRealListPosition(), mListContainer)
             // 切回至旧容器 (原列表容器)
             mSignalPlayer.bindContainer(mListContainer, false)
             // Finish
@@ -228,14 +223,13 @@ class XBBDetailView(context: Context) : RelativeLayout(context) {
             // 关闭页
             if (position == PAGE_FINISH) {
                 // 更新列表参数
-                mVideosView.renewParam(getListRealPosition(), mListContainer)
+                mVideosView.renewParam(getRealListPosition(), mListContainer)
                 // 切回至旧容器 (原列表容器)
                 mSignalPlayer.bindContainer(mListContainer, false)
                 return
             }
             // 同步列表Item的位置
-            (mVideosView.layoutManager as LinearLayoutManager)
-                .scrollToPositionWithOffset(getListRealPosition(), 0)
+            mVideosView.scrollToPositionWithOffset(getRealListPosition())
         }
 
         override fun onPageScrollStateChanged(state: Int) {
@@ -263,9 +257,7 @@ class XBBDetailView(context: Context) : RelativeLayout(context) {
                         // 重置容器
                         resetContainer()
                         // 同步列表的容器
-                        (mVideosView.findViewHolderForLayoutPosition(getListRealPosition()) as XBBAdapter.ViewHolder).let {
-                            mListContainer = it.mPlayContainer
-                        }
+                        mListContainer = mVideosView.getItemPlayContainer(getRealListPosition())
                         // 绑定 视图容器
                         bindContainer(currentItem, mListContainer, true)
                         // 初始容器
@@ -276,12 +268,7 @@ class XBBDetailView(context: Context) : RelativeLayout(context) {
                         mListContainer.onHideView()
                         mListContainer.isIntercept = true
                         // 播放
-                        mSignalPlayer.onPlay(DataSource(videoBean.videoUrl))
-                        // 设置 循环播放
-                        mSignalPlayer.setLooping(false)
-                        // 配置UP主信息
-                        mSignalPlayer.coverManager.valuePool
-                            .putObject(CoverConstant.ValueKey.KEY_UPLOADER_DATA, videoBean, false)
+                        mVideosView.onStart(videoBean)
 
                         mCurrentItem = currentItem
                     }
@@ -293,7 +280,7 @@ class XBBDetailView(context: Context) : RelativeLayout(context) {
     /**
      * 获取 列表的真实坐标
      */
-    private fun getListRealPosition(): Int {
+    private fun getRealListPosition(): Int {
         val currentItem = mBinding.detailVp.currentItem
         return if (currentItem == PAGE_FINISH) {
             this.mListPosition + currentItem

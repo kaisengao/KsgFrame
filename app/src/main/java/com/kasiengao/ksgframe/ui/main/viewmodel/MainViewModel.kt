@@ -1,9 +1,7 @@
 package com.kasiengao.ksgframe.ui.main.viewmodel
 
 import android.app.Application
-import android.view.View
 import androidx.lifecycle.MutableLiveData
-import com.kaisengao.base.util.SnackbarUtil
 import com.kaisengao.mvvm.viewmodel.ToolbarViewModel
 import com.kaisengao.retrofit.observer.BaseRxObserver
 import com.kasiengao.ksgframe.R
@@ -25,8 +23,6 @@ class MainViewModel(application: Application) : ToolbarViewModel(application) {
     val mVideos: MutableLiveData<List<VideoBean>> by lazy { MutableLiveData() }
 
     val mDanmakuData: MutableLiveData<List<DanmakuItemData>> by lazy { MutableLiveData() }
-
-    val mVideo: MutableLiveData<VideoBean> by lazy { MutableLiveData() }
 
     private val mModel: MainModel by lazy { MainModel() }
 
@@ -77,21 +73,5 @@ class MainViewModel(application: Application) : ToolbarViewModel(application) {
                     mDanmakuData.value = data
                 }
             })
-    }
-
-    /**
-     * 刷新信息
-     */
-    fun refreshInfo(position: Int) {
-        this.mVideos.value?.let {
-            mVideo.value = it[position]
-        }
-    }
-
-    /**
-     * 关注
-     */
-    fun onFollow(view: View) {
-        SnackbarUtil.with(view).setMessage("关注一波啊，喂！").show()
     }
 }

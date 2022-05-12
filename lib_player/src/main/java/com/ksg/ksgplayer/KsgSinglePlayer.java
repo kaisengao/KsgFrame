@@ -132,7 +132,7 @@ public class KsgSinglePlayer {
     /**
      * 播放
      */
-    public void onPlay(DataSource dataSource) {
+    public void onStart(DataSource dataSource) {
         this.mPlayer.setDataSource(dataSource);
         if (!isOverlap) {
             this.mPlayer.start();

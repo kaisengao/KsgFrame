@@ -280,8 +280,9 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
                 break;
         }
         this.mRenderer = renderer;
-        // BindPlayer
+        // 绑定
         this.mRenderer.bindPlayer(mPlayerProxy);
+        // 回调事件
         this.mRenderer.setRendererListener(mRendererListenerAdapter);
         // 设置渲染器
         this.mVideoContainer.setRenderer(mRenderer.getRendererView());
@@ -328,7 +329,7 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
         this.mPlayerProxy.setPlayerListener(mPlayerProxyListener);
         this.mPlayerProxy.setErrorListener(mErrorProxyListener);
         // Cover事件处理程序实现类
-        this.mCoverEventHandler = new CoverEventHandler(mPlayerProxy);
+        this.mCoverEventHandler = new CoverEventHandler(this);
     }
 
     /**
@@ -530,6 +531,15 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void replay(long msc) {
+        // 2022年05月12日
+        // IJK_BUG https://github.com/bilibili/ijkplayer/issues/2786
+        // 再重新播放时会导致Surface不更新
+        // 目前解决方案 重新Add到Layout下即可
+        // 重新设置渲染器 
+        Renderer renderer = getRenderer();
+        if (renderer != null) {
+            this.mVideoContainer.setRenderer(renderer.getRendererView());
+        }
         this.mPlayerProxy.replay(msc);
     }
 
@@ -608,6 +618,18 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
         @Override
         public void onPlayerEvent(int eventCode, Bundle bundle) {
             switch (eventCode) {
+                case OnPlayerListener.PLAYER_EVENT_ON_PREPARED:
+                    // 事件 准备完毕
+                    if (bundle != null && mRenderer != null) {
+                        int videoWidth = bundle.getInt(EventKey.INT_ARG1);
+                        int videoHeight = bundle.getInt(EventKey.INT_ARG2);
+                        // 渲染器
+                        if (getRenderer() != null) {
+                            // 设置 画面宽高
+                            getRenderer().setVideoSize(videoWidth, videoHeight);
+                        }
+                    }
+                    break;
                 case OnPlayerListener.PLAYER_EVENT_ON_VIDEO_SIZE_CHANGE:
                     // 事件 视频尺寸改变
                     if (bundle != null) {

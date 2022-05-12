@@ -440,7 +440,7 @@ public class KsgIJKPlayer extends BasePlayer {
      */
     private final IMediaPlayer.OnBufferingUpdateListener mBufferingUpdateListener = (iMediaPlayer, percent) -> {
         // 缓冲进度 (不知道为啥他的进度只显示99)
-        this.setBufferPercentage(percent >= 99 ? 100 : percent);
+        this.setBufferPercentage(percent > 95 ? 100 : percent);
     };
 
     /**

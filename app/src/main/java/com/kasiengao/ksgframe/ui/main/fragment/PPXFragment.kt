@@ -50,6 +50,10 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
 
     override fun initWidget() {
         super.initWidget()
+        // Refresh
+        this.mBinding.ppxRefresh.setOnRefreshListener {
+            this.mViewModel.requestVideos()
+        }
         // Init Adapter
         this.initAdapter()
         // Init DataObserve
@@ -157,7 +161,7 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
                     // 绑定 视图容器
                     this.mSignalPlayer.bindContainer(container, false)
                     // 播放
-                    this.mSignalPlayer.onPlay(DataSource(mAdapter.data[position].videoUrl))
+                    this.mSignalPlayer.onStart(DataSource(mAdapter.data[position].videoUrl))
                     // 设置 循环播放
                     this.mSignalPlayer.setLooping(true)
                 }

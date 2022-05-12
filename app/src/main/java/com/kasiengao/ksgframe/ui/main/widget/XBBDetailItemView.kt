@@ -1,12 +1,12 @@
 package com.kasiengao.ksgframe.ui.main.widget
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.databinding.DataBindingUtil
+import com.kaisengao.base.util.SnackbarUtil
 import com.kasiengao.ksgframe.R
 import com.kasiengao.ksgframe.common.widget.CNestedScrollView
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView
@@ -19,7 +19,6 @@ import com.kasiengao.ksgframe.ui.main.bean.VideoBean
  * @CreateDate: 2022/3/30 14:55
  * @Description: 视频详情 ItemView
  */
-@SuppressLint("ClickableViewAccessibility")
 class XBBDetailItemView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null
 ) : RelativeLayout(context, attrs) {
@@ -33,12 +32,13 @@ class XBBDetailItemView @JvmOverloads constructor(
             LayoutInflater.from(context), R.layout.layout_xbb_detail, this, true
         )
     }
-//
-//    private val mLandControllerCover: LandControllerCover by lazy { LandControllerCover(context) }
-//
-//    private val mSmallControllerCover: SmallControllerCover by lazy { SmallControllerCover(context) }
-//
-//    private val mDanmakuCover: DanmakuCover by lazy { DanmakuCover(context) }
+
+    init {
+        // OnClick
+        this.mBinding.infoFollow.setOnClickListener { v ->
+            SnackbarUtil.with(v).setMessage("关注一波啊，喂！").show()
+        }
+    }
 
     fun init(videoBean: VideoBean) {
         // 刷新数据
@@ -54,7 +54,7 @@ class XBBDetailItemView @JvmOverloads constructor(
                 videoBean.coverImg,
                 ImageView.ScaleType.CENTER_CROP
             )
-            this.mBinding.infoScroll.scrollTo(0,0)
+            this.mBinding.infoScroll.scrollTo(0, 0)
             this.mBinding.playerContainer.onShowView()
         }
     }
@@ -86,7 +86,6 @@ class XBBDetailItemView @JvmOverloads constructor(
         this.mBinding.infoRoot.visibility = GONE
         this.mBinding.playerBgLayer.visibility = GONE
     }
-
 
 //
 //    /**

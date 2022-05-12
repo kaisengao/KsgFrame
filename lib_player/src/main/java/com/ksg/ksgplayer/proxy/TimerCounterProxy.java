@@ -13,9 +13,9 @@ import com.ksg.ksgplayer.listener.OnPlayerListener;
  */
 public class TimerCounterProxy {
 
-    private static final int DEFAULT_TIMER = 1000;
+    public static final int DEFAULT_TIMER = 1000;
 
-    private int mCounterInterval;
+    private final int mCounterInterval;
 
     private WeakHandler mWeakHandler = new WeakHandler();
 
@@ -26,19 +26,6 @@ public class TimerCounterProxy {
      */
     public TimerCounterProxy(int counterIntervalMs) {
         this.mCounterInterval = counterIntervalMs;
-    }
-
-    /**
-     * 倍速
-     */
-    public void setSpeed(float speed) {
-        if (speed < 1) {
-            this.mCounterInterval = (int) (DEFAULT_TIMER + (speed * 1000f));
-        } else if (speed > 1) {
-            this.mCounterInterval = (int) (DEFAULT_TIMER - ((speed * 1000f) - DEFAULT_TIMER));
-        } else {
-            this.mCounterInterval = DEFAULT_TIMER;
-        }
     }
 
     /**
