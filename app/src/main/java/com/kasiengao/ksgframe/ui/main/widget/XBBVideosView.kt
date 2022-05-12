@@ -52,6 +52,39 @@ class XBBVideosView @JvmOverloads constructor(
     }
 
     /**
+     * Init Adapter
+     */
+    private fun initAdapter() {
+        // Recycler
+        this.layoutManager = LinearLayoutManager(context)
+        this.adapter = mAdapter
+        // EmptyView
+        this.mAdapter.setEmptyView(R.layout.item_xbb_videos_empty)
+        // ItemClick
+        this.mAdapter.setOnItemClickListener { _, _, position ->
+            // 打开详情页
+            this.openDetail(position)
+        }
+        // ChildClick
+        this.mAdapter.setOnItemChildClickListener { _, view, position ->
+            when (view.id) {
+                R.id.item_player_container ->
+                    // 播放
+                    this.onPlay(position, (view as PlayerContainerView))
+                R.id.item_xbb_interact_comment -> {
+                    // 打开详情页
+                    this.openDetail(position)
+                }
+            }
+        }
+        // Init
+        this.post {
+            // 注册滚动事件
+            this.addOnScrollListener(mScrollListener)
+        }
+    }
+
+    /**
      * Init Player
      */
     fun initPlayer() {
@@ -147,50 +180,22 @@ class XBBVideosView @JvmOverloads constructor(
     }
 
     /**
-     * Init Adapter
+     * 打开详情页
      */
-    private fun initAdapter() {
-        // Recycler
-        this.layoutManager = LinearLayoutManager(context)
-        this.adapter = mAdapter
-        // EmptyView
-        this.mAdapter.setEmptyView(R.layout.item_xbb_videos_empty)
-        // ItemClick
-        this.mAdapter.setOnItemClickListener { _, _, position ->
-            // 打开详情页
-            this.openDetail(position)
-        }
-        // ChildClick
-        this.mAdapter.setOnItemChildClickListener { _, view, position ->
-            when (view.id) {
-                R.id.item_player_container ->
-                    // 播放
-                    this.onPlay(position, (view as PlayerContainerView))
-                R.id.item_xbb_interact_comment -> {
-                    // 打开详情页
-                    this.openDetail(position)
-                }
-            }
-        }
-        // Init
-        this.post {
-            // 注册滚动事件
-            this.addOnScrollListener(mScrollListener)
-        }
-    }
-
     private fun openDetail(position: Int) {
         (findViewHolderForLayoutPosition(position) as XBBAdapter.ViewHolder).let {
+            // 列表截取
+            val subList = mAdapter.data.subList(position, mAdapter.data.size)
             // 验证与当前播放的是否是同一个
             if (mPosition == position && mContainer != null && mContainer === it.mPlayContainer) {
                 // 打开详情页
-                this.mVideoListener?.openDetail(position, it.mPlayContainer)
+                this.mVideoListener?.openDetail(position, subList, it.mPlayContainer)
                 return
             }
             // 播放
             this.onPlay(position, it.mPlayContainer)
             // 打开详情页
-            this.mVideoListener?.openDetail(position, it.mPlayContainer)
+            this.mVideoListener?.openDetail(position, subList, it.mPlayContainer)
         }
     }
 
@@ -305,6 +310,14 @@ class XBBVideosView @JvmOverloads constructor(
     }
 
     /**
+     * 更新 参数
+     */
+    fun renewParam(position: Int, container: PlayerContainerView) {
+        this.mPosition = position
+        this.mContainer = container
+    }
+
+    /**
      * onResume
      */
     fun onResume() {
@@ -346,9 +359,10 @@ class XBBVideosView @JvmOverloads constructor(
          * 打开详情页
          *
          * @param position      列表位置
+         * @param data          数据源
          * @param listContainer 列表容器
          */
-        fun openDetail(position: Int, listContainer: PlayerContainerView?)
+        fun openDetail(position: Int, data: List<VideoBean>, listContainer: PlayerContainerView)
 
         /**
          * 关闭详情页

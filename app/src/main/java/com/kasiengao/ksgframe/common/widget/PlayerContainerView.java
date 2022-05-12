@@ -2,7 +2,6 @@ package com.kasiengao.ksgframe.common.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -73,23 +72,6 @@ public class PlayerContainerView extends FrameLayout {
             this.mCoverImage.setScaleType(scaleType);
             this.mCoverImage.setVisibility(View.VISIBLE);
         }
-    }
-
-    /**
-     * 设置 封面图
-     *
-     * @param drawable drawable
-     */
-    public void setCoverImage(Drawable drawable) {
-        this.mCoverImage.setImageDrawable(drawable);
-        this.mCoverImage.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * 获取 封面图
-     */
-    public Drawable getCoverImage() {
-        return mCoverImage.getDrawable();
     }
 
     /**

@@ -55,6 +55,7 @@
         <entry key="app/src/main/res/layout/layout_trainee.xml" value="0.412962962962963" />
         <entry key="app/src/main/res/layout/layout_video_detail.xml" value="0.4276315789473684" />
         <entry key="app/src/main/res/layout/layout_xbb_detail.xml" value="0.4337719298245614" />
+        <entry key="app/src/main/res/layout/layout_xbb_detail_vp.xml" value="0.25" />
         <entry key="app/src/main/res/menu/menu_main_fish.xml" value="0.4337719298245614" />
       </map>
     </option>

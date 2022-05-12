@@ -1,7 +1,5 @@
 package com.kasiengao.ksgframe.ui.main.fragment
 
-import android.view.ViewGroup
-import androidx.core.view.contains
 import com.kaisengao.mvvm.base.fragment.BaseVmFragment
 import com.kasiengao.ksgframe.BR
 import com.kasiengao.ksgframe.R
@@ -9,6 +7,7 @@ import com.kasiengao.ksgframe.common.util.TextUtil
 import com.kasiengao.ksgframe.common.widget.PlayerContainerView
 import com.kasiengao.ksgframe.databinding.FragmentXbbBinding
 import com.kasiengao.ksgframe.ui.main.MainActivity
+import com.kasiengao.ksgframe.ui.main.bean.VideoBean
 import com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel
 import com.kasiengao.ksgframe.ui.main.widget.XBBDetailView
 import com.kasiengao.ksgframe.ui.main.widget.XBBVideosView
@@ -36,7 +35,7 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
         // 设置PaddingTop使得布局下移不会被Toolbar覆盖
         this.mBinding.root.post {
             (activity as MainActivity).getToolbarHeight().let {
-                this.mBinding.root.setPadding(0,it,0,0)
+                this.mBinding.root.setPadding(0, it, 0, 0)
             }
         }
         // Refresh
@@ -45,8 +44,6 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
         }
         // Init Videos
         this.initVideos()
-        // Init ViewDetail
-        this.initViewDetail()
         // Init DataObserve
         this.initDataObserve()
     }
@@ -74,6 +71,7 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
      * Init Videos
      */
     private fun initVideos() {
+        this.mDetailView.init(activity!!, mBinding.xbbVideos)
         // 事件
         this.mDetailView.mVideoListener = mVideoListener
         this.mBinding.xbbVideos.mVideoListener = mVideoListener
@@ -88,7 +86,7 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
          * Back
          */
         override fun onBack() {
-            mDetailView.onBackPressed()
+//            mDetailView.onBackPressed()
         }
 
         /**
@@ -112,38 +110,23 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
          * 打开详情页
          *
          * @param position      列表位置
+         * @param data          数据源
          * @param listContainer 列表容器
          */
-        override fun openDetail(position: Int, listContainer: PlayerContainerView?) {
-            listContainer?.let { container ->
-                activity?.let {
-                    val viewGroup = it.findViewById<ViewGroup>(android.R.id.content)
-                    if (!viewGroup.contains(mDetailView)) {
-                        viewGroup.addView(
-                            mDetailView, ViewGroup.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT
-                            )
-                        )
-                    }
-                }
-                mDetailView.openDetail(position, container)
-            }
+        override fun openDetail(
+            position: Int,
+            data: List<VideoBean>,
+            listContainer: PlayerContainerView
+        ) {
+            mDetailView.openDetail(position, data, listContainer)
         }
 
         /**
          * 关闭详情页
          */
         override fun closeDetail() {
-            activity?.findViewById<ViewGroup>(android.R.id.content)?.removeView(mDetailView)
+            mDetailView.closeDetail()
         }
-    }
-
-    /**
-     * Init ViewDetail
-     */
-    private fun initViewDetail() {
-        this.mDetailView.bindViewModel(this, mViewModel)
     }
 
     /**
@@ -151,9 +134,7 @@ class XBBFragment : BaseVmFragment<FragmentXbbBinding, MainViewModel>() {
      */
     private fun initDataObserve() {
         // Videos
-        this.mViewModel.mVideos.observe(
-            this
-        ) { videos ->
+        this.mViewModel.mVideos.observe(this) { videos ->
             videos?.let {
                 this.mBinding.xbbVideos.setData(it)
             }

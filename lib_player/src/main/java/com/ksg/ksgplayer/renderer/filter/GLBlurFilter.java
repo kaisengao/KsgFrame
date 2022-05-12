@@ -13,9 +13,9 @@ import com.ksg.ksgplayer.renderer.filter.base.GLFilter;
  */
 public class GLBlurFilter extends GLFilter {
 
-    private final Blur mXBlur, mYBlur;
+    private Blur mXBlur, mYBlur;
 
-    private final GLFilter mPreviewFilter;
+    private GLFilter mPreviewFilter;
 
     public GLBlurFilter(Context context) {
         super(context);
@@ -71,9 +71,18 @@ public class GLBlurFilter extends GLFilter {
 
     @Override
     public void release() {
-        this.mXBlur.release();
-        this.mYBlur.release();
-        this.mPreviewFilter.release();
+        if (mXBlur != null) {
+            this.mXBlur.release();
+            this.mXBlur = null;
+        }
+        if (mYBlur != null) {
+            this.mYBlur.release();
+            this.mYBlur = null;
+        }
+        if (mPreviewFilter != null) {
+            this.mPreviewFilter.release();
+            this.mPreviewFilter = null;
+        }
     }
 
     private static class Blur extends GLFilter {

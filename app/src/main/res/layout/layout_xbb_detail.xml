@@ -6,49 +6,33 @@
     <data>
 
         <variable
-            name="viewModel"
-            type="com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel" />
+            name="videoBean"
+            type="com.kasiengao.ksgframe.ui.main.bean.VideoBean" />
     </data>
 
     <merge
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:parentTag="com.kasiengao.ksgframe.ui.main.widget.XBBDetailView">
-
-        <!-- 状态栏 -->
-        <com.kasiengao.ksgframe.common.widget.CView
-            android:id="@+id/status_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/black" />
+        tools:parentTag="com.kasiengao.ksgframe.ui.main.widget.XBBDetailItemView">
 
         <!-- 视频背景图层 -->
         <View
             android:id="@+id/player_bg_layer"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignStart="@id/player_container"
             android:layout_alignTop="@id/player_container"
+            android:layout_alignEnd="@id/player_container"
             android:layout_alignBottom="@id/player_container"
-            android:background="@color/black" />
+            android:background="@color/color_FFCCCCCC" />
 
         <!-- 视频容器 -->
         <com.kasiengao.ksgframe.common.widget.PlayerContainerView
             android:id="@+id/player_container"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="240dp"
             android:layout_below="@id/status_bar"
             tools:layout_height="230dp" />
-
-        <!-- Back -->
-        <androidx.appcompat.widget.AppCompatImageView
-            android:id="@+id/back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@id/player_container"
-            android:layout_marginStart="@dimen/view_space"
-            android:layout_marginTop="12dp"
-            android:elevation="5dp"
-            android:src="@drawable/ic_cover_back" />
 
         <!--INFO-->
         <RelativeLayout
@@ -67,7 +51,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginBottom="5dp"
                 android:src="@color/color_FF5252"
-                app:loadImage="@{viewModel.MVideo.avatar}"
+                app:loadImage="@{videoBean.avatar}"
                 app:shapeAppearanceOverlay="@style/CircleImageStyle" />
 
             <!-- 基本信息-->
@@ -90,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@{viewModel.MVideo.nickname}"
+                    android:text="@{videoBean.nickname}"
                     android:textColor="@color/textColorPrimary"
                     android:textSize="15sp"
                     android:textStyle="bold"
@@ -103,7 +87,7 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:text="@{viewModel.MVideo.date + ` · `+ viewModel.MVideo.views}"
+                    android:text="@{videoBean.date + ` · `+ videoBean.views}"
                     android:textColor="@color/textColorSecondary"
                     android:textSize="13sp"
                     tools:text="2022年03月30日 · 207万次观看" />
@@ -120,7 +104,6 @@
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="@dimen/view_space"
                 android:backgroundTint="@color/color_FF9800"
-                android:onClick="@{viewModel::onFollow}"
                 android:text="@string/follow"
                 android:textColor="@color/white"
                 android:textSize="14sp"
@@ -147,7 +130,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/view_space"
                         android:layout_marginEnd="@dimen/view_space"
-                        android:text="@{viewModel.MVideo.movieName}"
+                        android:text="@{videoBean.movieName}"
                         android:textColor="@color/textColorPrimary"
                         android:textSize="16sp"
                         tools:text="人人果实·幻兽种·尼卡形态" />
@@ -189,7 +172,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:lineSpacingExtra="3dp"
-                            android:text="@{viewModel.MVideo.profile}"
+                            android:text="@{videoBean.profile}"
                             android:textColor="@color/textColorPrimary"
                             android:textSize="16sp" />
 
@@ -199,7 +182,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:scaleType="fitCenter"
-                            app:loadImage="@{viewModel.MVideo.profileDrawing}"
+                            app:loadImage="@{videoBean.profileDrawing}"
                             app:shapeAppearanceOverlay="@style/RoundedImageStyle" />
 
                         <!-- 故事简介-->
@@ -208,7 +191,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
                             android:lineSpacingExtra="3dp"
-                            android:text="@{viewModel.MVideo.synopsis}"
+                            android:text="@{videoBean.synopsis}"
                             android:textColor="@color/textColorPrimary"
                             android:textSize="16sp" />
 

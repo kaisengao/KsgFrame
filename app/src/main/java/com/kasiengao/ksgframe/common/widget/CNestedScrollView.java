@@ -31,7 +31,7 @@ public class CNestedScrollView extends NestedScrollView {
         this.mScrollTop = top;
     }
 
-    public int getScrollTop() {
-        return mScrollTop;
+    public boolean isOnTop() {
+        return mScrollTop <= 0;
     }
 }
