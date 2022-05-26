@@ -15,10 +15,18 @@
 ##### 11、鱼儿游动小动画（动画练习）
 
 ## 效果图
-<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815624.png" width="35%">       <img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815629.png" width="35%">
+<div align="left"> 
+<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/danmaku.png" width="98.7%">  
+</div>
 
-<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815640.png" width="70.5%" >      
+<div align="left">
+<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/ppx.jpg" width="330">    
+<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/xbb.jpg" width="330">      
+<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/xbb_detail.jpg" width="330">
+</div>
 
-<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815634.png" width="35%">       <img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815648.png" width="35%">
-
-<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/fish.gif">
+<div align="left">   
+<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/trainee.jpg" width="330">     
+<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/staggered.jpg" width="330">    
+<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/fish.gif"  width="330">
+</div>
