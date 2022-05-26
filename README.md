@@ -12,11 +12,13 @@
 ##### 8、LoadPage（页面Loading）
 ##### 9、ListPlayer（列表播放器）
 ##### 10、Player（播放器框架）
+##### 11、鱼儿游动小动画（动画练习）
 
-### 效果图
+## 效果图
 <img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815624.png" width="35%">       <img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815629.png" width="35%">
 
 <img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815640.png" width="70.5%" >      
 
 <img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815634.png" width="35%">       <img src="https://github.com/kaisengao/KsgFrame/blob/master/image/Screenshot_1649815648.png" width="35%">
 
+<img src="https://github.com/kaisengao/KsgFrame/blob/master/image/fish.gif">
