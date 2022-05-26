@@ -46,6 +46,8 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
 
     private boolean mGestureSlideEnabled = true;
 
+    private boolean mGestureLongPressEnabled = true;
+
     private final VolumeHelper mVolumeHelper;
 
     private final GestureDetector mGestureDetector;
@@ -85,6 +87,13 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      */
     public void setGestureSlideEnabled(boolean gestureSlideEnabled) {
         this.mGestureSlideEnabled = gestureSlideEnabled;
+    }
+
+    /**
+     * 设置 是否开启手势长按、默认开启
+     */
+    public void setGestureLongPressEnabled(boolean gestureLongPressEnabled) {
+        this.mGestureLongPressEnabled = gestureLongPressEnabled;
     }
 
     /**
@@ -186,6 +195,9 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      */
     @Override
     public void onLongPress(MotionEvent e) {
+        if (!mGestureLongPressEnabled) {
+            return;
+        }
         this.mLongPress = true;
         this.mTouchGestureListener.onLongPress();
     }
@@ -194,6 +206,9 @@ public class GestureTouchHelper extends GestureDetector.SimpleOnGestureListener 
      * 长按结束
      */
     public void onLongPressEnd() {
+        if (!mGestureLongPressEnabled) {
+            return;
+        }
         this.mLongPress = false;
         this.mTouchGestureListener.onLongPressEnd();
     }

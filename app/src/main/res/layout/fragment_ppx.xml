@@ -9,7 +9,7 @@
         android:background="@color/black"
         android:orientation="vertical">
 
-        <com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout
+        <com.kaisengao.ksgframe.common.widget.CSwipeRefreshLayout
             android:id="@+id/ppx_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -21,7 +21,7 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical" />
 
-        </com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout>
+        </com.kaisengao.ksgframe.common.widget.CSwipeRefreshLayout>
 
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/phrase"

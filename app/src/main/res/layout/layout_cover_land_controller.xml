@@ -86,7 +86,7 @@
             tools:text="00:00" />
 
         <!-- Start/Pause-->
-        <com.kasiengao.ksgframe.common.widget.PlayStateView
+        <com.kaisengao.ksgframe.common.widget.PlayStateView
             android:id="@+id/cover_controller_play"
             android:layout_width="40dp"
             android:layout_height="40dp"

@@ -33,11 +33,16 @@
         <entry key="app/src/main/res/drawable/shape_play_bg.xml" value="0.22" />
         <entry key="app/src/main/res/drawable/shape_seek_bar.xml" value="0.2215" />
         <entry key="app/src/main/res/drawable/shape_start.xml" value="0.22" />
+        <entry key="app/src/main/res/layout/activity_canvas_ksg.xml" value="0.5151041666666667" />
+        <entry key="app/src/main/res/layout/activity_fish.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_gesture.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_loadpage.xml" value="0.20394736842105263" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/activity_mvvm.xml" value="0.3509259259259259" />
         <entry key="app/src/main/res/layout/activity_player.xml" value="0.37962962962962965" />
+        <entry key="app/src/main/res/layout/activity_rx_retrofit.xml" value="0.5151041666666667" />
         <entry key="app/src/main/res/layout/activity_touch_grid.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/dialog_share.xml" value="0.5151041666666667" />
         <entry key="app/src/main/res/layout/fragment_ppx.xml" value="0.37280296022201664" />
         <entry key="app/src/main/res/layout/fragment_xbb.xml" value="0.40370370370370373" />
         <entry key="app/src/main/res/layout/item_main_video.xml" value="0.40370370370370373" />
@@ -58,6 +63,8 @@
         <entry key="app/src/main/res/layout/layout_xbb_detail.xml" value="0.4337719298245614" />
         <entry key="app/src/main/res/layout/layout_xbb_detail_vp.xml" value="0.25" />
         <entry key="app/src/main/res/menu/menu_main_fish.xml" value="0.4337719298245614" />
+        <entry key="lib_base/src/main/res/layout/layout_error.xml" value="0.3592592592592593" />
+        <entry key="lib_base/src/main/res/layout/layout_loading.xml" value="0.3592592592592593" />
       </map>
     </option>
   </component>

@@ -1,10 +1,9 @@
 package com.kaisengao.retrofit.observer.dialog;
 
-import android.content.Context;
-
+import com.kaisengao.base.util.TextUtil;
+import com.kaisengao.base.util.ToastUtil;
 import com.kaisengao.retrofit.observer.BaseRxObserver;
 import com.kaisengao.retrofit.widget.LoadingDialog;
-import com.kaisengao.base.util.ToastUtil;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -20,8 +19,7 @@ public abstract class BaseDialogObserver<T> extends BaseRxObserver<T> {
 
     private LoadingDialog mLoadingDialog;
 
-    protected BaseDialogObserver(Context context) {
-        super(context);
+    protected BaseDialogObserver() {
     }
 
     /**
@@ -33,7 +31,7 @@ public abstract class BaseDialogObserver<T> extends BaseRxObserver<T> {
     public BaseRxObserver<T> setLoadMessage(int loadMessage) {
         super.setLoadMessage(loadMessage);
         if (mLoadingDialog != null) {
-            this.mLoadingDialog.loadMessage(mContext.getString(mLoadMessage));
+            this.mLoadingDialog.loadMessage(TextUtil.getString(mLoadMessage));
         }
         return this;
     }
@@ -81,7 +79,7 @@ public abstract class BaseDialogObserver<T> extends BaseRxObserver<T> {
     private void initDialog() {
         if (this.mLoadingDialog == null) {
             this.mLoadingDialog = new LoadingDialog.Builder()
-                    .setLoadMessage(mContext.getString(mLoadMessage))
+                    .setLoadMessage(TextUtil.getString(mLoadMessage))
                     .setLoadColor(mLoadColor)
                     .build();
         }

@@ -1,11 +1,12 @@
 package com.kaisengao.retrofit.observer;
 
-import android.content.Context;
-
 import androidx.annotation.ColorRes;
 import androidx.annotation.DrawableRes;
 import androidx.annotation.StringRes;
 
+import com.kaisengao.base.BaseApplication;
+import com.kaisengao.base.factory.AppFactory;
+import com.kaisengao.base.util.TextUtil;
 import com.kaisengao.retrofit.R;
 import com.kaisengao.retrofit.exception.ExceptionHandle;
 import com.kaisengao.retrofit.util.NetworkUtil;
@@ -24,8 +25,6 @@ import io.reactivex.disposables.Disposable;
  */
 public abstract class BaseRxObserver<T> implements Observer<T> {
 
-    protected Context mContext;
-
     @StringRes
     protected int mLoadMessage;
     @ColorRes
@@ -35,8 +34,7 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
     @DrawableRes
     protected int mLoadErrorIcon = 0;
 
-    protected BaseRxObserver(Context context) {
-        this.mContext = context;
+    protected BaseRxObserver() {
         this.setLoadMessage(R.string.loading);
         this.setLoadColor(R.color.textColorPrimary);
         this.setLoadBgColor(R.color.translucent);
@@ -104,11 +102,12 @@ public abstract class BaseRxObserver<T> implements Observer<T> {
      */
     @Override
     public void onError(@NotNull Throwable throwable) {
+        BaseApplication application = AppFactory.application();
         String exception;
-        if (!NetworkUtil.isNetConnected(mContext)) {
-            exception = mContext.getString(R.string.net_not);
+        if (!NetworkUtil.isNetConnected(application)) {
+            exception = TextUtil.getString(R.string.net_not);
         } else {
-            exception = ExceptionHandle.handleException(mContext, throwable);
+            exception = ExceptionHandle.handleException(application, throwable);
         }
         this.onError(throwable, exception);
     }

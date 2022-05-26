@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel" />
+            type="com.kaisengao.ksgframe.ui.main.viewmodel.MainViewModel" />
     </data>
 
     <androidx.drawerlayout.widget.DrawerLayout
@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <com.kasiengao.ksgframe.common.widget.ViewPagerEx
+            <com.kaisengao.ksgframe.common.widget.ViewPagerEx
                 android:id="@+id/main_pager"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -58,7 +58,7 @@
         </FrameLayout>
 
         <!-- 侧滑抽屉 -->
-        <com.kasiengao.ksgframe.common.widget.TraineeView
+        <com.kaisengao.ksgframe.common.widget.TraineeView
             android:id="@+id/main_trainee"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

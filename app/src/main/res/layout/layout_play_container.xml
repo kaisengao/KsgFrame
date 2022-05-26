@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:layout_height="210dp"
-    tools:parentTag="com.kasiengao.ksgframe.common.widget.PlayerContainerView">
+    tools:parentTag="com.kaisengao.ksgframe.common.widget.PlayerContainerView">
 
     <!-- 封面图 -->
     <androidx.appcompat.widget.AppCompatImageView

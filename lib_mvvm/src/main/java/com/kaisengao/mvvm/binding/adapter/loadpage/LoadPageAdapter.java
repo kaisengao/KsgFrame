@@ -1,5 +1,6 @@
 package com.kaisengao.mvvm.binding.adapter.loadpage;
 
+import android.app.Activity;
 import android.view.View;
 
 import androidx.annotation.Nullable;
@@ -28,7 +29,7 @@ public class LoadPageAdapter {
         // 存储TAG
         LoadPageFactory loadSirFactory = LoadPageFactory.getInstance();
         // 注册LoadPage
-        loadSirFactory.register(register.getContext(), register, target -> {
+        loadSirFactory.register((Activity) register.getContext(), register, target -> {
             // Retry事件
             if (onReloadImp != null) {
                 onReloadImp.execute(target);
@@ -49,17 +50,17 @@ public class LoadPageAdapter {
         // 区分状态
         switch (loadState.getLoadState()) {
             case LoadState.LOADING:
-                loadSirFactory.showLoading(target.getContext(), target,
+                loadSirFactory.showLoading((Activity) target.getContext(), target,
                         loadState.getLoadBgColor(),
                         loadState.getLoadColor(),
                         loadState.getLoadMessage(),
                         loadState.getLoadingView());
                 break;
             case LoadState.SUCCESS:
-                loadSirFactory.showSuccess(target.getContext(), target);
+                loadSirFactory.showSuccess((Activity) target.getContext(), target);
                 break;
             case LoadState.ERROR:
-                loadSirFactory.showError(target.getContext(), target,
+                loadSirFactory.showError((Activity) target.getContext(), target,
                         loadState.getLoadErrorIcon(),
                         loadState.getLoadBgColor(),
                         loadState.getLoadColor(),

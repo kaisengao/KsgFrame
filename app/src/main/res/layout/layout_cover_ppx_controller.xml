@@ -8,7 +8,7 @@
     tools:background="@color/color_48000000">
 
     <!-- Start/Pause-->
-    <com.kasiengao.ksgframe.common.widget.PlayStateView
+    <com.kaisengao.ksgframe.common.widget.PlayStateView
         android:id="@+id/cover_controller_play"
         android:layout_width="100dp"
         android:layout_height="100dp"

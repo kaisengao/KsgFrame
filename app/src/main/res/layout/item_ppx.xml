@@ -13,7 +13,7 @@
         android:layout_height="match_parent" />
 
     <!-- 播放器-->
-    <com.kasiengao.ksgframe.common.widget.PlayerContainerView
+    <com.kaisengao.ksgframe.common.widget.PlayerContainerView
         android:id="@+id/item_player_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

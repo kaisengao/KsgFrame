@@ -19,7 +19,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.kasiengao.ksgframe.ui.trainee.element.preview.PreviewPager
+            <com.kaisengao.ksgframe.ui.trainee.element.preview.PreviewPager
                 android:id="@+id/share_element_pager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
@@ -37,7 +37,7 @@
 
     </androidx.core.widget.NestedScrollView>
 
-    <com.kasiengao.ksgframe.common.widget.PlayerContainerView
+    <com.kaisengao.ksgframe.common.widget.PlayerContainerView
         android:id="@+id/share_player_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

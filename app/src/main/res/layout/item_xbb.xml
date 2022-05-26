@@ -89,7 +89,7 @@
             tools:text="人人果实·幻兽种·尼卡形态" />
 
         <!-- PlayerContainer -->
-        <com.kasiengao.ksgframe.common.widget.PlayerContainerView
+        <com.kaisengao.ksgframe.common.widget.PlayerContainerView
             android:id="@+id/item_player_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
