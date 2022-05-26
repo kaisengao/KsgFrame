@@ -42,6 +42,7 @@ public class PPXControllerCover extends BaseControllerCover {
         this.mPlayState = findViewById(R.id.cover_controller_play);
         this.mPlayState.setMBitStart(BitmapUtils.getVectorBitmap(mContext, R.drawable.ic_start_ppx));
         this.mPlayState.setMBitPause(null);
+        this.setCoverVisibility(View.GONE);
     }
 
     /**

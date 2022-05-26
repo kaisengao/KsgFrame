@@ -215,6 +215,16 @@ public class PlayerProxy implements IPlayer {
     }
 
     /**
+     * 渲染器 改变事件
+     */
+    @Override
+    public void onSurfaceChanged() {
+        if (isPlayerAvailable()) {
+            this.mBasePlayer.onSurfaceChanged();
+        }
+    }
+
+    /**
      * 获取自定义渲染器
      */
     @Override

@@ -61,5 +61,10 @@
       <option name="name" value="maven" />
       <option name="url" value="https://maven.aliyun.com/repository/public" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="maven" />
+      <option name="name" value="maven" />
+      <option name="url" value="https://maven.aliyun.com/nexus/content/repositories/releases" />
+    </remote-repository>
   </component>
 </project>

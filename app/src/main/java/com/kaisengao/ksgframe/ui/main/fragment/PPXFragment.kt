@@ -14,10 +14,14 @@ import com.kaisengao.ksgframe.player.cover.LoadingCover
 import com.kaisengao.ksgframe.player.cover.PPXControllerCover
 import com.kaisengao.ksgframe.ui.main.MainActivity
 import com.kaisengao.ksgframe.ui.main.adapter.PPXAdapter
+import com.kaisengao.ksgframe.ui.main.fragment.PPXFragment.Companion.CURR_CONTAINER
+import com.kaisengao.ksgframe.ui.main.fragment.PPXFragment.Companion.CURR_POSITION
 import com.kaisengao.ksgframe.ui.main.viewmodel.MainViewModel
 import com.kaisengao.mvvm.base.fragment.BaseVmFragment
 import com.ksg.ksgplayer.KsgSinglePlayer
 import com.ksg.ksgplayer.data.DataSource
+import com.ksg.ksgplayer.event.BundlePool
+import com.ksg.ksgplayer.event.EventKey
 import com.ksg.ksgplayer.renderer.glrender.PIPGLViewRender
 import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView
 
@@ -38,7 +42,7 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
 
     private val mSignalPlayer: KsgSinglePlayer by lazy { KsgSinglePlayer.getInstance() }
 
-    private lateinit var mController: PPXControllerCover
+    private val mController: PPXControllerCover by lazy { PPXControllerCover(context) }
 
     private lateinit var mAdapter: PPXAdapter
 
@@ -50,10 +54,12 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
 
     override fun initWidget() {
         super.initWidget()
-        this.mController = PPXControllerCover(context)
-        // Refresh
-        this.mBinding.ppxRefresh.setOnRefreshListener {
-            this.mViewModel.requestVideos()
+        // 设置预加载数量
+        BundlePool.obtain().apply {
+            putInt(EventKey.INT_DATA, 2)
+            mSignalPlayer.player.option(
+                CoverConstant.OptionEvent.OPTION_ALI_PRELOAD_COUNT, this
+            )
         }
         // Init Adapter
         this.initAdapter()
@@ -83,12 +89,13 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
     private fun initPlayer() {
         this.mSignalPlayer.player.reset()
         // 设置 GL渲染器
-        if (mSignalPlayer.player.renderer !is GLSurfaceView) {
-            this.mSignalPlayer.player.setGLViewRender(
-                PIPGLViewRender(),
-                KsgGLSurfaceView.MODE_RENDER_SIZE
-            )
-        }
+        // TODO 适配阿里播放器的短视频 暂时关闭GLSurface的绘制
+//        if (mSignalPlayer.player.renderer !is GLSurfaceView) {
+//            this.mSignalPlayer.player.setGLViewRender(
+//                PIPGLViewRender(),
+//                KsgGLSurfaceView.MODE_RENDER_SIZE
+//            )
+//        }
         // CoverManager
         this.mSignalPlayer.coverManager.let {
             // 移除Cover
@@ -117,10 +124,16 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
      * Init Adapter
      */
     private fun initAdapter() {
+        // Refresh
+        this.mBinding.ppxRefresh.setOnRefreshListener {
+            this.mViewModel.requestVideos()
+            this.mBinding.ppxRefresh.isRefreshing = false
+        }
         // Adapter
         this.mAdapter = PPXAdapter()
         // Viewpager2
         this.mBinding.ppxVideos.adapter = mAdapter
+        this.mBinding.ppxVideos.offscreenPageLimit = 2
         // 注册滑动事件
         this.mBinding.ppxVideos.registerOnPageChangeCallback(mPageChangeCallback)
     }
@@ -146,6 +159,16 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
         override fun onPageSelected(position: Int) {
             // 播放
             onPlay(position)
+//            // 预缓存下一条视频
+//            BundlePool.obtain().apply {
+//                putSerializable(
+//                    EventKey.SERIALIZABLE_DATA,
+//                    DataSource(mAdapter.data[position + 1].videoUrl)
+//                )
+//                mSignalPlayer.player.option(
+//                    CoverConstant.OptionEvent.OPTION_ALI_PRELOAD_URL, this
+//                )
+//            }
         }
     }
 
@@ -166,7 +189,18 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
                     // 绑定 视图容器
                     this.mSignalPlayer.bindContainer(container, false)
                     // 播放
-                    this.mSignalPlayer.onStart(DataSource(mAdapter.data[position].videoUrl))
+                    val dataSource = DataSource(mAdapter.data[position].videoUrl)
+//                    if (position == 0) {
+                        this.mSignalPlayer.onStart(dataSource)
+//                    } else {
+//                        // 播放加载视频源
+//                        BundlePool.obtain().apply {
+//                            putSerializable(EventKey.SERIALIZABLE_DATA, dataSource)
+//                            mSignalPlayer.player.option(
+//                                CoverConstant.OptionEvent.OPTION_ALI_PRELOAD_MOVE_TO, this
+//                            )
+//                        }
+//                    }
                     // 设置 循环播放
                     this.mSignalPlayer.setLooping(true)
                 }

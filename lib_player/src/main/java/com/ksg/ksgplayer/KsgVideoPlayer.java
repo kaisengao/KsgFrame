@@ -255,6 +255,11 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
      */
     @Override
     public void setRenderer(int rendererType) {
+        if (getCustomRenderer() != null) {
+            // 设置渲染器（自定义 | 优先级较高）
+            this.mVideoContainer.setRenderer(getCustomRenderer());
+            return;
+        }
         this.mRendererType = rendererType;
         this.mPlayerProxy.setSurface(null);
         this.mPlayerProxy.setDisplay(null);
@@ -387,6 +392,14 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     @Override
     public void setDisplay(SurfaceHolder holder) {
         this.mPlayerProxy.setDisplay(holder);
+    }
+
+    /**
+     * 渲染器 改变事件
+     */
+    @Override
+    public void onSurfaceChanged() {
+        this.mPlayerProxy.onSurfaceChanged();
     }
 
     /**

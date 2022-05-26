@@ -291,6 +291,14 @@ public class KsgAssistView implements IKsgVideoView {
     }
 
     /**
+     * 渲染器 改变事件
+     */
+    @Override
+    public void onSurfaceChanged() {
+        this.mPlayer.onSurfaceChanged();
+    }
+
+    /**
      * 获取渲染器
      *
      * @return View

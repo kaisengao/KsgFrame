@@ -128,4 +128,22 @@ public interface CoverConstant {
          */
         int CODE_REQUEST_TIMER_UPDATE_STATE = -150;
     }
+
+    interface OptionEvent {
+
+        /**
+         * 自定义事件 阿里播放器 预加载个数
+         */
+        int OPTION_ALI_PRELOAD_COUNT = 100;
+
+        /**
+         * 自定义事件 阿里播放器 预加载地址
+         */
+        int OPTION_ALI_PRELOAD_URL = 110;
+
+        /**
+         * 自定义事件 阿里播放器 播放预加载视频源
+         */
+        int OPTION_ALI_PRELOAD_MOVE_TO = 120;
+    }
 }

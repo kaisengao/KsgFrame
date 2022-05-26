@@ -23,6 +23,7 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://maven.aliyun.com/nexus/content/repositories/releases" }
         maven { url "https://maven.aliyun.com/repository/public" }
         maven { url "https://jitpack.io" }
     }

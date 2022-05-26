@@ -22,4 +22,6 @@ dependencies {
     implementation project(':lib_base')
     // VideoCache
     api "com.danikula:videocache:$videoCache"
+    // 阿里解码器
+    api 'com.aliyun.sdk.android:AliyunPlayer:5.4.8.0-full'
 }

@@ -4,6 +4,7 @@ import android.content.Intent
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
+import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import androidx.core.content.ContextCompat
@@ -18,6 +19,7 @@ import com.kaisengao.ksgframe.R
 import com.kaisengao.ksgframe.common.util.ColorUtil
 import com.kaisengao.ksgframe.constant.CoverConstant
 import com.kaisengao.ksgframe.databinding.ActivityMainBinding
+import com.kaisengao.ksgframe.player.KsgAliPlayer
 import com.kaisengao.ksgframe.player.KsgIJKPlayer
 import com.kaisengao.ksgframe.player.cover.GestureCover
 import com.kaisengao.ksgframe.player.cover.LoadingCover
@@ -28,6 +30,10 @@ import com.kaisengao.ksgframe.ui.main.viewmodel.MainViewModel
 import com.kaisengao.ksgframe.ui.trainee.fish.FishActivity
 import com.kaisengao.mvvm.base.activity.BaseVmActivity
 import com.ksg.ksgplayer.KsgSinglePlayer
+import com.ksg.ksgplayer.config.PlayerConfig
+import com.ksg.ksgplayer.event.BundlePool
+import com.ksg.ksgplayer.event.EventKey
+import com.ksg.ksgplayer.renderer.RendererType
 
 
 /**
@@ -84,7 +90,7 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     private fun initPlayer() {
         // 解码器
         this.mSignalPlayer.player.decoderView =
-            KsgIJKPlayer(this)
+            KsgAliPlayer(this)
         // Loading
         this.mSignalPlayer.coverManager.addCover(
             CoverConstant.CoverKey.KEY_LOADING,

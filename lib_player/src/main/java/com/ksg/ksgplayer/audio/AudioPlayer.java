@@ -104,6 +104,14 @@ public class AudioPlayer extends BasePlayer {
     }
 
     /**
+     * 渲染器 改变事件
+     */
+    @Override
+    public void onSurfaceChanged() {
+
+    }
+
+    /**
      * 设置 播放器自定义的视图
      *
      * @return View

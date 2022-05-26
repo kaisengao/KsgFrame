@@ -103,6 +103,11 @@ public interface IPlayer {
     void setDisplay(SurfaceHolder holder);
 
     /**
+     * 渲染器 改变事件
+     */
+    void onSurfaceChanged();
+
+    /**
      * 获取自定义渲染器
      *
      * @return View

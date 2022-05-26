@@ -22,7 +22,7 @@ import java.util.Map;
  */
 public class KsgSinglePlayer {
 
-    private static KsgSinglePlayer instance;
+    private static volatile KsgSinglePlayer instance;
 
     private boolean isOverlap;
 
