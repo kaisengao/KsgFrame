@@ -7,7 +7,7 @@
 
         <variable
             name="viewModel"
-            type="com.kasiengao.ksgframe.ui.main.viewmodel.MainViewModel" />
+            type="com.kaisengao.ksgframe.ui.main.viewmodel.MainViewModel" />
     </data>
 
     <RelativeLayout
@@ -15,13 +15,13 @@
         android:layout_height="match_parent">
 
         <!-- 视频 -->
-        <com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout
+        <com.kaisengao.ksgframe.common.widget.CSwipeRefreshLayout
             android:id="@+id/xbb_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:setRefreshing="@{viewModel.MRefreshing}">
 
-            <com.kasiengao.ksgframe.ui.main.widget.XBBVideosView
+            <com.kaisengao.ksgframe.ui.main.widget.XBBVideosView
                 android:id="@+id/xbb_videos"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -29,6 +29,6 @@
                 tools:itemCount="20"
                 tools:listitem="@layout/item_xbb" />
 
-        </com.kasiengao.ksgframe.common.widget.CSwipeRefreshLayout>
+        </com.kaisengao.ksgframe.common.widget.CSwipeRefreshLayout>
     </RelativeLayout>
 </layout>

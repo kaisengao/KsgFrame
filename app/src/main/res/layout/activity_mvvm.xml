@@ -5,11 +5,11 @@
 
     <data class="MvvmBinding">
 
-        <import type="com.kasiengao.ksgframe.ui.trainee.mvvm.MvvmViewModel" />
+        <import type="com.kaisengao.ksgframe.ui.trainee.mvvm.MvvmViewModel" />
 
         <variable
             name="viewModel"
-            type="MvvmViewModel" />
+            type="com.kaisengao.ksgframe.ui.trainee.mvvm.MvvmViewModel" />
 
     </data>
 

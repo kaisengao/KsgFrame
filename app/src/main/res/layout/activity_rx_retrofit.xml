@@ -4,11 +4,11 @@
 
     <data>
 
-        <import type="com.kasiengao.ksgframe.ui.trainee.retrofit.RxRetrofitViewModel" />
+        <import type="com.kaisengao.ksgframe.ui.trainee.retrofit.RxRetrofitViewModel" />
 
         <variable
             name="viewModel"
-            type="RxRetrofitViewModel" />
+            type="com.kaisengao.ksgframe.ui.trainee.retrofit.RxRetrofitViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

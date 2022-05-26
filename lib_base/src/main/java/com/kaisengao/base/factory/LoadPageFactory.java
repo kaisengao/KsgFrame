@@ -1,6 +1,6 @@
 package com.kaisengao.base.factory;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -32,7 +32,7 @@ public class LoadPageFactory {
 
     private static LoadPageFactory sInstance;
 
-    private final Map<Context, Map<Object, LoadContainer>> mLoadContainers;
+    private final Map<Activity, Map<Object, LoadContainer>> mLoadContainers;
 
     private LoadPageFactory() {
         this.mLoadContainers = new HashMap<>();
@@ -52,13 +52,13 @@ public class LoadPageFactory {
     /**
      * 注册异常布局
      */
-    public synchronized void register(final Context context,
+    public synchronized void register(final Activity activity,
                                       final Object target,
                                       final OnLoadReloadListener onReloadListener) {
-        Map<Object, LoadContainer> loadContainers = mLoadContainers.get(context);
+        Map<Object, LoadContainer> loadContainers = mLoadContainers.get(activity);
         if (loadContainers == null) {
             loadContainers = new HashMap<>();
-            this.mLoadContainers.put(context, loadContainers);
+            this.mLoadContainers.put(activity, loadContainers);
         }
         if (!loadContainers.containsKey(target)) {
             loadContainers.put(target, createLoadFrame(target, onReloadListener));
@@ -74,9 +74,9 @@ public class LoadPageFactory {
         });
     }
 
-    public synchronized void showSuccess(final Context context,
+    public synchronized void showSuccess(final Activity activity,
                                          final Object target) {
-        Map<Object, LoadContainer> loadContainers = mLoadContainers.get(context);
+        Map<Object, LoadContainer> loadContainers = mLoadContainers.get(activity);
         if (loadContainers != null) {
             LoadContainer loadContainer = loadContainers.get(target);
             if (loadContainer != null) {
@@ -85,21 +85,21 @@ public class LoadPageFactory {
         }
     }
 
-    public synchronized void showLoading(final Context context,
+    public synchronized void showLoading(final Activity activity,
                                          final Object target,
                                          final @ColorRes int backgroundColor,
                                          final @ColorRes int color,
                                          final String message) {
-        this.showLoading(context, target, backgroundColor, color, message, LoadingViewLoad.class);
+        this.showLoading(activity, target, backgroundColor, color, message, LoadingViewLoad.class);
     }
 
-    public synchronized void showLoading(final Context context,
+    public synchronized void showLoading(final Activity activity,
                                          final Object target,
                                          final @ColorRes int backgroundColor,
                                          final @ColorRes int color,
                                          final String message,
                                          final Class<? extends ILoad> loadView) {
-        Map<Object, LoadContainer> loadContainers = mLoadContainers.get(context);
+        Map<Object, LoadContainer> loadContainers = mLoadContainers.get(activity);
         if (loadContainers != null) {
             LoadContainer loadContainer = loadContainers.get(target);
             if (loadContainer != null) {
@@ -108,10 +108,10 @@ public class LoadPageFactory {
                 // 背景色
                 ViewGroup loadingRoot = rootView.findViewById(R.id.loading_root);
                 if (loadingRoot != null && backgroundColor != -1) {
-                    loadingRoot.setBackgroundColor(ContextCompat.getColor(context, backgroundColor));
+                    loadingRoot.setBackgroundColor(ContextCompat.getColor(activity, backgroundColor));
                 }
                 // 加载颜色
-                int newColor = ContextCompat.getColor(context, color);
+                int newColor = ContextCompat.getColor(activity, color);
                 // Loading
                 AVLoadingIndicatorView loadingView = rootView.findViewById(R.id.loading);
                 if (loadingView != null) {
@@ -127,23 +127,23 @@ public class LoadPageFactory {
         }
     }
 
-    public synchronized void showError(final Context context,
+    public synchronized void showError(final Activity activity,
                                        final Object target,
                                        final @DrawableRes int icon,
                                        final @ColorRes int backgroundColor,
                                        final @ColorRes int loadColor,
                                        final CharSequence message) {
-        this.showError(context, target, icon, backgroundColor, loadColor, message, ErrorViewLoad.class);
+        this.showError(activity, target, icon, backgroundColor, loadColor, message, ErrorViewLoad.class);
     }
 
-    public synchronized void showError(final Context context,
+    public synchronized void showError(final Activity activity,
                                        final Object target,
                                        final @DrawableRes int icon,
                                        final @ColorRes int backgroundColor,
                                        final @ColorRes int loadColor,
                                        final CharSequence message,
                                        final Class<? extends ILoad> loadView) {
-        Map<Object, LoadContainer> loadContainers = mLoadContainers.get(context);
+        Map<Object, LoadContainer> loadContainers = mLoadContainers.get(activity);
         if (loadContainers != null) {
             LoadContainer loadContainer = loadContainers.get(target);
             if (loadContainer != null) {
@@ -152,7 +152,7 @@ public class LoadPageFactory {
                 // 背景色
                 ViewGroup errorRoot = rootView.findViewById(R.id.error_root);
                 if (errorRoot != null && backgroundColor != -1) {
-                    errorRoot.setBackgroundColor(ContextCompat.getColor(context, backgroundColor));
+                    errorRoot.setBackgroundColor(ContextCompat.getColor(activity, backgroundColor));
                 }
                 // 失败图标
                 ImageView errorIcon = rootView.findViewById(R.id.error_icon);
@@ -168,7 +168,7 @@ public class LoadPageFactory {
                 TextView errorText = rootView.findViewById(R.id.error_text);
                 if (errorText != null) {
                     errorText.setText(message);
-                    errorText.setTextColor(ContextCompat.getColor(context, loadColor));
+                    errorText.setTextColor(ContextCompat.getColor(activity, loadColor));
                 }
             }
         }
@@ -177,11 +177,11 @@ public class LoadPageFactory {
     /**
      * 销毁视图后初始化LoadPage
      */
-    public synchronized void onDetachView(final Context context) {
-        Map<Object, LoadContainer> loadContainers = mLoadContainers.get(context);
+    public synchronized void onDetachView(final Activity activity) {
+        Map<Object, LoadContainer> loadContainers = mLoadContainers.get(activity);
         if (loadContainers != null) {
             loadContainers.clear();
         }
-        this.mLoadContainers.remove(context);
+        this.mLoadContainers.remove(activity);
     }
 }

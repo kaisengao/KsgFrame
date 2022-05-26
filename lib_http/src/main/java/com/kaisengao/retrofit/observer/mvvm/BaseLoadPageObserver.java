@@ -1,13 +1,13 @@
 package com.kaisengao.retrofit.observer.mvvm;
 
-import android.content.Context;
-
 import androidx.lifecycle.MutableLiveData;
 
+import com.kaisengao.base.factory.AppFactory;
 import com.kaisengao.base.loadpage.load.LoadingViewLoad;
 import com.kaisengao.base.loadpage.load.base.ILoad;
 import com.kaisengao.base.state.LoadState;
 import com.kaisengao.base.state.LoadingState;
+import com.kaisengao.base.util.TextUtil;
 import com.kaisengao.retrofit.observer.BaseRxObserver;
 
 import io.reactivex.annotations.NonNull;
@@ -27,12 +27,11 @@ public abstract class BaseLoadPageObserver<T> extends BaseRxObserver<T> {
 
     private Class<? extends ILoad> mLoadingView = LoadingViewLoad.class;
 
-    protected BaseLoadPageObserver(Context context, MutableLiveData<LoadingState> loadingState) {
-        super(context);
+    protected BaseLoadPageObserver(MutableLiveData<LoadingState> loadingState) {
         this.mLoadingState = loadingState;
         this.mLoadState = new LoadingState();
         // 初始化
-        this.notify(LoadState.INITIAL, mLoadColor, mLoadBgColor, mContext.getString(mLoadMessage));
+        this.notify(LoadState.INITIAL, mLoadColor, mLoadBgColor, TextUtil.getString(mLoadMessage));
     }
 
     /**
@@ -48,7 +47,7 @@ public abstract class BaseLoadPageObserver<T> extends BaseRxObserver<T> {
     @Override
     public void onSubscribe(@NonNull Disposable d) {
         super.onSubscribe(d);
-        this.notify(LoadState.LOADING, mLoadColor, mLoadBgColor, mContext.getString(mLoadMessage));
+        this.notify(LoadState.LOADING, mLoadColor, mLoadBgColor, AppFactory.application().getString(mLoadMessage));
     }
 
     @Override

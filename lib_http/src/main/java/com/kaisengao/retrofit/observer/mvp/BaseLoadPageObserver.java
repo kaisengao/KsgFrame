@@ -1,6 +1,6 @@
 package com.kaisengao.retrofit.observer.mvp;
 
-import android.content.Context;
+import android.app.Activity;
 
 import androidx.annotation.NonNull;
 
@@ -17,8 +17,13 @@ import io.reactivex.disposables.Disposable;
  * @Author: KaiSenGao
  * @CreateDate: 2019-10-12 14:26
  * @Description: 页面Load
+ * <p>
+ * 2022年05月26日 该逻辑还需要优化，暂时不要用这个类
  */
+@Deprecated
 public abstract class BaseLoadPageObserver<T> extends BaseRxObserver<T> implements OnLoadReloadListener {
+
+    private Activity mActivity;
 
     private final Object mRegister;
 
@@ -26,11 +31,11 @@ public abstract class BaseLoadPageObserver<T> extends BaseRxObserver<T> implemen
 
     private Class<? extends ILoad> mLoadingView = LoadingViewLoad.class;
 
-    protected BaseLoadPageObserver(Context context, Object register) {
-        super(context);
+    protected BaseLoadPageObserver(Activity activity, Object register) {
+        this.mActivity = activity;
         this.mRegister = register;
         this.mLoadPageFactory = LoadPageFactory.getInstance();
-        this.mLoadPageFactory.register(mContext, mRegister,this);
+        this.mLoadPageFactory.register(activity, mRegister, this);
     }
 
     /**
@@ -48,24 +53,24 @@ public abstract class BaseLoadPageObserver<T> extends BaseRxObserver<T> implemen
         super.onSubscribe(d);
         this.mLoadPageFactory
                 .showLoading(
-                        mContext,
+                        mActivity,
                         mRegister,
                         mLoadBgColor,
                         mLoadColor,
-                        mContext.getString(mLoadMessage),
+                        mActivity.getString(mLoadMessage),
                         mLoadingView);
     }
 
     @Override
     public void onNext(@NonNull T t) {
-        this.mLoadPageFactory.showSuccess(mContext, mRegister);
+        this.mLoadPageFactory.showSuccess(mActivity, mRegister);
         super.onNext(t);
     }
 
     @Override
     protected void onError(String message) {
         super.onError(message);
-        this.mLoadPageFactory.showError(mContext, mRegister, mLoadErrorIcon, mLoadBgColor, mLoadColor, message);
+        this.mLoadPageFactory.showError(mActivity, mRegister, mLoadErrorIcon, mLoadBgColor, mLoadColor, message);
     }
 
     @Override
