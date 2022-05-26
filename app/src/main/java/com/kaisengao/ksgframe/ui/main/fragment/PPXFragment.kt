@@ -38,7 +38,7 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
 
     private val mSignalPlayer: KsgSinglePlayer by lazy { KsgSinglePlayer.getInstance() }
 
-    private val mController: PPXControllerCover by lazy { PPXControllerCover(context) }
+    private lateinit var mController: PPXControllerCover
 
     private lateinit var mAdapter: PPXAdapter
 
@@ -50,6 +50,7 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
 
     override fun initWidget() {
         super.initWidget()
+        this.mController = PPXControllerCover(context)
         // Refresh
         this.mBinding.ppxRefresh.setOnRefreshListener {
             this.mViewModel.requestVideos()
@@ -100,7 +101,11 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
             )
             // 手势提示UI 设置PaddingTop使得布局下移不会被Toolbar覆盖
             val toolbarHeight = (activity as MainActivity).getToolbarHeight()
-            it.valuePool.putObject(CoverConstant.ValueKey.KEY_GESTURE_PADDING_TOP, toolbarHeight,false)
+            it.valuePool.putObject(
+                CoverConstant.ValueKey.KEY_GESTURE_PADDING_TOP,
+                toolbarHeight,
+                false
+            )
         }
         // Cover事件
         this.mSignalPlayer.player.setCoverEventListener(null)
