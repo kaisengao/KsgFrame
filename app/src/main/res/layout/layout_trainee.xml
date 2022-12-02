@@ -72,6 +72,12 @@
                 style="@style/TraineeBtn"
                 android:text="@string/trainee_loadpage" />
 
+            <!-- Resizeable -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/trainee_resizeable"
+                style="@style/TraineeBtn"
+                android:text="@string/trainee_resizeable" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </merge>

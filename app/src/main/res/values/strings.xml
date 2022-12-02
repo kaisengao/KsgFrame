@@ -45,6 +45,7 @@
     <string name="trainee_grid">TouchGrid</string>
     <string name="trainee_gesture">GestureView</string>
     <string name="trainee_loadpage">LoadPage</string>
+    <string name="trainee_resizeable">Resizeable</string>
 
     <string name="trainee_other">待定</string>
 

@@ -9,15 +9,16 @@ import android.widget.LinearLayout;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.kaisengao.ksgframe.R;
 import com.kaisengao.ksgframe.ui.trainee.gesture.GestureActivity;
+import com.kaisengao.ksgframe.ui.trainee.grid.TouchGridActivity;
 import com.kaisengao.ksgframe.ui.trainee.loadpage.LoadPageActivity;
 import com.kaisengao.ksgframe.ui.trainee.mvp.MvpActivity;
+import com.kaisengao.ksgframe.ui.trainee.mvvm.MvvmActivity;
 import com.kaisengao.ksgframe.ui.trainee.player.PlayerActivity;
+import com.kaisengao.ksgframe.ui.trainee.resizeable.ResizeableAcA;
 import com.kaisengao.ksgframe.ui.trainee.retrofit.RxRetrofitActivity;
 import com.kaisengao.ksgframe.ui.trainee.staggered.StaggeredGridActivity;
-import com.kaisengao.ksgframe.R;
-import com.kaisengao.ksgframe.ui.trainee.grid.TouchGridActivity;
-import com.kaisengao.ksgframe.ui.trainee.mvvm.MvvmActivity;
 
 /**
  * @ClassName: TraineeView
@@ -40,9 +41,9 @@ public class TraineeView extends LinearLayout {
     /**
      * Init
      */
-    private void init(){
+    private void init() {
         // ContentView
-        View.inflate(getContext(), R.layout.layout_trainee,this);
+        View.inflate(getContext(), R.layout.layout_trainee, this);
         this.setOrientation(LinearLayout.VERTICAL);
         this.setOnClickListener(this::onClick);
         // Mvp
@@ -61,6 +62,8 @@ public class TraineeView extends LinearLayout {
         this.findViewById(R.id.trainee_gesture).setOnClickListener(this::onClick);
         // loadpage
         this.findViewById(R.id.trainee_loadpage).setOnClickListener(this::onClick);
+        // Resizeable
+        this.findViewById(R.id.trainee_resizeable).setOnClickListener(this::onClick);
     }
 
     /**
@@ -86,6 +89,8 @@ public class TraineeView extends LinearLayout {
             this.getContext().startActivity(new Intent(getContext(), GestureActivity.class));
         } else if (id == R.id.trainee_loadpage) {
             this.getContext().startActivity(new Intent(getContext(), LoadPageActivity.class));
+        } else if (id == R.id.trainee_resizeable) {
+            this.getContext().startActivity(new Intent(getContext(), ResizeableAcA.class));
         }
     }
 }
