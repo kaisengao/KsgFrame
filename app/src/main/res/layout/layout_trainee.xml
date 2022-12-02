@@ -72,6 +72,12 @@
                 style="@style/TraineeBtn"
                 android:text="@string/trainee_loadpage" />
 
+            <!-- Pip-->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/trainee_pip"
+                style="@style/TraineeBtn"
+                android:text="@string/trainee_pip" />
+
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 </merge>

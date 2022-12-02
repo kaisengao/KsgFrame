@@ -89,13 +89,12 @@ class PPXFragment : BaseVmFragment<FragmentPpxBinding, MainViewModel>() {
     private fun initPlayer() {
         this.mSignalPlayer.player.reset()
         // 设置 GL渲染器
-        // TODO 适配阿里播放器的短视频 暂时关闭GLSurface的绘制
-//        if (mSignalPlayer.player.renderer !is GLSurfaceView) {
-//            this.mSignalPlayer.player.setGLViewRender(
-//                PIPGLViewRender(),
-//                KsgGLSurfaceView.MODE_RENDER_SIZE
-//            )
-//        }
+        if (mSignalPlayer.player.renderer !is GLSurfaceView) {
+            this.mSignalPlayer.player.setGLViewRender(
+                PIPGLViewRender(),
+                KsgGLSurfaceView.MODE_RENDER_SIZE
+            )
+        }
         // CoverManager
         this.mSignalPlayer.coverManager.let {
             // 移除Cover

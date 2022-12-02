@@ -3,32 +3,28 @@ package com.kaisengao.ksgframe.ui.trainee.player;
 import android.annotation.SuppressLint;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 
 import com.kaisengao.base.util.DensityUtil;
 import com.kaisengao.base.util.StatusBarUtil;
+import com.kaisengao.base.util.ToastUtil;
+import com.kaisengao.ksgframe.BR;
+import com.kaisengao.ksgframe.R;
 import com.kaisengao.ksgframe.common.util.AnimUtil;
 import com.kaisengao.ksgframe.common.util.SystemUiUtil;
 import com.kaisengao.ksgframe.constant.CoverConstant;
-import com.kaisengao.ksgframe.player.KsgExoPlayer;
+import com.kaisengao.ksgframe.databinding.ActivityPlayerBinding;
+import com.kaisengao.ksgframe.player.KsgAliPlayer;
 import com.kaisengao.ksgframe.player.cover.ControllerCover;
 import com.kaisengao.ksgframe.player.cover.GestureCover;
 import com.kaisengao.ksgframe.player.cover.LoadingCover;
 import com.kaisengao.mvvm.base.activity.BaseVmActivity;
-import com.kaisengao.ksgframe.BR;
-import com.kaisengao.ksgframe.R;
-import com.kaisengao.ksgframe.databinding.ActivityPlayerBinding;
 import com.ksg.ksgplayer.config.AspectRatio;
 import com.ksg.ksgplayer.cover.CoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
-import com.ksg.ksgplayer.listener.OnRendererListener;
 import com.ksg.ksgplayer.renderer.RendererType;
-import com.ksg.ksgplayer.renderer.glrender.PIPGLViewRender;
-import com.ksg.ksgplayer.renderer.view.KsgGLSurfaceView;
 import com.ksg.ksgplayer.widget.KsgVideoView;
 
 /**
@@ -38,6 +34,10 @@ import com.ksg.ksgplayer.widget.KsgVideoView;
  * @Description: Player
  */
 public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, PlayerViewModel> {
+
+    private int mRotate;
+
+    private int mAspectRatio = 0;
 
     private int[] mScreenSize;
 
@@ -56,9 +56,6 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
     public int initVariableId() {
         return BR.viewModel;
     }
-    //记住切换数据源类型
-    private int mType = 0;
-    protected int mRotate;
 
     @Override
     protected void initWidget() {
@@ -66,84 +63,77 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
         this.mScreenSize = DensityUtil.getScreenSize(this);
         // Init Player
         this.initPlayer();
-
-        this.mBinding.playerShotPic.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mBinding.player.getRenderer().onShotPic();
+        // 事件 截图
+        this.mBinding.playerShotPic.setOnClickListener(v -> mBinding.player.getRenderer().onShotPic());
+        // 事件 切换比例
+        this.mBinding.playerAspectRatio.setOnClickListener(v -> {
+            if (mAspectRatio == 0) {
+                this.mAspectRatio = 1;
+            } else if (mAspectRatio == 1) {
+                this.mAspectRatio = 2;
+            } else if (mAspectRatio == 2) {
+                this.mAspectRatio = 3;
+            } else if (mAspectRatio == 3) {
+                this.mAspectRatio = 4;
+            } else if (mAspectRatio == 4) {
+                this.mAspectRatio = 0;
+            }
+            this.resolveTypeUI();
+        });
+        // 事件 旋转
+        this.mBinding.playerDegree.setOnClickListener(v -> {
+            if ((mBinding.player.getRenderer().getRotationDegrees() - mRotate) == 270) {
+                this.mBinding.player.getRenderer().setRotationDegrees(mRotate);
+            } else {
+                this.mBinding.player.getRenderer().setRotationDegrees(mBinding.player.getRenderer().getRotationDegrees() + 90);
             }
         });
-
-        this.mBinding.playerAspectRatio.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mType == 0) {
-                    mType = 1;
-                } else if (mType == 1) {
-                    mType = 2;
-                } else if (mType == 2) {
-                    mType = 3;
-                } else if (mType == 3) {
-                    mType = 4;
-                } else if (mType == 4) {
-                    mType = 0;
-                }
-                resolveTypeUI();
-            }
-        });
-
-        this.mBinding.playerDegree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if ((mBinding.player.getRenderer().getRotationDegrees() - mRotate) == 270) {
-                    mBinding.player.getRenderer().setRotationDegrees(mRotate);
-                } else {
-                    mBinding.player.getRenderer().setRotationDegrees( mBinding.player.getRenderer().getRotationDegrees() + 90);
-                }
-            }
-        });
-
-        this.mBinding.playerFilter.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+        // 事件 滤镜
+        this.mBinding.playerFilter.setOnClickListener(v -> {
 //                if (!v.isSelected()) {
 //                    mBinding.player.getRenderer().setGLFilter(new GaussianBlurFilter());
 //                }else {
 //                    mBinding.player.getRenderer().setGLFilter(new NoFilter());
 //                }
-                v.setSelected(!v.isSelected());
-            }
+//                v.setSelected(!v.isSelected());
+            ToastUtil.showShort("还没做哦~");
         });
     }
+
+    @SuppressLint("SetTextI18n")
     private void resolveTypeUI() {
-        if (mType == 1) {
-//            mMoreScale.setText("16:9");
-            mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_16_9);
-        } else if (mType == 2) {
-//            mMoreScale.setText("4:3");
-            mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_4_3);
-        } else if (mType == 3) {
-//            mMoreScale.setText("全屏");
-            mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_FULL);
-        } else if (mType == 4) {
-//            mMoreScale.setText("拉伸全屏");
-            mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_MATCH_FULL);
-        } else if (mType == 0) {
-//            mMoreScale.setText("默认比例");
-            mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_DEFAULT);
+        if (mAspectRatio == 1) {
+            this.mBinding.playerAspectRatio.setText("16:9");
+            this.mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_16_9);
+        } else if (mAspectRatio == 2) {
+            this.mBinding.playerAspectRatio.setText("4:3");
+            this.mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_4_3);
+        } else if (mAspectRatio == 3) {
+            this.mBinding.playerAspectRatio.setText("全屏");
+            this.mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_FULL);
+        } else if (mAspectRatio == 4) {
+            this.mBinding.playerAspectRatio.setText("拉伸全屏");
+            this.mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_MATCH_FULL);
+        } else if (mAspectRatio == 0) {
+            this.mBinding.playerAspectRatio.setText("默认比例");
+            this.mBinding.player.getRenderer().setAspectRatio(AspectRatio.RATIO_DEFAULT);
         }
     }
+
     /**
      * Init Player
      */
     @SuppressLint("SourceLockedOrientationActivity")
     private void initPlayer() {
         KsgVideoView player = mBinding.player;
-        // 1 (注意调用顺序，否则不生效)
-        player.setGLViewRender(new PIPGLViewRender(), KsgGLSurfaceView.MODE_RENDER_SIZE);
-        // 2、3
-        player.setDecoderView(new KsgExoPlayer(this));
-        player.setRenderer(RendererType.GL_SURFACE);
+//        // 1 (注意调用顺序，否则不生效)
+//        player.setGLViewRender(new PIPGLViewRender(), KsgGLSurfaceView.MODE_RENDER_SIZE);
+//        // 2、3
+//        player.setDecoderView(new KsgExoPlayer(this));
+//        player.setRenderer(RendererType.GL_SURFACE);
+
+        player.setDecoderView(new KsgAliPlayer(this));
+        player.setRenderer(RendererType.SURFACE);
 
         // 创建 Cover管理器
         this.mCoverManager = new CoverManager();
@@ -183,13 +173,9 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
             }
         });
         // 渲染器事件
-        player.setRendererListener(new OnRendererListener() {
-
-            @Override
-            public void onShotPic(Bitmap bitmap) {
-                mBinding.playerShotPicInfo.setImageBitmap(bitmap);
-                mBinding.playerShotPicInfo.setRotation(player.getRenderer().getRotationDegrees());
-            }
+        player.setRendererListener(bitmap -> {
+            mBinding.playerShotPicInfo.setImageBitmap(bitmap);
+            mBinding.playerShotPicInfo.setRotation(player.getRenderer().getRotationDegrees());
         });
         // 播放
         this.onPlay("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4");
@@ -222,7 +208,7 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
     public void onFullscreen(boolean fullscreen) {
         this.mFullscreen = fullscreen;
         // 获取View在屏幕上的高度位置
-        int viewHeight = (int) (mScreenSize[0] * 9 / 16) + StatusBarUtil.getStatusBarHeight(this);
+        int viewHeight = (mScreenSize[0] * 9 / 16) + StatusBarUtil.getStatusBarHeight(this);
         // 全屏动画
         AnimUtil.fullScreenAnim(mBinding.player, fullscreen, viewHeight, mScreenSize[1], animation -> {
             // 更新高度

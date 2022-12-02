@@ -20,6 +20,7 @@ import com.kaisengao.ksgframe.common.util.ColorUtil
 import com.kaisengao.ksgframe.constant.CoverConstant
 import com.kaisengao.ksgframe.databinding.ActivityMainBinding
 import com.kaisengao.ksgframe.player.KsgAliPlayer
+import com.kaisengao.ksgframe.player.KsgExoPlayer
 import com.kaisengao.ksgframe.player.KsgIJKPlayer
 import com.kaisengao.ksgframe.player.cover.GestureCover
 import com.kaisengao.ksgframe.player.cover.LoadingCover
@@ -34,7 +35,6 @@ import com.ksg.ksgplayer.config.PlayerConfig
 import com.ksg.ksgplayer.event.BundlePool
 import com.ksg.ksgplayer.event.EventKey
 import com.ksg.ksgplayer.renderer.RendererType
-
 
 /**
  * @ClassName: MainActivity
@@ -90,7 +90,7 @@ class MainActivity : BaseVmActivity<ActivityMainBinding, MainViewModel>() {
     private fun initPlayer() {
         // 解码器
         this.mSignalPlayer.player.decoderView =
-            KsgAliPlayer(this)
+            KsgExoPlayer(this)
         // Loading
         this.mSignalPlayer.coverManager.addCover(
             CoverConstant.CoverKey.KEY_LOADING,

@@ -21,7 +21,6 @@ import com.ksg.ksgplayer.listener.OnErrorListener
 import com.ksg.ksgplayer.listener.OnPlayerListener
 import com.ksg.ksgplayer.player.BasePlayer
 
-
 /**
  * @ClassName: KsgAliPlayer
  * @Author: GaoXin
