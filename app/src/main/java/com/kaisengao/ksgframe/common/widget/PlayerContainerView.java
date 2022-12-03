@@ -126,13 +126,22 @@ public class PlayerContainerView extends FrameLayout {
         this.requestLayout();
     }
 
-    @SuppressLint("ClickableViewAccessibility")
+    /**
+     * 更新 宽度高度
+     */
+    @Keep
+    public void setWidthHeight(float width, float height) {
+        this.getLayoutParams().width = (int) width;
+        this.getLayoutParams().height = (int) height;
+        this.requestLayout();
+    }
+
     @Override
-    public boolean onTouchEvent(MotionEvent event) {
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
         // 拦截所有事件
         if (isIntercept()) {
             return true;
         }
-        return super.onTouchEvent(event);
+        return super.onInterceptTouchEvent(ev);
     }
 }

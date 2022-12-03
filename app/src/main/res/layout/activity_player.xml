@@ -13,7 +13,7 @@
         android:background="@color/background">
 
         <!-- 播放器本器 -->
-        <com.ksg.ksgplayer.widget.KsgVideoView
+        <FrameLayout
             android:id="@+id/player"
             android:layout_width="match_parent"
             android:layout_height="0dp"
@@ -56,7 +56,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
-            app:constraint_referenced_ids="player_shotPic,player_degree,player_aspectRatio,player_decoder,player_renderer,player_filter,player_bind_network"
+            app:constraint_referenced_ids="player_shotPic,player_degree,player_aspectRatio,player_decoder,player_renderer,player_filter,player_bind_network,player_float"
             app:flow_horizontalGap="10dp"
             app:flow_maxElementsWrap="3"
             app:flow_wrapMode="chain"
@@ -103,6 +103,12 @@
             android:id="@+id/player_bind_network"
             style="@style/PlayerMenuBtn"
             android:text="绑定网络事件" />
+
+        <!--  悬浮窗播放 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/player_float"
+            style="@style/PlayerMenuBtn"
+            android:text="悬浮窗播放" />
 
         <!-- 截图 -->
         <androidx.appcompat.widget.AppCompatImageView

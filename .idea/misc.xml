@@ -4,6 +4,14 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.5" />
+        <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/activity_gesture.xml" value="0.5265625" />
+        <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/activity_pip.xml" value="0.33" />
+        <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/activity_player.xml" value="0.33" />
+        <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/layout_float_player.xml" value="0.5265625" />
+        <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/layout_play_container.xml" value="0.3177083333333333" />
+        <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/layout_player_app_float.xml" value="0.33425925925925926" />
+        <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/layout_preview_pager.xml" value="0.5265625" />
+        <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/layout_trainee.xml" value="0.5" />
         <entry key="app/src/main/res/drawable/ic_baseline_agriculture_24.xml" value="0.2435" />
         <entry key="app/src/main/res/drawable/ic_baseline_star_24.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/ic_big_start.xml" value="0.22" />
@@ -83,7 +91,7 @@
       <item index="0" class="java.lang.String" itemvalue="com.kasiengao.base.annotations.ReloadAnnotations" />
     </list>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

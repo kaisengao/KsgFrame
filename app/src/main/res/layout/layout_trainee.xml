@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="220dp"
         android:scaleType="centerCrop"
-        android:src="@drawable/ic_beauty" />
+        android:src="@mipmap/ic_beauty" />
 
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"

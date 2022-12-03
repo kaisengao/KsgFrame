@@ -45,6 +45,10 @@ dependencies {
     implementation "com.google.android.exoplayer:exoplayer-smoothstreaming:$exoplayer"
     // AkDanmaku
     implementation 'com.kuaishou:akdanmaku:1.0.3'
+    // EasyFloat (应用外部)
+    implementation 'com.github.princekin-f:EasyFloat:2.0.4'
+    // EasyFloat（应用内部）
+    implementation 'com.github.Petterpx:FloatingX:1.1.3'
     // Base
     implementation project(':lib_base')
     // MVP
