@@ -16,12 +16,11 @@ import com.kaisengao.ksgframe.common.util.AnimUtil;
 import com.kaisengao.ksgframe.common.util.SystemUiUtil;
 import com.kaisengao.ksgframe.constant.CoverConstant;
 import com.kaisengao.ksgframe.databinding.ActivityPlayerBinding;
-import com.kaisengao.ksgframe.player.KsgAliPlayer;
 import com.kaisengao.ksgframe.player.KsgExoPlayer;
 import com.kaisengao.ksgframe.player.cover.ControllerCover;
 import com.kaisengao.ksgframe.player.cover.GestureCover;
 import com.kaisengao.ksgframe.player.cover.LoadingCover;
-import com.kaisengao.ksgframe.player.window.FloatPlayerView;
+import com.kaisengao.ksgframe.player.window.app.FloatPlayerView;
 import com.kaisengao.mvvm.base.activity.BaseVmActivity;
 import com.ksg.ksgplayer.config.AspectRatio;
 import com.ksg.ksgplayer.cover.CoverManager;
@@ -29,9 +28,7 @@ import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.renderer.RendererType;
 import com.ksg.ksgplayer.widget.KsgAssistView;
-import com.ksg.ksgplayer.widget.KsgVideoView;
 import com.petterp.floatingx.FloatingX;
-import com.petterp.floatingx.listener.IFxViewLifecycle;
 import com.petterp.floatingx.view.FxViewHolder;
 
 /**
@@ -109,20 +106,7 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
         });
         // 事件  悬浮窗播放
         this.mBinding.playerFloat.setOnClickListener(v -> {
-            FloatingX.control().show();
 
-            FxViewHolder viewHolder = FloatingX.control().getViewHolder();
-            if (viewHolder != null) {
-                View container = viewHolder.getView(R.id.floatPlayerView);
-                if (container instanceof FloatPlayerView) {
-                    FloatPlayerView playerView = (FloatPlayerView) container;
-                    mPlayer.bindContainer(playerView);
-
-                    mCoverManager.removeCover(CoverConstant.CoverKey.KEY_CONTROLLER);
-                    mCoverManager.removeCover(CoverConstant.CoverKey.KEY_GESTURE);
-
-                }
-            }
         });
     }
 

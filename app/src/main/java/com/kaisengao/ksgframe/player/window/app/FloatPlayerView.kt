@@ -1,17 +1,15 @@
-package com.kaisengao.ksgframe.player.window
+package com.kaisengao.ksgframe.player.window.app
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.AttributeSet
 import android.util.Log
 import android.view.GestureDetector
-import android.view.GestureDetector.SimpleOnGestureListener
 import android.view.MotionEvent
 import android.view.View
-import androidx.core.content.ContextCompat
 import com.kaisengao.base.util.DensityUtil
 import com.kaisengao.ksgframe.common.widget.PlayerContainerView
-import com.kaisengao.ksgframe.player.window.constant.FloatConstant
+import com.kaisengao.ksgframe.player.window.app.constant.FloatConstant
 
 /**
  * @ClassName: FloatPlayerView
@@ -34,10 +32,6 @@ class FloatPlayerView(context: Context, attrs: AttributeSet?) :
     }
 
     init {
-        // Backdrop
-        this.setBackgroundColor(
-            ContextCompat.getColor(getContext(), android.R.color.holo_green_light)
-        )
         // 时间 Touch
         this.setOnTouchListener(this)
         // 初始 尺寸

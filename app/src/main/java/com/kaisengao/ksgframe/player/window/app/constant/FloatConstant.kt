@@ -1,4 +1,4 @@
-package com.kaisengao.ksgframe.player.window.constant
+package com.kaisengao.ksgframe.player.window.app.constant
 
 import com.kaisengao.base.util.DensityUtil
 import com.kaisengao.ksgframe.factory.AppFactory

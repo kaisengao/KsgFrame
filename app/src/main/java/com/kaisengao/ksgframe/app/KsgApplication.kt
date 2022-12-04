@@ -10,6 +10,7 @@ import com.kaisengao.ksgframe.BuildConfig
 import com.kaisengao.ksgframe.R
 import com.kaisengao.ksgframe.common.float.app.FxAnimationImpl
 import com.kaisengao.ksgframe.common.float.app.FxConfigStorageToSpImpl
+import com.kaisengao.ksgframe.factory.AppFactory
 import com.petterp.floatingx.FloatingX
 import com.petterp.floatingx.assist.FxGravity
 import com.petterp.floatingx.listener.IFxViewLifecycle
@@ -60,5 +61,7 @@ class KsgApplication : BaseApplication() {
             // 设置是否启用日志
             setEnableLog(BuildConfig.DEBUG, "zzz")
         }
+        FloatingX.configControl()
+            .setEnableSaveDirection(FxConfigStorageToSpImpl(AppFactory.application()), true)
     }
 }
