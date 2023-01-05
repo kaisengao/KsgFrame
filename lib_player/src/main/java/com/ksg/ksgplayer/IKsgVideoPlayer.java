@@ -40,6 +40,13 @@ public interface IKsgVideoPlayer extends IPlayer {
     void setCoverManager(ICoverManager coverManager);
 
     /**
+     * 获取 覆盖组件管理器
+     *
+     * @return ICoverManager
+     */
+    ICoverManager getCoverManager();
+
+    /**
      * 添加自定义事件生产者
      *
      * @param eventProducer 自定义事件生产者

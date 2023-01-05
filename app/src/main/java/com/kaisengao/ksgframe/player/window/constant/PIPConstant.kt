@@ -1,4 +1,4 @@
-package com.kaisengao.ksgframe.player.window.app.constant
+package com.kaisengao.ksgframe.player.window.constant
 
 import com.kaisengao.base.util.DensityUtil
 import com.kaisengao.ksgframe.factory.AppFactory
@@ -9,10 +9,10 @@ import com.kaisengao.ksgframe.factory.AppFactory
  * @CreateDate: 2022/12/3 20:28
  * @Description: 悬浮窗
  */
-object FloatConstant {
+object PIPConstant {
 
     /**
      * 悬浮窗 比例 (16:9)
      */
-    val WINDOW_SCALE: FloatArray by lazy { floatArrayOf(0.5F, 0.7F, 0.9F) }
+    val WINDOW_SCALE: FloatArray by lazy { floatArrayOf(0.5F, 0.7F, 0.9F, 1F) }
 }

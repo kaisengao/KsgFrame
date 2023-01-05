@@ -77,6 +77,11 @@ public class KsgAssistView implements IKsgVideoView {
         this.mPlayer.setCoverManager(coverManager);
     }
 
+    @Override
+    public ICoverManager getCoverManager() {
+        return mPlayer.getCoverManager();
+    }
+
     /**
      * 添加自定义事件生产者
      *

@@ -121,6 +121,16 @@ public class KsgVideoPlayer implements IKsgVideoPlayer {
     }
 
     /**
+     * 获取 覆盖组件管理器
+     *
+     * @return ICoverManager
+     */
+    @Override
+    public ICoverManager getCoverManager() {
+        return mVideoContainer.getCoverManager();
+    }
+
+    /**
      * 添加自定义事件生产者
      *
      * @param eventProducer 自定义事件生产者

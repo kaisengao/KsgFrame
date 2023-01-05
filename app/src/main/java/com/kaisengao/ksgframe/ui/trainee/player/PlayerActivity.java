@@ -1,9 +1,11 @@
 package com.kaisengao.ksgframe.ui.trainee.player;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
-import android.view.View;
+import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 
@@ -16,20 +18,21 @@ import com.kaisengao.ksgframe.common.util.AnimUtil;
 import com.kaisengao.ksgframe.common.util.SystemUiUtil;
 import com.kaisengao.ksgframe.constant.CoverConstant;
 import com.kaisengao.ksgframe.databinding.ActivityPlayerBinding;
-import com.kaisengao.ksgframe.player.KsgExoPlayer;
+import com.kaisengao.ksgframe.player.KsgAliPlayer;
 import com.kaisengao.ksgframe.player.cover.ControllerCover;
 import com.kaisengao.ksgframe.player.cover.GestureCover;
 import com.kaisengao.ksgframe.player.cover.LoadingCover;
-import com.kaisengao.ksgframe.player.window.app.FloatPlayerView;
+import com.kaisengao.ksgframe.player.window.AppOutPip;
 import com.kaisengao.mvvm.base.activity.BaseVmActivity;
+import com.ksg.ksgplayer.cache.AssistCachePool;
 import com.ksg.ksgplayer.config.AspectRatio;
 import com.ksg.ksgplayer.cover.CoverManager;
 import com.ksg.ksgplayer.data.DataSource;
 import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.renderer.RendererType;
 import com.ksg.ksgplayer.widget.KsgAssistView;
-import com.petterp.floatingx.FloatingX;
-import com.petterp.floatingx.view.FxViewHolder;
+
+import java.util.UUID;
 
 /**
  * @ClassName: PlayerVideo
@@ -49,9 +52,18 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
 
     private boolean isLandscape;
 
+    private String mAssistUUID;
+
     private CoverManager mCoverManager;
 
     private KsgAssistView mPlayer;
+
+    public static void startAc(Context context, String uuid) {
+        Intent intent = new Intent(context, PlayerActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("uuid", uuid);
+        context.startActivity(intent);
+    }
 
     @Override
     protected int getContentLayoutId() {
@@ -61,6 +73,14 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
     @Override
     public int initVariableId() {
         return BR.viewModel;
+    }
+
+    @Override
+    protected void initArgs(Bundle bundle) {
+        super.initArgs(bundle);
+        if (bundle != null) {
+            this.mAssistUUID = bundle.getString("uuid", "");
+        }
     }
 
     @Override
@@ -106,6 +126,8 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
         });
         // 事件  悬浮窗播放
         this.mBinding.playerFloat.setOnClickListener(v -> {
+//            AppInPip.Companion.getInstance().showPip(UUID.randomUUID().toString(), mPlayer);
+            AppOutPip.Companion.getInstance().showPip(this, UUID.randomUUID().toString(), mPlayer);
 
         });
     }
@@ -135,70 +157,79 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
      */
     @SuppressLint("SourceLockedOrientationActivity")
     private void initPlayer() {
-        this.mPlayer = new KsgAssistView(this);
-        this.mPlayer.bindContainer(mBinding.player);
-//        // 1 (注意调用顺序，否则不生效)
+        KsgAssistView cachePlayer = AssistCachePool.getInstance().getCache(mAssistUUID);
+        if (cachePlayer != null) {
+            this.mPlayer = cachePlayer;
+            this.mPlayer.bindContainer(mBinding.player);
+        } else {
+            this.mPlayer = new KsgAssistView(this);
+            this.mPlayer.bindContainer(mBinding.player);
+
+//         // 1 (注意调用顺序，否则不生效)
 //        player.setGLViewRender(new PIPGLViewRender(), KsgGLSurfaceView.MODE_RENDER_SIZE);
 //        // 2、3
 //        player.setDecoderView(new KsgExoPlayer(this));
 //        player.setRenderer(RendererType.GL_SURFACE);
 
-        this.mPlayer.setDecoderView(new KsgExoPlayer(this));
-        this.mPlayer.setRenderer(RendererType.SURFACE);
+            this.mPlayer.setDecoderView(new KsgAliPlayer(this));
+            this.mPlayer.setRenderer(RendererType.SURFACE);
 
-        // 创建 Cover管理器
-        this.mCoverManager = new CoverManager();
-        this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_LOADING, new LoadingCover(this));
-        this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_GESTURE, new GestureCover(this));
-        this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_CONTROLLER, new ControllerCover(this));
-        // 设置 覆盖组件管理器
-        this.mPlayer.setCoverManager(mCoverManager);
-        // Cover组件事件
-        this.mPlayer.setCoverEventListener((eventCode, bundle) -> {
-            switch (eventCode) {
-                case CoverConstant.CoverEvent.CODE_REQUEST_BACK:
-                    // 回退
-                    this.onBackPressed();
-                    break;
-                case CoverConstant.CoverEvent.CODE_REQUEST_LP_SCREEN_TOGGLE:
-                    // 横竖屏切换
-                    boolean lpScreen = bundle.getBoolean(EventKey.BOOL_DATA, false);
-                    // 改变横竖屏
-                    this.setRequestedOrientation(lpScreen
-                            ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
-                            // 横屏自动旋转 180°
-                            : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-                    break;
-                case CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_TOGGLE:
-                    // 全屏切换
-                    boolean fullscreen = bundle.getBoolean(EventKey.BOOL_DATA, false);
-                    // 如果在横屏状态下退出了全屏模式恢复为竖屏
-                    if (isLandscape && !fullscreen) {
-                        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                    }
-                    // 全屏切换
-                    this.onFullscreen(fullscreen);
-                    break;
-                default:
-                    break;
-            }
-        });
-        // 渲染器事件
-        this.mPlayer.setRendererListener(bitmap -> {
-            mBinding.playerShotPicInfo.setImageBitmap(bitmap);
-            mBinding.playerShotPicInfo.setRotation(mPlayer.getRenderer().getRotationDegrees());
-        });
-        // 播放
-        this.onPlay("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4");
+            // 创建 Cover管理器
+            this.mCoverManager = new CoverManager();
+            this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_LOADING, new LoadingCover(this));
+            this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_GESTURE, new GestureCover(this));
+            this.mCoverManager.addCover(CoverConstant.CoverKey.KEY_CONTROLLER, new ControllerCover(this));
+            // 设置 覆盖组件管理器
+            this.mPlayer.setCoverManager(mCoverManager);
+            // Cover组件事件
+            this.mPlayer.setCoverEventListener((eventCode, bundle) -> {
+                switch (eventCode) {
+                    case CoverConstant.CoverEvent.CODE_REQUEST_BACK:
+                        // 回退
+                        this.onBackPressed();
+                        break;
+                    case CoverConstant.CoverEvent.CODE_REQUEST_LP_SCREEN_TOGGLE:
+                        // 横竖屏切换
+                        boolean lpScreen = bundle.getBoolean(EventKey.BOOL_DATA, false);
+                        // 改变横竖屏
+                        this.setRequestedOrientation(lpScreen
+                                ? ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+                                // 横屏自动旋转 180°
+                                : ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
+                        break;
+                    case CoverConstant.CoverEvent.CODE_REQUEST_FULLSCREEN_TOGGLE:
+                        // 全屏切换
+                        boolean fullscreen = bundle.getBoolean(EventKey.BOOL_DATA, false);
+                        // 如果在横屏状态下退出了全屏模式恢复为竖屏
+                        if (isLandscape && !fullscreen) {
+                            this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                        }
+                        // 全屏切换
+                        this.onFullscreen(fullscreen);
+                        break;
+                    default:
+                        break;
+                }
+            });
+            // 渲染器事件
+            this.mPlayer.setRendererListener(bitmap -> {
+                mBinding.playerShotPicInfo.setImageBitmap(bitmap);
+                mBinding.playerShotPicInfo.setRotation(mPlayer.getRenderer().getRotationDegrees());
+            });
+            // 播放
+            this.onPlay("http://vfx.mtime.cn/Video/2019/05/24/mp4/190524093650003718.mp4");
+        }
     }
 
     /**
      * 播放
      */
     private void onPlay(String url) {
-        this.mPlayer.setDataSource(new DataSource(url));
-        this.mPlayer.start();
-        this.mPlayer.setLooping(true);
+        if (!mPlayer.isPlaying()) {
+            this.mPlayer.setDataSource(new DataSource(url));
+            this.mPlayer.start();
+            this.mPlayer.setLooping(true);
+        }
         // 当前解码器
         this.getCurrentDecoder();
     }
@@ -284,5 +315,12 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
         }
         // 剩下的基操给系统
         super.onBackPressed();
+    }
+
+    @Override
+    public void finish() {
+        super.finish();
+        // 开启悬浮窗
+//        AppInPip.Companion.getInstance().showPip(UUID.randomUUID().toString(), mPlayer);
     }
 }

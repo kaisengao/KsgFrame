@@ -29,7 +29,6 @@ public interface ICoverManager {
      * RemoveAll 覆盖组件
      *
      * @param filter 过滤器（不包含在内的）
-     * @param key    key
      */
     void removeAllCover(OnCoverFilter filter);
 

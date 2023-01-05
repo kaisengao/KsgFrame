@@ -36,24 +36,24 @@ class PipActivity : BaseVmActivity<ActivityPipBinding, PipViewModel>() {
             }
         }
         // 事件 EasyFloat-> 应用内悬浮窗
-        var appFloatShow = renewAppPip()
+//        var appFloatShow = renewAppPip()
         this.mBinding.btnEfAppPip.setOnClickListener {
-            if (appFloatShow) {
-                FloatingX.control().hide()
-            } else {
-                FloatingX.control().show()
-            }
-            appFloatShow = renewAppPip()
+//            if (appFloatShow) {
+//                FloatingX.control().hide()
+//            } else {
+//                FloatingX.control().show()
+//            }
+//            appFloatShow = renewAppPip()
         }
     }
 
-    private fun renewAppPip(): Boolean {
-        val appFloatShow = FloatingX.control().isShow()
-        if (appFloatShow) {
-            this.mBinding.btnEfAppPip.text = "EasyFloat-> 应用内悬浮窗（关闭）"
-        } else {
-            this.mBinding.btnEfAppPip.text = "EasyFloat-> 应用内悬浮窗（开启）"
-        }
-        return appFloatShow
-    }
+//    private fun renewAppPip(): Boolean {
+//        val appFloatShow = FloatingX.control().isShow()
+//        if (appFloatShow) {
+//            this.mBinding.btnEfAppPip.text = "EasyFloat-> 应用内悬浮窗（关闭）"
+//        } else {
+//            this.mBinding.btnEfAppPip.text = "EasyFloat-> 应用内悬浮窗（开启）"
+//        }
+//        return appFloatShow
+//    }
 }

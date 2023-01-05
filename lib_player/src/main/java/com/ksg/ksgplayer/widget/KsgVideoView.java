@@ -84,6 +84,16 @@ public class KsgVideoView extends FrameLayout implements IKsgVideoView {
     }
 
     /**
+     * 获取 覆盖组件管理器
+     *
+     * @return ICoverManager
+     */
+    @Override
+    public ICoverManager getCoverManager() {
+        return mPlayer.getCoverManager();
+    }
+
+    /**
      * 添加自定义事件生产者
      *
      * @param eventProducer 自定义事件生产者

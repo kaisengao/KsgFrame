@@ -12,19 +12,14 @@ public class ProgressCache {
 
     private static final int MAX_SIZE = 200;
 
-    private static ProgressCache instance;
-
     private final LruCache<String, Long> mLruCache;
 
+    private static final class InstanceHolder {
+        static final ProgressCache instance = new ProgressCache();
+    }
+
     public static ProgressCache getInstance() {
-        if (null == instance) {
-            synchronized (ProgressCache.class) {
-                if (null == instance) {
-                    instance = new ProgressCache();
-                }
-            }
-        }
-        return instance;
+        return InstanceHolder.instance;
     }
 
     private ProgressCache() {

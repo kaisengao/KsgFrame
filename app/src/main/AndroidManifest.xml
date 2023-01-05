@@ -67,6 +67,7 @@
         <activity
             android:name=".ui.trainee.player.PlayerActivity"
             android:configChanges="orientation|screenSize"
+            android:exported="true"
             android:screenOrientation="portrait" />
         <activity
             android:name=".ui.trainee.grid.TouchGridActivity"

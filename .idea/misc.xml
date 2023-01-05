@@ -18,6 +18,7 @@
         <entry key="app/src/main/res/drawable/ic_brightness_high.xml" value="0.2065" />
         <entry key="app/src/main/res/drawable/ic_brightness_low.xml" value="0.2065" />
         <entry key="app/src/main/res/drawable/ic_brightness_medium.xml" value="0.2065" />
+        <entry key="app/src/main/res/drawable/ic_close.xml" value="0.3545" />
         <entry key="app/src/main/res/drawable/ic_collection.xml" value="0.2275" />
         <entry key="app/src/main/res/drawable/ic_com.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/ic_comment.xml" value="0.2275" />
@@ -75,7 +76,12 @@
         <entry key="app/src/main/res/layout/layout_cover_ppx_controller.xml" value="0.4337719298245614" />
         <entry key="app/src/main/res/layout/layout_cover_small_controller.xml" value="0.4337719298245614" />
         <entry key="app/src/main/res/layout/layout_cover_uploader.xml" value="0.3294372294372294" />
+        <entry key="app/src/main/res/layout/layout_pip.xml" value="0.5484375" />
         <entry key="app/src/main/res/layout/layout_play_container.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/layout_player_app_float.xml" value="0.5484375" />
+        <entry key="app/src/main/res/layout/layout_player_container.xml" value="0.5484375" />
+        <entry key="app/src/main/res/layout/layout_player_container_pip.xml" value="0.5484375" />
+        <entry key="app/src/main/res/layout/layout_player_pip.xml" value="0.5484375" />
         <entry key="app/src/main/res/layout/layout_trainee.xml" value="0.412962962962963" />
         <entry key="app/src/main/res/layout/layout_video_detail.xml" value="0.4276315789473684" />
         <entry key="app/src/main/res/layout/layout_xbb_detail.xml" value="0.4337719298245614" />

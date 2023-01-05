@@ -1,6 +1,5 @@
 package com.kaisengao.ksgframe.common.widget;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -45,7 +44,7 @@ public class PlayerContainerView extends FrameLayout {
      * Init
      */
     private void init() {
-        View controlView = View.inflate(getContext(), R.layout.layout_play_container, this);
+        View controlView = View.inflate(getContext(), R.layout.layout_player_container, this);
         this.mPlayIcon = controlView.findViewById(R.id.play_icon);
         this.mCoverImage = controlView.findViewById(R.id.cover_image);
         // HideView

@@ -152,6 +152,15 @@ public class VideoContainer extends FrameLayout {
     }
 
     /**
+     * 获取 覆盖组件管理器
+     *
+     * @return ICoverManager
+     */
+    public ICoverManager getCoverManager() {
+        return mCoverManager;
+    }
+
+    /**
      * AttachCover
      */
     private void attachCover(ICover cover) {
