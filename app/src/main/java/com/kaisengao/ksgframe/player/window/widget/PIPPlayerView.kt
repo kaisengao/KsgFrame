@@ -1,5 +1,6 @@
 package com.kaisengao.ksgframe.player.window.widget
 
+import android.annotation.SuppressLint
 import android.app.AppOpsManager
 import android.content.Context
 import android.os.Process
@@ -14,6 +15,7 @@ import com.kaisengao.ksgframe.common.widget.PlayerContainerView
 import com.kaisengao.ksgframe.databinding.LayoutPlayerPipBinding
 import com.kaisengao.ksgframe.player.window.AppInPip
 import com.kaisengao.ksgframe.player.window.AppOutPip
+import com.kaisengao.ksgframe.player.window.AppPip
 import com.kaisengao.ksgframe.player.window.constant.PIPConstant
 import com.kaisengao.ksgframe.ui.trainee.player.PlayerActivity
 import java.lang.reflect.Method
@@ -58,27 +60,31 @@ class PIPPlayerView(context: Context, attrs: AttributeSet?) : PlayerContainerVie
         // Close
         this.mBinding.ivClose.setOnClickListener {
             // 释放 画中画
-            AppInPip.instance.releasePip()
+            AppPip.instance.releasePip()
         }
         // Open
         this.mBinding.ivOpen.setOnClickListener {
-            // 打开 原Ac
-//            AppInPip.instance.cancelPip()
-//            PlayerActivity.startAc(context, AppOutPip.instance.mCurrUUID)
 
-            if (isAllowed()) {
-                Log.d("zzz", "init() called isAllowed = true")
-            } else {
-                Log.d("zzz", "init() called isAllowed = false")
-            }
+//            val xiaomiBackGroundIntent = Intent()
+//            xiaomiBackGroundIntent.action = "miui.intent.action.APP_PERM_EDITOR"
+//            xiaomiBackGroundIntent.addCategory(Intent.CATEGORY_DEFAULT)
+//            xiaomiBackGroundIntent.putExtra("extra_pkgname", context.packageName)
+//            context.startActivity(xiaomiBackGroundIntent)
+
+            // 打开 原Ac
+            AppPip.instance.dismissPip()
+            PlayerActivity.startAc(context, AppPip.instance.getCurrAssistUUID())
+//
+//            if (isAllowed()) {
+//                Log.d("zzz", "init() called isAllowed = true")
+//            } else {
+//                Log.d("zzz", "init() called isAllowed = false")
+//            }
         }
-        // 事件传递
-//        AppInPip.instance.mOnTouchEvent = { event ->
-//            this.mGestureDetector.onTouchEvent(event)
-//        }
-//        AppOutPip.instance.mOnTouchEvent = { event ->
-//            this.mGestureDetector.onTouchEvent(event)
-//        }
+        // 画中画 事件传递
+        AppPip.instance.setTouchEvent { event ->
+            this.mGestureDetector.onTouchEvent(event)
+        }
     }
 
     /**
@@ -108,22 +114,28 @@ class PIPPlayerView(context: Context, attrs: AttributeSet?) : PlayerContainerVie
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
-        return this.mGestureDetector.onTouchEvent(event)
-
+        if (AppPip.instance.getCurrPip() is AppOutPip) {
+            return this.mGestureDetector.onTouchEvent(event)
+        }
+        return super.onTouchEvent(event)
     }
 
     private fun isAllowed(): Boolean {
-        val ops = context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager?
-        try {
-            val op = 10021
-            val method: Method = ops!!.javaClass.getMethod(
-                "checkOpNoThrow", Int::class.java, Int::class.java, String::class.java
-            )
-            return method.invoke(
-                ops, op, Process.myUid(), context.packageName
-            ) == AppOpsManager.MODE_ALLOWED
-        } catch (e: Exception) {
+        val ops = context.getSystemService(Context.APP_OPS_SERVICE)
+        if (ops is AppOpsManager) {
+            try {
+                val op = 10021
+                val method: Method = ops.javaClass.getMethod(
+                    "checkOpNoThrow", Int::class.java, Int::class.java, String::class.java
+                )
+                return method.invoke(
+                    ops, op, Process.myUid(), context.packageName
+                ) == AppOpsManager.MODE_ALLOWED
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
         return false
     }
@@ -139,7 +151,6 @@ class PIPPlayerView(context: Context, attrs: AttributeSet?) : PlayerContainerVie
             }
 
             override fun onSingleTapConfirmed(e: MotionEvent?): Boolean {
-                Log.d("zzz", "onSingleTapConfirmed() called with: e = $e")
                 // 更新 UI
                 renewUI()
                 // Return
@@ -147,7 +158,6 @@ class PIPPlayerView(context: Context, attrs: AttributeSet?) : PlayerContainerVie
             }
 
             override fun onDoubleTap(e: MotionEvent?): Boolean {
-                Log.d("zzz", "onDoubleTap() called with: e = $e")
                 // 更新 尺寸
                 renewSize()
                 // Return

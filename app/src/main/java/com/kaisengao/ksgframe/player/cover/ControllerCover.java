@@ -17,6 +17,7 @@ import com.ksg.ksgplayer.event.EventKey;
 import com.ksg.ksgplayer.listener.OnPlayerListener;
 import com.ksg.ksgplayer.listener.OnTimerUpdateListener;
 import com.ksg.ksgplayer.player.IPlayer;
+import com.ksg.ksgplayer.state.PlayerInfoGetter;
 
 /**
  * @ClassName: ControllerCover
@@ -86,6 +87,11 @@ public class ControllerCover extends BaseControllerCover implements OnTimerUpdat
         super.onCoverViewBind();
         // 开启手势
         this.setGestureEnabled(true, false, false);
+        // 播放状态
+        PlayerInfoGetter playerInfoGetter = getPlayerInfoGetter();
+        if (playerInfoGetter != null) {
+            this.setPlayState(playerInfoGetter.getState());
+        }
     }
 
     /**

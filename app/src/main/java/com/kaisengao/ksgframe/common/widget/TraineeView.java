@@ -82,7 +82,7 @@ public class TraineeView extends LinearLayout {
         } else if (id == R.id.trainee_staggered) {
             this.getContext().startActivity(new Intent(getContext(), StaggeredGridActivity.class));
         } else if (id == R.id.trainee_player) {
-            this.getContext().startActivity(new Intent(getContext(), PlayerActivity.class));
+            PlayerActivity.startAc(getContext(), "");
         } else if (id == R.id.trainee_touch_grid) {
             this.getContext().startActivity(new Intent(getContext(), TouchGridActivity.class));
         } else if (id == R.id.trainee_gesture) {

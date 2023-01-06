@@ -1,5 +1,6 @@
 package com.kaisengao.ksgframe.player.window
 
+import android.app.Activity
 import android.content.Context
 import android.view.MotionEvent
 import android.view.View
@@ -18,6 +19,7 @@ import com.ksg.ksgplayer.widget.KsgAssistView
 import com.petterp.floatingx.FloatingX
 import com.petterp.floatingx.assist.FxGravity
 import com.petterp.floatingx.listener.IFxScrollListener
+import java.io.IOException
 
 /**
  * @ClassName: AppInPip
@@ -25,25 +27,26 @@ import com.petterp.floatingx.listener.IFxScrollListener
  * @CreateDate: 2023/1/5 11:07
  * @Description: APP 免权限画中画
  */
-class AppInPip {
+class AppInPip : IAppPip {
 
-    var mCurrUUID: String? = null
+    private var mOnTouchEvent: ((event: MotionEvent) -> Unit)? = null
 
-    private var mCurrAssist: KsgAssistView? = null
-
-    var mOnTouchEvent: ((event: MotionEvent) -> Unit)? = null
+    init {
+        // 初始 窗口
+        this.initWindow()
+    }
 
     /**
-     * 初始 悬浮窗
+     * 初始 窗口
      */
-    fun initWindow(context: Context) {
+    private fun initWindow() {
         FloatingX.init {
             // 悬浮窗View
             setLayout(R.layout.layout_player_container_pip)
             // 设置悬浮窗默认方向
             setGravity(FxGravity.RIGHT_OR_TOP)
             // 启用辅助方向,具体参加方法注释
-            setEnableAssistDirection(t = DensityUtil.getHeightInPx(context) * 0.3f)
+            setEnableAssistDirection(t = DensityUtil.getHeightInPx(AppFactory.application()) * 0.3f)
             // 设置启用悬浮窗位置修复
             setEnableAbsoluteFix(true)
             // 设置启用边缘吸附
@@ -64,7 +67,7 @@ class AppInPip {
             // 3.允许插入Activity的页面, setEnableAllBlackClass(false)时,此方法生效 (白名单)
 //            addInstallWhiteClass( )
             // 设置是否启用日志
-            setEnableLog(BuildConfig.DEBUG, TAG)
+            setEnableLog(BuildConfig.DEBUG, AppPip.TAG)
 
             setScrollListener(object : IFxScrollListener {
                 override fun down() {}
@@ -80,93 +83,68 @@ class AppInPip {
             .setEnableSaveDirection(FxConfigStorageToSpImpl(AppFactory.application()), true)
     }
 
+//    /**
+//     * 关闭 画中画
+//     */
+//    fun cancelPip() {
+//        FloatingX.control().cancel()
+//    }
+//
+//    /**
+//     * 播放 画中画
+//     */
+//    fun resumePip() {
+//        this.mCurrAssist?.resume()
+//    }
+//
+//    /**
+//     * 暂停 画中画
+//     */
+//    fun pausePip() {
+//        this.mCurrAssist?.pause()
+//    }
+//
+//    /**
+//     * 停止 画中画
+//     */
+//    fun stopPip() {
+//        this.mCurrAssist?.destroy()
+//        FloatingX.control().cancel()
+//        AssistCachePool.getInstance().removeCache(mCurrUUID)
+//    }
+
     /**
      * 显示 画中画
      */
-    fun showPip(uuid: String, assist: KsgAssistView?) {
-        if (!isOpenPip()) return
-        // 释放播放器
-        this.releasePip()
-        // 1、获取 播放器实例
-        this.mCurrAssist = assist ?: return
-        this.mCurrUUID = uuid
-        AssistCachePool.getInstance().addCache(uuid, assist)
-        // 2、创建 画中画视图
+    override fun showPip(
+        activity: Activity, uuid: String, callback: (container: PIPPlayerView?) -> Unit
+    ) {
         FloatingX.control().show()
         val viewHolder = FloatingX.control().getViewHolder()
         if (viewHolder != null) {
-            val container = viewHolder.getView<View>(R.id.pipContainer)
-            if (container is PIPPlayerView) {
-                this.showPip(container)
-            }
+            callback.invoke(viewHolder.getView(R.id.pipContainer))
         }
-    }
-
-    /**
-     * 播放 画中画
-     */
-    private fun showPip(container: PIPPlayerView) {
-        this.mCurrAssist?.bindContainer(container)
-        this.mCurrAssist?.player?.coverManager?.removeAllCover(object :
-            ICoverManager.OnCoverFilter {
-            override fun filter(cover: ICover?): Boolean {
-                if (cover == null) return false
-                return cover.key == CoverConstant.CoverKey.KEY_LOADING
-            }
-        })
     }
 
     /**
      * 关闭 画中画
      */
-    fun cancelPip() {
+    override fun dismissPip() {
         FloatingX.control().cancel()
     }
 
     /**
-     * 播放 画中画
+     * 设置 TouchEvent 事件传递
      */
-    fun resumePip() {
-        this.mCurrAssist?.resume()
+    override fun setTouchEvent(onTouchEvent: ((event: MotionEvent) -> Unit)?) {
+        this.mOnTouchEvent = onTouchEvent
     }
 
     /**
-     * 暂停 画中画
+     * 是否 正在显示
      */
-    fun pausePip() {
-        this.mCurrAssist?.pause()
+    override fun isShowing(): Boolean {
+        return FloatingX.control().isShow()
     }
 
-    /**
-     * 停止 画中画
-     */
-    fun stopPip() {
-        this.mCurrAssist?.destroy()
-        FloatingX.control().cancel()
-        AssistCachePool.getInstance().removeCache(mCurrUUID)
-    }
-
-    /**
-     * 释放 画中画
-     */
-    fun releasePip() {
-        if (FloatingX.control().isShow()) {
-            this.stopPip()
-        }
-    }
-
-    /**
-     * 是否 开启了画中画
-     */
-    fun isOpenPip(): Boolean {
-        return true
-    }
-
-    companion object {
-        private const val TAG = "AppInPip"
-
-        val instance: AppInPip by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-            AppInPip()
-        }
-    }
 }

@@ -104,12 +104,6 @@
             style="@style/PlayerMenuBtn"
             android:text="绑定网络事件" />
 
-        <!--  悬浮窗播放 -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/player_float"
-            style="@style/PlayerMenuBtn"
-            android:text="悬浮窗播放" />
-
         <!-- 截图 -->
         <androidx.appcompat.widget.AppCompatImageView
             android:id="@+id/player_shotPic_info"
@@ -118,6 +112,24 @@
             app:layout_constraintEnd_toEndOf="@id/flow"
             app:layout_constraintStart_toStartOf="@id/flow"
             app:layout_constraintTop_toBottomOf="@id/flow" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchAppOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/sp_14"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="播放被中断时自动小窗播放\n直播间切换至App外时生效"
+            app:layout_constraintTop_toBottomOf="@id/player_shotPic_info" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switchAppIn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="@dimen/sp_14"
+            android:layout_marginTop="@dimen/dp_10"
+            android:text="应用内自动小窗播放\n直播间切换至App内其他页面时生效"
+            app:layout_constraintTop_toBottomOf="@id/switchAppOut" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

@@ -13,7 +13,6 @@ class KsgApplication : BaseApplication() {
 
     override fun onCreate() {
         super.onCreate()
-        // 初始 应用内部的悬浮窗
-        AppInPip.instance.initWindow(this)
+
     }
 }

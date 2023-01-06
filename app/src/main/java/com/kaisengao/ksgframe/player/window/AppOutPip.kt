@@ -1,9 +1,11 @@
 package com.kaisengao.ksgframe.player.window
 
 import android.app.Activity
+import android.text.TextUtils
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import com.badlogic.gdx.scenes.scene2d.actions.Actions.show
 import com.kaisengao.ksgframe.R
 import com.kaisengao.ksgframe.constant.CoverConstant
 import com.kaisengao.ksgframe.player.window.widget.PIPPlayerView
@@ -15,6 +17,7 @@ import com.lzf.easyfloat.EasyFloat
 import com.lzf.easyfloat.enums.ShowPattern
 import com.lzf.easyfloat.enums.SidePattern
 import com.petterp.floatingx.FloatingX
+import java.util.*
 
 /**
  * @ClassName: AppOutPip
@@ -22,63 +25,69 @@ import com.petterp.floatingx.FloatingX
  * @CreateDate: 2023/1/5 14:36
  * @Description: APP 悬浮窗画中画
  */
-class AppOutPip {
-    var mCurrUUID: String? = null
+class AppOutPip : IAppPip {
+
+    var mCurrUUID: String = ""
 
     var mOnTouchEvent: ((event: MotionEvent) -> Unit)? = null
 
-    private var mCurrAssist: KsgAssistView? = null
+    override fun showPip(
+        activity: Activity,
+        uuid: String,
+        callback: (container: PIPPlayerView?) -> Unit
+    ) {
+
+    }
+//
+//    /**
+//     * 显示 画中画
+//     */
+//    override  fun showPip(activity: Activity, uuid: String): PIPPlayerView? {
+//        this.mCurrUUID = uuid
+//        var container: PIPPlayerView? = null
+//        val easyFloat = EasyFloat
+//            .with(activity)
+//            .setLayout(R.layout.layout_player_container_pip) { rootView ->
+//                container = rootView?.findViewById(R.id.pipContainer)
+//            }
+//            .setSidePattern(SidePattern.RESULT_HORIZONTAL)
+//            .setShowPattern(ShowPattern.ALL_TIME)
+//            .setDragEnable(true)
+//            .setTag(uuid)
+//            .registerCallback {
+//                touchEvent { _, event ->
+//                    mOnTouchEvent?.invoke(event)
+//                }
+//            }
+//        if (container != null) {
+//            easyFloat.show()
+//            return container
+//        }
+//        return null
+//    }
+
 
     /**
-     * 显示 画中画
+     * 关闭 画中画
      */
-    fun showPip(activity: Activity, uuid: String, assist: KsgAssistView?) {
-        // 1、获取 播放器实例
-        this.mCurrAssist = assist ?: return
-        this.mCurrUUID = uuid
-        AssistCachePool.getInstance().addCache(uuid, assist)
-        // 2、创建 画中画视图
-        EasyFloat
-            .with(activity)
-            .setLayout(R.layout.layout_player_container_pip) { rootView ->
-                // container
-                val container = rootView?.findViewById<PIPPlayerView>(R.id.pipContainer)
-                if (container != null) {
-                    this.showPip(container)
-                }
-            }
-            .setSidePattern(SidePattern.RESULT_HORIZONTAL)
-            .setShowPattern(ShowPattern.ALL_TIME)
-            .setDragEnable(true)
-            .registerCallback {
-
-                touchEvent{ _, event ->
-                    mOnTouchEvent?.invoke(event)
-                }
-            }
-            .show()
-    }
-
-    /**
-     * 播放 画中画
-     */
-    private fun showPip(container: PIPPlayerView) {
-        this.mCurrAssist?.bindContainer(container)
-        this.mCurrAssist?.player?.coverManager?.removeAllCover(object :
-            ICoverManager.OnCoverFilter {
-            override fun filter(cover: ICover?): Boolean {
-                if (cover == null) return false
-                return cover.key == CoverConstant.CoverKey.KEY_LOADING
-            }
-        })
-    }
-
-    companion object {
-        private const val TAG = "AppInPip"
-
-        val instance: AppOutPip by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
-          AppOutPip()
+    override fun dismissPip() {
+        if (!TextUtils.isEmpty(mCurrUUID)) {
+            EasyFloat.dismiss(mCurrUUID)
         }
     }
 
+    /**
+     * 设置 TouchEvent 事件传递
+     */
+    override fun setTouchEvent(onTouchEvent: ((event: MotionEvent) -> Unit)?) {
+        this.mOnTouchEvent = onTouchEvent
+    }
+
+    /**
+     * 是否 正在显示
+     */
+    override fun isShowing(): Boolean {
+        if (TextUtils.isEmpty(mCurrUUID)) return false
+        return EasyFloat.isShow(mCurrUUID)
+    }
 }
