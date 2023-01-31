@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../layout/custom_preview.xml" value="0.5" />
+        <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/drawable/bg_progressbar.xml" value="0.268" />
         <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/activity_gesture.xml" value="0.5265625" />
         <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/activity_pip.xml" value="0.33" />
         <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/activity_player.xml" value="0.33" />
@@ -12,6 +13,7 @@
         <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/layout_player_app_float.xml" value="0.33425925925925926" />
         <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/layout_preview_pager.xml" value="0.5265625" />
         <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/layout_trainee.xml" value="0.5" />
+        <entry key="..\:/Project/Android/KsgFrame/app/src/main/res/layout/textprogressbar.xml" value="0.4479166666666667" />
         <entry key="app/src/main/res/drawable/ic_baseline_agriculture_24.xml" value="0.2435" />
         <entry key="app/src/main/res/drawable/ic_baseline_star_24.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/ic_big_start.xml" value="0.22" />

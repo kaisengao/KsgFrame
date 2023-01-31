@@ -27,44 +27,34 @@ import java.util.*
  */
 class AppOutPip : IAppPip {
 
-    var mCurrUUID: String = ""
+    private var mCurrUUID: String = ""
 
-    var mOnTouchEvent: ((event: MotionEvent) -> Unit)? = null
+    private var mOnTouchEvent: ((event: MotionEvent) -> Unit)? = null
 
+    /**
+     * 显示 画中画
+     */
     override fun showPip(
         activity: Activity,
         uuid: String,
         callback: (container: PIPPlayerView?) -> Unit
     ) {
-
+        EasyFloat
+            .with(activity)
+            .setLayout(R.layout.layout_player_container_pip) { rootView ->
+                callback.invoke(rootView?.findViewById(R.id.pipContainer))
+            }
+            .setSidePattern(SidePattern.RESULT_HORIZONTAL)
+            .setShowPattern(ShowPattern.ALL_TIME)
+            .setDragEnable(true)
+            .setTag(uuid)
+            .registerCallback {
+                touchEvent { _, event ->
+                    mOnTouchEvent?.invoke(event)
+                }
+            }.show()
+        this.mCurrUUID = uuid
     }
-//
-//    /**
-//     * 显示 画中画
-//     */
-//    override  fun showPip(activity: Activity, uuid: String): PIPPlayerView? {
-//        this.mCurrUUID = uuid
-//        var container: PIPPlayerView? = null
-//        val easyFloat = EasyFloat
-//            .with(activity)
-//            .setLayout(R.layout.layout_player_container_pip) { rootView ->
-//                container = rootView?.findViewById(R.id.pipContainer)
-//            }
-//            .setSidePattern(SidePattern.RESULT_HORIZONTAL)
-//            .setShowPattern(ShowPattern.ALL_TIME)
-//            .setDragEnable(true)
-//            .setTag(uuid)
-//            .registerCallback {
-//                touchEvent { _, event ->
-//                    mOnTouchEvent?.invoke(event)
-//                }
-//            }
-//        if (container != null) {
-//            easyFloat.show()
-//            return container
-//        }
-//        return null
-//    }
 
 
     /**

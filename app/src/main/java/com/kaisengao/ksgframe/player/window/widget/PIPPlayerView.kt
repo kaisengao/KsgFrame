@@ -72,7 +72,6 @@ class PIPPlayerView(context: Context, attrs: AttributeSet?) : PlayerContainerVie
 //            context.startActivity(xiaomiBackGroundIntent)
 
             // 打开 原Ac
-            AppPip.instance.dismissPip()
             PlayerActivity.startAc(context, AppPip.instance.getCurrAssistUUID())
 //
 //            if (isAllowed()) {
@@ -116,6 +115,7 @@ class PIPPlayerView(context: Context, attrs: AttributeSet?) : PlayerContainerVie
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent?): Boolean {
+        // 画中画 事件传递
         if (AppPip.instance.getCurrPip() is AppOutPip) {
             return this.mGestureDetector.onTouchEvent(event)
         }

@@ -1,9 +1,17 @@
 package com.kaisengao.ksgframe.player.window
 
 import android.app.Activity
+import android.app.AlertDialog
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.os.Build
+import android.provider.Settings
 import android.util.Log
 import android.view.MotionEvent
+import com.kaisengao.base.configure.ActivityManager
 import com.kaisengao.ksgframe.constant.CoverConstant
+import com.kaisengao.ksgframe.factory.AppFactory
 import com.kaisengao.ksgframe.player.window.constant.PIPConstant
 import com.kaisengao.ksgframe.player.window.widget.PIPPlayerView
 import com.ksg.ksgplayer.cache.AssistCachePool
@@ -30,25 +38,63 @@ class AppPip {
     private var mCurrAssistView: KsgAssistView? = null // 当前播放器的实例
 
     /**
+     * 设置 缓存实例
+     */
+    fun setCurrAssistView(assist: KsgAssistView?) {
+        this.mCurrAssistUUID = getUUID()
+        this.mCurrAssistView = assist
+    }
+
+    /**
+     * 清空 缓存实例
+     */
+    fun clearCurrAssistView() {
+        this.mCurrAssistUUID = ""
+        this.mCurrAssistView = null
+    }
+
+    /**
      * 显示 悬浮窗
      *
      * @param activity 上下文
      * @param assist 放器的实例
      */
-    fun showAppPip(activity: Activity, assist: KsgAssistView?) {
+    fun showAppPip(
+        activity: Activity,
+        assist: KsgAssistView?,
+    ) {
+        this.showAppPip(activity, assist = assist)
+    }
+
+    /**
+     * 显示 悬浮窗
+     *
+     * @param activity 上下文
+     * @param assist 放器的实例
+     */
+    fun showAppPip(
+        activity: Activity,
+        uuid: String = getUUID(),
+        assist: KsgAssistView?,
+    ) {
         if (isShowing() || assist == null) return
         // Assist
-        this.mCurrAssistUUID = UUID.randomUUID().toString()
+        this.mCurrAssistUUID = uuid
         this.mCurrAssistView = assist
-        // 显示 APP悬浮窗播放
-        if (isOpenAppOutPip()) {
-            this.mCurrAppPip = mAppOutPip
+        // 显示 画中画
+        if (!isOpenAppPip()) {
+            // 未开启画中画 -> 停止播放
+            this.stopPlayer()
+            return
         }
-        // 显示 APP内部小窗播放
-        if (isOpenAppInPip()) {
+        // 显示 悬浮窗播放
+        if (isOpenAlertWindow()) {
+            this.mCurrAppPip = mAppOutPip
+        } else {
+            // 显示 小窗播放
             this.mCurrAppPip = mAppInPip
         }
-        // 显示 悬浮窗
+        // ShowPip
         if (mCurrAppPip != null) {
             this.showAppPip(activity)
             return
@@ -62,7 +108,6 @@ class AppPip {
      */
     private fun showAppPip(activity: Activity) {
         try {
-            this.mCurrAppPip = mAppInPip
             // 创建 画中画视图
             this.mCurrAppPip?.showPip(activity, mCurrAssistUUID) { container ->
                 if (container != null) {
@@ -107,12 +152,33 @@ class AppPip {
     }
 
     /**
+     * 继续 播放器
+     */
+    fun resumePlayer() {
+        if (isShowing() && !(mCurrAppPip is AppOutPip)) {
+            this.mCurrAssistView?.resume()
+        }
+    }
+
+    /**
+     * 暂停 画中画
+     */
+    fun pausePlayer() {
+        if (!isOpenAlertWindow()) {
+            // 弹出 引导打开悬浮窗权限弹窗
+            this.showOpenAlertWindowDialog()
+            // 暂停 画中画
+            this.mCurrAssistView?.pause()
+        }
+    }
+
+    /**
      * 停止 播放器
      */
     private fun stopPlayer() {
         AssistCachePool.getInstance().removeCache(mCurrAssistUUID)
-        this.mCurrAssistUUID = ""
         this.mCurrAssistView?.destroy()
+        this.clearCurrAssistView()
     }
 
     /**
@@ -127,8 +193,8 @@ class AppPip {
      * 释放 画中画
      */
     fun releasePip() {
-        this.stopPlayer()
         this.dismissPip()
+        this.stopPlayer()
     }
 
     /**
@@ -160,21 +226,97 @@ class AppPip {
     }
 
     /**
-     * 是否 APP内部小窗播放
+     * 从前台到后台时触发
      */
-    private fun isOpenAppInPip(): Boolean {
-        return PIPConstant.appInPip
+    fun handleOnBackground(activity: Activity?) {
+        if (activity == null) return
+        // 1、校验是否开启了悬浮窗
+        if (isOpenAlertWindow()) {
+            // 已开启悬浮窗，打开悬浮窗
+            this.showAppPip(activity, mCurrAssistUUID, mCurrAssistView)
+        } else {
+            // 画中画
+            this.pausePlayer()
+        }
     }
 
     /**
-     * 是否 APP悬浮窗播放
+     * 从后台回到前台时触发
      */
-    private fun isOpenAppOutPip(): Boolean {
-        return PIPConstant.appOutPip
+    fun handleOnForeground(activity: Activity?) {
+        // 画中画
+        this.resumePlayer()
+    }
+
+    /**
+     * 引导打开悬浮窗权限弹窗
+     */
+    private fun showOpenAlertWindowDialog() {
+        ActivityManager.getInstance().currentActivity()?.let { activity ->
+            AlertDialog
+                .Builder(activity)
+                .setMessage("APP外部显示视频悬浮窗，需要开启权限哦~")
+                .setNegativeButton("取消") { dialog, _ ->
+                    dialog.dismiss()
+                }
+                .setPositiveButton("去开启") { dialog, _ ->
+                    dialog.dismiss()
+                    this.requestSettingCanDrawOverlays()
+                }
+                .show()
+        }
+    }
+
+    /**
+     * 是否 小窗播放
+     */
+    private fun isOpenAppPip(): Boolean {
+        return PIPConstant.appPip
+    }
+
+    /**
+     * 是否 开启了悬浮窗权限
+     */
+    private fun isOpenAlertWindow(): Boolean {
+        return canDrawOverlays(AppFactory.application())
+    }
+
+    /**
+     * 生成 UUID
+     */
+    private fun getUUID(): String {
+        return UUID.randomUUID().toString()
+    }
+
+    /**
+     * 检查 是否开启了悬浮窗权限
+     */
+    private fun canDrawOverlays(context: Context): Boolean {
+        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            true
+        } else {
+            Settings.canDrawOverlays(context)
+        }
+    }
+
+    /**
+     * 请求 悬浮窗权限
+     */
+    private fun requestSettingCanDrawOverlays() {
+        ActivityManager.getInstance().currentActivity()?.let { activity ->
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                // 无需处理
+            } else {
+                val intent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+                intent.data = Uri.parse("package:" + activity.packageName)
+                activity.startActivityForResult(intent, OPEN_OVERLAY_PERMISSION)
+            }
+        }
     }
 
     companion object {
         const val TAG = "AppPip"
+        const val OPEN_OVERLAY_PERMISSION = 1011;
 
         val instance: AppPip by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
             AppPip()

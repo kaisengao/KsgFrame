@@ -5,6 +5,7 @@ import android.content.Context
 import android.view.MotionEvent
 import android.view.View
 import com.kaisengao.base.util.DensityUtil
+import com.kaisengao.base.util.ToastUtil.setGravity
 import com.kaisengao.ksgframe.BuildConfig
 import com.kaisengao.ksgframe.R
 import com.kaisengao.ksgframe.common.float.app.FxAnimationImpl
@@ -82,36 +83,6 @@ class AppInPip : IAppPip {
         FloatingX.configControl()
             .setEnableSaveDirection(FxConfigStorageToSpImpl(AppFactory.application()), true)
     }
-
-//    /**
-//     * 关闭 画中画
-//     */
-//    fun cancelPip() {
-//        FloatingX.control().cancel()
-//    }
-//
-//    /**
-//     * 播放 画中画
-//     */
-//    fun resumePip() {
-//        this.mCurrAssist?.resume()
-//    }
-//
-//    /**
-//     * 暂停 画中画
-//     */
-//    fun pausePip() {
-//        this.mCurrAssist?.pause()
-//    }
-//
-//    /**
-//     * 停止 画中画
-//     */
-//    fun stopPip() {
-//        this.mCurrAssist?.destroy()
-//        FloatingX.control().cancel()
-//        AssistCachePool.getInstance().removeCache(mCurrUUID)
-//    }
 
     /**
      * 显示 画中画

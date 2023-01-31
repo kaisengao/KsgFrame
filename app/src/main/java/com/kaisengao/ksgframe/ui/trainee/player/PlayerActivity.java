@@ -9,9 +9,11 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.kaisengao.base.util.DensityUtil;
 import com.kaisengao.base.util.StatusBarUtil;
+import com.kaisengao.base.util.TextUtil;
 import com.kaisengao.base.util.ToastUtil;
 import com.kaisengao.ksgframe.BR;
 import com.kaisengao.ksgframe.R;
@@ -60,7 +62,6 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
     private KsgAssistView mPlayer;
 
     public static void startAc(Context context, String uuid) {
-        // 停止悬浮窗
         if (TextUtils.isEmpty(uuid)) {
             AppPip.Companion.getInstance().releasePip();
         }
@@ -131,19 +132,12 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
             ToastUtil.showShort("还没做哦~");
         });
         // 小窗
-        this.mBinding.switchAppOut.setChecked(PIPConstant.INSTANCE.getAppOutPip());
-        this.mBinding.switchAppOut.setOnCheckedChangeListener((buttonView, isChecked) -> {
+        this.mBinding.switchPIP.setChecked(PIPConstant.INSTANCE.getAppPip());
+        this.mBinding.switchPIP.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (!buttonView.isPressed()) {
                 return;
             }
-            PIPConstant.INSTANCE.setAppOutPip(isChecked);
-        });
-        this.mBinding.switchAppIn.setChecked(PIPConstant.INSTANCE.getAppInPip());
-        this.mBinding.switchAppIn.setOnCheckedChangeListener((buttonView, isChecked) -> {
-            if (!buttonView.isPressed()) {
-                return;
-            }
-            PIPConstant.INSTANCE.setAppInPip(isChecked);
+            PIPConstant.INSTANCE.setAppPip(isChecked);
         });
     }
 
@@ -174,11 +168,17 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
     private void initPlayer() {
         KsgAssistView cachePlayer = AssistCachePool.getInstance().getCache(mAssistUUID);
         if (cachePlayer != null) {
+            // 停止悬浮窗
+            AppPip.Companion.getInstance().dismissPip();
+            // 续播
             this.mPlayer = cachePlayer;
             this.mPlayer.bindContainer(mBinding.player);
         } else {
             this.mPlayer = new KsgAssistView(this);
             this.mPlayer.bindContainer(mBinding.player);
+
+            AppPip.Companion.getInstance().setCurrAssistView(mPlayer);
+
 
 //         // 1 (注意调用顺序，否则不生效)
 //        player.setGLViewRender(new PIPGLViewRender(), KsgGLSurfaceView.MODE_RENDER_SIZE);

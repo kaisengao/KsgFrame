@@ -114,22 +114,13 @@
             app:layout_constraintTop_toBottomOf="@id/flow" />
 
         <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switchAppOut"
+            android:id="@+id/switchPIP"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="@dimen/sp_14"
             android:layout_marginTop="@dimen/dp_10"
-            android:text="播放被中断时自动小窗播放\n直播间切换至App外时生效"
+            android:text="小窗播放"
             app:layout_constraintTop_toBottomOf="@id/player_shotPic_info" />
-
-        <androidx.appcompat.widget.SwitchCompat
-            android:id="@+id/switchAppIn"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/sp_14"
-            android:layout_marginTop="@dimen/dp_10"
-            android:text="应用内自动小窗播放\n直播间切换至App内其他页面时生效"
-            app:layout_constraintTop_toBottomOf="@id/switchAppOut" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

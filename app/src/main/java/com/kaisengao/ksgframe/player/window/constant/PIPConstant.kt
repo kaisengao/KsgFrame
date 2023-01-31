@@ -14,12 +14,7 @@ object PIPConstant {
     val WINDOW_SCALE: FloatArray by lazy { floatArrayOf(0.5F, 0.7F, 0.9F, 1F) }
 
     /**
-     * 测试用 APP内部小窗播放
+     * 测试用 APP小窗播放
      */
-    var appInPip: Boolean = false
-
-    /**
-     * 测试用 APP悬浮窗播放
-     */
-    var appOutPip: Boolean = false
+    var appPip: Boolean = false
 }
