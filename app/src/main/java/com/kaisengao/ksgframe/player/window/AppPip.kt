@@ -2,13 +2,18 @@ package com.kaisengao.ksgframe.player.window
 
 import android.app.Activity
 import android.app.AlertDialog
+import android.app.AppOpsManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Binder
 import android.os.Build
+import android.os.Process
 import android.provider.Settings
+import android.provider.Settings.canDrawOverlays
 import android.util.Log
 import android.view.MotionEvent
+import android.widget.FrameLayout
 import com.kaisengao.base.configure.ActivityManager
 import com.kaisengao.ksgframe.constant.CoverConstant
 import com.kaisengao.ksgframe.factory.AppFactory
@@ -18,7 +23,10 @@ import com.ksg.ksgplayer.cache.AssistCachePool
 import com.ksg.ksgplayer.cover.ICover
 import com.ksg.ksgplayer.cover.ICoverManager
 import com.ksg.ksgplayer.widget.KsgAssistView
+import java.lang.reflect.Field
+import java.lang.reflect.Method
 import java.util.*
+
 
 /**
  * @ClassName: AppPip
@@ -36,6 +44,8 @@ class AppPip {
 
     private var mCurrAssistUUID: String = "" // 当前播放器的唯一标识
     private var mCurrAssistView: KsgAssistView? = null // 当前播放器的实例
+
+    private var mPermissionDialog: AlertDialog? = null
 
     /**
      * 设置 缓存实例
@@ -58,12 +68,14 @@ class AppPip {
      *
      * @param activity 上下文
      * @param assist 放器的实例
+     * @param dissatisfyStop 不满足条件是否停止播放 (默认True)
      */
     fun showAppPip(
         activity: Activity,
         assist: KsgAssistView?,
+        dissatisfyStop: Boolean = true
     ) {
-        this.showAppPip(activity, assist = assist)
+        this.showAppPip(activity, getUUID(), assist, dissatisfyStop)
     }
 
     /**
@@ -71,11 +83,13 @@ class AppPip {
      *
      * @param activity 上下文
      * @param assist 放器的实例
+     * @param dissatisfyStop 不满足条件是否停止播放 (默认True)
      */
-    fun showAppPip(
+    private fun showAppPip(
         activity: Activity,
         uuid: String = getUUID(),
         assist: KsgAssistView?,
+        dissatisfyStop: Boolean = true
     ) {
         if (isShowing() || assist == null) return
         // Assist
@@ -84,7 +98,7 @@ class AppPip {
         // 显示 画中画
         if (!isOpenAppPip()) {
             // 未开启画中画 -> 停止播放
-            this.stopPlayer()
+            if (dissatisfyStop) stopPlayer()
             return
         }
         // 显示 悬浮窗播放
@@ -100,7 +114,7 @@ class AppPip {
             return
         }
         // 以上验证均为通过 -> 停止播放
-        this.stopPlayer()
+        if (dissatisfyStop) stopPlayer()
     }
 
     /**
@@ -155,7 +169,7 @@ class AppPip {
      * 继续 播放器
      */
     fun resumePlayer() {
-        if (isShowing() && !(mCurrAppPip is AppOutPip)) {
+        if (isShowing() && mCurrAppPip !is AppOutPip) {
             this.mCurrAssistView?.resume()
         }
     }
@@ -179,6 +193,18 @@ class AppPip {
         AssistCachePool.getInstance().removeCache(mCurrAssistUUID)
         this.mCurrAssistView?.destroy()
         this.clearCurrAssistView()
+    }
+
+    /**
+     * 关闭 画中画（只是关闭）
+     *
+     * @param container 容器
+     */
+    fun closePip(container: FrameLayout?) {
+        // 替换容器
+        this.mCurrAssistView?.bindContainer(container)
+        // 关闭 画中画
+        this.dismissPip()
     }
 
     /**
@@ -221,7 +247,7 @@ class AppPip {
     /**
      * 是否 正在显示
      */
-    private fun isShowing(): Boolean {
+    fun isShowing(): Boolean {
         return mCurrAppPip?.isShowing() ?: false
     }
 
@@ -233,10 +259,10 @@ class AppPip {
         // 1、校验是否开启了悬浮窗
         if (isOpenAlertWindow()) {
             // 已开启悬浮窗，打开悬浮窗
-            this.showAppPip(activity, mCurrAssistUUID, mCurrAssistView)
+            this.showAppPip(activity, mCurrAssistUUID, mCurrAssistView, false)
         } else {
-            // 画中画
-            this.pausePlayer()
+            // 弹出 引导打开悬浮窗权限弹窗
+            this.showOpenAlertWindowDialog()
         }
     }
 
@@ -244,27 +270,39 @@ class AppPip {
      * 从后台回到前台时触发
      */
     fun handleOnForeground(activity: Activity?) {
-        // 画中画
-        this.resumePlayer()
+        // 校验是否开启了悬浮窗
+        if (isOpenAlertWindow()) {
+            this.dismissOpenAlertWindowDialog()
+        }
     }
 
     /**
-     * 引导打开悬浮窗权限弹窗
+     * 显示 引导打开悬浮窗权限弹窗
      */
     private fun showOpenAlertWindowDialog() {
+        if (!isOpenAppPip()) return
         ActivityManager.getInstance().currentActivity()?.let { activity ->
-            AlertDialog
+            this.mPermissionDialog = AlertDialog
                 .Builder(activity)
                 .setMessage("APP外部显示视频悬浮窗，需要开启权限哦~")
                 .setNegativeButton("取消") { dialog, _ ->
                     dialog.dismiss()
+                    this.dismissOpenAlertWindowDialog()
                 }
                 .setPositiveButton("去开启") { dialog, _ ->
                     dialog.dismiss()
+                    this.dismissOpenAlertWindowDialog()
                     this.requestSettingCanDrawOverlays()
-                }
-                .show()
+                }.create()
+            this.mPermissionDialog?.show()
         }
+    }
+
+    /**
+     * 关闭 引导打开悬浮窗权限弹窗
+     */
+    private fun dismissOpenAlertWindowDialog() {
+        this.mPermissionDialog?.dismiss()
     }
 
     /**
@@ -292,11 +330,45 @@ class AppPip {
      * 检查 是否开启了悬浮窗权限
      */
     private fun canDrawOverlays(context: Context): Boolean {
-        return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            true
-        } else {
-            Settings.canDrawOverlays(context)
+        try {
+            return if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+                try {
+                    var cls = Class.forName("android.content.Context")
+                    val declaredField: Field = cls.getDeclaredField("APP_OPS_SERVICE")
+                    declaredField.isAccessible = true
+                    var obj: Any? = declaredField.get(cls) as? String ?: return false
+                    val str2 = obj as String
+                    obj =
+                        cls.getMethod("getSystemService", String::class.java).invoke(context, str2)
+                    cls = Class.forName("android.app.AppOpsManager")
+                    val declaredField2: Field = cls.getDeclaredField("MODE_ALLOWED")
+                    declaredField2.isAccessible = true
+                    val checkOp: Method = cls.getMethod(
+                        "checkOp", Integer.TYPE, Integer.TYPE, String::class.java
+                    )
+                    val result =
+                        checkOp.invoke(obj, 24, Binder.getCallingUid(), context.packageName) as Int
+                    result == declaredField2.getInt(cls)
+                } catch (e: Exception) {
+                    false
+                }
+            } else {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    val appOpsMgr =
+                        (context.getSystemService(Context.APP_OPS_SERVICE) as AppOpsManager?)
+                            ?: return false
+                    val mode = appOpsMgr.checkOpNoThrow(
+                        "android:system_alert_window", Process.myUid(), context.packageName
+                    )
+                    Settings.canDrawOverlays(context) || mode == AppOpsManager.MODE_ALLOWED || mode == AppOpsManager.MODE_IGNORED
+                } else {
+                    Settings.canDrawOverlays(context)
+                }
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
+        return false
     }
 
     /**

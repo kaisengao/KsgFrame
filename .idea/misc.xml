@@ -29,6 +29,7 @@
         <entry key="app/src/main/res/drawable/ic_fullscreen_exit.xml" value="0.2065" />
         <entry key="app/src/main/res/drawable/ic_loading.xml" value="0.22" />
         <entry key="app/src/main/res/drawable/ic_main_slack_off.xml" value="0.233" />
+        <entry key="app/src/main/res/drawable/ic_pause.xml" value="0.3345" />
         <entry key="app/src/main/res/drawable/ic_ppx_collect.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/ic_ppx_commnet.xml" value="0.218" />
         <entry key="app/src/main/res/drawable/ic_ppx_praise.xml" value="0.218" />
@@ -71,7 +72,7 @@
         <entry key="app/src/main/res/layout/item_ppx.xml" value="0.3888888888888889" />
         <entry key="app/src/main/res/layout/item_video.xml" value="0.33" />
         <entry key="app/src/main/res/layout/item_xbb.xml" value="0.4337719298245614" />
-        <entry key="app/src/main/res/layout/layout_cover_controller.xml" value="0.36944444444444446" />
+        <entry key="app/src/main/res/layout/layout_cover_controller.xml" value="0.7466007416563659" />
         <entry key="app/src/main/res/layout/layout_cover_gesture.xml" value="0.25" />
         <entry key="app/src/main/res/layout/layout_cover_land_controller.xml" value="0.4337719298245614" />
         <entry key="app/src/main/res/layout/layout_cover_loading.xml" value="0.362962962962963" />
@@ -99,7 +100,7 @@
       <item index="0" class="java.lang.String" itemvalue="com.kasiengao.base.annotations.ReloadAnnotations" />
     </list>
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="1.8" project-jdk-type="JavaSDK">
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" project-jdk-name="1.8" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>
   <component name="ProjectType">

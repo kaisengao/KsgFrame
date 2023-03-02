@@ -1,8 +1,11 @@
 package com.kaisengao.ksgframe.app
 
 import android.app.Activity
+import android.app.Application
 import android.util.Log
+import com.jeremyliao.liveeventbus.LiveEventBus
 import com.kaisengao.base.BaseApplication
+import com.kaisengao.ksgframe.constant.BusConstant
 import com.kaisengao.ksgframe.player.window.AppPip
 
 /**
@@ -15,8 +18,18 @@ class KsgApplication : BaseApplication() {
 
     override fun onCreate() {
         super.onCreate()
+        // Init 事件总线
+        this.initLiveDataBus(this)
         // Init ActivityLifecycle
         this.initActivityLifecycle()
+    }
+
+    /**
+     * Init 事件总线
+     */
+    private fun initLiveDataBus(application: Application?) {
+        LiveEventBus.config().setContext(application).lifecycleObserverAlwaysActive(true)
+            .autoClear(true)
     }
 
     /**
@@ -30,8 +43,10 @@ class KsgApplication : BaseApplication() {
              */
             override fun handleOnBackground(activity: Activity?) {
                 Log.d("zzz", "进入后台")
-                // 画中画
-                AppPip.instance.handleOnBackground(activity)
+//                // 画中画
+//                AppPip.instance.handleOnBackground(activity)
+                // EventBus
+                LiveEventBus.get<Int>(BusConstant.APP_BACK).post(0)
             }
 
             /**
@@ -39,8 +54,10 @@ class KsgApplication : BaseApplication() {
              */
             override fun handleOnForeground(activity: Activity?) {
                 Log.d("zzz", "回到前台")
-                // 画中画
-                AppPip.instance.handleOnForeground(activity)
+//                // 画中画
+//                AppPip.instance.handleOnForeground(activity)
+                // EventBus
+                LiveEventBus.get<Int>(BusConstant.APP_FORE).post(0)
             }
         })
     }

@@ -9,16 +9,17 @@ import android.os.Bundle;
 import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.lifecycle.Observer;
 
+import com.jeremyliao.liveeventbus.LiveEventBus;
 import com.kaisengao.base.util.DensityUtil;
 import com.kaisengao.base.util.StatusBarUtil;
-import com.kaisengao.base.util.TextUtil;
 import com.kaisengao.base.util.ToastUtil;
 import com.kaisengao.ksgframe.BR;
 import com.kaisengao.ksgframe.R;
 import com.kaisengao.ksgframe.common.util.AnimUtil;
 import com.kaisengao.ksgframe.common.util.SystemUiUtil;
+import com.kaisengao.ksgframe.constant.BusConstant;
 import com.kaisengao.ksgframe.constant.CoverConstant;
 import com.kaisengao.ksgframe.databinding.ActivityPlayerBinding;
 import com.kaisengao.ksgframe.player.KsgAliPlayer;
@@ -27,6 +28,7 @@ import com.kaisengao.ksgframe.player.cover.GestureCover;
 import com.kaisengao.ksgframe.player.cover.LoadingCover;
 import com.kaisengao.ksgframe.player.window.AppPip;
 import com.kaisengao.ksgframe.player.window.constant.PIPConstant;
+import com.kaisengao.ksgframe.ui.trainee.grid.TouchGridActivity;
 import com.kaisengao.mvvm.base.activity.BaseVmActivity;
 import com.ksg.ksgplayer.cache.AssistCachePool;
 import com.ksg.ksgplayer.config.AspectRatio;
@@ -139,6 +141,18 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
             }
             PIPConstant.INSTANCE.setAppPip(isChecked);
         });
+        // 小窗跳转测试
+        this.mBinding.PIPIntent.setOnClickListener(v -> {
+            this.startActivity(new Intent(this, TouchGridActivity.class));
+        });
+        // APP 进入后台
+        LiveEventBus.<Integer>get(BusConstant.APP_BACK).observe(this, (Observer<Integer>) integer -> {
+            AppPip.Companion.getInstance().handleOnBackground(this);
+        });
+        // APP 回到前台
+        LiveEventBus.<Integer>get(BusConstant.APP_FORE).observe(this, (Observer<Integer>) integer -> {
+            AppPip.Companion.getInstance().handleOnForeground(this);
+        });
     }
 
     @SuppressLint("SetTextI18n")
@@ -172,10 +186,10 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
             AppPip.Companion.getInstance().dismissPip();
             // 续播
             this.mPlayer = cachePlayer;
-            this.mPlayer.bindContainer(mBinding.player);
+            this.mPlayer.bindContainer(mBinding.container);
         } else {
             this.mPlayer = new KsgAssistView(this);
-            this.mPlayer.bindContainer(mBinding.player);
+            this.mPlayer.bindContainer(mBinding.container);
 
             AppPip.Companion.getInstance().setCurrAssistView(mPlayer);
 
@@ -265,10 +279,10 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
         // 获取View在屏幕上的高度位置
         int viewHeight = (mScreenSize[0] * 9 / 16) + StatusBarUtil.getStatusBarHeight(this);
         // 全屏动画
-        AnimUtil.fullScreenAnim(mBinding.player, fullscreen, viewHeight, mScreenSize[1], animation -> {
+        AnimUtil.fullScreenAnim(mBinding.container, fullscreen, viewHeight, mScreenSize[1], animation -> {
             // 更新高度
-            this.mBinding.player.getLayoutParams().height = (int) animation.getAnimatedValue();
-            this.mBinding.player.requestLayout();
+            this.mBinding.container.getLayoutParams().height = (int) animation.getAnimatedValue();
+            this.mBinding.container.requestLayout();
         }, null);
         // 通知组件横屏幕改变
         this.mCoverManager.getValuePool().putObject(CoverConstant.ValueKey.KEY_FULLSCREEN_TOGGLE, fullscreen);
@@ -306,12 +320,16 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
             // 隐藏系统Ui
             SystemUiUtil.hideVideoSystemUI(this);
         }
+        // 画中画
+        AppPip.Companion.getInstance().closePip(mBinding.container);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
 //        this.mPlayer.pause();
+        // 画中画
+        AppPip.Companion.getInstance().showAppPip(this, mPlayer, false);
     }
 
     @SuppressLint("SourceLockedOrientationActivity")
@@ -331,10 +349,20 @@ public class PlayerActivity extends BaseVmActivity<ActivityPlayerBinding, Player
         super.onBackPressed();
     }
 
+//    @Override
+//    public void finish() {
+//        super.finish();
+//        // 画中画
+//        AppPip.Companion.getInstance().showAppPip(this, mPlayer);
+//    }
+
     @Override
-    public void finish() {
-        super.finish();
-        // 画中画
-        AppPip.Companion.getInstance().showAppPip(this, mPlayer);
+    protected void onDestroy() {
+        super.onDestroy();
+        // 如果未开启画中画则停止播放器
+        if (!AppPip.Companion.getInstance().isShowing()) {
+            this.mPlayer.destroy();
+            AppPip.Companion.getInstance().clearCurrAssistView();
+        }
     }
 }

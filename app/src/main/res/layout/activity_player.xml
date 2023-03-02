@@ -14,7 +14,7 @@
 
         <!-- 播放器本器 -->
         <FrameLayout
-            android:id="@+id/player"
+            android:id="@+id/container"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/black"
@@ -32,7 +32,7 @@
             android:textSize="15sp"
             app:layout_constraintEnd_toStartOf="@id/player_curr_renderer"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/player"
+            app:layout_constraintTop_toBottomOf="@id/container"
             tools:text="KsgExoPlayer" />
 
         <!-- 当前 渲染器 -->
@@ -46,7 +46,7 @@
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/player_curr_decoder"
-            app:layout_constraintTop_toBottomOf="@id/player"
+            app:layout_constraintTop_toBottomOf="@id/container"
             tools:text="KsgTextureView" />
 
         <!--Flow-->
@@ -56,7 +56,7 @@
             android:layout_height="0dp"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
-            app:constraint_referenced_ids="player_shotPic,player_degree,player_aspectRatio,player_decoder,player_renderer,player_filter,player_bind_network,player_float"
+            app:constraint_referenced_ids="player_shotPic,player_degree,player_aspectRatio,player_decoder,player_renderer,player_filter,player_bind_network"
             app:flow_horizontalGap="10dp"
             app:flow_maxElementsWrap="3"
             app:flow_wrapMode="chain"
@@ -113,14 +113,24 @@
             app:layout_constraintStart_toStartOf="@id/flow"
             app:layout_constraintTop_toBottomOf="@id/flow" />
 
+        <!-- 小窗播放 -->
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switchPIP"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/sp_14"
+            android:layout_marginHorizontal="12dp"
             android:layout_marginTop="@dimen/dp_10"
             android:text="小窗播放"
             app:layout_constraintTop_toBottomOf="@id/player_shotPic_info" />
+
+        <!-- 小窗跳转测试 -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/PIPIntent"
+            style="@style/PlayerMenuBtn"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="12dp"
+            android:text="小窗跳转测试"
+            app:layout_constraintTop_toBottomOf="@id/switchPIP" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
